@@ -82,7 +82,7 @@ public record ReferenceCases(
 
     public static String toExplanationStringShort(ProfileDTO pf, String sep) {
         return sep + "niveau: '" + pf.niveau() + "'\n" +
-                sep + "bac: '" + pf.bac() + "'\n" +
+                sep + "bac: '" + Objects.requireNonNullElse(pf.bac(),"null") + "'\n" +
                 sep + "duree: '" + pf.duree() + "'\n" +
                 sep + "apprentissage: '" + SuggestionsEvaluator.toApprentissageExplanationString(pf.apprentissage()) + "'\n" +
                 sep + "geo_pref: " + pf.geo_pref() + "'\n" +

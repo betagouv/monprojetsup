@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +17,8 @@ public record ProfileDTO(
 
         @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "prem", "term"})
         String niveau,
-        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
-        String bac,
+        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", nullable = true, allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG", "NC"})
+        @Nullable String bac,
         @Schema(name = "duree", description = "durée envisagée des études", example = "long", allowableValues = {"", "court", "long", "indiff"})
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
@@ -46,6 +47,7 @@ public record ProfileDTO(
     }
 
     public int bacIndex() {
+        if(Objects.isNull(bac)) return 0;
         if(bac.startsWith("S")) return 2;
         return switch (bac) {
             case "Générale" -> 1;

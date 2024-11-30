@@ -33,6 +33,7 @@ class RecupererEleveService(
                 profilFiltre = filtrerMetiers(eleveBDD, profilFiltre)
                 profilFiltre
             }
+
             else -> eleveBDD
         }
     }
@@ -45,7 +46,8 @@ class RecupererEleveService(
             return profilFiltre.copy(specialites = null)
         }
         val idBaccalaureat = eleveBDD.baccalaureat
-        val paireBacSpecialites = baccalaureatSpecialiteRepository.recupererUnBaccalaureatEtLesIdsDeSesSpecialites(idBaccalaureat)
+        val paireBacSpecialites =
+            baccalaureatSpecialiteRepository.recupererUnBaccalaureatEtLesIdsDeSesSpecialites(idBaccalaureat)
         if (paireBacSpecialites != null) {
             profilFiltre.specialites?.let { specialites ->
                 val specialitesConformes = specialites.filter { paireBacSpecialites.second.contains(it) }
@@ -67,10 +69,16 @@ class RecupererEleveService(
         profilFiltre: ProfilEleve.AvecProfilExistant,
     ): ProfilEleve.AvecProfilExistant {
         val domainesInexistants =
-            eleveBDD.domainesInterets?.let { domaineRepository.recupererIdsDomainesInexistants(it) }?.takeUnless { it.isEmpty() }
+            eleveBDD.domainesInterets?.let { domaineRepository.recupererIdsDomainesInexistants(it) }
+                ?.takeUnless { it.isEmpty() }
         if (domainesInexistants != null) {
             return profilFiltre.copy(
-                domainesInterets = profilFiltre.domainesInterets?.filterNot { domain -> domainesInexistants.contains(domain) },
+                domainesInterets =
+                    profilFiltre.domainesInterets?.filterNot { domain ->
+                        domainesInexistants.contains(
+                            domain,
+                        )
+                    },
             )
         }
         return profilFiltre
@@ -81,7 +89,8 @@ class RecupererEleveService(
         profilFiltre: ProfilEleve.AvecProfilExistant,
     ): ProfilEleve.AvecProfilExistant {
         val metiersInexistants =
-            eleveBDD.metiersFavoris?.let { metierRepository.recupererIdsMetiersInexistants(it) }?.takeUnless { it.isEmpty() }
+            eleveBDD.metiersFavoris?.let { metierRepository.recupererIdsMetiersInexistants(it) }
+                ?.takeUnless { it.isEmpty() }
         if (metiersInexistants != null) {
             return profilFiltre.copy(
                 metiersFavoris = profilFiltre.metiersFavoris?.filterNot { metiers -> metiersInexistants.contains(metiers) },
@@ -95,10 +104,16 @@ class RecupererEleveService(
         profilFiltre: ProfilEleve.AvecProfilExistant,
     ): ProfilEleve.AvecProfilExistant {
         val interetsInexistants =
-            eleveBDD.centresInterets?.let { interetRepository.recupererIdsCentresInteretsInexistants(it) }?.takeUnless { it.isEmpty() }
+            eleveBDD.centresInterets?.let { interetRepository.recupererIdsCentresInteretsInexistants(it) }
+                ?.takeUnless { it.isEmpty() }
         if (interetsInexistants != null) {
             return profilFiltre.copy(
-                centresInterets = profilFiltre.centresInterets?.filterNot { interet -> interetsInexistants.contains(interet) },
+                centresInterets =
+                    profilFiltre.centresInterets?.filterNot { interet ->
+                        interetsInexistants.contains(
+                            interet,
+                        )
+                    },
             )
         }
         return profilFiltre
@@ -109,7 +124,8 @@ class RecupererEleveService(
         profilFiltre: ProfilEleve.AvecProfilExistant,
     ): ProfilEleve.AvecProfilExistant {
         var profilFiltre1 = profilFiltre
-        val idsFormations = (eleveBDD.formationsFavorites?.map { it.idFormation } ?: emptyList()) + eleveBDD.corbeilleFormations
+        val idsFormations =
+            (eleveBDD.formationsFavorites?.map { it.idFormation } ?: emptyList()) + eleveBDD.corbeilleFormations
         val formationsInexistantes =
             idsFormations.distinct().takeUnless { it.isEmpty() }?.let {
                 formationRepository.recupererIdsFormationsInexistantes(it)
@@ -127,17 +143,17 @@ class RecupererEleveService(
                         },
                 )
         }
-        val idVoeux = profilFiltre1.formationsFavorites?.map { it.voeuxChoisis }?.flatten()?.takeUnless { it.isEmpty() }
-        val voeuxInexistants = idVoeux?.let { voeuRepository.recupererIdsVoeuxInexistants(it.distinct()) }?.takeUnless { it.isEmpty() }
-        if (voeuxInexistants != null) {
-            profilFiltre1 =
-                profilFiltre1.copy(
-                    formationsFavorites =
-                        profilFiltre1.formationsFavorites?.map { voeuFormation ->
-                            voeuFormation.copy(voeuxChoisis = voeuFormation.voeuxChoisis.filterNot { voeuxInexistants.contains(it) })
-                        },
-                )
+        val voeuxInexistants =
+            profilFiltre1.voeuxFavoris.map { it.idVoeu }
+                .takeUnless { it.isEmpty() }
+                ?.let { voeuRepository.recupererIdsVoeuxInexistants(it.distinct()) }
+                ?.takeUnless { it.isEmpty() }
+        return if (voeuxInexistants != null) {
+            profilFiltre1.copy(
+                voeuxFavoris = profilFiltre1.voeuxFavoris.filterNot { it.idVoeu in voeuxInexistants },
+            )
+        } else {
+            profilFiltre1
         }
-        return profilFiltre1
     }
 }

@@ -4,7 +4,8 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
 import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
 import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parametre.domain.entity.Parametre
@@ -57,22 +58,21 @@ abstract class ControllerTest {
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0010", "fl0012"),
                 compteParcoursupLie = true,
+                voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta77", false)),
             )
 
         private val unProfilEnseignant = ProfilEleve.SansCompte(id = ID_ENSEIGNANT)

@@ -15,6 +15,7 @@
     "test": "npx vitest run src --passWithNoTests",
     "test:watch": "npx vitest watch src --passWithNoTests",
     "lint": "npm run lint:eslint && npm run lint:tsc",
+    "lint:fix": "eslint --report-unused-disable-directives --max-warnings 0 './**/*.{ts,tsx}' --fix",
     "lint:eslint": "eslint --report-unused-disable-directives --max-warnings 0 './**/*.{ts,tsx}'",
     "lint:tsc": "npx tsc",
     "i18n-types": "npx i18next-resources-for-ts interface -i ./src/configuration/i18n/locales/ -o ./src/types/i18next-generated.d.ts",

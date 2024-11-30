@@ -1,14 +1,12 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.commun.erreur.domain.eleveSansCompteException
 import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
-import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Profil Élève", description = "API des profils des utilisateurs MonProjetSup")
 class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
-    private val miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService,
+    private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
     private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
 ) : AuthentifieController() {
     @PostMapping
@@ -49,13 +47,9 @@ class ProfilEleveController(
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
     fun getProfilEleve(): ProfilDTO {
-        when (val profil = recupererEleve()) {
-            is ProfilEleve.AvecProfilExistant -> {
-                val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
-                return ProfilDTO(profilMisAJour)
-            }
-            is ProfilEleve.SansCompte -> throw eleveSansCompteException()
-        }
+        val profil = recupererEleveAvecProfilExistant()
+        val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
+        return ProfilDTO(profil, voeuxFavoris)
     }
 
     @PostMapping("/parcoursup")

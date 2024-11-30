@@ -15,7 +15,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
-@Entity
+@Entity(name = "ProfilEleve")
 @Table(name = "profil_eleve")
 class ProfilEleveEntity() {
     @Id
@@ -63,7 +63,11 @@ class ProfilEleveEntity() {
 
     @Type(JsonType::class)
     @Column(name = "formations_favorites", nullable = true)
-    var formationsFavorites: List<VoeuEntity>? = null
+    var formationsFavorites: List<FormationFavoriteEntity>? = null
+
+    @Type(JsonType::class)
+    @Column(name = "voeux_favoris", nullable = true)
+    var voeuxFavoris: List<VoeuFavoriEntity>? = null
 
     @Column(name = "moyenne_generale", nullable = true)
     var moyenneGenerale: Float? = null
@@ -84,12 +88,13 @@ class ProfilEleveEntity() {
         centresInterets = profilEleve.centresInterets
         metiersFavoris = profilEleve.metiersFavoris
         communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
-        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuEntity(it) }
+        formationsFavorites = profilEleve.formationsFavorites?.map { FormationFavoriteEntity(it) }
+        voeuxFavoris = profilEleve.voeuxFavoris.map { VoeuFavoriEntity(it) }
         moyenneGenerale = profilEleve.moyenneGenerale
         corbeilleFormations = profilEleve.corbeilleFormations
     }
 
-    fun toProfilEleve() =
+    fun toProfilEleve(compteParcoursupLie: Boolean = false) =
         ProfilEleve.AvecProfilExistant(
             id = id,
             situation = situation,
@@ -102,9 +107,10 @@ class ProfilEleveEntity() {
             dureeEtudesPrevue = dureeEtudesPrevue,
             alternance = alternance,
             communesFavorites = communesFavorites?.map { it.toCommune() },
-            formationsFavorites = formationsFavorites?.map { it.toVoeuFormation() },
+            formationsFavorites = formationsFavorites?.map { it.toFormationFavorite() },
             moyenneGenerale = moyenneGenerale,
             corbeilleFormations = corbeilleFormations,
-            compteParcoursupLie = false,
+            compteParcoursupLie = compteParcoursupLie,
+            voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
         )
 }

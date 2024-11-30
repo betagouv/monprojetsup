@@ -1,7 +1,8 @@
 package fr.gouv.monprojetsup.authentification.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
@@ -79,22 +80,25 @@ class RecupererEleveServiceTest {
             communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
             compteParcoursupLie = true,
+            voeuxFavoris =
+                listOf(
+                    VoeuFavori("ta1", true),
+                    VoeuFavori("ta77", false),
+                ),
         )
 
     @Nested
@@ -170,9 +174,9 @@ class RecupererEleveServiceTest {
     @Nested
     inner class FiltrerFormationsEtVoeux {
         @Test
-        fun `si les formations favorites sont nulles et la corbeille vide, doit ne pas modifier et ne pas appeler le repo`() {
+        fun `si formations favorites et voeux favoris nuls et la corbeille vide, doit ne pas modifier et ne pas appeler le repo`() {
             // Given
-            val profil = profilEleve.copy(formationsFavorites = null, corbeilleFormations = emptyList())
+            val profil = profilEleve.copy(formationsFavorites = null, voeuxFavoris = emptyList(), corbeilleFormations = emptyList())
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
@@ -191,9 +195,9 @@ class RecupererEleveServiceTest {
                 profilEleve.copy(
                     formationsFavorites =
                         listOf(
-                            VoeuFormation("fl0001", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
-                            VoeuFormation("fl0002", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
-                            VoeuFormation("flInconnue", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
+                            FormationFavorite("fl0001", niveauAmbition = 0, priseDeNote = null),
+                            FormationFavorite("fl0002", niveauAmbition = 0, priseDeNote = null),
+                            FormationFavorite("flInconnue", niveauAmbition = 0, priseDeNote = null),
                         ),
                     corbeilleFormations = listOf("flInconnue2", "flInconnue", "test", "fl0003"),
                 )
@@ -214,13 +218,12 @@ class RecupererEleveServiceTest {
                 profilEleve.copy(
                     formationsFavorites =
                         listOf(
-                            VoeuFormation("fl0001", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
-                            VoeuFormation("fl0002", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
+                            FormationFavorite("fl0001", niveauAmbition = 0, priseDeNote = null),
+                            FormationFavorite("fl0002", niveauAmbition = 0, priseDeNote = null),
                         ),
                     corbeilleFormations = listOf("fl0003"),
                 )
             assertThat(resultat).isEqualTo(attendu)
-            then(voeuRepository).shouldHaveNoInteractions()
         }
 
         @Test
@@ -230,27 +233,43 @@ class RecupererEleveServiceTest {
                 profilEleve.copy(
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 "fl0001",
                                 niveauAmbition = 0,
-                                voeuxChoisis = listOf("ta26660", "ta37607", "taInconnu", "ta31045"),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation("fl0002", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
-                            VoeuFormation(
+                            FormationFavorite("fl0002", niveauAmbition = 0, priseDeNote = null),
+                            FormationFavorite(
                                 "fl0003",
                                 niveauAmbition = 0,
-                                voeuxChoisis = listOf("ta31042", "ta31045", "ta37607"),
                                 priseDeNote = null,
                             ),
                         ),
                     corbeilleFormations = listOf("fl0004"),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta26660", true),
+                            VoeuFavori("ta37607", true),
+                            VoeuFavori("taInconnu", true),
+                            VoeuFavori("ta31045", true),
+                            VoeuFavori("ta31042", true),
+                        ),
                 )
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
             given(
                 formationRepository.recupererIdsFormationsInexistantes(listOf("fl0001", "fl0002", "fl0003", "fl0004")),
             ).willReturn(emptyList())
-            given(voeuRepository.recupererIdsVoeuxInexistants(listOf("ta26660", "ta37607", "taInconnu", "ta31045", "ta31042"))).willReturn(
+            given(
+                voeuRepository.recupererIdsVoeuxInexistants(
+                    listOf(
+                        "ta26660",
+                        "ta37607",
+                        "taInconnu",
+                        "ta31045",
+                        "ta31042",
+                    ),
+                ),
+            ).willReturn(
                 listOf("taInconnu"),
             )
 
@@ -262,21 +281,26 @@ class RecupererEleveServiceTest {
                 profilEleve.copy(
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 "fl0001",
                                 niveauAmbition = 0,
-                                voeuxChoisis = listOf("ta26660", "ta37607", "ta31045"),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation("fl0002", niveauAmbition = 0, voeuxChoisis = emptyList(), priseDeNote = null),
-                            VoeuFormation(
+                            FormationFavorite("fl0002", niveauAmbition = 0, priseDeNote = null),
+                            FormationFavorite(
                                 "fl0003",
                                 niveauAmbition = 0,
-                                voeuxChoisis = listOf("ta31042", "ta31045", "ta37607"),
                                 priseDeNote = null,
                             ),
                         ),
                     corbeilleFormations = listOf("fl0004"),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta26660", true),
+                            VoeuFavori("ta37607", true),
+                            VoeuFavori("ta31045", true),
+                            VoeuFavori("ta31042", true),
+                        ),
                 )
             assertThat(resultat).isEqualTo(attendu)
         }

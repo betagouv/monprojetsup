@@ -283,6 +283,24 @@ export interface components {
              */
             longitude: number;
         };
+        FormationFavoriteDTO: {
+            /**
+             * @description Id de la formation
+             * @example fl490030
+             */
+            idFormation: string;
+            /**
+             * Format: int32
+             * @description Niveau de l'ambition avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux
+             * @example 2
+             */
+            niveauAmbition: number;
+            /**
+             * @description Prise de note additionnel sur le voeu
+             * @example Ma note personnalisée
+             */
+            priseDeNote?: string;
+        };
         ModificationProfilDTO: {
             /**
              * @description Etat d'avancée du projet de l'élève
@@ -357,8 +375,10 @@ export interface components {
              * @example 14
              */
             moyenneGenerale?: number;
-            /** @description Les idées de formations de l'élève */
-            formationsFavorites?: components["schemas"]["VoeuFormationDTO"][];
+            /** @description Les formations favorites de l'élève */
+            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
+            /** @description Les voeux favoris de l'élève */
+            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
             /**
              * @description Les formations mises à la corbeille par l'élève
              * @example [
@@ -368,31 +388,17 @@ export interface components {
              */
             corbeilleFormations?: string[];
         };
-        VoeuFormationDTO: {
+        VoeuFavoriDTO: {
             /**
-             * @description Id de la formation
-             * @example fl490030
+             * @description Id du voeu
+             * @example ta490030
              */
-            idFormation: string;
+            idVoeu: string;
             /**
-             * Format: int32
-             * @description Niveau de l'ambition du voeux avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux
-             * @example 2
+             * @description Marquage des favoris Parcoursup
+             * @example true
              */
-            niveauAmbition: number;
-            /**
-             * @description Les voeux (triplets d'affectation) souhaités
-             * @example [
-             *       "ta15974",
-             *       "ta17831"
-             *     ]
-             */
-            voeuxChoisis: string[];
-            /**
-             * @description Prise de note additionnel sur le voeu
-             * @example Ma note personnalisée
-             */
-            priseDeNote?: string;
+            estFavoriParcoursup: boolean;
         };
         Unit: Record<string, never>;
         AjoutCompteParcoursupDTO: {
@@ -542,7 +548,7 @@ export interface components {
              */
             moyenneGenerale?: number;
             /** @description Les idées de formations de l'élève */
-            formationsFavorites?: components["schemas"]["VoeuFormationDTO"][];
+            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
             /**
              * @description Les formations mises à la corbeille par l'élève
              * @example [
@@ -556,6 +562,8 @@ export interface components {
              * @example false
              */
             compteParcoursupAssocie: boolean;
+            /** @description Liste des voeux favoris */
+            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
         };
         FormationCourteDTO: {
             id: string;

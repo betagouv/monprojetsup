@@ -6,7 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalDate
 
-@Entity
+@Entity(name = "CompteParcoursup")
 @Table(name = "eleve_compte_parcoursup")
 class CompteParcoursupEntity() {
     @Id

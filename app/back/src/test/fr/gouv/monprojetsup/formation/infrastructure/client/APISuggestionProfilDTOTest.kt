@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
@@ -45,22 +45,21 @@ class APISuggestionProfilDTOTest {
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0002"),
                 compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val unProfilDTO =
             APISuggestionProfilDTO(
@@ -109,22 +108,21 @@ class APISuggestionProfilDTOTest {
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001"),
                 compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
@@ -174,6 +172,7 @@ class APISuggestionProfilDTOTest {
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = emptyList(),
                 compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
@@ -210,22 +209,21 @@ class APISuggestionProfilDTOTest {
                 metiersFavoris = emptyList(),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0001",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0005",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta4", "ta5"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
                 compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
@@ -260,6 +258,7 @@ class APISuggestionProfilDTOTest {
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
                 compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
@@ -289,22 +288,21 @@ class APISuggestionProfilDTOTest {
                 metiersFavoris = null,
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0012"),
                 compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOTerminal =
             APISuggestionProfilDTO(
@@ -344,6 +342,7 @@ class APISuggestionProfilDTOTest {
                 domainesInterets = null,
                 corbeilleFormations = emptyList(),
                 compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTONull =
             APISuggestionProfilDTO(

@@ -16,7 +16,8 @@ data class ModificationProfilEleve(
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     val alternance: ChoixAlternance? = null,
     val communesFavorites: List<CommuneFavorite>? = null,
-    val formationsFavorites: List<VoeuFormation>? = null,
+    val formationsFavorites: List<FormationFavorite>? = null,
     val moyenneGenerale: Float? = null,
     val corbeilleFormations: List<String>? = null,
+    val voeuxFavoris: List<VoeuFavori>? = null,
 )

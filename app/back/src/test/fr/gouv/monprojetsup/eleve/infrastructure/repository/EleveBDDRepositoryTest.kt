@@ -3,7 +3,8 @@ package fr.gouv.monprojetsup.eleve.infrastructure.repository
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -53,22 +54,21 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta15974", "ta17831"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),
             compteParcoursupLie = true,
+            voeuxFavoris = listOf(VoeuFavori("ta15974", true), VoeuFavori("ta17831", false)),
         )
 
     private val profil129f =
@@ -86,22 +86,21 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta15974", "ta17831"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),
             compteParcoursupLie = false,
+            voeuxFavoris = listOf(VoeuFavori("ta15974", true), VoeuFavori("ta17831", false)),
         )
 
     @Nested
@@ -217,22 +216,21 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0010",
                                 niveauAmbition = 1,
-                                voeuxChoisis = emptyList(),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0012",
                                 niveauAmbition = 3,
-                                voeuxChoisis = listOf("ta15974", "ta17831"),
-                                priseDeNote = "Mon voeu préféré",
+                                priseDeNote = "Ma formation préférée",
                             ),
                         ),
                     moyenneGenerale = 10.5f,
                     corbeilleFormations = listOf("fl0001", "fl0002"),
                     compteParcoursupLie = false,
+                    voeuxFavoris = listOf(VoeuFavori("ta15974", true), VoeuFavori("ta17831", false)),
                 )
 
             // When & Then

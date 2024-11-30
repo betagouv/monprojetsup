@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -82,22 +82,21 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             metiersFavoris = listOf("MET.123", "MET.456"),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl5678",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             domainesInterets = listOf("dom8", "dom6", "dom2", "dom9"),
             corbeilleFormations = listOf("fl0001"),
             compteParcoursupLie = true,
+            voeuxFavoris = emptyList(),
         )
 
     @Nested

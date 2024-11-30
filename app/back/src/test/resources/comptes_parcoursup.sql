@@ -38,20 +38,20 @@ VALUES ('AUCUNE_IDEE',
           {
             "idFormation": "fl0010",
             "priseDeNote": null,
-            "niveauAmbition": 1,
-            "voeuxChoisis": []
+            "niveauAmbition": 1
           },
           {
             "idFormation": "fl0012",
-            "priseDeNote": "Mon voeu préféré",
-            "niveauAmbition": 3,
-            "voeuxChoisis": [
-              "ta15974",
-              "ta17831"
-            ]
+            "priseDeNote": "Ma formation préférée",
+            "niveauAmbition": 3
           }
         ]'::jsonb,
-        '0f88ddd1-62ef-436e-ad3f-cf56d5d14c15');
+        '0f88ddd1-62ef-436e-ad3f-cf56d5d14c15',
+        '[
+            {"idVoeu":"ta15974", "estFavoriParcoursup": "true" },
+            {"idVoeu":"ta17831", "estFavoriParcoursup": "false" }
+        ]'::jsonb
+        );
 
 INSERT INTO profil_eleve
 VALUES ('QUELQUES_PISTES',
@@ -86,19 +86,20 @@ VALUES ('QUELQUES_PISTES',
           {
             "idFormation": "fl0010",
             "priseDeNote": null,
-            "niveauAmbition": 1,
-            "voeuxChoisis": []
+            "niveauAmbition": 1
           },
           {
             "idFormation": "fl0012",
-            "priseDeNote": "Mon voeu préféré",
-            "niveauAmbition": 3,
-            "voeuxChoisis": [
-              "ta15974",
-              "ta17831"
-            ]
+            "priseDeNote": "Ma formation préférée",
+            "niveauAmbition": 3
           }
-        ]'::jsonb, '129f6d9c-0f6f-4fa4-8107-75b7cb129889');
+        ]'::jsonb,
+        '129f6d9c-0f6f-4fa4-8107-75b7cb129889',
+        '[
+            {"idVoeu":"ta15974", "estFavoriParcoursup": "true" },
+            {"idVoeu":"ta17831", "estFavoriParcoursup": "false" }
+        ]'::jsonb
+        );
 
 INSERT INTO eleve_compte_parcoursup
 VALUES ('12345', '2024-09-27', '0f88ddd1-62ef-436e-ad3f-cf56d5d14c15')

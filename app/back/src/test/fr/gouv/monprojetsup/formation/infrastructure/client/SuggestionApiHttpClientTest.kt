@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
@@ -71,22 +71,21 @@ class SuggestionApiHttpClientTest {
             metiersFavoris = listOf("MET_123", "MET_456"),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl5678",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             corbeilleFormations = listOf("fl0001"),
             compteParcoursupLie = true,
+            voeuxFavoris = emptyList(),
         )
 
     @BeforeEach

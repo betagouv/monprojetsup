@@ -20,6 +20,7 @@ export class TestHelper {
         moyenneGénérale: null,
         communesFavorites: null,
         formationsFavorites: null,
+        voeuxFavoris: null,
         formationsMasquées: null,
         ...argumentsProfilÉlève,
       };
@@ -43,6 +44,7 @@ export class TestHelper {
       moyenneGénérale: 15,
       duréeÉtudesPrévue: "courte",
       formationsFavorites: [],
+      voeuxFavoris: [],
       formationsMasquées: [],
     };
 

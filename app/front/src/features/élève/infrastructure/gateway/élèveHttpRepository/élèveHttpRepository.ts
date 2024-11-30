@@ -32,6 +32,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         moyenneGénérale: null,
         communesFavorites: null,
         formationsFavorites: null,
+        voeuxFavoris: null,
         formationsMasquées: null,
       });
 
@@ -97,8 +98,12 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         élève.formationsFavorites?.map((formationFavorite) => ({
           idFormation: formationFavorite.id,
           niveauAmbition: formationFavorite.niveauAmbition ?? 0,
-          voeuxChoisis: formationFavorite.voeux ?? [],
           priseDeNote: formationFavorite.commentaire ?? undefined,
+        })) ?? undefined,
+      voeuxFavoris:
+        élève.voeuxFavoris?.map((voeuFavori) => ({
+          idVoeu: voeuFavori.id,
+          estFavoriParcoursup: voeuFavori.estParcoursup,
         })) ?? undefined,
     };
   }
@@ -124,8 +129,12 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
           niveauAmbition: [1, 2, 3].includes(formationFavorite.niveauAmbition)
             ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
             : null,
-          voeux: formationFavorite.voeuxChoisis,
           commentaire: formationFavorite.priseDeNote ?? null,
+        })) ?? null,
+      voeuxFavoris:
+        élève.voeuxFavoris?.map((voeu) => ({
+          id: voeu.idVoeu,
+          estParcoursup: voeu.estFavoriParcoursup,
         })) ?? null,
     };
   }

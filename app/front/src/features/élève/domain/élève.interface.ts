@@ -12,8 +12,12 @@ export type CommuneFavorite = Omit<Commune, "codePostal">;
 export type FormationFavorite = {
   id: string;
   niveauAmbition: 1 | 2 | 3 | null;
-  voeux: string[];
   commentaire: string | null;
+};
+
+export type VoeuFavori = {
+  id: string;
+  estParcoursup: boolean;
 };
 
 export type Élève = {
@@ -30,6 +34,7 @@ export type Élève = {
   moyenneGénérale: number | null;
   communesFavorites: CommuneFavorite[] | null;
   formationsFavorites: FormationFavorite[] | null;
+  voeuxFavoris: VoeuFavori[] | null;
   formationsMasquées: string[] | null;
 };
 

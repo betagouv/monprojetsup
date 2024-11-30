@@ -6,8 +6,9 @@ import fr.gouv.monprojetsup.commun.Constantes.NOTE_MINIMALE
 import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
@@ -44,8 +45,17 @@ class MiseAJourEleveService(
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
         verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
-        verifierVoeuxFormations(miseAJourDuProfil.formationsFavorites)
+        verifierVoeux(miseAJourDuProfil.voeuxFavoris?.map { it.idVoeu })
         verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
+
+        val nouvellesFormations = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites
+        val nouveauxVoeux =
+            calculerNouveauxVoeux(
+                profilInitial.voeuxFavoris,
+                miseAJourDuProfil.voeuxFavoris,
+                nouvellesFormations?.map { it.idFormation }.orEmpty().toSet(),
+            )
+
         val profilEleveAMettreAJour =
             ProfilEleve.AvecProfilExistant(
                 id = profilActuel.id,
@@ -59,19 +69,59 @@ class MiseAJourEleveService(
                 dureeEtudesPrevue = miseAJourDuProfil.dureeEtudesPrevue ?: profilInitial.dureeEtudesPrevue,
                 alternance = miseAJourDuProfil.alternance ?: profilInitial.alternance,
                 communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
-                formationsFavorites = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites,
+                formationsFavorites = nouvellesFormations,
                 moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
                 corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
                 compteParcoursupLie = profilInitial.compteParcoursupLie,
+                voeuxFavoris = nouveauxVoeux.sortedBy { it.idVoeu },
             )
         if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
         }
     }
 
+    private fun calculerNouveauxVoeux(
+        voeuxFavorisActuels: List<VoeuFavori>,
+        voeuxMisAjourOuNull: List<VoeuFavori>?,
+        formationsFavorites: Set<String>,
+    ): List<VoeuFavori> {
+        return voeuxMisAjourOuNull?.let { voeuxMisAjour ->
+
+            val voeuxActuelsParFormation = voeuRepository.recupererVoeux(voeuxFavorisActuels.map { it.idVoeu })
+
+            val voeuxMisAjourIds =
+                voeuxMisAjour
+                    .filter { !it.estFavoriParcoursup }
+                    .map { it.idVoeu }
+                    .toSet()
+
+            val voeuxSupprimesIds =
+                voeuxFavorisActuels
+                    .filter { !it.estFavoriParcoursup && !voeuxMisAjourIds.contains(it.idVoeu) }
+                    .map { it.idVoeu }
+                    .toSet()
+
+            val voeuxAConserverIds =
+                voeuxActuelsParFormation.asSequence()
+                    .filter { it.key in formationsFavorites }
+                    .flatMap { it.value }
+                    .filter { it.id !in voeuxSupprimesIds }
+                    .map { it.id }.distinct().toList()
+            val voeuxConserves = voeuxFavorisActuels.filter { it.estFavoriParcoursup || it.idVoeu in voeuxAConserverIds }
+            val voeuxConservesIds = voeuxConserves.map { it.idVoeu }.toSet()
+            val voeuxAjoutes =
+                voeuxMisAjourIds
+                    .filter { it !in voeuxConservesIds }
+                    .filter { it !in voeuxSupprimesIds }
+                    .map { VoeuFavori(it, false) }
+
+            return (voeuxConserves + voeuxAjoutes).sortedBy { it.idVoeu }
+        } ?: voeuxFavorisActuels
+    }
+
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierFormations(
-        voeuxDeFormations: List<VoeuFormation>?,
+        voeuxDeFormations: List<FormationFavorite>?,
         corbeilleFormations: List<String>?,
         profilInitial: ProfilEleve.AvecProfilExistant,
     ) {
@@ -138,23 +188,15 @@ class MiseAJourEleveService(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun verifierVoeuxFormations(voeuxDeFormations: List<VoeuFormation>?) {
-        voeuxDeFormations?.mapNotNull {
-            if (it.voeuxChoisis.isNotEmpty()) it.idFormation else null
-        }?.takeUnless { it.isEmpty() }?.let { idsFormations ->
-            val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus = true)
-            voeuxDeFormations.forEach { voeu ->
-                if (voeu.voeuxChoisis.isNotEmpty()) {
-                    val voeuDuVoeu = voeux[voeu.idFormation]?.map { it.id }
-                    if (voeuDuVoeu?.containsAll(voeu.voeuxChoisis) != true) {
-                        throw MonProjetSupBadRequestException(
-                            code = "VOEU_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
-                            msg =
-                                "Pour la formation ${voeu.idFormation} présente dans les formations favorites " +
-                                    "comporte un ou plusieurs voeux ne correspondant pas à une de ses possibilités : $voeuDuVoeu",
-                        )
-                    }
-                }
+    private fun verifierVoeux(voeux: List<String>?) {
+        voeux?.let {
+            val voeuxInexistants = voeuRepository.recupererIdsVoeuxInexistants(it)
+            if (voeuxInexistants.isNotEmpty()) {
+                throw MonProjetSupBadRequestException(
+                    code = "VOEU_FAVORI_INEXISTANT",
+                    msg =
+                        "Le ou les voeux favoris suivants ne sont pas connus : $voeuxInexistants",
+                )
             }
         }
     }
@@ -256,13 +298,11 @@ class MiseAJourEleveService(
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierLaMoyenneGenerale(moyenneGenerale: Float?) {
         moyenneGenerale?.let {
-            if (it > NOTE_MAXIMALE || it < NOTE_MINIMALE) {
-                if (it != NOTE_NON_REPONSE) {
-                    throw MonProjetSupBadRequestException(
-                        code = "ERREUR_MOYENNE_GENERALE",
-                        msg = "La moyenne générale $it n'est pas dans l'intervalle ${NOTE_MINIMALE.toInt()} et ${NOTE_MAXIMALE.toInt()}",
-                    )
-                }
+            if ((it > NOTE_MAXIMALE || it < NOTE_MINIMALE) && it != NOTE_NON_REPONSE) {
+                throw MonProjetSupBadRequestException(
+                    code = "ERREUR_MOYENNE_GENERALE",
+                    msg = "La moyenne générale $it n'est pas dans l'intervalle ${NOTE_MINIMALE.toInt()} et ${NOTE_MAXIMALE.toInt()}",
+                )
             }
         }
     }

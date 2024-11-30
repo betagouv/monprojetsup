@@ -11,9 +11,8 @@ export default function useMaSélectionVoeux() {
 
   const voeuxSélectionnés = useMemo(
     () =>
-      élève?.formationsFavorites
-        ?.find((formationFavorite) => formationFavorite.id === formationAffichée.id)
-        ?.voeux.map((idVoeu) => formation?.voeux.find(({ id }) => idVoeu === id))
+      élève?.voeuxFavoris
+        ?.map((voeu) => formation?.voeux.find(({ id }) => voeu.id === id))
         .filter((voeu) => voeu !== undefined) ?? [],
     [élève],
   );

@@ -2,7 +2,8 @@ package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
@@ -24,7 +25,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class MiseAJourFavorisParcoursupServiceTest {
+class RecupererAssociationFormationsVoeuxServiceTest {
     @Mock
     lateinit var compteParcoursupRepository: CompteParcoursupRepository
 
@@ -38,7 +39,8 @@ class MiseAJourFavorisParcoursupServiceTest {
     lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
-    lateinit var miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService
+    lateinit var recupererAssociationFormationsVoeuxService:
+        RecupererAssociationFormationsVoeuxService
 
     @BeforeEach
     fun setup() {
@@ -52,27 +54,36 @@ class MiseAJourFavorisParcoursupServiceTest {
             creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori(
+                            idVoeu = "ta1",
+                            estFavoriParcoursup = true,
+                        ),
+                        VoeuFavori(
+                            idVoeu = "ta2",
+                            estFavoriParcoursup = false,
                         ),
                     ),
             )
         given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(null)
 
         // When
-        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+        val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
-        assertThat(resultat).isEqualTo(profil)
+        assertThat(resultat).isEqualTo(profil.voeuxFavoris)
         then(parcoursupApiHttpClient).shouldHaveNoInteractions()
         then(voeuRepository).shouldHaveNoInteractions()
     }
@@ -84,17 +95,22 @@ class MiseAJourFavorisParcoursupServiceTest {
             creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori(
+                            idVoeu = "ta2",
+                            estFavoriParcoursup = false,
                         ),
                     ),
             )
@@ -108,11 +124,11 @@ class MiseAJourFavorisParcoursupServiceTest {
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willThrow(exception)
 
         // When
-        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+        val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
         then(voeuRepository).shouldHaveNoInteractions()
-        assertThat(resultat).isEqualTo(profil)
+        assertThat(resultat).isEqualTo(profil.voeuxFavoris)
     }
 
     @Test
@@ -122,17 +138,22 @@ class MiseAJourFavorisParcoursupServiceTest {
             creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori(
+                            idVoeu = "ta2",
+                            estFavoriParcoursup = false,
                         ),
                     ),
             )
@@ -140,11 +161,11 @@ class MiseAJourFavorisParcoursupServiceTest {
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(emptyList())
 
         // When
-        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+        val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
         then(voeuRepository).shouldHaveNoInteractions()
-        assertThat(resultat).isEqualTo(profil)
+        assertThat(resultat).isEqualTo(profil.voeuxFavoris)
     }
 
     @Test
@@ -154,17 +175,22 @@ class MiseAJourFavorisParcoursupServiceTest {
             creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori(
+                            idVoeu = "ta2",
+                            estFavoriParcoursup = true,
                         ),
                     ),
             )
@@ -187,38 +213,46 @@ class MiseAJourFavorisParcoursupServiceTest {
         )
 
         // When
-        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+        val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
-        assertThat(resultat).isEqualTo(profil)
+        assertThat(resultat).isEqualTo(profil.voeuxFavoris)
+        then(voeuRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `alors doit mettre à jour les voeux des formations non présnete et ne pas toucher les existantes`() {
+    fun `alors doit mettre à jour les voeux des formations non présentes et supprimer les voeux Parcoursup qui ont disparus`() {
         // Given
         val profil =
             creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori(
+                            idVoeu = "ta1",
+                            estFavoriParcoursup = false,
+                        ),
+                        VoeuFavori(
+                            idVoeu = "ta7",
+                            estFavoriParcoursup = true,
                         ),
                     ),
             )
         given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         val voeuxParcoursup =
             listOf(
-                FavorisParcoursup(idVoeu = "ta1", commentaire = null, notation = 0),
-                FavorisParcoursup(idVoeu = "ta7", commentaire = null, notation = 0),
                 FavorisParcoursup(idVoeu = "ta18", commentaire = null, notation = 0),
                 FavorisParcoursup(idVoeu = "ta19", commentaire = null, notation = 0),
             )
@@ -242,7 +276,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                             longitude = -1.96914,
                         ),
                     ),
-                "fl0010" to
+                "fl0011" to
                     listOf(
                         Voeu(
                             id = "ta7",
@@ -266,54 +300,48 @@ class MiseAJourFavorisParcoursupServiceTest {
         )
 
         // When
-        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+        val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
         val attendu =
-            creerProfilAvecProfilExistant(
-                formationsFavorites =
-                    listOf(
-                        VoeuFormation(
-                            idFormation = "fl0010",
-                            niveauAmbition = 1,
-                            voeuxChoisis = listOf("ta7"),
-                            priseDeNote = null,
-                        ),
-                        VoeuFormation(
-                            idFormation = "fl0012",
-                            niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2", "ta18"),
-                            priseDeNote = "Mon voeu préféré",
-                        ),
-                        VoeuFormation(
-                            idFormation = "fl0753",
-                            niveauAmbition = 0,
-                            voeuxChoisis = listOf("ta19"),
-                            priseDeNote = null,
-                        ),
-                    ),
+            listOf(
+                VoeuFavori(
+                    idVoeu = "ta1",
+                    estFavoriParcoursup = false,
+                ),
+                VoeuFavori(
+                    idVoeu = "ta18",
+                    estFavoriParcoursup = true,
+                ),
+                VoeuFavori(
+                    idVoeu = "ta19",
+                    estFavoriParcoursup = true,
+                ),
             )
         assertThat(resultat).isEqualTo(attendu)
     }
 
-    private fun creerProfilAvecProfilExistant(formationsFavorites: List<VoeuFormation>) =
-        ProfilEleve.AvecProfilExistant(
-            id = ID_ELEVE,
-            situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
-            classe = ChoixNiveau.SECONDE,
-            baccalaureat = "Général",
-            specialites = listOf("4", "1006"),
-            domainesInterets = listOf("animaux", "agroequipement"),
-            centresInterets = listOf("linguistique", "voyage"),
-            metiersFavoris = listOf("MET001"),
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
-            alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
-            formationsFavorites = formationsFavorites,
-            moyenneGenerale = -1.0f,
-            corbeilleFormations = listOf("fl1234", "fl5678"),
-            compteParcoursupLie = true,
-        )
+    private fun creerProfilAvecProfilExistant(
+        formationsFavorites: List<FormationFavorite>,
+        voeuxFavoris: List<VoeuFavori>,
+    ) = ProfilEleve.AvecProfilExistant(
+        id = ID_ELEVE,
+        situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
+        classe = ChoixNiveau.SECONDE,
+        baccalaureat = "Général",
+        specialites = listOf("4", "1006"),
+        domainesInterets = listOf("animaux", "agroequipement"),
+        centresInterets = listOf("linguistique", "voyage"),
+        metiersFavoris = listOf("MET001"),
+        dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
+        alternance = ChoixAlternance.INDIFFERENT,
+        communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
+        formationsFavorites = formationsFavorites,
+        moyenneGenerale = -1.0f,
+        corbeilleFormations = listOf("fl1234", "fl5678"),
+        compteParcoursupLie = true,
+        voeuxFavoris = voeuxFavoris,
+    )
 
     companion object {
         private const val ID_ELEVE = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"

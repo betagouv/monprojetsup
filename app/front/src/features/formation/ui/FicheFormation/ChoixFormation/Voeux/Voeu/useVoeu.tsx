@@ -7,11 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function useVoeu({ voeu }: UseVoeuArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
+  const { ajouterUnVoeuFavori, supprimerUnVoeuFavori, élève } = useÉlève({});
   const formationAffichée = élémentAffichéListeEtAperçuStore();
 
-  const idsVoeuxSélectionnés =
-    élève?.formationsFavorites?.find((formationFavorite) => formationFavorite.id === formationAffichée.id)?.voeux ?? [];
+  const idsVoeuxSélectionnés = new Set(élève?.voeuxFavoris?.map((voeuFavori) => voeuFavori.id));
+  const idsVoeuxParcoursup = new Set(
+    élève?.voeuxFavoris?.filter((voeuFavori) => voeuFavori.estParcoursup).map((voeuFavori) => voeuFavori.id),
+  );
 
   const urlParcoursup = (): string => {
     const idTypeBacParcoursup = référentielDonnées?.bacs.find(
@@ -32,28 +34,31 @@ export default function useVoeu({ voeu }: UseVoeuArgs) {
   const estFavori = (): boolean => {
     if (!élève) return false;
 
-    return Boolean(idsVoeuxSélectionnés?.includes(voeu.id));
+    return Boolean(idsVoeuxSélectionnés.has(voeu.id));
+  };
+
+  const estFavoriParcoursup = (): boolean => {
+    if (!élève) return false;
+
+    return Boolean(idsVoeuxParcoursup.has(voeu.id));
   };
 
   const mettreÀJour = async () => {
     if (!élève || !formationAffichée?.id) return;
 
-    const voeux = new Set(idsVoeuxSélectionnés);
-
-    if (voeux.has(voeu.id)) {
-      voeux.delete(voeu.id);
+    if (idsVoeuxSélectionnés.has(voeu.id)) {
+      idsVoeuxSélectionnés.delete(voeu.id);
+      await supprimerUnVoeuFavori(voeu.id);
     } else {
-      voeux.add(voeu.id);
+      idsVoeuxSélectionnés.add(voeu.id);
+      await ajouterUnVoeuFavori(voeu.id);
     }
-
-    await mettreÀJourUneFormationFavorite(formationAffichée.id, {
-      voeux: [...voeux],
-    });
   };
 
   return {
     mettreÀJour,
     estFavori,
+    estFavoriParcoursup,
     urlParcoursup,
   };
 }

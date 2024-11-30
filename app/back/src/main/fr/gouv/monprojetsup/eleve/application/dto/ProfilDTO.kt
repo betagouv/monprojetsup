@@ -3,7 +3,8 @@ package fr.gouv.monprojetsup.eleve.application.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -88,7 +89,7 @@ data class ProfilDTO(
     val moyenneGenerale: Float? = null,
     @ArraySchema(arraySchema = Schema(description = "Les idées de formations de l'élève"))
     @JsonProperty("formationsFavorites")
-    val formationsFavorites: List<VoeuFormationDTO>? = null,
+    val formationsFavorites: List<FormationFavoriteDTO>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -101,14 +102,17 @@ data class ProfilDTO(
     @Schema(description = "Prénom de l'élève", example = "Kévin")
     @JsonProperty("compteParcoursupAssocie")
     val compteParcoursupAssocie: Boolean,
+    @ArraySchema(arraySchema = Schema(description = "Liste des voeux favoris"))
+    @JsonProperty("voeuxFavoris")
+    val voeuxFavoris: List<VoeuFavoriDTO>? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
         dureeEtudesPrevue = profilEleve.dureeEtudesPrevue,
         alternance = profilEleve.alternance,
-        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuFormationDTO(it) },
+        formationsFavorites = profilEleve.formationsFavorites?.map { FormationFavoriteDTO(it) },
         communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
         specialites = profilEleve.specialites,
         moyenneGenerale = profilEleve.moyenneGenerale,
@@ -117,6 +121,7 @@ data class ProfilDTO(
         domaines = profilEleve.domainesInterets,
         corbeilleFormations = profilEleve.corbeilleFormations,
         compteParcoursupAssocie = profilEleve.compteParcoursupLie,
+        voeuxFavoris = voeuxFavoris.map { VoeuFavoriDTO(it) },
     )
 
     data class CommuneDTO(
@@ -141,7 +146,7 @@ data class ProfilDTO(
         )
     }
 
-    data class VoeuFormationDTO(
+    data class FormationFavoriteDTO(
         @Schema(description = "Id de la formation", example = "fl490030")
         @JsonProperty("idFormation")
         val idFormation: String,
@@ -151,24 +156,34 @@ data class ProfilDTO(
         )
         @JsonProperty("niveauAmbition")
         val niveauAmbition: Int,
-        @ArraySchema(
-            arraySchema =
-                Schema(
-                    description = "Les voeux (triplets d'affectation) souhaités",
-                    example = "[\"ta15974\", \"ta17831\"]",
-                ),
-        )
-        @JsonProperty("voeuxChoisis")
-        val voeuxChoisis: List<String>,
-        @Schema(description = "Prise de note additionnel sur le voeu", example = "Ma note personnalisée")
+        @Schema(description = "Prise de note additionnel sur la formation favorite", example = "Ma note personnalisée")
         @JsonProperty("priseDeNote")
         val priseDeNote: String?,
     ) {
-        constructor(voeuDeFormation: VoeuFormation) : this(
-            idFormation = voeuDeFormation.idFormation,
-            niveauAmbition = voeuDeFormation.niveauAmbition,
-            voeuxChoisis = voeuDeFormation.voeuxChoisis,
-            priseDeNote = voeuDeFormation.priseDeNote,
+        constructor(formationFavorite: FormationFavorite) : this(
+            idFormation = formationFavorite.idFormation,
+            niveauAmbition = formationFavorite.niveauAmbition,
+            priseDeNote = formationFavorite.priseDeNote,
+        )
+    }
+
+    data class VoeuFavoriDTO(
+        @Schema(description = "Id du voeu", example = "ta490030")
+        @JsonProperty("idVoeu")
+        val idVoeu: String,
+        @Schema(description = "Marquage des favoris Parcoursup", example = "true")
+        @JsonProperty("estFavoriParcoursup")
+        val estFavoriParcoursup: Boolean,
+    ) {
+        fun toVoeuFavori() =
+            VoeuFavori(
+                idVoeu = idVoeu,
+                estFavoriParcoursup = estFavoriParcoursup,
+            )
+
+        constructor(idVoeu: VoeuFavori) : this(
+            idVoeu = idVoeu.idVoeu,
+            estFavoriParcoursup = idVoeu.estFavoriParcoursup,
         )
     }
 }

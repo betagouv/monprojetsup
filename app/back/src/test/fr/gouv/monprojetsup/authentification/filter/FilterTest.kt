@@ -99,23 +99,22 @@ class FilterTest(
                           {
                             "idFormation": "fl1234",
                             "niveauAmbition": 1,
-                            "voeuxChoisis": [],
                             "priseDeNote": null
                           },
                           {
                             "idFormation": "fl5678",
                             "niveauAmbition": 3,
-                            "voeuxChoisis": [
-                              "ta1",
-                              "ta2"
-                            ],
-                            "priseDeNote": "Mon voeu préféré"
+                            "priseDeNote": "Ma formation préférée"
                           }
                         ],
                         "moyenneGenerale": 14.0,
                         "corbeilleFormations": [
                           "fl0010",
                           "fl0012"
+                        ],
+                        "voeuxFavoris":[
+                            {"idVoeu":"ta1","estFavoriParcoursup":true},
+                            {"idVoeu":"ta77","estFavoriParcoursup":false}
                         ]
                       },
                       "authorities": [

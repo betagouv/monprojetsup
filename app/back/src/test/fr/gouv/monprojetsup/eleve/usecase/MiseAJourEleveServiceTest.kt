@@ -2,8 +2,9 @@ package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
@@ -23,6 +24,9 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.only
 import org.mockito.BDDMockito.then
@@ -78,22 +82,21 @@ class MiseAJourEleveServiceTest {
             communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
             compteParcoursupLie = true,
+            voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
         )
 
     private val profilVide = ProfilEleve.AvecProfilExistant(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
@@ -124,7 +127,10 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Général. " +
@@ -139,7 +145,10 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilVide,
+                )
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage("Veuillez mettre à jour le baccalaureat avant de mettre à jour ses spécialités")
         }
@@ -156,8 +165,12 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilVide,
+                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -172,8 +185,12 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilVide,
+                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -192,7 +209,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide.copy(specialites = emptyList()),
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -307,7 +325,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les métiers [MET_INCONNU] n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Les métiers [MET_INCONNU] n'existent pas")
         }
 
         @Test
@@ -322,7 +341,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des métiers est en double")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Un ou plusieurs des métiers est en double")
             then(metierRepository).shouldHaveNoInteractions()
         }
 
@@ -339,7 +359,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les domaines [inconnu] n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Les domaines [inconnu] n'existent pas")
         }
 
         @Test
@@ -355,7 +376,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les centres d'intérêt [inconnu] n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Les centres d'intérêt [inconnu] n'existent pas")
         }
     }
 
@@ -366,17 +388,15 @@ class MiseAJourEleveServiceTest {
             // Given
             val formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 )
             val corbeilleFormations = listOf("fl5678")
@@ -384,9 +404,16 @@ class MiseAJourEleveServiceTest {
                 modificationProfilEleveVide.copy(
                     formationsFavorites = formationsFavorites,
                     corbeilleFormations = corbeilleFormations,
+                    voeuxFavoris = emptyList(), // listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
                 )
             given(
-                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+                formationRepository.recupererIdsFormationsInexistantes(
+                    ids =
+                        listOf(
+                            "flInconnue",
+                            "fl0001",
+                        ) + corbeilleFormations,
+                ),
             ).willReturn(listOf("flInconnue"))
 
             // When & Then
@@ -405,17 +432,15 @@ class MiseAJourEleveServiceTest {
             // Given
             val formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 )
             val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
@@ -457,17 +482,15 @@ class MiseAJourEleveServiceTest {
             // Given
             val formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 )
             val corbeilleFormations = listOf("fl5678", "fl0001")
@@ -477,7 +500,13 @@ class MiseAJourEleveServiceTest {
                     corbeilleFormations = corbeilleFormations,
                 )
             given(
-                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+                formationRepository.recupererIdsFormationsInexistantes(
+                    ids =
+                        listOf(
+                            "flInconnue",
+                            "fl0001",
+                        ) + corbeilleFormations,
+                ),
             ).willReturn(listOf("flInconnue"))
 
             // When & Then
@@ -495,17 +524,15 @@ class MiseAJourEleveServiceTest {
             // Given
             val formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 )
             val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
@@ -543,17 +570,15 @@ class MiseAJourEleveServiceTest {
             // Given
             val formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 )
             val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
@@ -590,160 +615,41 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurVoeu {
         @Test
-        fun `si le repository renvoie une map vide, doit throw BadRequestException`() {
-            // Given
-            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(
-                    formationsFavorites =
-                        listOf(
-                            VoeuFormation(
-                                idFormation = "fl1",
-                                niveauAmbition = 3,
-                                voeuxChoisis = listOf("ta129"),
-                                priseDeNote = null,
-                            ),
-                            VoeuFormation(
-                                idFormation = "fl3",
-                                niveauAmbition = 1,
-                                voeuxChoisis = listOf("ta1"),
-                                priseDeNote = "Ma prise de note",
-                            ),
-                        ),
-                )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(emptyMap())
-
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Pour la formation fl1 présente dans les formations favorites comporte un ou plusieurs " +
-                        "voeux ne correspondant pas à une de ses possibilités : null",
-                )
-        }
-
-        @Test
-        fun `si le repository renvoie des listes vides, doit throw BadRequestException`() {
-            // Given
-            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(
-                    formationsFavorites =
-                        listOf(
-                            VoeuFormation(
-                                idFormation = "fl1",
-                                niveauAmbition = 3,
-                                voeuxChoisis = listOf("ta129"),
-                                priseDeNote = null,
-                            ),
-                            VoeuFormation(
-                                idFormation = "fl3",
-                                niveauAmbition = 1,
-                                voeuxChoisis = listOf("ta1"),
-                                priseDeNote = "Ma prise de note",
-                            ),
-                        ),
-                )
-            val mapResultat =
-                mapOf(
-                    "fl1" to
-                        listOf(
-                            Voeu(
-                                id = "ta1",
-                                nom = "Nom ta1",
-                                commune = CommunesCourtes.CAEN,
-                                latitude = 49.183334,
-                                longitude = -0.350000,
-                            ),
-                            Voeu(
-                                id = "ta129",
-                                nom = "Nom ta129",
-                                commune = CommunesCourtes.GRENOBLE,
-                                longitude = 5.71667,
-                                latitude = 45.16667,
-                            ),
-                        ),
-                    "fl3" to emptyList(),
-                )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(mapResultat)
-
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
-                        "voeux ne correspondant pas à une de ses possibilités : []",
-                )
-        }
-
-        @Test
         fun `si un des voeux n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
+            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(
+                emptyList(),
+            )
+            given(
+                voeuRepository.recupererIdsVoeuxInexistants(
+                    listOf(
+                        "ta1",
+                        "tainconnu",
+                    ),
+                ),
+            ).willReturn(listOf("tainconnu"))
+
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl1",
                                 niveauAmbition = 3,
-                                voeuxChoisis = listOf("ta1"),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl3",
                                 niveauAmbition = 1,
-                                voeuxChoisis = listOf("ta129", "ta128"),
                                 priseDeNote = "Ma prise de note",
                             ),
                         ),
-                )
-            val mapResultat =
-                mapOf(
-                    "fl1" to
+                    voeuxFavoris =
                         listOf(
-                            Voeu(
-                                id = "ta1",
-                                nom = "Nom ta1",
-                                commune = CommunesCourtes.CAEN,
-                                latitude = 49.183334,
-                                longitude = -0.350000,
-                            ),
-                            Voeu(
-                                id = "ta2",
-                                nom = "Nom ta2",
-                                commune = CommunesCourtes.PARIS15EME,
-                                longitude = 2.2885659,
-                                latitude = 48.851227,
-                            ),
-                        ),
-                    "fl3" to
-                        listOf(
-                            Voeu(
-                                id = "ta1",
-                                nom = "Nom ta1",
-                                commune = CommunesCourtes.CAEN,
-                                latitude = 49.183334,
-                                longitude = -0.350000,
-                            ),
-                            Voeu(
-                                id = "ta129",
-                                nom = "Nom ta129",
-                                commune = CommunesCourtes.GRENOBLE,
-                                longitude = 5.71667,
-                                latitude = 45.16667,
-                            ),
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("tainconnu", false),
                         ),
                 )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -753,8 +659,7 @@ class MiseAJourEleveServiceTest {
                 )
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
-                    "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
-                        "voeux ne correspondant pas à une de ses possibilités : [ta1, ta129]",
+                    "Le ou les voeux favoris suivants ne sont pas connus : [tainconnu]",
                 )
         }
     }
@@ -797,16 +702,19 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `quand toutes les valeurs sont à null, ne doit rien faire`() {
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleveVide, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = modificationProfilEleveVide,
+                profilActuel = profilEleve,
+            )
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
-            then(voeuRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
             then(formationRepository).shouldHaveNoInteractions()
+            then(voeuRepository).shouldHaveNoInteractions()
             then(eleveRepository).shouldHaveNoInteractions()
         }
 
@@ -830,7 +738,10 @@ class MiseAJourEleveServiceTest {
                 )
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
@@ -838,8 +749,8 @@ class MiseAJourEleveServiceTest {
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
-            then(formationRepository).shouldHaveNoInteractions()
             then(voeuRepository).shouldHaveNoInteractions()
+            then(formationRepository).shouldHaveNoInteractions()
             val profilAMettreAJour =
                 profilEleve.copy(
                     specialites = emptyList(),
@@ -869,24 +780,37 @@ class MiseAJourEleveServiceTest {
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                voeuxChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0015",
                                 niveauAmbition = 2,
-                                voeuxChoisis = listOf(),
                                 priseDeNote = null,
                             ),
                         ),
                     moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta2", false),
+                        ),
                 )
-            given(domaineRepository.recupererIdsDomainesInexistants(ids = listOf("agroequipement"))).willReturn(emptyList())
-            given(interetRepository.recupererIdsCentresInteretsInexistants(ids = listOf("linguistique", "etude"))).willReturn(emptyList())
+            given(domaineRepository.recupererIdsDomainesInexistants(ids = listOf("agroequipement"))).willReturn(
+                emptyList(),
+            )
+            given(
+                interetRepository.recupererIdsCentresInteretsInexistants(
+                    ids =
+                        listOf(
+                            "linguistique",
+                            "etude",
+                        ),
+                ),
+            ).willReturn(emptyList())
             given(metierRepository.recupererIdsMetiersInexistants(ids = listOf("MET004"))).willReturn(emptyList())
             given(
                 formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl0011", "fl0015", "fl0013")),
@@ -896,15 +820,15 @@ class MiseAJourEleveServiceTest {
                     "fl0011" to
                         listOf(
                             Voeu(
-                                id = "ta12",
-                                nom = "Nom ta12",
+                                id = "ta1",
+                                nom = "Nom ta1",
                                 commune = CommunesCourtes.MARSEILLE,
                                 latitude = 43.300000,
                                 longitude = 5.400000,
                             ),
                             Voeu(
-                                id = "ta13",
-                                nom = "Nom ta13",
+                                id = "ta2",
+                                nom = "Nom ta2",
                                 commune = CommunesCourtes.PARIS15EME,
                                 longitude = 2.2885659,
                                 latitude = 48.851227,
@@ -923,7 +847,10 @@ class MiseAJourEleveServiceTest {
                 .willReturn(listOf("5", "7", "1008", "2003"))
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = modificationProfilEleve,
+                profilActuel = profilEleve,
+            )
 
             // Then
             val nouveauProfil =
@@ -941,22 +868,25 @@ class MiseAJourEleveServiceTest {
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                voeuxChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0015",
                                 niveauAmbition = 2,
-                                voeuxChoisis = listOf(),
                                 priseDeNote = null,
                             ),
                         ),
                     moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
                     compteParcoursupLie = true,
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta2", false),
+                        ),
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
@@ -968,7 +898,10 @@ class MiseAJourEleveServiceTest {
             val modificationProfilEleve = ModificationProfilEleve(moyenneGenerale = -1.0f)
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = modificationProfilEleve,
+                profilActuel = profilEleve,
+            )
 
             // Then
             val nouveauProfil =
@@ -986,26 +919,24 @@ class MiseAJourEleveServiceTest {
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     formationsFavorites =
                         listOf(
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0010",
                                 niveauAmbition = 1,
-                                voeuxChoisis = emptyList(),
                                 priseDeNote = null,
                             ),
-                            VoeuFormation(
+                            FormationFavorite(
                                 idFormation = "fl0012",
                                 niveauAmbition = 3,
-                                voeuxChoisis = listOf("ta1", "ta2"),
-                                priseDeNote = "Mon voeu préféré",
+                                priseDeNote = "Ma formation préférée",
                             ),
                         ),
                     moyenneGenerale = -1.0f,
                     corbeilleFormations = listOf("fl1234", "fl5678"),
                     compteParcoursupLie = true,
+                    voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
-            then(voeuRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
@@ -1024,11 +955,265 @@ class MiseAJourEleveServiceTest {
             given(baccalaureatRepository.verifierBaccalaureatExiste(id = "Pro")).willReturn(true)
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
 
             // Then
             val profilAMettreAJour = profilEleve.copy(baccalaureat = "Pro", specialites = emptyList())
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
+        }
+    }
+
+    data class ScenarioCasNominalModifVoeux(
+        val nomScenario: String,
+        val formations: List<String>,
+        val voeuxFavorisActuels: List<VoeuFavori>,
+        val modifVoeux: List<VoeuFavori>,
+        val modifFormations: List<String>? = null,
+        val nouveauxVoeuxFavoris: List<VoeuFavori>,
+    )
+
+    companion object {
+        private val scenariosNominauxModifsVoeux =
+            listOf(
+                ScenarioCasNominalModifVoeux(
+                    nomScenario = "quand un nouveau voeu marqué comme non FavoriParcoursup est ajouté, il doit apparaître ",
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                ),
+                ScenarioCasNominalModifVoeux(
+                    nomScenario = "quand un nouveau voeu marqué comme  FavoriParcoursup est ajouté, il est ignoré ",
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("ta", true),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                ),
+                ScenarioCasNominalModifVoeux(
+                    nomScenario =
+                        """
+                    |quand un voeu est supprimé, 
+                    |et que ce n'est pas un favori parcoursup, 
+                    |ce voeu doit disparaitre des favoris
+                        """.trimMargin(),
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                ),
+                ScenarioCasNominalModifVoeux(
+                    nomScenario =
+                        """
+                    |quand un voeu est supprimé, 
+                    |et que c'est un favori parcoursup, 
+                    |ce voeu ne doit pas disparaitre des favoris
+                        """.trimMargin(),
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("ta", true),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta", true),
+                            VoeuFavori("tafl0010", true),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                ),
+                ScenarioCasNominalModifVoeux(
+                    nomScenario =
+                        """
+                    |quand une formation est supprimée, 
+                    |les voeux associés qui n'apparaissent
+                    |pas dans une autre formation et ne sont pas des favoris Psup
+                    |sont supprimés
+                        """.trimMargin(),
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                            VoeuFavori("tafl0012", false),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                        ),
+                    modifFormations = listOf("fl0010"),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                        ),
+                ),
+                ScenarioCasNominalModifVoeux(
+                    nomScenario =
+                        """
+                    |quand une formation est supprimée, 
+                    |les voeux associés qui n'apparaissent
+                    |pas dans une autre formation mais sont des favoris psup 
+                    |ne sont pas supprimés
+                        """.trimMargin(),
+                    formations = listOf("fl0010", "fl0012"),
+                    voeuxFavorisActuels =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                            VoeuFavori("tafl0012", true),
+                        ),
+                    modifVoeux =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                        ),
+                    modifFormations = listOf("fl0010"),
+                    nouveauxVoeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta", false),
+                            VoeuFavori("tafl0010", false),
+                            VoeuFavori("tafl0012", true),
+                        ),
+                ),
+            )
+
+        @JvmStatic
+        fun provideArgumentsForScenariosModifVoeux(): List<Arguments> {
+            return scenariosNominauxModifsVoeux.map { Arguments.of(it) }
+        }
+    }
+
+    private val formationsIds = listOf("fl0010", "fl0012")
+    private val voeuxMaps =
+        formationsIds.map {
+            it to
+                listOf(
+                    Voeu(
+                        id = "ta",
+                        nom = "Nom ta",
+                        commune = CommunesCourtes.MARSEILLE,
+                        latitude = 43.300000,
+                        longitude = 5.400000,
+                    ),
+                    Voeu(
+                        id = "ta$it",
+                        nom = "Nom ta$it",
+                        commune = CommunesCourtes.MARSEILLE,
+                        latitude = 43.300000,
+                        longitude = 5.400000,
+                    ),
+                )
+        }.toMap()
+
+    @ParameterizedTest
+    @MethodSource("provideArgumentsForScenariosModifVoeux")
+    fun `scénarios de modifications de voeux`(scenario: ScenarioCasNominalModifVoeux) {
+        val voeuxRequetés = scenario.voeuxFavorisActuels.map { it.idVoeu }
+        val voeuxMappés =
+            voeuxMaps
+                .filterKeys { it in scenario.formations }
+                .map { it.key to it.value.filter { v -> v.id in voeuxRequetés } }
+                .toMap()
+
+        // Given
+        given(voeuRepository.recupererVoeux(voeuxRequetés)).willReturn(voeuxMappés)
+        val profilActuel =
+            profilEleve.copy(
+                id = scenario.nomScenario,
+                formationsFavorites =
+                    scenario.formations.map { idFormation ->
+                        FormationFavorite(
+                            idFormation = idFormation,
+                            niveauAmbition = 1,
+                            priseDeNote = null,
+                        )
+                    },
+                voeuxFavoris = scenario.voeuxFavorisActuels,
+            )
+        val miseAJourProfil =
+            if (scenario.modifFormations != null) {
+                modificationProfilEleveVide.copy(
+                    formationsFavorites =
+                        scenario.modifFormations.map { idFormation ->
+                            FormationFavorite(
+                                idFormation = idFormation,
+                                niveauAmbition = 1,
+                                priseDeNote = null,
+                            )
+                        },
+                    voeuxFavoris = scenario.modifVoeux,
+                )
+            } else {
+                modificationProfilEleveVide.copy(
+                    voeuxFavoris = scenario.modifVoeux,
+                    formationsFavorites = profilActuel.formationsFavorites,
+                )
+            }
+        // When
+        miseAJourEleveService.mettreAJourUnProfilEleve(
+            miseAJourDuProfil = miseAJourProfil,
+            profilActuel = profilActuel,
+        )
+        // Then
+        val nouveauProfil =
+            profilActuel.copy(
+                formationsFavorites = miseAJourProfil.formationsFavorites,
+                voeuxFavoris = scenario.nouveauxVoeuxFavoris,
+            )
+        if (profilActuel == nouveauProfil) {
+            then(eleveRepository).shouldHaveNoInteractions()
+        } else {
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
         }
     }
 }
