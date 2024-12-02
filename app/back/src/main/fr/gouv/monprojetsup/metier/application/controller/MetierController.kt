@@ -80,6 +80,6 @@ class MetierController(
         private const val TAILLE_LOT_RECHERCHE_SUCCINCTE = 30
         private const val TAILLE_LOT_ID = 30
         private const val TAILLE_MINIMUM_RECHERCHE = 2
-        private const val TAILLE_MAXIMAL_RECHERCHE = 50
+        private const val TAILLE_MAXIMAL_RECHERCHE = 100
     }
 }

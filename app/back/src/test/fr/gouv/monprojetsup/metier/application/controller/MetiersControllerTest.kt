@@ -604,11 +604,13 @@ class MetiersControllerTest(
         @Test
         fun `si la recherche est trop longue, doit retourner 400`() {
             // Given
-            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            val rechercheDe101Caracteres =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                    "Ut posuere mattis consequat. Sed dapibus nam"
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=$rechercheDe51Caracteres"),
+                get("/api/v1/metiers/recherche/succincte?recherche=$rechercheDe101Caracteres"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -618,7 +620,7 @@ class MetiersControllerTest(
                           "type": "about:blank",
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
-                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "detail": "La taille de la requête dépasse la taille maximale de 100 caractères",
                           "instance": "/api/v1/metiers/recherche/succincte"
                         }
                         """.trimIndent(),
