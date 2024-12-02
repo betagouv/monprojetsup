@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import useEntête from "./useEntête";
 import { constantes } from "@/configuration/constantes";
+import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
 import { useRouterState } from "@tanstack/react-router";
@@ -137,7 +138,7 @@ describe("useEntête", () => {
         {
           iconId: "fr-icon-arrow-go-back-fill",
           linkProps: {
-            href: constantes.LIENS.AVENIRS,
+            href: environnement.VITE_AVENIRS_URL,
             className: "after:!content-none",
           },
           text: i18n.ENTÊTE.PLATEFORME_AVENIRS,

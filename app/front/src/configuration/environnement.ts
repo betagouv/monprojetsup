@@ -7,6 +7,7 @@ export const environnement = createEnv({
     VITE_APP_URL: z.string().url(),
     VITE_API_URL: z.string().url(),
     VITE_PUBLIC_WEBSITE_URL: z.string().url(),
+    VITE_AVENIRS_URL: z.string().url(),
     VITE_KEYCLOAK_URL: z.string().url(),
     VITE_KEYCLOAK_ROYAUME: z.string(),
     VITE_KEYCLOAK_CLIENT_ID: z.string(),
