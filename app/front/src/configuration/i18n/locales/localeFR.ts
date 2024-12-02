@@ -146,8 +146,6 @@ export const localeFR = {
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",
           LABEL: "Établissements",
           DESCRIPTION: "Commence à taper puis sélectionne des établissements",
-          SÉLECTIONNÉS: "Établissement(s) sélectionné(s)",
-          VOIR_PLUS: "établissement(s) conforme(s) à ta recherche, retrouve toute l’offre de formation sur la",
         },
         MA_SÉLECTION: {
           TITRE: "Ma sélection",
@@ -456,6 +454,10 @@ export const localeFR = {
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",
     BOUTON_AFFICHER_CONTENU_PRINCIPAL: "Retour à la fiche",
     NE_VEUT_PAS_RÉPONDRE: "Je n’en ai aucune idée / Je ne veux pas répondre",
+    FAVORIS: {
+      VOIR_PLUS: "Plus de résultats",
+      MA_SÉLÉCTION: "Ma sélection",
+    },
   },
   ERREURS: {
     SERVEUR_INDISPONIBLE: {

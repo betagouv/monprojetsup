@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Fuse from "fuse.js";
 import { useState } from "react";
 
-export default function useVoeuxOngletToutesLesCommunes() {
+export default function useRechercheVoeux() {
   const [voeuxSuggérés, setVoeuxSuggérés] = useState<Voeu[]>([]);
   const formationAffichée = élémentAffichéListeEtAperçuStore();
   const { data: formation } = useQuery(récupérerFormationQueryOptions(formationAffichée.id));
