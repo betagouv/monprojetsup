@@ -2853,11 +2853,13 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+        fun `si le mot recherché fait strictement plus de 150 caractère, doit retourner 400`() {
             // When & Then
-            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            val rechercheDe151Caracteres =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
+                    "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe51Caracteres"),
+                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe151Caracteres"),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2866,7 +2868,7 @@ class FormationControllerTest(
                           "type": "about:blank",
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
-                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
                           "instance": "/api/v1/formations/recherche/succincte"
                         }
                         """.trimIndent(),
@@ -3984,11 +3986,13 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+        fun `si le mot recherché fait strictement plus de 150 caractère, doit retourner 400`() {
             // When & Then
-            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            val rechercheDe151Caracteres =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
+                    "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=$rechercheDe51Caracteres"),
+                get("/api/v1/formations/recherche/detaillee?recherche=$rechercheDe151Caracteres"),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -3997,7 +4001,7 @@ class FormationControllerTest(
                           "type": "about:blank",
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
-                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
                           "instance": "/api/v1/formations/recherche/detaillee"
                         }
                         """.trimIndent(),

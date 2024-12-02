@@ -10,15 +10,20 @@ export default function useRechercheFormations() {
   const [status, setStatus] = useState<ChampDeRechercheFormulaireProps["status"]>();
 
   const àLaRecherche = (recherche: string) => {
-    if (recherche && recherche.length >= constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE) {
-      setStatus(undefined);
-      rechercher(recherche);
-      document.querySelector("#liste-formations")?.scrollTo({ top: 0 });
-    } else if (recherche && recherche.length < constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE) {
+    if (recherche && recherche.length < constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE) {
       setStatus({
         type: "erreur",
         message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
       });
+    } else if (recherche && recherche.length > constantes.FORMATIONS.NB_CARACTÈRES_MAX_RECHERCHE) {
+      setStatus({
+        type: "erreur",
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.MOINS_DE_X_CARACTÈRES} ${constantes.FORMATIONS.NB_CARACTÈRES_MAX_RECHERCHE} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
+      });
+    } else if (recherche) {
+      setStatus(undefined);
+      rechercher(recherche);
+      document.querySelector("#liste-formations")?.scrollTo({ top: 0 });
     } else {
       réinitialiserRecherche();
     }
