@@ -4,18 +4,24 @@ import { constantes } from "@/configuration/constantes";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export default function useVoeu({ voeu }: UseVoeuArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { ajouterUnVoeuFavori, supprimerUnVoeuFavori, élève } = useÉlève({});
+  const { élève, mettreÀJourÉlève } = useÉlève({});
   const formationAffichée = élémentAffichéListeEtAperçuStore();
 
-  const idsVoeuxSélectionnés = new Set(élève?.voeuxFavoris?.map((voeuFavori) => voeuFavori.id));
-  const idsVoeuxParcoursup = new Set(
-    élève?.voeuxFavoris?.filter((voeuFavori) => voeuFavori.estParcoursup).map((voeuFavori) => voeuFavori.id),
+  const estFavori = useMemo(
+    () => élève?.voeuxFavoris?.some((voeuFavori) => voeuFavori.id === voeu.id) ?? false,
+    [élève?.voeuxFavoris, voeu],
   );
 
-  const urlParcoursup = (): string => {
+  const estFavoriParcoursup = useMemo(
+    () => élève?.voeuxFavoris?.find((voeuFavori) => voeuFavori.id === voeu.id)?.estParcoursup ?? false,
+    [élève?.voeuxFavoris, voeu],
+  );
+
+  const urlParcoursup = useMemo((): string => {
     const idTypeBacParcoursup = référentielDonnées?.bacs.find(
       (baccalaureat) => baccalaureat.id === élève?.bac,
     )?.idCarteParcoursup;
@@ -29,30 +35,27 @@ export default function useVoeu({ voeu }: UseVoeuArgs) {
     if (idTypeBacParcoursup) url.searchParams.set("typeBac", idTypeBacParcoursup);
 
     return `${url.toString()}`;
-  };
-
-  const estFavori = (): boolean => {
-    if (!élève) return false;
-
-    return Boolean(idsVoeuxSélectionnés.has(voeu.id));
-  };
-
-  const estFavoriParcoursup = (): boolean => {
-    if (!élève) return false;
-
-    return Boolean(idsVoeuxParcoursup.has(voeu.id));
-  };
+  }, [référentielDonnées?.bacs, voeu.id, élève?.bac]);
 
   const mettreÀJour = async () => {
     if (!élève || !formationAffichée?.id) return;
 
-    if (idsVoeuxSélectionnés.has(voeu.id)) {
-      idsVoeuxSélectionnés.delete(voeu.id);
-      await supprimerUnVoeuFavori(voeu.id);
+    if (estFavori) {
+      await mettreÀJourÉlève({
+        voeuxFavoris: élève.voeuxFavoris?.filter((voeuFavori) => voeuFavori.id !== voeu.id),
+      });
     } else {
-      idsVoeuxSélectionnés.add(voeu.id);
-      await ajouterUnVoeuFavori(voeu.id);
+      await mettreÀJourÉlève({
+        voeuxFavoris: [...(élève.voeuxFavoris ?? []), { id: voeu.id, estParcoursup: false }],
+      });
     }
+  };
+
+  const classIcône = () => {
+    if (estFavoriParcoursup) return "fr-icon-custom-parcoursup";
+    if (estFavori) return "fr-icon-heart-fill";
+
+    return "fr-icon-heart-line";
   };
 
   return {
@@ -60,5 +63,6 @@ export default function useVoeu({ voeu }: UseVoeuArgs) {
     estFavori,
     estFavoriParcoursup,
     urlParcoursup,
+    icône: classIcône(),
   };
 }

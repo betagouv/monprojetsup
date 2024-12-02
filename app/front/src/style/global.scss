@@ -68,3 +68,12 @@ label:has(+ *:required)::after {
 .fr-select-group:not(:last-child) {
   margin-bottom: 0;
 }
+
+// Custom icons
+.fr-icon-custom-parcoursup {
+
+  &::before,
+  &::after {
+    mask-image: url("../assets/parcoursup-fav.svg");
+  }
+}

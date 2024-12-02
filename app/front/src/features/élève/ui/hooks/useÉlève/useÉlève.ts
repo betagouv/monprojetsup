@@ -34,32 +34,9 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
     });
   };
 
-  const ajouterUnVoeuFavori = async (voeuId: string) => {
-    if (!élève) return;
-    const voeuxActuels = élève.voeuxFavoris ?? [];
-    const nouveauvoeu = { id: voeuId, estParcoursup: false };
-    const nouveauxVoeux = [...voeuxActuels, nouveauvoeu];
-
-    await mettreÀJourÉlève({
-      voeuxFavoris: nouveauxVoeux,
-    });
-  };
-
-  const supprimerUnVoeuFavori = async (voeuId: string) => {
-    if (!élève) return;
-    const voeuxActuels = élève.voeuxFavoris ?? [];
-    const nouveauxVoeux = voeuxActuels.filter((voeu) => voeu.id !== voeuId);
-
-    await mettreÀJourÉlève({
-      voeuxFavoris: [...nouveauxVoeux],
-    });
-  };
-
   return {
     élève,
     mettreÀJourÉlève,
     mettreÀJourUneFormationFavorite,
-    ajouterUnVoeuFavori,
-    supprimerUnVoeuFavori,
   };
 }

@@ -474,6 +474,7 @@ export const localeFR = {
     FAVORIS: "Favoris",
     MASQUÉ: "Masqué",
     METTRE_EN_FAVORI: "Mettre en favori",
+    FAVORI_PARCOURSUP: "Favori provenant de Parcoursup",
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",

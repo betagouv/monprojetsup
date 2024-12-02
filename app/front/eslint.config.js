@@ -108,6 +108,7 @@ export default [
                 "Balise",
                 "TextareaAutosize",
                 "Link",
+                "Toggle",
                 "Accordion.Root",
                 "Accordion.Item",
                 "Accordion.Header",
