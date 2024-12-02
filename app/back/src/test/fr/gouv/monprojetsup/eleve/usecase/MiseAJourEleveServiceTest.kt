@@ -937,6 +937,7 @@ class MiseAJourEleveServiceTest {
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
+            then(voeuRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
