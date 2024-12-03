@@ -1,5 +1,10 @@
 import { type UseÉlèveArgs } from "./useÉlève.interface";
-import { type FormationFavorite, type Élève } from "@/features/élève/domain/élève.interface";
+import {
+  CommuneFavorite,
+  type FormationFavorite,
+  VoeuFavori,
+  type Élève,
+} from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -34,9 +39,46 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
     });
   };
 
+  const mettreÀJourUneCommuneFavorite = async (commune: CommuneFavorite) => {
+    if (!élève) return;
+
+    const communesFavoritesExistantes = élève.communesFavorites ?? [];
+    const estFavorite = communesFavoritesExistantes.some(
+      (communeFavorite) => communeFavorite.codeInsee === commune.codeInsee,
+    );
+
+    if (estFavorite) {
+      const nouvellesCommunesFavorites = communesFavoritesExistantes.filter(
+        (communeFavorite) => communeFavorite.codeInsee !== commune.codeInsee,
+      );
+
+      await mettreÀJourÉlève({ communesFavorites: nouvellesCommunesFavorites });
+    } else {
+      await mettreÀJourÉlève({ communesFavorites: [...communesFavoritesExistantes, commune] });
+    }
+  };
+
+  const mettreÀJourUnVoeu = async (voeu: VoeuFavori) => {
+    if (!élève) return;
+
+    const estFavori = élève?.voeuxFavoris?.some((voeuFavori) => voeuFavori.id === voeu.id) ?? false;
+
+    if (estFavori) {
+      await mettreÀJourÉlève({
+        voeuxFavoris: élève.voeuxFavoris?.filter((voeuFavori) => voeuFavori.id !== voeu.id),
+      });
+    } else {
+      await mettreÀJourÉlève({
+        voeuxFavoris: [...(élève.voeuxFavoris ?? []), voeu],
+      });
+    }
+  };
+
   return {
     élève,
     mettreÀJourÉlève,
     mettreÀJourUneFormationFavorite,
+    mettreÀJourUneCommuneFavorite,
+    mettreÀJourUnVoeu,
   };
 }

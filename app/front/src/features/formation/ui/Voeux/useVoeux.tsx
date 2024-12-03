@@ -1,8 +1,8 @@
 import VoeuxOngletToutesLesCommunes from "./VoeuxOngletToutesLesCommunes/VoeuxOngletToutesLesCommunes";
 import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import { i18n } from "@/configuration/i18n/i18n";
-import VoeuxOngletUneCommune from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/VoeuxOngletUneCommune/VoeuxOngletUneCommune.tsx";
 import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
+import VoeuxOngletUneCommune from "@/features/formation/ui/Voeux/VoeuxOngletUneCommune/VoeuxOngletUneCommune";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 import { useQuery } from "@tanstack/react-query";

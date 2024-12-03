@@ -2,6 +2,7 @@ import { Favori } from "@/components/SélecteurFavoris/Favori/Favori.interface";
 
 export type ListeDeFavorisProps = {
   favoris: Favori[];
+  listeDeSuggestions?: boolean;
   nombreFavorisAffichésParDéfaut?: number;
 };
 

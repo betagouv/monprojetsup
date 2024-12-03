@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function useVoeu() {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { élève, mettreÀJourÉlève } = useÉlève({});
+  const { élève, mettreÀJourUnVoeu } = useÉlève({});
 
   const générerUrlParcoursup = (voeuId: Voeu["id"], bacs: Bac[]) => {
     const idTypeBacParcoursup = bacs.find((baccalaureat) => baccalaureat.id === élève?.bac)?.idCarteParcoursup;
@@ -23,20 +23,6 @@ export default function useVoeu() {
     if (idTypeBacParcoursup) url.searchParams.set("typeBac", idTypeBacParcoursup);
 
     return `${url.toString()}`;
-  };
-
-  const mettreÀJour = async (voeuId: Voeu["id"], estFavori: boolean) => {
-    if (!élève) return;
-
-    if (estFavori) {
-      await mettreÀJourÉlève({
-        voeuxFavoris: élève.voeuxFavoris?.filter((voeuFavori) => voeuFavori.id !== voeuId),
-      });
-    } else {
-      await mettreÀJourÉlève({
-        voeuxFavoris: [...(élève.voeuxFavoris ?? []), { id: voeuId, estParcoursup: false }],
-      });
-    }
   };
 
   const voeuVersFavori = (voeu: Voeu): Favori => {
@@ -54,7 +40,7 @@ export default function useVoeu() {
       désactivé: estFavoriParcoursup,
       icôneEstFavori: estFavoriParcoursup ? "fr-icon-custom-parcoursup" : undefined,
       icôneEstPasFavori: estFavoriParcoursup ? "fr-icon-custom-parcoursup" : undefined,
-      callbackMettreÀJour: (idFavori: string) => mettreÀJour(idFavori, estFavori),
+      callbackMettreÀJour: () => mettreÀJourUnVoeu({ id: voeu.id, estParcoursup: false }),
     };
   };
 

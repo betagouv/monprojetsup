@@ -29,12 +29,12 @@ const Favori = ({
             {nom}
           </LienExterne>
         ) : (
-          nom
+          <p className="fr-text--sm mb-0">{nom}</p>
         )}
-      </div>
+      </div>{" "}
       <Toggle
         aria-label={ariaLabel}
-        className={désactivé ? "*:text-gray-600 *:opacity-75" : ""}
+        className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
         disabled={désactivé}
         onPressedChange={() => callbackMettreÀJour?.(id)}
         pressed={estFavori}

@@ -7,21 +7,32 @@ import { i18n } from "@/configuration/i18n/i18n";
 const ListeDeFavoris = ({
   favoris,
   nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
+  listeDeSuggestions,
 }: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
     nombreFavorisAffichésParDéfaut,
   });
 
+  if (favorisAffichés.length === 0) return null;
+
   return (
     <div
+      className="mt-4"
       id={`liste-favoris-${id}`}
       tabIndex={-1}
     >
-      <ul className="m-0 grid grid-flow-row justify-start gap-2 p-0">
+      <ul
+        aria-label={
+          listeDeSuggestions
+            ? i18n.ACCESSIBILITÉ.LISTE_SUGGESTIONS_FAVORIS
+            : i18n.ACCESSIBILITÉ.LISTE_FAVORIS_SÉLECTIONNÉS
+        }
+        className="m-0 grid grid-flow-row justify-stretch gap-2 p-0"
+      >
         {favorisAffichés.map((favori) => (
           <li
-            className="grid grid-flow-col justify-between gap-2 p-0"
+            className="grid grid-flow-col items-center justify-between gap-2 p-0"
             key={favori.id}
           >
             <Favori
@@ -40,13 +51,15 @@ const ListeDeFavoris = ({
         ))}
       </ul>
       {favoris.length > nombreFavorisAffichés && (
-        <Bouton
-          auClic={afficherPlusDeFavoris}
-          label={i18n.COMMUN.FAVORIS.VOIR_PLUS}
-          taille="petit"
-          type="button"
-          variante="quinaire"
-        />
+        <div className="mt-2 *:p-0">
+          <Bouton
+            auClic={afficherPlusDeFavoris}
+            label={i18n.COMMUN.FAVORIS.VOIR_PLUS}
+            taille="petit"
+            type="button"
+            variante="quinaire"
+          />
+        </div>
       )}
     </div>
   );

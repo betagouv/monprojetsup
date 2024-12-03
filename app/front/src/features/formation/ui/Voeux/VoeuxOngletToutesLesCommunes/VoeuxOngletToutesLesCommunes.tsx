@@ -1,7 +1,7 @@
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import MaSélectionVoeux from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/MaSélectionVoeux/MaSélectionVoeux";
-import RechercheVoeux from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/RechercheVoeux/RechercheVoeux";
+import MaSélectionVoeux from "@/features/formation/ui/Voeux/MaSélectionVoeux/MaSélectionVoeux";
+import RechercheVoeux from "@/features/formation/ui/Voeux/RechercheVoeux/RechercheVoeux";
 
 const VoeuxOngletToutesLesCommunes = () => {
   return (

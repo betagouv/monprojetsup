@@ -1,9 +1,9 @@
 import { Voeu } from "@/features/formation/domain/formation.interface";
 
-export type ListeDeVoeuxProps = {
+export type ListeDeVoeuxSuggérésProps = {
   voeux: Voeu[];
 };
 
-export type UseListeDeVoeuxArgs = {
+export type UseListeDeVoeuxSuggérésArgs = {
   voeux: Voeu[];
 };

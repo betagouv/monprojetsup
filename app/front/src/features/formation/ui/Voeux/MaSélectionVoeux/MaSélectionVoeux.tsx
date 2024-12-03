@@ -9,7 +9,6 @@ const MaSélectionVoeux = () => {
     <MaSélectionFavoris
       favoris={favoris}
       messageAucun={i18n.PAGE_FORMATION.CHOIX.VOEUX.MA_SÉLECTION.AUCUN}
-      niveauDeTitre="h4"
     />
   );
 };

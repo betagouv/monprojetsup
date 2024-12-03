@@ -3,19 +3,23 @@ import useRecherche from "./useRecherche";
 import ChampDeRecherche from "@/components/ChampDeRecherche/ChampDeRecherche";
 import { i18n } from "@/configuration/i18n/i18n.ts";
 
-const Recherche = <T extends object>({
+const Recherche = ({
   rechercheCallback,
   label,
   description,
   nombreDeCaractèresMinimumRecherche,
-}: RechercheProps<T>) => {
-  const { debouncedSetRecherche, statusChampDeRecherche, nombreDeRésultats } = useRecherche({
+  nombreDeCaractèresMaximumRecherche,
+  nombreDeRésultats,
+}: RechercheProps) => {
+  const { debouncedSetRecherche, statusChampDeRecherche } = useRecherche({
     nombreDeCaractèresMinimumRecherche,
+    nombreDeCaractèresMaximumRecherche,
     rechercheCallback,
+    nombreDeRésultats,
   });
 
   return (
-    <div>
+    <div className="[&>.fr-input-group]:mb-0">
       <ChampDeRecherche
         auChangement={(événement) => debouncedSetRecherche(événement.target.value ?? undefined)}
         entête={{ description, label }}

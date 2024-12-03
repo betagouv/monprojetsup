@@ -53,6 +53,22 @@ export class InscriptionTestHelper extends TestHelper {
     await this.champRechercheSélecteurMultiple(labelDuChamp).fill(recherche);
   };
 
+  public listeDesFavorisSuggérés = () => {
+    return this._page.getByRole("list", { name: i18n.ACCESSIBILITÉ.LISTE_SUGGESTIONS_FAVORIS });
+  };
+
+  public listeDesFavorisSélectionnés = () => {
+    return this._page.getByRole("list", { name: i18n.ACCESSIBILITÉ.LISTE_FAVORIS_SÉLECTIONNÉS });
+  };
+
+  public boutonFavoriSuggéré = (nom: string) => {
+    return this.listeDesFavorisSuggérés().getByRole("listitem").filter({ hasText: nom }).getByRole("button");
+  };
+
+  public boutonFavoriSélectionné = (nom: string) => {
+    return this.listeDesFavorisSélectionnés().getByRole("listitem").filter({ hasText: nom }).getByRole("button");
+  };
+
   public listeDesOptionsSuggérées = () => {
     return this._page.getByTestId("suggérées");
   };

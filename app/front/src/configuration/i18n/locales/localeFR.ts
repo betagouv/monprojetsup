@@ -148,7 +148,6 @@ export const localeFR = {
           DESCRIPTION: "Commence à taper puis sélectionne des établissements",
         },
         MA_SÉLECTION: {
-          TITRE: "Ma sélection",
           AUCUN: "Aucun établissement sélectionné en favoris",
         },
       },
@@ -307,6 +306,9 @@ export const localeFR = {
         LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune ville sélectionnée en favoris",
+        },
       },
     },
     FORMATIONS: {
@@ -474,6 +476,8 @@ export const localeFR = {
   ACCESSIBILITÉ: {
     CHARGEMENT: "Chargement",
     FAVORIS: "Favoris",
+    LISTE_SUGGESTIONS_FAVORIS: "Éléments correspondants",
+    LISTE_FAVORIS_SÉLECTIONNÉS: "Éléments sélectionnés",
     MASQUÉ: "Masqué",
     METTRE_EN_FAVORI: "Mettre en favori",
     FAVORI_PARCOURSUP: "Favori provenant de Parcoursup",

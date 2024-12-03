@@ -1,4 +1,4 @@
-import useCommunesÉtudeForm from "./useCommunesÉtudeForm";
+/* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -7,14 +7,17 @@ import {
   DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseÉtudeFormArgs) {
+  const { élève } = useÉlève({});
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
 
-  const { register, erreurs, mettreÀJourÉlève, getValues, setValue } = useÉlèveForm({
+  const { register, erreurs, mettreÀJourÉlève, setValue } = useÉlèveForm({
     schémaValidation: étudeValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
@@ -31,10 +34,9 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
       label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS[alternance].LABEL,
     })) ?? [];
 
-  const communesÉtudeForm = useCommunesÉtudeForm({
-    setValue,
-    getValues,
-  });
+  useEffect(() => {
+    setValue("communesFavorites", élève?.communesFavorites ?? []);
+  }, [élève?.communesFavorites]);
 
   return {
     mettreÀJourÉlève,
@@ -42,6 +44,5 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     register,
     duréeÉtudesPrévueOptions,
     alternanceOptions,
-    ...communesÉtudeForm,
   };
 }

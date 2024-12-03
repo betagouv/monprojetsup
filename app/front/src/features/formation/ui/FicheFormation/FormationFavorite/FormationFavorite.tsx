@@ -1,13 +1,13 @@
-import Voeux from "./Voeux/Voeux";
 import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu.ts";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import Ambition from "@/features/formation/ui/FicheFormation/ChoixFormation/Ambition/Ambition.tsx";
-import Commentaire from "@/features/formation/ui/FicheFormation/ChoixFormation/Commentaire/Commentaire.tsx";
+import Ambition from "@/features/formation/ui/FicheFormation/FormationFavorite/Ambition/Ambition";
+import Commentaire from "@/features/formation/ui/FicheFormation/FormationFavorite/Commentaire/Commentaire";
+import Voeux from "@/features/formation/ui/Voeux/Voeux";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
-const ChoixFormation = () => {
+const FormationFavorite = () => {
   const formationAffichée = élémentAffichéListeEtAperçuStore();
   const { data: élève } = useQuery(élèveQueryOptions);
 
@@ -32,4 +32,4 @@ const ChoixFormation = () => {
   );
 };
 
-export default ChoixFormation;
+export default FormationFavorite;

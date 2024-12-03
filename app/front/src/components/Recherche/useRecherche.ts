@@ -1,35 +1,53 @@
 import { UseRechercheArgs } from "./Recherche.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { StatusFormulaire } from "@/types/commons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
-export default function useRecherche<T>({
+export default function useRecherche({
   nombreDeCaractèresMinimumRecherche,
+  nombreDeCaractèresMaximumRecherche,
   rechercheCallback,
-}: UseRechercheArgs<T>) {
+  nombreDeRésultats,
+}: UseRechercheArgs) {
   const [statusChampDeRecherche, setStatusChampDeRecherche] = useState<StatusFormulaire | undefined>();
-  const [nombreDeRésultats, setNombreDeRésultats] = useState<number | undefined>(undefined);
 
-  const lancerRecherche = (recherche?: string): void => {
+  const lancerRecherche = async (recherche?: string) => {
     setStatusChampDeRecherche(undefined);
 
-    if (recherche && recherche.length < nombreDeCaractèresMinimumRecherche) {
+    if (!recherche) {
+      await rechercheCallback(undefined);
+      return;
+    }
+
+    if (recherche.length < nombreDeCaractèresMinimumRecherche) {
+      await rechercheCallback(undefined);
       setStatusChampDeRecherche({
         type: "erreur" as const,
         message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${nombreDeCaractèresMinimumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
       });
-    } else if (recherche) {
-      const résultats = rechercheCallback(recherche);
-      setNombreDeRésultats(résultats.length);
 
-      if (résultats.length === 0) {
-        setStatusChampDeRecherche({ type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT });
-      }
-    } else {
-      setNombreDeRésultats(undefined);
+      return;
     }
+
+    if (recherche.length > nombreDeCaractèresMaximumRecherche) {
+      await rechercheCallback(undefined);
+      setStatusChampDeRecherche({
+        type: "erreur" as const,
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.MOINS_DE_X_CARACTÈRES} ${nombreDeCaractèresMaximumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
+      });
+
+      return;
+    }
+
+    await rechercheCallback(recherche);
   };
+
+  useEffect(() => {
+    if (nombreDeRésultats !== undefined && nombreDeRésultats === 0) {
+      setStatusChampDeRecherche({ type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT });
+    }
+  }, [nombreDeRésultats]);
 
   const debouncedSetRecherche = useDebounceCallback(lancerRecherche, 400);
 

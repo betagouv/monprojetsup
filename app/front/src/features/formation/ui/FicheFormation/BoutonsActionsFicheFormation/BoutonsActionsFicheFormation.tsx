@@ -3,7 +3,7 @@ import useBoutonsActionsFicheFormation from "./useBoutonsActionsFicheFormation";
 import Bouton from "@/components/Bouton/Bouton";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
-import VoeuxFicheFormation from "@/features/formation/ui/FicheFormation/ChoixFormation/ChoixFormation.tsx";
+import FormationFavorite from "@/features/formation/ui/FicheFormation/FormationFavorite/FormationFavorite";
 
 const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormationProps) => {
   const {
@@ -72,7 +72,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
         <section className="fr-accordion">
           <h2 className="fr-accordion__title">
             <button
-              aria-controls="accordeon-voeux"
+              aria-controls="accordeon-formation-favorite"
               aria-expanded="false"
               className="fr-accordion__btn"
               type="button"
@@ -82,9 +82,9 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           </h2>
           <div
             className="fr-collapse"
-            id="accordeon-voeux"
+            id="accordeon-formation-favorite"
           >
-            <VoeuxFicheFormation />
+            <FormationFavorite />
           </div>
         </section>
       )}

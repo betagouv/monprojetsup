@@ -64,7 +64,7 @@ test.describe("Inscription élève - Mes études", () => {
     await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(5);
+    await expect(testhelper.listeDesFavorisSuggérés().getByRole("listitem")).toHaveCount(5);
   });
 
   test("Je peux sélectionner des communes", async ({ page }) => {
@@ -74,12 +74,11 @@ test.describe("Inscription élève - Mes études", () => {
 
     // WHEN
     await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
-    await testhelper.boutonOptionSuggérée(testhelper.PREMIÈRE_COMMUNE).click();
-    await testhelper.boutonOptionSuggérée(testhelper.SECONDE_COMMUNE).click();
+    await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_COMMUNE).click();
+    await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_COMMUNE).click();
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(3);
-    await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(2);
+    await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
   });
 
   test("Je peux supprimer des communes sélectionnées", async ({ page }) => {
@@ -89,13 +88,12 @@ test.describe("Inscription élève - Mes études", () => {
 
     // WHEN
     await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
-    await testhelper.boutonOptionSuggérée(testhelper.PREMIÈRE_COMMUNE).click();
-    await testhelper.boutonOptionSuggérée(testhelper.SECONDE_COMMUNE).click();
-    await testhelper.boutonOptionSélectionnée(testhelper.SECONDE_COMMUNE).click();
+    await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_COMMUNE).click();
+    await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_COMMUNE).click();
+    await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_COMMUNE).click();
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(4);
-    await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(1);
+    await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(1);
   });
 
   test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
@@ -120,17 +118,17 @@ test.describe("Inscription élève - Mes études", () => {
       await testhelper.renseignerChampDuréeÉtudesPrévue(i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.courte.LABEL);
       await testhelper.renseignerChampAlternance(i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.interesse.LABEL);
       await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
-      await testhelper.boutonOptionSuggérée(testhelper.PREMIÈRE_COMMUNE).click();
-      await testhelper.boutonOptionSuggérée(testhelper.SECONDE_COMMUNE).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_COMMUNE).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_COMMUNE).click();
       await testhelper.soumettreLeFormulaire();
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
       await expect(testhelper.champDuréeÉtudesPrévue()).toHaveValue("courte");
       await expect(testhelper.champAlternance()).toHaveValue("interesse");
-      await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(2);
-      await expect(testhelper.boutonOptionSélectionnée(testhelper.PREMIÈRE_COMMUNE)).toBeVisible();
-      await expect(testhelper.boutonOptionSélectionnée(testhelper.SECONDE_COMMUNE)).toBeVisible();
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.PREMIÈRE_COMMUNE)).toBeVisible();
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.SECONDE_COMMUNE)).toBeVisible();
     });
   });
 });

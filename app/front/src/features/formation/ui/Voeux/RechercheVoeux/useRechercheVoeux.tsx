@@ -6,12 +6,17 @@ import Fuse from "fuse.js";
 import { useState } from "react";
 
 export default function useRechercheVoeux() {
-  const [voeuxSuggérés, setVoeuxSuggérés] = useState<Voeu[]>([]);
+  const [voeuxSuggérés, setVoeuxSuggérés] = useState<Voeu[]>();
   const formationAffichée = élémentAffichéListeEtAperçuStore();
   const { data: formation } = useQuery(récupérerFormationQueryOptions(formationAffichée.id));
 
-  const rechercher = (recherche: string): Voeu[] => {
-    if (!formation) return [];
+  const rechercher = (recherche?: string) => {
+    if (!formation) return;
+
+    if (!recherche) {
+      setVoeuxSuggérés([]);
+      return;
+    }
 
     const fuse = new Fuse<Formation["voeux"][number]>(formation.voeux, {
       distance: 200,
@@ -21,7 +26,6 @@ export default function useRechercheVoeux() {
 
     const voeuxCorrespondants = fuse.search(recherche).map((correspondance) => correspondance.item);
     setVoeuxSuggérés(voeuxCorrespondants);
-    return voeuxCorrespondants;
   };
 
   return {

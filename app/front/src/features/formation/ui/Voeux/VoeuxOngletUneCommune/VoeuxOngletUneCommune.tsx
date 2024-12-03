@@ -3,8 +3,8 @@ import { type VoeuxOngletUneCommuneProps } from "./VoeuxOngletUneCommune.interfa
 import Bouton from "@/components/Bouton/Bouton";
 import Titre from "@/components/Titre/Titre.tsx";
 import { i18n } from "@/configuration/i18n/i18n";
-import ListeDeVoeux from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/ListeDeVoeux/ListeDeVoeux";
-import MaSélectionVoeux from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/MaSélectionVoeux/MaSélectionVoeux";
+import ListeDeVoeuxSuggérés from "@/features/formation/ui/Voeux/ListeDeVoeuxSuggérés/ListeDeVoeuxSuggérés.tsx";
+import MaSélectionVoeux from "@/features/formation/ui/Voeux/MaSélectionVoeux/MaSélectionVoeux.tsx";
 
 const VoeuxOngletUneCommune = ({ codeCommune }: VoeuxOngletUneCommuneProps) => {
   const { voeux, rayonSélectionné, changerRayonSélectionné, rayons } = useVoeuxOngletUneCommune({
@@ -45,7 +45,7 @@ const VoeuxOngletUneCommune = ({ codeCommune }: VoeuxOngletUneCommuneProps) => {
             </Titre>
           </div>
           {voeux.length > 0 ? (
-            <ListeDeVoeux voeux={voeux} />
+            <ListeDeVoeuxSuggérés voeux={voeux} />
           ) : (
             <p className="fr-text--sm mb-0">
               {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ} {rayonSélectionné}{" "}

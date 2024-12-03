@@ -1,11 +1,15 @@
-export type RechercheProps<T> = {
-  rechercheCallback: (recherche: string) => T[];
+export type RechercheProps = {
+  rechercheCallback: (recherche?: string) => Promise<void> | void;
   label: string;
-  description?: string;
   nombreDeCaractèresMinimumRecherche: number;
+  nombreDeCaractèresMaximumRecherche: number;
+  description?: string;
+  nombreDeRésultats?: number;
 };
 
-export type UseRechercheArgs<T> = {
-  nombreDeCaractèresMinimumRecherche: RechercheProps<T>["nombreDeCaractèresMinimumRecherche"];
-  rechercheCallback: RechercheProps<T>["rechercheCallback"];
+export type UseRechercheArgs = {
+  nombreDeCaractèresMinimumRecherche: RechercheProps["nombreDeCaractèresMinimumRecherche"];
+  nombreDeCaractèresMaximumRecherche: RechercheProps["nombreDeCaractèresMaximumRecherche"];
+  rechercheCallback: RechercheProps["rechercheCallback"];
+  nombreDeRésultats: RechercheProps["nombreDeRésultats"];
 };

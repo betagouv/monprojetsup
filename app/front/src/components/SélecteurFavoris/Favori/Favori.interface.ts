@@ -9,7 +9,7 @@ export type Favori = {
   désactivé?: boolean;
   icôneEstFavori?: string;
   icôneEstPasFavori?: string;
-  callbackMettreÀJour?: (idFavori: string) => Promise<void>;
+  callbackMettreÀJour?: (idFavori: string) => Promise<void> | void;
 };
 
 export type FavoriProps = Favori;
