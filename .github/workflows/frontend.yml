@@ -37,6 +37,9 @@ jobs:
       - name: Setup Node and packages
         uses: ./.github/actions/setupNodeAndPackages
 
+      - name: Copy .env
+        run: cp .env.ci .env
+        
       - name: Run test command
         run: npm run test
 
