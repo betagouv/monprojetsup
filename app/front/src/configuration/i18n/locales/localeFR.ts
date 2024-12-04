@@ -2,10 +2,6 @@ const pages = {
   TABLEAU_DE_BORD: "Tableau de bord",
   FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
-  PLAN_DU_SITE: "Plan du site",
-  ACCESSIBILITÉ: "Accessibilité : non conforme",
-  MENTIONS_LÉGALES: "Mentions légales",
-  DONNÉES_PERSONNELLES: "Données personnelles",
   GESTION_COOKIES: "Gestion des cookies",
 } as const;
 
@@ -26,10 +22,7 @@ export const localeFR = {
   PIED_DE_PAGE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
     LIENS_INTERNES: {
-      PLAN_DU_SITE: pages.PLAN_DU_SITE,
-      ACCESSIBILITÉ: pages.ACCESSIBILITÉ,
-      MENTIONS_LÉGALES: pages.MENTIONS_LÉGALES,
-      DONNÉES_PERSONNELLES: pages.DONNÉES_PERSONNELLES,
+      DONNÉES_PERSONNELLES: "Données personnelles",
       GESTION_COOKIES: pages.GESTION_COOKIES,
     },
   },
@@ -46,6 +39,9 @@ export const localeFR = {
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
     COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
+  },
+  PAGE_PLAN_DU_SITE: {
+    TITRE_PAGE: "Plan du site",
   },
   PAGE_FAVORIS: {
     TITRE_PAGE: pages.FAVORIS,

@@ -3,6 +3,8 @@ export const constantes = {
     ALTERNANCE: "https://www.parcoursup.gouv.fr/trouver-une-formation/zoom-sur-les-formations-en-apprentissage-1634",
     SIX_NIVEAUX_MPS: "https://monprojetsup.fr/niveaux-de-progression-pedagogique-monprojetsup",
     FICHE_VOEU_PARCOURSUP: "https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation",
+    PAGE_MENTIONS_LÉGALES: "https://monprojetsup.fr/mentions-legales/",
+    PAGE_DONNÉES_PERSONNELLES: "https://monprojetsup.fr/donnees-personnelles/",
   },
   EMAIL_CONTACT: "support@monprojetsup.fr",
   ÉLÈVE: {

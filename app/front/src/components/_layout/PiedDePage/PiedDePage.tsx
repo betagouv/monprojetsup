@@ -1,5 +1,6 @@
 import usePiedDePage from "./usePiedDePage";
 import useLayout from "@/components/_layout/useLayout";
+import { constantes } from "@/configuration/constantes.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Footer } from "@codegouvfr/react-dsfr/Footer";
 
@@ -17,7 +18,8 @@ const PiedDePage = () => {
       homeLinkProps={lienAccueil}
       operatorLogo={logoOpérateur}
       partnersLogos={partenaires}
-      termsLinkProps={{ to: "/" }}
+      termsLinkProps={{ href: constantes.LIENS.PAGE_MENTIONS_LÉGALES }}
+      websiteMapLinkProps={{ to: "/plan-du-site" }}
     />
   );
 };
