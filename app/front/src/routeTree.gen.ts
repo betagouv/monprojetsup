@@ -25,6 +25,9 @@ import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscr
 const AuthEleveImport = createFileRoute('/_auth/eleve')()
 const AuthProfilIndexLazyImport = createFileRoute('/_auth/profil/')()
 const AuthPlanDuSiteIndexLazyImport = createFileRoute('/_auth/plan-du-site/')()
+const AuthDeclarationAccessibliteIndexLazyImport = createFileRoute(
+  '/_auth/declaration-accessiblite/',
+)()
 const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
   '/_auth/eleve/_inscription/inscription/scolarite/',
 )()
@@ -88,6 +91,17 @@ const AuthPlanDuSiteIndexLazyRoute = AuthPlanDuSiteIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/_auth/plan-du-site/index.lazy').then((d) => d.Route),
 )
+
+const AuthDeclarationAccessibliteIndexLazyRoute =
+  AuthDeclarationAccessibliteIndexLazyImport.update({
+    id: '/declaration-accessiblite/',
+    path: '/declaration-accessiblite/',
+    getParentRoute: () => AuthRoute,
+  } as any).lazy(() =>
+    import('./routes/_auth/declaration-accessiblite/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const AuthFormationsIndexRoute = AuthFormationsIndexImport.update({
   id: '/formations/',
@@ -247,6 +261,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFormationsIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/declaration-accessiblite/': {
+      id: '/_auth/declaration-accessiblite/'
+      path: '/declaration-accessiblite'
+      fullPath: '/declaration-accessiblite'
+      preLoaderRoute: typeof AuthDeclarationAccessibliteIndexLazyImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/plan-du-site/': {
       id: '/_auth/plan-du-site/'
       path: '/plan-du-site'
@@ -372,6 +393,7 @@ interface AuthRouteChildren {
   AuthEleveRoute: typeof AuthEleveRouteWithChildren
   AuthFavorisIndexRoute: typeof AuthFavorisIndexRoute
   AuthFormationsIndexRoute: typeof AuthFormationsIndexRoute
+  AuthDeclarationAccessibliteIndexLazyRoute: typeof AuthDeclarationAccessibliteIndexLazyRoute
   AuthPlanDuSiteIndexLazyRoute: typeof AuthPlanDuSiteIndexLazyRoute
   AuthProfilIndexLazyRoute: typeof AuthProfilIndexLazyRoute
 }
@@ -381,6 +403,8 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthEleveRoute: AuthEleveRouteWithChildren,
   AuthFavorisIndexRoute: AuthFavorisIndexRoute,
   AuthFormationsIndexRoute: AuthFormationsIndexRoute,
+  AuthDeclarationAccessibliteIndexLazyRoute:
+    AuthDeclarationAccessibliteIndexLazyRoute,
   AuthPlanDuSiteIndexLazyRoute: AuthPlanDuSiteIndexLazyRoute,
   AuthProfilIndexLazyRoute: AuthProfilIndexLazyRoute,
 }
@@ -394,6 +418,7 @@ export interface FileRoutesByFullPath {
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
+  '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
   '/profil': typeof AuthProfilIndexLazyRoute
   '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
@@ -412,6 +437,7 @@ export interface FileRoutesByTo {
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
+  '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
   '/profil': typeof AuthProfilIndexLazyRoute
   '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
@@ -433,6 +459,7 @@ export interface FileRoutesById {
   '/_auth/eleve/_inscription': typeof AuthEleveInscriptionRouteWithChildren
   '/_auth/favoris/': typeof AuthFavorisIndexRoute
   '/_auth/formations/': typeof AuthFormationsIndexRoute
+  '/_auth/declaration-accessiblite/': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/_auth/plan-du-site/': typeof AuthPlanDuSiteIndexLazyRoute
   '/_auth/profil/': typeof AuthProfilIndexLazyRoute
   '/_auth/eleve/_inscription/inscription/confirmation/': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
@@ -454,6 +481,7 @@ export interface FileRouteTypes {
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/declaration-accessiblite'
     | '/plan-du-site'
     | '/profil'
     | '/eleve/inscription/confirmation'
@@ -471,6 +499,7 @@ export interface FileRouteTypes {
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/declaration-accessiblite'
     | '/plan-du-site'
     | '/profil'
     | '/eleve/inscription/confirmation'
@@ -490,6 +519,7 @@ export interface FileRouteTypes {
     | '/_auth/eleve/_inscription'
     | '/_auth/favoris/'
     | '/_auth/formations/'
+    | '/_auth/declaration-accessiblite/'
     | '/_auth/plan-du-site/'
     | '/_auth/profil/'
     | '/_auth/eleve/_inscription/inscription/confirmation/'
@@ -534,6 +564,7 @@ export const routeTree = rootRoute
         "/_auth/eleve",
         "/_auth/favoris/",
         "/_auth/formations/",
+        "/_auth/declaration-accessiblite/",
         "/_auth/plan-du-site/",
         "/_auth/profil/"
       ]
@@ -572,6 +603,10 @@ export const routeTree = rootRoute
     },
     "/_auth/formations/": {
       "filePath": "_auth/formations/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/declaration-accessiblite/": {
+      "filePath": "_auth/declaration-accessiblite/index.lazy.tsx",
       "parent": "/_auth"
     },
     "/_auth/plan-du-site/": {

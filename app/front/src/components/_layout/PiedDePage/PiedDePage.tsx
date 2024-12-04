@@ -11,7 +11,7 @@ const PiedDePage = () => {
   return (
     <Footer
       accessibility="partially compliant"
-      accessibilityLinkProps={{ to: "/" }}
+      accessibilityLinkProps={{ to: "/declaration-accessiblite" }}
       bottomItems={liensSupplémentaires}
       brandTop={blocMarque}
       contentDescription={i18n.PIED_DE_PAGE.DESCRIPTION_SERVICE}

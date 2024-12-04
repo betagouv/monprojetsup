@@ -15,10 +15,10 @@ const ModaleParcourSup = ({ modale }: ModaleParcourSupProps) => {
       <p className="mb-0 whitespace-pre-line">
         {i18n.ÉLÈVE.TABLEAU_DE_BORD.MODALE_PARCOURSUP.CONTENU}{" "}
         <LienExterne
-          ariaLabel={constantes.EMAIL_CONTACT}
-          href={`mailto:${constantes.EMAIL_CONTACT}`}
+          ariaLabel={constantes.CONTACT.EMAIL}
+          href={`mailto:${constantes.CONTACT.EMAIL}`}
         >
-          {constantes.EMAIL_CONTACT}
+          {constantes.CONTACT.EMAIL}
         </LienExterne>
       </p>
     </modale.Component>

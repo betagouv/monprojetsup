@@ -34,10 +34,10 @@ const CarteParcourSupÉlève = () => {
           <p className="mb-0 whitespace-pre-line">
             {i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PARCOURSUP.SI_SYNCHRO.SOUS_TITRE}{" "}
             <LienExterne
-              ariaLabel={constantes.EMAIL_CONTACT}
-              href={`mailto:${constantes.EMAIL_CONTACT}`}
+              ariaLabel={constantes.CONTACT.EMAIL}
+              href={`mailto:${constantes.CONTACT.EMAIL}`}
             >
-              {constantes.EMAIL_CONTACT}
+              {constantes.CONTACT.EMAIL}
             </LienExterne>
           </p>
         ) : (

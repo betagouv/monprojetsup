@@ -6,7 +6,10 @@ export const constantes = {
     PAGE_MENTIONS_LÉGALES: "https://monprojetsup.fr/mentions-legales/",
     PAGE_DONNÉES_PERSONNELLES: "https://monprojetsup.fr/donnees-personnelles/",
   },
-  EMAIL_CONTACT: "support@monprojetsup.fr",
+  CONTACT: {
+    EMAIL: "support@monprojetsup.fr",
+    ADRESSE: "12 mail Barthélémy Thimonnier, 77437 Marne la Vallée cedex 2 CS 10450",
+  },
   ÉLÈVE: {
     PATH_PARCOURS_INSCRIPTION: "/eleve/inscription/",
   },
