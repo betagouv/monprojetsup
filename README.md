@@ -12,7 +12,7 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
   - suggestions - API des suggestions de formations (Kotlin + Java / Spring Boot)
 
 ## Schéma simplifié des apps et des types d'échanges en local
-![Schéma apps en local](schema-local.png)
+![Schéma apps en local](/doc/schema-local.png)
 
 
 ## Comment lancer le projet
