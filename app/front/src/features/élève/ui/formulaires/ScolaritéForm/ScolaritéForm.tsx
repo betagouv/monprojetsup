@@ -1,8 +1,8 @@
 import { type ScolaritéFormProps } from "./ScolaritéForm.interface";
+import MaSélectionSpécialités from "./Spécialités/MaSélectionSpécialités/MaSélectionSpécialités";
+import RechercheSpécialités from "./Spécialités/RechercheSpécialités/RechercheSpécialités";
 import useScolaritéForm from "./useScolaritéForm";
 import CurseurCranté from "@/components/CurseurCranté/CurseurCranté";
-import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
-import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Select } from "@codegouvfr/react-dsfr/SelectNext";
@@ -20,11 +20,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     moyenneGénérale,
     auClicSurNeVeutPasRépondreMoyenne,
     pourcentageAdmisAyantCetteMoyenneOuMoins,
-    bacADesSpécialités,
-    spécialitésSuggérées,
-    spécialitésSélectionnéesParDéfaut,
-    auChangementDesSpécialitésSélectionnées,
-    àLaRechercheDUneSpécialité,
+    spécialitésBac,
   } = useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
   return (
@@ -79,21 +75,14 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           )}
         </div>
       )}
-      {bacADesSpécialités && spécialitésSélectionnéesParDéfaut && (
-        <div>
-          <SélecteurMultiple
-            auChangementOptionsSélectionnées={auChangementDesSpécialitésSélectionnées}
-            description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
-            key={`${valeurBac}${spécialitésSélectionnéesParDéfaut.length}`}
-            label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
-            nombreDeCaractèreMinimumRecherche={constantes.SPÉCIALITÉS.NB_CARACTÈRES_MIN_RECHERCHE}
-            optionsSuggérées={spécialitésSuggérées}
-            optionsSélectionnéesParDéfaut={spécialitésSélectionnéesParDéfaut}
-            rechercheSuggestionsEnCours={false}
-            texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.SÉLECTIONNÉS}
-            àLaRechercheDUneOption={àLaRechercheDUneSpécialité}
+      {spécialitésBac?.length > 0 && (
+        <fieldset className="grid gap-6 border-0 p-0">
+          <RechercheSpécialités
+            key={valeurBac}
+            spécialitésBac={spécialitésBac}
           />
-        </div>
+          <MaSélectionSpécialités />
+        </fieldset>
       )}
     </form>
   );

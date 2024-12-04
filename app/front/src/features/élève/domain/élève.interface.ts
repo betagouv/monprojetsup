@@ -7,6 +7,9 @@ import {
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
+// eslint-disable-next-line sonarjs/redundant-type-aliases
+export type IdSpécialité = string;
+
 export type CommuneFavorite = Omit<Commune, "codePostal">;
 
 export type FormationFavorite = {
@@ -25,7 +28,7 @@ export type Élève = {
   situation: SituationÉlève | null;
   classe: ClasseÉlève | null;
   bac: BacÉlève | null;
-  spécialités: string[] | null;
+  spécialités: IdSpécialité[] | null;
   domaines: string[] | null;
   centresIntérêts: string[] | null;
   métiersFavoris: string[] | null;

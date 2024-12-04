@@ -11,7 +11,7 @@ const ListeDeCommunesSuggérées = ({ communes }: ListeDeCommunesSuggéréesProp
     <ListeDeFavoris
       favoris={favoris}
       listeDeSuggestions
-      nombreFavorisAffichésParDéfaut={constantes.COMMUNES.NB_COMMUNES_PAR_PAGE}
+      nombreFavorisAffichésParDéfaut={constantes.COMMUNES.NB_PAR_PAGE}
     />
   );
 };

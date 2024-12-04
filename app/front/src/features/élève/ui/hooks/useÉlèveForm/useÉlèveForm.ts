@@ -27,5 +27,6 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
     dirtyFields,
     erreurs: errors,
     mettreÀJourÉlève: handleSubmit(mettreÀJourÉlève),
+    élève,
   };
 }

@@ -3,6 +3,8 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {
+  public SPÉCIALITÉ_RECHERCHÉE = "arts";
+
   public BAC_GÉNÉRAL = "Bac Général";
 
   public BAC_STAV = "Bac STAV";
@@ -27,7 +29,7 @@ class Test extends InscriptionTestHelper {
     await this.champBac().selectOption({ label: optionLabel });
   };
 
-  public renseignerChampSpécialités = async (recherche: string) => {
+  public renseignerChampRechercheSpécialités = async (recherche: string) => {
     await this.champSpécialités().fill(recherche);
   };
 
@@ -35,28 +37,12 @@ class Test extends InscriptionTestHelper {
     return this._page.getByLabel(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL);
   };
 
-  public listeDesSuggestionsSpécialités = () => {
-    return this._page.getByTestId("suggérées");
-  };
-
-  public listeDesSpécialitésSélectionnées = () => {
-    return this._page.getByTestId("sélectionnées");
-  };
-
-  public boutonSuggestionSpécialité = (nomSpécialité: string) => {
-    return this.listeDesSuggestionsSpécialités().getByRole("button", { name: nomSpécialité });
-  };
-
-  public boutonSpécialitéSélectionnée = (nomSpécialité: string) => {
-    return this.listeDesSpécialitésSélectionnées().getByRole("button", { name: nomSpécialité });
-  };
-
   public champBac = () => {
     return this._page.getByLabel(i18n.ÉLÈVE.SCOLARITÉ.BAC.LABEL);
   };
 
   public champSpécialités = () => {
-    return this._page.getByRole("searchbox", { name: i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL });
+    return this.champRechercheSélecteurMultiple(i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL);
   };
 }
 
@@ -98,7 +84,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
 
       // THEN
-      await expect(testhelper.champSpécialités()).toBeVisible();
+      await expect(testhelper.champRechercheSélecteurMultiple(i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL)).toBeVisible();
     });
 
     test("Je peux obtenir des suggestions de spécialités en fonction de ma recherche", async ({ page }) => {
@@ -108,10 +94,10 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
       // WHEN
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("arts");
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
 
       // THEN
-      await expect(testhelper.listeDesSuggestionsSpécialités().getByRole("listitem")).toHaveCount(3);
+      await expect(testhelper.listeDesFavorisSuggérés().getByRole("listitem")).toHaveCount(3);
     });
 
     test("Je peux sélectionner des spécialités", async ({ page }) => {
@@ -121,13 +107,12 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
       // WHEN
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("arts");
-      await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
-      await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
 
       // THEN
-      await expect(testhelper.listeDesSuggestionsSpécialités().getByRole("listitem")).toHaveCount(1);
-      await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(2);
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
     });
 
     test("Je peux supprimer des spécialités sélectionnées", async ({ page }) => {
@@ -137,14 +122,13 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
       // WHEN
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("arts");
-      await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
-      await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
-      await testhelper.boutonSpécialitéSélectionnée(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
 
       // THEN
-      await expect(testhelper.listeDesSuggestionsSpécialités().getByRole("listitem")).toHaveCount(2);
-      await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(1);
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(1);
     });
 
     test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
@@ -154,7 +138,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
       // WHEN
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("blablablabla");
+      await testhelper.renseignerChampRechercheSpécialités("blablablabla");
 
       // THEN
       await expect(testhelper.messageErreurAucunRésultat()).toBeVisible();
@@ -169,15 +153,15 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
       // WHEN
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("arts");
-      await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
-      await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
       await testhelper.renseignerChampBac(testhelper.BAC_STAV);
 
       // THEN
       await expect(testhelper.champSpécialités()).toHaveText("");
-      await expect(testhelper.listeDesSuggestionsSpécialités().getByRole("listitem")).toHaveCount(0);
-      await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(0);
+      await expect(testhelper.listeDesFavorisSuggérés().getByRole("listitem")).toHaveCount(0);
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(0);
     });
   });
 
@@ -193,18 +177,18 @@ test.describe("Inscription élève - Ma scolarité", () => {
         classeActuelle: classeActuelleÀSélectionner,
       });
       await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-      await testhelper.renseignerChampSpécialités("arts");
-      await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
-      await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
       await testhelper.soumettreLeFormulaire();
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
       await expect(testhelper.champClasseActuelle()).toHaveValue("premiere");
       await expect(testhelper.champBac()).toHaveValue("Générale");
-      await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(2);
-      await expect(testhelper.boutonSpécialitéSélectionnée(testhelper.ARTS_PLASTIQUES)).toBeVisible();
-      await expect(testhelper.boutonSpécialitéSélectionnée(testhelper.HISTOIRE_DES_ARTS)).toBeVisible();
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.ARTS_PLASTIQUES)).toBeVisible();
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.HISTOIRE_DES_ARTS)).toBeVisible();
     });
   });
 });

@@ -1,11 +1,12 @@
 import useRechercheVoeux from "./useRechercheVoeux";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Recherche from "@/components/Recherche/Recherche";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import ListeDeVoeuxSuggérés from "@/features/formation/ui/Voeux/ListeDeVoeuxSuggérés/ListeDeVoeuxSuggérés";
 
 const RechercheVoeux = () => {
-  const { rechercher, voeuxSuggérés } = useRechercheVoeux();
+  const { rechercher, voeuxSuggérés, rechercheEnCours } = useRechercheVoeux();
 
   return (
     <>
@@ -17,7 +18,7 @@ const RechercheVoeux = () => {
         nombreDeRésultats={voeuxSuggérés?.length}
         rechercheCallback={rechercher}
       />
-      <ListeDeVoeuxSuggérés voeux={voeuxSuggérés ?? []} />
+      {rechercheEnCours ? <AnimationChargement /> : <ListeDeVoeuxSuggérés voeux={voeuxSuggérés ?? []} />}
     </>
   );
 };

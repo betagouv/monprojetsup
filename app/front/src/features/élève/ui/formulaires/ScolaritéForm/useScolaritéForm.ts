@@ -1,18 +1,18 @@
 import { type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
 import useMoyenneScolaritéForm from "./useMoyenneScolaritéForm";
-import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
 import { BacÉlève, ClasseÉlève } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseScolaritéFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-
+  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève({});
   const { register, erreurs, mettreÀJourÉlève, watch, setValue, getValues } = useÉlèveForm({
     schémaValidation: scolaritéValidationSchema(référentielDonnées?.bacs ?? []),
     àLaSoumissionDuFormulaireAvecSuccès,
@@ -40,16 +40,31 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     [référentielDonnées],
   );
 
+  const spécialitésBac = useMemo(
+    () => référentielDonnées?.bacs.find((bac) => bac.id === valeurBac)?.spécialités ?? [],
+    [valeurBac],
+  );
+
+  // Garder synchroniser la valeur react-hook-form et le profil de l'élève
+  useEffect(() => {
+    setValue("spécialités", élève?.spécialités ?? []);
+  }, [élève?.spécialités]);
+
+  useEffect(() => {
+    const supprimerSpécialitésÉlèveInexistantesDansLeBacSélectionné = async () => {
+      const idsSpécialitésÉlèveNonExistantesDansLeBac =
+        // eslint-disable-next-line sonarjs/no-nested-functions
+        élève?.spécialités?.filter((idSpécialité) => !spécialitésBac.some(({ id }) => id === idSpécialité)) ?? [];
+
+      await mettreÀJourSpécialitésÉlève(idsSpécialitésÉlèveNonExistantesDansLeBac);
+    };
+
+    void supprimerSpécialitésÉlèveInexistantesDansLeBacSélectionné();
+  }, [spécialitésBac]);
+
   const moyenneScolaritéForm = useMoyenneScolaritéForm({
     référentielDonnées,
     watch,
-    setValue,
-    getValues,
-  });
-
-  const spécialitésScolaritéForm = useSpécialitésScolaritéForm({
-    référentielDonnées,
-    valeurBac,
     setValue,
     getValues,
   });
@@ -61,7 +76,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     classeOptions,
     bacOptions,
     valeurBac,
+    spécialitésBac,
     ...moyenneScolaritéForm,
-    ...spécialitésScolaritéForm,
   };
 }

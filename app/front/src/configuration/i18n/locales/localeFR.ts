@@ -218,6 +218,9 @@ export const localeFR = {
         LABEL: "Spécialité de bac ou enseignement(s) de spécialité(s) choisi(s) ou envisagé(s)",
         DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
         SÉLECTIONNÉS: "Spécialité(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune spécialité sélectionnée",
+        },
       },
     },
     DOMAINES: {

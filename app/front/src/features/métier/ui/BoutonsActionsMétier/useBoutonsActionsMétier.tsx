@@ -1,11 +1,11 @@
 import { type useBoutonsActionsMétierArgs } from "./BoutonsActionsMétier.interface";
 import { type Élève } from "@/features/élève/domain/élève.interface";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { mutationÉlèveKeys, élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export default function useBoutonsActionsMétier({ métier }: useBoutonsActionsMétierArgs) {
   const { data: élève } = useQuery(élèveQueryOptions);
-  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: ["mettreÀJourÉlève"] });
+  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: [mutationÉlèveKeys.PROFIL] });
 
   const estFavori = élève?.métiersFavoris?.some((métierFavori) => métierFavori === métier.id) ?? false;
 

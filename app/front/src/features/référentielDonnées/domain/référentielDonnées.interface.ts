@@ -6,7 +6,7 @@ export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["Mod
 export type AlternanceÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["alternance"]>;
 export type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
-export type SpécialitéBac = {
+export type Spécialité = {
   id: string;
   nom: string;
 };
@@ -15,7 +15,7 @@ export type Bac = {
   id: BacÉlève;
   nom: string;
   idCarteParcoursup: string;
-  spécialités: SpécialitéBac[];
+  spécialités: Spécialité[];
   statistiquesAdmission: {
     parMoyenneGénérale: Array<{
       moyenne: number;

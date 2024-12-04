@@ -11,13 +11,6 @@ export type UseScolaritéFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès?: () => void;
 };
 
-export type UseSpécialitésScolaritéFormArgs = {
-  référentielDonnées?: RéférentielDonnées | null;
-  valeurBac: Élève["bac"] | null;
-  setValue: UseFormSetValue<Élève>;
-  getValues: UseFormGetValues<Élève>;
-};
-
 export type UseMoyenneScolaritéFormArgs = {
   référentielDonnées?: RéférentielDonnées | null;
   watch: UseFormWatch<Élève>;

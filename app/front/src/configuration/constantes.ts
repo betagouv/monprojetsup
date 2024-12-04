@@ -24,12 +24,12 @@ export const constantes = {
     NB_FORMATIONS_À_AFFICHER: 5,
   },
   VOEUX: {
-    NB_VOEUX_PAR_PAGE: 5,
+    NB_PAR_PAGE: 5,
     NB_CARACTÈRES_MIN_RECHERCHE: 3,
     NB_CARACTÈRES_MAX_RECHERCHE: 50,
   },
   COMMUNES: {
-    NB_COMMUNES_PAR_PAGE: 5,
+    NB_PAR_PAGE: 5,
     NB_CARACTÈRES_MIN_RECHERCHE: 3,
     NB_CARACTÈRES_MAX_RECHERCHE: 50,
   },
@@ -44,6 +44,8 @@ export const constantes = {
     NB_CARACTÈRES_MAX_RECHERCHE: 100,
   },
   SPÉCIALITÉS: {
+    NB_PAR_PAGE: 10,
     NB_CARACTÈRES_MIN_RECHERCHE: 2,
+    NB_CARACTÈRES_MAX_RECHERCHE: 50,
   },
 } as const;

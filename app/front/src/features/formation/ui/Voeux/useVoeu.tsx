@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function useVoeu() {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { élève, mettreÀJourUnVoeu } = useÉlève({});
+  const { élève, mettreÀJourVoeuxÉlève } = useÉlève({});
 
   const générerUrlParcoursup = (voeuId: Voeu["id"], bacs: Bac[]) => {
     const idTypeBacParcoursup = bacs.find((baccalaureat) => baccalaureat.id === élève?.bac)?.idCarteParcoursup;
@@ -40,7 +40,7 @@ export default function useVoeu() {
       désactivé: estFavoriParcoursup,
       icôneEstFavori: estFavoriParcoursup ? "fr-icon-custom-parcoursup" : undefined,
       icôneEstPasFavori: estFavoriParcoursup ? "fr-icon-custom-parcoursup" : undefined,
-      callbackMettreÀJour: () => mettreÀJourUnVoeu({ id: voeu.id, estParcoursup: false }),
+      callbackMettreÀJour: () => mettreÀJourVoeuxÉlève([voeu.id]),
     };
   };
 

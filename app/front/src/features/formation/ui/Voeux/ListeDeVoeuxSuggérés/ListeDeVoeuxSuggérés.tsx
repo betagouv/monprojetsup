@@ -11,7 +11,7 @@ const ListeDeVoeuxSuggérés = ({ voeux }: ListeDeVoeuxSuggérésProps) => {
     <ListeDeFavoris
       favoris={favoris}
       listeDeSuggestions
-      nombreFavorisAffichésParDéfaut={constantes.VOEUX.NB_VOEUX_PAR_PAGE}
+      nombreFavorisAffichésParDéfaut={constantes.VOEUX.NB_PAR_PAGE}
     />
   );
 };

@@ -1,7 +1,14 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
 import { queryClient } from "@/configuration/lib/tanstack-query";
-import { type Élève } from "@/features/élève/domain/élève.interface";
+import { CommuneFavorite, IdSpécialité, VoeuFavori, type Élève } from "@/features/élève/domain/élève.interface";
 import { queryOptions } from "@tanstack/react-query";
+
+export const mutationÉlèveKeys = {
+  PROFIL: "mettreÀJourÉlève",
+  SPÉCIALITÉS: "mettreÀJourSpécialitésÉlève",
+  VOEUX: "mettreÀJourVoeuxÉlève",
+  COMMUNES: "mettreÀJourCommunesÉlève",
+};
 
 export const élèveQueryOptions = queryOptions({
   queryKey: ["élève"],
@@ -14,9 +21,48 @@ export const élèveQueryOptions = queryOptions({
   },
 });
 
-queryClient.setMutationDefaults(["mettreÀJourÉlève"], {
+queryClient.setMutationDefaults([mutationÉlèveKeys.PROFIL], {
   mutationFn: async (élève: Élève) => {
     const réponse = await dépendances.mettreÀJourProfilÉlèveUseCase.run(élève);
+
+    if (réponse instanceof Error) throw réponse;
+
+    return réponse;
+  },
+  onSuccess: async () => {
+    await queryClient.invalidateQueries(élèveQueryOptions);
+  },
+});
+
+queryClient.setMutationDefaults([mutationÉlèveKeys.SPÉCIALITÉS], {
+  mutationFn: async ({ élève, idsSpécialitésÀModifier }: { élève: Élève; idsSpécialitésÀModifier: IdSpécialité[] }) => {
+    const réponse = await dépendances.mettreÀJourSpécialitésÉlèveUseCase.run(élève, idsSpécialitésÀModifier);
+
+    if (réponse instanceof Error) throw réponse;
+
+    return réponse;
+  },
+  onSuccess: async () => {
+    await queryClient.invalidateQueries(élèveQueryOptions);
+  },
+});
+
+queryClient.setMutationDefaults([mutationÉlèveKeys.VOEUX], {
+  mutationFn: async ({ élève, idsVoeuxÀModifier }: { élève: Élève; idsVoeuxÀModifier: VoeuFavori["id"][] }) => {
+    const réponse = await dépendances.mettreÀJourVoeuxÉlèveUseCase.run(élève, idsVoeuxÀModifier);
+
+    if (réponse instanceof Error) throw réponse;
+
+    return réponse;
+  },
+  onSuccess: async () => {
+    await queryClient.invalidateQueries(élèveQueryOptions);
+  },
+});
+
+queryClient.setMutationDefaults([mutationÉlèveKeys.COMMUNES], {
+  mutationFn: async ({ élève, communesÀModifier }: { élève: Élève; communesÀModifier: CommuneFavorite[] }) => {
+    const réponse = await dépendances.mettreÀJourCommunesÉlèveUseCase.run(élève, communesÀModifier);
 
     if (réponse instanceof Error) throw réponse;
 

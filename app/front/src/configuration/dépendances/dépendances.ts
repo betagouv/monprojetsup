@@ -7,6 +7,7 @@ import { type FormationRepository } from "@/features/formation/infrastructure/fo
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
 import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
+import { RechercherVoeuxUseCase } from "@/features/formation/usecase/RechercherVoeux";
 import { RécupérerFormationUseCase } from "@/features/formation/usecase/RécupérerFormation";
 import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations";
 import { SuggérerFormationsUseCase } from "@/features/formation/usecase/SuggérerFormations";
@@ -24,7 +25,11 @@ import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
+import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
 import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
+import { MettreÀJourSpécialitésÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourSpécialitésÉlève";
+import { MettreÀJourVoeuxÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourVoeuxÉlève";
+import { RechercherSpécialitésUseCase } from "@/features/élève/usecase/RechercherSpécialités";
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { HttpClient } from "@/services/httpClient/httpClient";
 import { ConsoleLogger } from "@/services/logger/consoleLogger/consoleLogger";
@@ -60,6 +65,12 @@ export class Dépendances {
 
   public readonly associerCompteParcourSupÉlèveUseCase: AssocierCompteParcourSupÉlèveUseCase;
 
+  public readonly mettreÀJourSpécialitésÉlèveUseCase: MettreÀJourSpécialitésÉlèveUseCase;
+
+  public readonly mettreÀJourVoeuxÉlèveUseCase: MettreÀJourVoeuxÉlèveUseCase;
+
+  public readonly mettreÀJourCommunesÉlèveUseCase: MettreÀJourCommunesÉlèveUseCase;
+
   public readonly récupérerFormationUseCase: RécupérerFormationUseCase;
 
   public readonly récupérerFormationsUseCase: RécupérerFormationsUseCase;
@@ -75,6 +86,10 @@ export class Dépendances {
   public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
 
   public readonly rechercherCommunesUseCase: RechercherCommunesUseCase;
+
+  public readonly rechercherSpécialitésUseCase: RechercherSpécialitésUseCase;
+
+  public readonly rechercherVoeuxUseCase: RechercherVoeuxUseCase;
 
   private constructor() {
     this._httpClient = new HttpClient();
@@ -109,6 +124,9 @@ export class Dépendances {
     this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
     this.associerCompteParcourSupÉlèveUseCase = new AssocierCompteParcourSupÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourVoeuxÉlèveUseCase = new MettreÀJourVoeuxÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourCommunesÉlèveUseCase = new MettreÀJourCommunesÉlèveUseCase(this._élèveRepository);
 
     // Formations
     this.récupérerFormationUseCase = new RécupérerFormationUseCase(this._formationRepository);
@@ -123,6 +141,12 @@ export class Dépendances {
 
     // Communes
     this.rechercherCommunesUseCase = new RechercherCommunesUseCase(this._communeRepository);
+
+    // Spécialités
+    this.rechercherSpécialitésUseCase = new RechercherSpécialitésUseCase();
+
+    // Voeux
+    this.rechercherVoeuxUseCase = new RechercherVoeuxUseCase();
   }
 
   public static getInstance(): Dépendances {
