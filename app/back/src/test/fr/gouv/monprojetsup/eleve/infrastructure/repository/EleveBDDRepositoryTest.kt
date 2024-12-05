@@ -11,7 +11,6 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -25,9 +24,6 @@ import org.springframework.test.context.jdbc.Sql
 class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var eleveJPARepository: EleveJPARepository
-
-    @Autowired
-    lateinit var entityManager: EntityManager
 
     @Mock
     lateinit var logger: MonProjetSupLogger

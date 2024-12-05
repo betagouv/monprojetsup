@@ -33,8 +33,8 @@ class SecuriteConfiguration {
                 authorize("/actuator/**", permitAll)
                 authorize("/api/v1/formations/**", authenticated)
                 authorize("/api/v1/metiers/**", authenticated)
-                authorize("/api/v1/profil/**", authenticated)
                 authorize("/api/v1/referentiel/**", authenticated)
+                authorize("/api/v1/profil/**", authenticated)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer { jwt {} }

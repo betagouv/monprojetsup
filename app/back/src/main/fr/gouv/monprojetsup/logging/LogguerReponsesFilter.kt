@@ -13,7 +13,7 @@ import java.io.IOException
 import java.io.UnsupportedEncodingException
 
 @Component
-class LogguerRequetesEtReponsesFilter(
+class LogguerReponsesFilter(
     private val monProjetSupLogger: MonProjetSupLogger,
 ) : OncePerRequestFilter() {
     @Throws(ServletException::class, IOException::class)
