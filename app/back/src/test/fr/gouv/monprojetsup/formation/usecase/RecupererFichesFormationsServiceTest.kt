@@ -36,7 +36,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
-class RecupererFormationsServiceTest {
+class RecupererFichesFormationsServiceTest {
     @Mock
     lateinit var formationRepository: FormationRepository
 
@@ -65,7 +65,7 @@ class RecupererFormationsServiceTest {
     lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
-    lateinit var recupererFormationsService: RecupererFormationsService
+    lateinit var recupererFichesFormationsService: RecupererFichesFormationsService
 
     @BeforeEach
     fun setup() {
@@ -336,7 +336,12 @@ class RecupererFormationsServiceTest {
 
             // When
             val resultat =
-                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations, true)
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    profilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    true,
+                )
 
             // Then
             val ficheFormationFl0001 =
@@ -551,7 +556,12 @@ class RecupererFormationsServiceTest {
 
             // When
             val resultat =
-                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations, true)
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    profilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    true,
+                )
 
             // Then
             val ficheFormationFl0001 =
@@ -758,7 +768,7 @@ class RecupererFormationsServiceTest {
             )
 
             // When
-            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations, true)
+            val resultat = recupererFichesFormationsService.recupererFichesFormation(idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =
@@ -896,7 +906,7 @@ class RecupererFormationsServiceTest {
             )
 
             // When
-            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations, true)
+            val resultat = recupererFichesFormationsService.recupererFichesFormation(idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =

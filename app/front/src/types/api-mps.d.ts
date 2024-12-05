@@ -112,8 +112,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Récupération d'une liste de formations, mode détaillé
-         * @description A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.
+         * Récupération d'une liste de formations
+         * @description A partir d'une liste d'ids, récupère l'id et le nom des formations, plus un lien de pagination.
          */
         get: operations["getFormations"];
         put?: never;
@@ -196,6 +196,26 @@ export interface paths {
          * @description A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des explications sur la raison de cette suggestion.
          */
         get: operations["getRechercheFormationDetaillee"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/formations/fiches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupération d'une liste de fiches formations
+         * @description A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.
+         */
+        get: operations["getFichesFormations"];
         put?: never;
         post?: never;
         delete?: never;
@@ -596,6 +616,10 @@ export interface components {
             metiers: components["schemas"]["MetierCourtDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
+        FormationsCourtesDTO: {
+            formations: components["schemas"]["FormationCourteDTO"][];
+            liens: components["schemas"]["LienHateoasDTO"][];
+        };
         AffiniteSpecialiteDTO: {
             nomSpecialite: string;
             /** Format: int32 */
@@ -683,10 +707,6 @@ export interface components {
             id: string;
             nom: string;
         };
-        FormationsAvecExplicationsDTO: {
-            formations: components["schemas"]["FormationAvecExplicationsDTO"][];
-            liens: components["schemas"]["LienHateoasDTO"][];
-        };
         InteretDTO: {
             id: string;
             nom: string;
@@ -726,8 +746,8 @@ export interface components {
             /** Format: int32 */
             distanceKm: number;
         };
-        FormationsCourtesDTO: {
-            formations: components["schemas"]["FormationCourteDTO"][];
+        FormationsAvecExplicationsDTO: {
+            formations: components["schemas"]["FormationAvecExplicationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
         Link: {
@@ -898,7 +918,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                    "*/*": components["schemas"]["FormationsCourtesDTO"];
                 };
             };
         };
@@ -978,6 +998,30 @@ export interface operations {
             query: {
                 /** @description Formation recherchée */
                 recherche: string;
+                /** @description Numéro de page */
+                numeroDePage?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    getFichesFormations: {
+        parameters: {
+            query: {
+                ids: string[];
                 /** @description Numéro de page */
                 numeroDePage?: number;
             };

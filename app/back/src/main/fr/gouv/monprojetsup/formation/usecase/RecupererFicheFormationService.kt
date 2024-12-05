@@ -9,7 +9,7 @@ import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.springframework.stereotype.Service
 
 @Service
-class RecupererFormationService(
+class RecupererFicheFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val recupererInformationsSurLesVoeuxEtLeursCommunesService: RecupererInformationsSurLesVoeuxEtLeursCommunesService,

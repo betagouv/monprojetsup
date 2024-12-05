@@ -1,7 +1,7 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation } from "@/features/formation/domain/formation.interface";
 
 export type FormationMasquéeProps = {
-  formation: Formation;
+  formation: FicheFormation;
 };
 
 export type UseFormationMasquéeArgs = {

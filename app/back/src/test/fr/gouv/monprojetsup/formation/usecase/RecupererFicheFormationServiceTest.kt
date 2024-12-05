@@ -39,7 +39,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class RecupererFormationServiceTest {
+class RecupererFicheFormationServiceTest {
     @Mock
     lateinit var suggestionHttpClient: SuggestionHttpClient
 
@@ -66,7 +66,7 @@ class RecupererFormationServiceTest {
     lateinit var calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder
 
     @InjectMocks
-    lateinit var recupererFormationService: RecupererFormationService
+    lateinit var recupererFicheFormationService: RecupererFicheFormationService
 
     @BeforeEach
     fun setup() {
@@ -168,7 +168,7 @@ class RecupererFormationServiceTest {
             ).willReturn(statistiquesDesAdmis)
 
             // When
-            val resultat = recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
+            val resultat = recupererFicheFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
 
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
@@ -273,7 +273,7 @@ class RecupererFormationServiceTest {
             ).willReturn(statistiquesDesAdmis)
 
             // When
-            recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
+            recupererFicheFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
 
             // Then
             then(suggestionHttpClient).shouldHaveNoInteractions()
@@ -501,7 +501,7 @@ class RecupererFormationServiceTest {
             )
 
             // When
-            val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
+            val resultat = recupererFicheFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
 
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(

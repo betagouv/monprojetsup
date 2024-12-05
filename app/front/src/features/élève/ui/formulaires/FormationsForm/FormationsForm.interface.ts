@@ -7,16 +7,11 @@ export type SituationFormationsÉlève = (typeof situationFormationsÉlève)[num
 
 export type FormationsFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void>;
 };
 
 export type UseFormationsFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès?: FormationsFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
-};
-
-export type UseFormationsFavoritesFormationsFormArgs = {
-  setValue: UseFormSetValue<Élève>;
-  getValues: UseFormGetValues<Élève>;
 };
 
 export type UseSituationFormationsFormationsFormArgs = {

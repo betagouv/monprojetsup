@@ -1,9 +1,9 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation } from "@/features/formation/domain/formation.interface";
 
 export type useBoutonsActionsFicheFormationArgs = {
-  formation: Formation;
+  formation: FicheFormation;
 };
 
 export type BoutonsActionsFicheFormationProps = {
-  formation: Formation;
+  formation: FicheFormation;
 };

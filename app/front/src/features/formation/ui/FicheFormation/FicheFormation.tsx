@@ -9,12 +9,12 @@ import AnimationChargement from "@/components/AnimationChargement/AnimationCharg
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
-import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
+import { récupérerFicheFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 
 const FicheFormation = ({ id }: FicheFormationProps) => {
-  const { data: formation, isLoading: chargementEnCours } = useQuery(récupérerFormationQueryOptions(id));
+  const { data: formation, isLoading: chargementEnCours } = useQuery(récupérerFicheFormationQueryOptions(id));
 
   if (formation === null) return null;
 

@@ -17,7 +17,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.usecase.OrdonnerRechercheFormationsBuilder
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
-import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFicheFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFichesFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import io.swagger.v3.oas.annotations.Operation
@@ -34,7 +35,8 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Formation", description = "API des formations proposées sur MonProjetSup")
 class FormationController(
     val suggestionsFormationsService: SuggestionsFormationsService,
-    val recupererFormationService: RecupererFormationService,
+    val recupererFicheFormationService: RecupererFicheFormationService,
+    val recupererFichesFormationsService: RecupererFichesFormationsService,
     val recupererFormationsService: RecupererFormationsService,
     val rechercherFormation: RechercherFormationsService,
     val ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder,
@@ -64,7 +66,7 @@ class FormationController(
             )
 
         val formationsSuggerees: List<FicheFormation.FicheFormationPourProfil> =
-            recupererFormationsService.recupererFichesFormationPourProfil(
+            recupererFichesFormationsService.recupererFichesFormationPourProfil(
                 profilEleve = profilEleve,
                 suggestionsPourUnProfil = suggestions,
                 idsFormations = hateoas.listeCoupee.map { it.idFormation },
@@ -138,7 +140,7 @@ class FormationController(
                         tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE,
                     )
                 val formations =
-                    recupererFormationsService.recupererFichesFormationPourProfil(
+                    recupererFichesFormationsService.recupererFichesFormationPourProfil(
                         profilEleve = utilisateur,
                         suggestionsPourUnProfil = suggestions,
                         idsFormations = hateoas.listeCoupee,
@@ -156,7 +158,7 @@ class FormationController(
                         tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE,
                     )
                 val formations =
-                    recupererFormationsService.recupererFichesFormation(
+                    recupererFichesFormationsService.recupererFichesFormation(
                         idsFormations = hateoas.listeCoupee,
                         obsoletesInclus = false,
                     )
@@ -180,18 +182,18 @@ class FormationController(
                 is AvecProfilExistant -> utilisateur
                 is SansCompte, ProfilConnnecte, null -> null
             }
-        val ficheFormation = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
+        val ficheFormation = recupererFicheFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
         return FormationAvecExplicationsDTO(ficheFormation)
     }
 
-    @GetMapping
+    @GetMapping("/fiches")
     @Operation(
-        summary = "Récupération d'une liste de formations, mode détaillé",
+        summary = "Récupération d'une liste de fiches formations",
         description =
             "A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, " +
                 "y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.",
     )
-    fun getFormations(
+    fun getFichesFormations(
         @RequestParam ids: List<String>,
         @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsAvecExplicationsDTO {
@@ -204,16 +206,41 @@ class FormationController(
         val formations =
             when (val utilisateur = recupererUtilisateur()) {
                 is AvecProfilExistant ->
-                    recupererFormationsService.recupererFichesFormationPourProfil(
+                    recupererFichesFormationsService.recupererFichesFormationPourProfil(
                         profilEleve = utilisateur,
                         suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(utilisateur),
                         idsFormations = hateoas.listeCoupee,
                         obsoletesInclus = true,
                     )
 
-                else -> recupererFormationsService.recupererFichesFormation(idsFormations = hateoas.listeCoupee, obsoletesInclus = true)
+                else ->
+                    recupererFichesFormationsService.recupererFichesFormation(
+                        idsFormations = hateoas.listeCoupee,
+                        obsoletesInclus = true,
+                    )
             }
         return creerFormationsAvecExplicationsDTO(formations, hateoas)
+    }
+
+    @GetMapping
+    @Operation(
+        summary = "Récupération d'une liste de formations",
+        description = "A partir d'une liste d'ids, récupère l'id et le nom des formations, plus un lien de pagination.",
+    )
+    fun getFormations(
+        @RequestParam ids: List<String>,
+        @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
+    ): FormationsCourtesDTO {
+        val hateoas =
+            hateoasBuilder.creerHateoas(
+                liste = ids,
+                numeroDePageActuelle = numeroDePage,
+                tailleLot = TAILLE_LOT_FORMATIONS,
+            )
+        val formations = recupererFormationsService.recupererFormations(idsFormations = hateoas.listeCoupee)
+        val dto = FormationsCourtesDTO(formations = formations.map { FormationCourteDTO(it) })
+        dto.ajouterHateoas(hateoas)
+        return dto
     }
 
     @Throws(MonProjetSupBadRequestException::class)

@@ -1,10 +1,10 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation } from "@/features/formation/domain/formation.interface";
 
 export type CarteFormationProps = {
-  id: Formation["id"];
-  titre: Formation["nom"];
-  métiersAccessibles: Formation["métiersAccessibles"];
-  communes: Formation["communesProposantLaFormation"];
-  affinité?: Formation["affinité"];
+  id: FicheFormation["id"];
+  titre: FicheFormation["nom"];
+  métiersAccessibles: FicheFormation["métiersAccessibles"];
+  communes: FicheFormation["communesProposantLaFormation"];
+  affinité?: FicheFormation["affinité"];
   sélectionnée?: boolean;
 };

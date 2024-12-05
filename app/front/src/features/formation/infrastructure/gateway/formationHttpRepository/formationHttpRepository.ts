@@ -1,9 +1,10 @@
 import {
   LiensFormationRéponseHTTP,
-  type RécupérerFormationsRéponseHTTP,
+  type RécupérerFichesFormationsRéponseHTTP,
+  RécupérerFormationsRéponseHTTP,
   type RécupérerSuggestionsFormationsRéponseHTTP,
 } from "./formationHttpRepository.interface";
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
@@ -14,8 +15,8 @@ export class formationHttpRepository implements FormationRepository {
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
-  public async récupérer(formationId: string): Promise<Formation | Error> {
-    const réponse = await this.récupérerPlusieurs([formationId]);
+  public async récupérerUneFiche(formationId: string): Promise<FicheFormation | Error> {
+    const réponse = await this.récupérerPlusieursFiches([formationId]);
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
       return new RessourceNonTrouvéeErreur();
@@ -26,6 +27,25 @@ export class formationHttpRepository implements FormationRepository {
     }
 
     return réponse?.[0];
+  }
+
+  public async récupérerPlusieursFiches(formationIds: string[]): Promise<FicheFormation[] | Error> {
+    const paramètresDeRequête = new URLSearchParams();
+
+    for (const formationId of formationIds) {
+      paramètresDeRequête.append("ids", formationId);
+    }
+
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFichesFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/fiches`,
+      paramètresDeRequête,
+    );
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
   }
 
   public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | Error> {
@@ -44,14 +64,14 @@ export class formationHttpRepository implements FormationRepository {
       return réponse;
     }
 
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse.formations.map((formation) => this._mapperFormationVersLeDomaine(formation));
   }
 
-  public async rechercher(recherche: string): Promise<Formation[] | Error> {
+  public async rechercherFichesFormations(recherche: string): Promise<FicheFormation[] | Error> {
     const paramètresDeRequête = new URLSearchParams();
     paramètresDeRequête.set("recherche", recherche);
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFichesFormationsRéponseHTTP>(
       `${this._ENDPOINT}/recherche/detaillee`,
       paramètresDeRequête,
     );
@@ -60,10 +80,26 @@ export class formationHttpRepository implements FormationRepository {
       return réponse;
     }
 
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
   }
 
-  public async suggérer(): Promise<Formation[] | Error> {
+  public async rechercherFormations(recherche: string): Promise<Formation[] | Error> {
+    const paramètresDeRequête = new URLSearchParams();
+    paramètresDeRequête.set("recherche", recherche);
+
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/recherche/succincte`,
+      paramètresDeRequête,
+    );
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse.formations.map((formation) => this._mapperFormationVersLeDomaine(formation));
+  }
+
+  public async suggérer(): Promise<FicheFormation[] | Error> {
     const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
       `${this._ENDPOINT}/suggestions`,
     );
@@ -72,10 +108,21 @@ export class formationHttpRepository implements FormationRepository {
       return réponse;
     }
 
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
   }
 
-  private _mapperVersLeDomaine(formationHttp: RécupérerFormationsRéponseHTTP["formations"][number]): Formation {
+  private _mapperFormationVersLeDomaine(
+    formationHttp: RécupérerFormationsRéponseHTTP["formations"][number],
+  ): Formation {
+    return {
+      id: formationHttp.id,
+      nom: formationHttp.nom,
+    };
+  }
+
+  private _mapperFicheFormationVersLeDomaine(
+    formationHttp: RécupérerFichesFormationsRéponseHTTP["formations"][number],
+  ): FicheFormation {
     const lienParcourSup = formationHttp.formation.liens.find((lien) => /Parcoursup/u.exec(lien.nom));
     const lienParcourSupAvecCommunesFavorites = lienParcourSup
       ? {
@@ -157,8 +204,8 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   private _mapperExplicationsVersLeDomaine = (
-    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
-  ): Formation["explications"] => {
+    explications: RécupérerFichesFormationsRéponseHTTP["formations"][number]["explications"],
+  ): FicheFormation["explications"] => {
     if (!explications) {
       return null;
     }
@@ -218,7 +265,7 @@ export class formationHttpRepository implements FormationRepository {
   };
 
   private _calculerNombrePointsAffinité = (
-    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
+    explications: RécupérerFichesFormationsRéponseHTTP["formations"][number]["explications"],
   ): number => {
     if (!explications) {
       return 0;
@@ -259,7 +306,7 @@ export class formationHttpRepository implements FormationRepository {
 
   private _générerLeLienParcourSupAvecCommunesFavorites(
     lien: string,
-    voeuxParCommuneFavorites: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["communesFavoritesAvecLeursVoeux"],
+    voeuxParCommuneFavorites: RécupérerFichesFormationsRéponseHTTP["formations"][number]["formation"]["communesFavoritesAvecLeursVoeux"],
   ): string {
     const uneCommuneFavorite = voeuxParCommuneFavorites.length === 1;
     const plusieursCommunesFavorites = voeuxParCommuneFavorites.length > 1;
@@ -322,7 +369,7 @@ export class formationHttpRepository implements FormationRepository {
   private _mapperLiensVersLeDomaine(
     liens: LiensFormationRéponseHTTP,
     lienParcourSup: LiensFormationRéponseHTTP[number] | null,
-  ): Formation["liens"] {
+  ): FicheFormation["liens"] {
     return liens.map((lien) => {
       if (lienParcourSup && lienParcourSup.nom === lien.nom) {
         return { intitulé: lienParcourSup.nom, url: lienParcourSup.url };

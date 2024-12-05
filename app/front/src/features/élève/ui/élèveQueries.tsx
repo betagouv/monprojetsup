@@ -1,5 +1,6 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
 import { queryClient } from "@/configuration/lib/tanstack-query";
+import { Formation } from "@/features/formation/domain/formation.interface.ts";
 import { CommuneFavorite, IdSpécialité, VoeuFavori, type Élève } from "@/features/élève/domain/élève.interface";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -8,6 +9,7 @@ export const mutationÉlèveKeys = {
   SPÉCIALITÉS: "mettreÀJourSpécialitésÉlève",
   VOEUX: "mettreÀJourVoeuxÉlève",
   COMMUNES: "mettreÀJourCommunesÉlève",
+  FORMATIONS: "mettreÀJourFormationsFavoritesÉlève",
 };
 
 export const élèveQueryOptions = queryOptions({
@@ -63,6 +65,25 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.VOEUX], {
 queryClient.setMutationDefaults([mutationÉlèveKeys.COMMUNES], {
   mutationFn: async ({ élève, communesÀModifier }: { élève: Élève; communesÀModifier: CommuneFavorite[] }) => {
     const réponse = await dépendances.mettreÀJourCommunesÉlèveUseCase.run(élève, communesÀModifier);
+
+    if (réponse instanceof Error) throw réponse;
+
+    return réponse;
+  },
+  onSuccess: async () => {
+    await queryClient.invalidateQueries(élèveQueryOptions);
+  },
+});
+
+queryClient.setMutationDefaults([mutationÉlèveKeys.FORMATIONS], {
+  mutationFn: async ({
+    élève,
+    idsFormationsÀModifier,
+  }: {
+    élève: Élève;
+    idsFormationsÀModifier: Formation["id"][];
+  }) => {
+    const réponse = await dépendances.mettreÀJourFormationsFavoritesÉlèveUseCase.run(élève, idsFormationsÀModifier);
 
     if (réponse instanceof Error) throw réponse;
 

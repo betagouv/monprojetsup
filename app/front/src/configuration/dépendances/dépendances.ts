@@ -6,10 +6,12 @@ import { RechercherCommunesUseCase } from "@/features/commune/usecase/Rechercher
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
-import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
+import { RechercherFichesFormationsUseCase } from "@/features/formation/usecase/RechercherFichesFormations.ts";
+import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations.ts";
 import { RechercherVoeuxUseCase } from "@/features/formation/usecase/RechercherVoeux";
-import { RécupérerFormationUseCase } from "@/features/formation/usecase/RécupérerFormation";
-import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations";
+import { RécupérerFicheFormationUseCase } from "@/features/formation/usecase/RécupérerFicheFormation.ts";
+import { RécupérerFichesFormationsUseCase } from "@/features/formation/usecase/RécupérerFichesFormations.ts";
+import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations.ts";
 import { SuggérerFormationsUseCase } from "@/features/formation/usecase/SuggérerFormations";
 import { métierHttpRepository } from "@/features/métier/infrastructure/gateway/métierHttpRepository/métierHttpRepository";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
@@ -26,6 +28,7 @@ import { type ÉlèveRepository } from "@/features/élève/infrastructure/gatewa
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
+import { MettreÀJourFormationsFavoritesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourFormationsFavoritesÉlève.ts";
 import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
 import { MettreÀJourSpécialitésÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourSpécialitésÉlève";
 import { MettreÀJourVoeuxÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourVoeuxÉlève";
@@ -71,9 +74,15 @@ export class Dépendances {
 
   public readonly mettreÀJourCommunesÉlèveUseCase: MettreÀJourCommunesÉlèveUseCase;
 
-  public readonly récupérerFormationUseCase: RécupérerFormationUseCase;
+  public readonly mettreÀJourFormationsFavoritesÉlèveUseCase: MettreÀJourFormationsFavoritesÉlèveUseCase;
+
+  public readonly récupérerFicheFormationUseCase: RécupérerFicheFormationUseCase;
+
+  public readonly récupérerFichesFormationsUseCase: RécupérerFichesFormationsUseCase;
 
   public readonly récupérerFormationsUseCase: RécupérerFormationsUseCase;
+
+  public readonly rechercherFichesFormationsUseCase: RechercherFichesFormationsUseCase;
 
   public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
@@ -127,9 +136,14 @@ export class Dépendances {
     this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourVoeuxÉlèveUseCase = new MettreÀJourVoeuxÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourCommunesÉlèveUseCase = new MettreÀJourCommunesÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourFormationsFavoritesÉlèveUseCase = new MettreÀJourFormationsFavoritesÉlèveUseCase(
+      this._élèveRepository,
+    );
 
     // Formations
-    this.récupérerFormationUseCase = new RécupérerFormationUseCase(this._formationRepository);
+    this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);
+    this.récupérerFichesFormationsUseCase = new RécupérerFichesFormationsUseCase(this._formationRepository);
+    this.rechercherFichesFormationsUseCase = new RechercherFichesFormationsUseCase(this._formationRepository);
     this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
     this.suggérerFormationsUseCase = new SuggérerFormationsUseCase(this._formationRepository);

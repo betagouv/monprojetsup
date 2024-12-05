@@ -15,6 +15,11 @@ export type Voeu = {
 export type Formation = {
   id: string;
   nom: string;
+};
+
+export type FicheFormation = {
+  id: Formation["id"];
+  nom: Formation["nom"];
   descriptifs: {
     formation: string | null;
     détails: string | null;

@@ -1,23 +1,20 @@
 import { type UseFormationsFormArgs } from "./FormationsForm.interface";
 import { formationsValidationSchema } from "./FormationsForm.validation";
-import useFormationsFavoritesFormationsForm from "./useFormationsFavoritesFormationsForm";
 import useSituationFormationsFormationsForm from "./useSituationFormationsFormationsForm";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { useEffect } from "react";
 
 export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseFormationsFormArgs) {
-  const { register, erreurs, mettreÀJourÉlève, setValue, getValues } = useÉlèveForm({
+  const { mettreÀJourFormationsFavoritesÉlève, élève } = useÉlève({});
+  const { setValue, getValues, handleSubmit } = useÉlèveForm({
     schémaValidation: formationsValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
   const situationFormationsFormationsForm = useSituationFormationsFormationsForm({
-    setValue,
-    getValues,
-  });
-
-  const formationsFavoritesFormationsForm = useFormationsFavoritesFormationsForm({
     setValue,
     getValues,
   });
@@ -46,14 +43,22 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
       return;
     }
 
-    await mettreÀJourÉlève(event);
+    if (situationFormationsFormationsForm.optionSélectionnée === "aucune_idee" && élève?.formationsFavorites) {
+      await mettreÀJourFormationsFavoritesÉlève(élève?.formationsFavorites?.map(({ id }) => id));
+    }
+
+    await handleSubmit(async () => {
+      await àLaSoumissionDuFormulaireAvecSuccès?.();
+    })();
   };
+
+  // Garder synchroniser la valeur react-hook-form et le profil de l'élève
+  useEffect(() => {
+    setValue("formationsFavorites", élève?.formationsFavorites ?? []);
+  }, [setValue, élève?.formationsFavorites]);
 
   return {
     mettreÀJourÉlève: soumettreFormulaire,
-    erreurs,
-    register,
     situationFormations: situationFormationsFormationsForm,
-    ...formationsFavoritesFormationsForm,
   };
 }

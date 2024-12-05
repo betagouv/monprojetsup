@@ -1,8 +1,8 @@
-import { Formation } from "@/features/formation/domain/formation.interface";
+import { FicheFormation } from "@/features/formation/domain/formation.interface";
 import { Métier } from "@/features/métier/domain/métier.interface";
 
 export type ListeEtAperçuStoreState = {
-  élémentAffiché: { id: Formation["id"] | null; type: "formation" } | { id: Métier["id"] | null; type: "métier" };
+  élémentAffiché: { id: FicheFormation["id"] | null; type: "formation" } | { id: Métier["id"] | null; type: "métier" };
   afficherBarreLatéraleEnMobile: boolean;
   recherche?: string;
 };

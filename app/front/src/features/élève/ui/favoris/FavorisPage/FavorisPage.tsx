@@ -5,7 +5,7 @@ import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/List
 import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import { i18n } from "@/configuration/i18n/i18n";
-import { récupérerFormationsQueryOptions } from "@/features/formation/ui/formationQueries";
+import { récupérerFichesFormationsQueryOptions } from "@/features/formation/ui/formationQueries";
 import { récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
 import BarreLatéraleFavoris from "@/features/élève/ui/favoris/BarreLatéraleFavoris/BarreLatéraleFavoris";
 import ContenuFavoris from "@/features/élève/ui/favoris/ContenuFavoris/ContenuFavoris";
@@ -20,7 +20,9 @@ const FavorisPage = () => {
   const élève = routeApi.useLoaderData();
 
   const { data: formations } = useQuery(
-    récupérerFormationsQueryOptions(élève?.formationsFavorites?.map((formationFavorite) => formationFavorite.id) ?? []),
+    récupérerFichesFormationsQueryOptions(
+      élève?.formationsFavorites?.map((formationFavorite) => formationFavorite.id) ?? [],
+    ),
   );
 
   const { data: métiers } = useQuery(récupérerMétiersQueryOptions(élève?.métiersFavoris ?? []));

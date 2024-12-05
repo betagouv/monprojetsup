@@ -1,6 +1,6 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation } from "@/features/formation/domain/formation.interface";
 
 export type CommunesProposantLaFormationProps = {
-  communes: Formation["communesProposantLaFormation"];
-  lienParcoursSup?: Formation["lienParcoursSup"];
+  communes: FicheFormation["communesProposantLaFormation"];
+  lienParcoursSup?: FicheFormation["lienParcoursSup"];
 };

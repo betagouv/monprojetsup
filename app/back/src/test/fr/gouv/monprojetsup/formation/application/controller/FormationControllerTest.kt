@@ -39,7 +39,8 @@ import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.STRASBOURG
 import fr.gouv.monprojetsup.formation.usecase.OrdonnerRechercheFormationsBuilder
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
-import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFicheFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFichesFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
@@ -72,7 +73,10 @@ class FormationControllerTest(
     lateinit var suggestionsFormationsService: SuggestionsFormationsService
 
     @MockBean
-    lateinit var recupererFormationService: RecupererFormationService
+    lateinit var recupererFicheFormationService: RecupererFicheFormationService
+
+    @MockBean
+    lateinit var recupererFichesFormationsService: RecupererFichesFormationsService
 
     @MockBean
     lateinit var recupererFormationsService: RecupererFormationsService
@@ -566,7 +570,7 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     affinitesFormationEtMetier,
                     idsFormations,
@@ -978,7 +982,7 @@ class FormationControllerTest(
             )
             val idsFormations = listOf("fl2016", "fl2118", "fl680003")
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     affinitesFormationEtMetier,
                     idsFormations,
@@ -1342,7 +1346,7 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     affinitesFormationEtMetier,
                     idsFormations,
@@ -1841,12 +1845,12 @@ class FormationControllerTest(
     }
 
     @Nested
-    inner class `Quand on appelle la route de récupération d'une formation` {
+    inner class `Quand on appelle la route de récupération d'une fiche formation` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -2142,7 +2146,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -2438,7 +2442,7 @@ class FormationControllerTest(
         @Test
         fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
             given(
-                recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+                recupererFicheFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
             ).willReturn(ficheFormationSansProfil)
 
             // When & Then
@@ -2587,7 +2591,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl00010 existe plusieurs fois entre id et dans les formations équivalentes",
                 )
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl00010")).willThrow(uneException)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl00010")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -2605,7 +2609,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation inconnu n'existe pas",
                 )
-            given(recupererFormationService.recupererFormation(unProfilEleve, "inconnu")).willThrow(uneException)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "inconnu")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -3048,7 +3052,7 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     toutesLesSuggestions,
                     listOf("fl1", "fl7"),
@@ -3530,7 +3534,7 @@ class FormationControllerTest(
                     ficheFormation.copy(id = "fl1"),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     toutesLesSuggestions,
                     listOf("fl7", "fl1"),
@@ -4041,7 +4045,7 @@ class FormationControllerTest(
                         metiers = emptyList(),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"), false)).willReturn(fichesFormations)
+            given(recupererFichesFormationsService.recupererFichesFormation(listOf("fl1", "fl7"), false)).willReturn(fichesFormations)
             given(ordonnerRechercheFormationsBuilder.trierParScore(rechercheL1)).willReturn(
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -4292,7 +4296,7 @@ class FormationControllerTest(
     }
 
     @Nested
-    inner class `Quand on appelle la route de récupération de formations` {
+    inner class `Quand on appelle la route de récupération de fiches formations` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail des formations`() {
@@ -4326,7 +4330,7 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     toutesLesSuggestions,
                     listOf("fl1", "fl2"),
@@ -4347,7 +4351,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4687,15 +4691,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             }
                           ]
                         }
@@ -4737,7 +4741,7 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
                     unProfilEleve,
                     toutesLesSuggestions,
                     listOf("fl1", "fl2"),
@@ -4758,7 +4762,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -5098,15 +5102,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             }
                           ]
                         }
@@ -5137,7 +5141,7 @@ class FormationControllerTest(
                         voeux = emptyList(),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"), true)).willReturn(fichesFormations)
+            given(recupererFichesFormationsService.recupererFichesFormation(listOf("fl1", "fl2"), true)).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -5152,7 +5156,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -5305,15 +5309,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
                             }
                           ]
                         }
@@ -5325,7 +5329,7 @@ class FormationControllerTest(
         @Test
         fun `si pas connecté, doit retourner 401`() {
             // When & Then
-            mvc.perform(get("/api/v1/formations?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
+            mvc.perform(get("/api/v1/formations/fiches?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -5342,9 +5346,131 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
+        }
+    }
+
+    @Nested
+    inner class `Quand on appelle la route de récupération de formations` {
+        val formations =
+            listOf(
+                FormationCourte("fl1", "Cycle pluridisciplinaire d'Études Supérieures - Science"),
+                FormationCourte("fl2", "2eme formation"),
+                FormationCourte("fl3", "3eme formation"),
+            )
+
+        val contenuJson =
+            """
+            {
+              "formations": [
+                {
+                  "id": "fl1",
+                  "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science"
+                },
+                {
+                  "id": "fl2",
+                  "nom": "2eme formation"
+                },
+                {
+                  "id": "fl3",
+                  "nom": "3eme formation"
+                }
+              ],
+              "liens": [
+                {
+                  "rel": "premier",
+                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                },
+                {
+                  "rel": "dernier",
+                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                },
+                {
+                  "rel": "actuel",
+                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                }
+              ]
+            }
+            """.trimIndent()
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl2", "fl3"),
+                )
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
+                hateoas,
+            )
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si enseignant, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl2", "fl3"),
+                )
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
+                hateoas,
+            )
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl2", "fl3"),
+                )
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
+                hateoas,
+            )
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/formations?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
     }
 }

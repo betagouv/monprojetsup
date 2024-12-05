@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 
 export class formationInMemoryRepository implements FormationRepository {
-  private FORMATIONS: Formation[] = [
+  private FORMATIONS: FicheFormation[] = [
     {
       id: "fl1002093",
       nom: "L1 - Tourisme -  Accès Santé (LAS)",
@@ -157,19 +157,35 @@ export class formationInMemoryRepository implements FormationRepository {
     },
   ];
 
-  public async récupérer(formationId: string): Promise<Formation | Error> {
+  public async récupérerUneFiche(formationId: string): Promise<FicheFormation | Error> {
     return this.FORMATIONS.find((formation) => formation.id === formationId) ?? new RessourceNonTrouvéeErreur();
   }
 
-  public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | Error> {
+  public async récupérerPlusieursFiches(formationIds: string[]): Promise<FicheFormation[] | Error> {
     return this.FORMATIONS.filter((formation) => formationIds.includes(formation.id));
   }
 
-  public async rechercher(recherche: string): Promise<Formation[] | Error> {
+  public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | Error> {
+    return this.FORMATIONS.filter((formation) => formationIds.includes(formation.id)).map((formation) => ({
+      id: formation.id,
+      nom: formation.nom,
+    }));
+  }
+
+  public async rechercherFichesFormations(recherche: string): Promise<FicheFormation[] | Error> {
     return this.FORMATIONS.filter((formation) => formation.nom.toLowerCase().includes(recherche.toLowerCase()));
   }
 
-  public async suggérer(): Promise<Formation[] | Error> {
+  public async rechercherFormations(recherche: string): Promise<Formation[] | Error> {
+    return this.FORMATIONS.filter((formation) => formation.nom.toLowerCase().includes(recherche.toLowerCase())).map(
+      (formation) => ({
+        id: formation.id,
+        nom: formation.nom,
+      }),
+    );
+  }
+
+  public async suggérer(): Promise<FicheFormation[] | Error> {
     return this.FORMATIONS.slice(0, 5);
   }
 }

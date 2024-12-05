@@ -336,6 +336,9 @@ export const localeFR = {
         LABEL: "Formations envisagées",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les formations qui pourraient t’intéresser",
         SÉLECTIONNÉES: "Formation(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune formation sélectionnée",
+        },
       },
     },
     CONFIRMATION_INSCRIPTION: {

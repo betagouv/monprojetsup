@@ -1,7 +1,7 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FicheFormation } from "@/features/formation/domain/formation.interface";
 
 export type BarreLatéraleFicheFormationProps = {
-  suggestions?: Formation[];
-  résultatsDeRecherche?: Formation[];
+  suggestions?: FicheFormation[];
+  résultatsDeRecherche?: FicheFormation[];
   chargementEnCours: boolean;
 };

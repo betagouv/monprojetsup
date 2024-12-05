@@ -10,7 +10,7 @@ import AnimationChargement from "@/components/AnimationChargement/AnimationCharg
 import BarreLatéraleFicheFormation from "@/features/formation/ui/BarreLatéraleFicheFormation/BarreLatéraleFicheFormation";
 import FicheFormation from "@/features/formation/ui/FicheFormation/FicheFormation";
 import {
-  rechercherFormationsQueryOptions,
+  rechercherFichesFormationsQueryOptions,
   suggérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ const DétailFormationPage = () => {
   });
 
   const { data: résultatsDeRecherche, isFetching: chargementRechercheEnCours } = useQuery({
-    ...rechercherFormationsQueryOptions(recherche),
+    ...rechercherFichesFormationsQueryOptions(recherche),
     enabled: recherche !== undefined,
   });
 

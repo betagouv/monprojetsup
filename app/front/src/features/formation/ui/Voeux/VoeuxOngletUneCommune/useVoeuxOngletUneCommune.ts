@@ -1,7 +1,7 @@
 import { type UseVoeuxOngletUneCommuneArgs } from "./VoeuxOngletUneCommune.interface.tsx";
 import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import { constantes } from "@/configuration/constantes";
-import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
+import { récupérerFicheFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
@@ -10,7 +10,7 @@ export default function useVoeuxOngletUneCommune({ codeCommune }: UseVoeuxOnglet
   const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
 
   const formationAffichée = élémentAffichéListeEtAperçuStore();
-  const { data: formation } = useQuery(récupérerFormationQueryOptions(formationAffichée.id));
+  const { data: formation } = useQuery(récupérerFicheFormationQueryOptions(formationAffichée.id));
 
   const voeuxÀProximitéDeLaCommune = useMemo(() => {
     return formation?.voeuxParCommuneFavorites.find((élément) => élément.commune.code === codeCommune)?.voeux ?? [];

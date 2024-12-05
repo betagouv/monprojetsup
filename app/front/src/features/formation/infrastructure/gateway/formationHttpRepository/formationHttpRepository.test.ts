@@ -1,9 +1,9 @@
 import { formationHttpRepository } from "./formationHttpRepository";
-import { RécupérerFormationsRéponseHTTP } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository.interface";
+import { RécupérerFichesFormationsRéponseHTTP } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository.interface";
 import { IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 type VoeuxParCommuneFavorites =
-  RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["communesFavoritesAvecLeursVoeux"];
+  RécupérerFichesFormationsRéponseHTTP["formations"][number]["formation"]["communesFavoritesAvecLeursVoeux"];
 
 vitest.mock("@/configuration/dépendances/dépendances", () => ({
   dépendances: {

@@ -1,4 +1,5 @@
 import { type UseÉlèveArgs } from "./useÉlève.interface";
+import { Formation } from "@/features/formation/domain/formation.interface.ts";
 import {
   CommuneFavorite,
   type FormationFavorite,
@@ -22,6 +23,13 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
   });
   const mutationCommunesÉlève = useMutation<Élève, unknown, { élève: Élève; communesÀModifier: CommuneFavorite[] }>({
     mutationKey: [mutationÉlèveKeys.COMMUNES],
+  });
+  const mutationFormationsFavoritesÉlève = useMutation<
+    Élève,
+    unknown,
+    { élève: Élève; idsFormationsÀModifier: Formation["id"][] }
+  >({
+    mutationKey: [mutationÉlèveKeys.FORMATIONS],
   });
 
   const mettreÀJourÉlève = async (changements: Partial<Élève>) => {
@@ -49,6 +57,12 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
     await mutationCommunesÉlève.mutateAsync({ élève, communesÀModifier });
   };
 
+  const mettreÀJourFormationsFavoritesÉlève = async (idsFormationsÀModifier: Formation["id"][]) => {
+    if (!élève) return;
+
+    await mutationFormationsFavoritesÉlève.mutateAsync({ élève, idsFormationsÀModifier });
+  };
+
   const mettreÀJourUneFormationFavorite = async (
     formationId: FormationFavorite["id"],
     changements: Partial<FormationFavorite>,
@@ -73,6 +87,7 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
     élève,
     mettreÀJourÉlève,
     mettreÀJourUneFormationFavorite,
+    mettreÀJourFormationsFavoritesÉlève,
     mettreÀJourSpécialitésÉlève,
     mettreÀJourVoeuxÉlève,
     mettreÀJourCommunesÉlève,

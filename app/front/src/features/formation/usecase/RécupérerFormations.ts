@@ -1,4 +1,4 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 
 export class RécupérerFormationsUseCase {
