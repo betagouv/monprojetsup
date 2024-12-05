@@ -20,6 +20,7 @@ import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -700,12 +701,13 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class CasNominaux {
         @Test
-        fun `quand toutes les valeurs sont à null, ne doit rien faire`() {
+        fun `quand toutes les valeurs sont à null, ne doit rien faire et renvoyer le profil initial`() {
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleveVide,
-                profilActuel = profilEleve,
-            )
+            val nouveauProfil =
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = modificationProfilEleveVide,
+                    profilActuel = profilEleve,
+                )
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
@@ -716,10 +718,11 @@ class MiseAJourEleveServiceTest {
             then(formationRepository).shouldHaveNoInteractions()
             then(voeuRepository).shouldHaveNoInteractions()
             then(eleveRepository).shouldHaveNoInteractions()
+            assertThat(nouveauProfil).isEqualTo(profilEleve)
         }
 
         @Test
-        fun `quand les listes sont à vides, doit les mettre à jour sans appeler les repo`() {
+        fun `quand les listes sont à vides, doit les mettre à jour sans appeler les autres repo`() {
             // Given
             val nouveauProfil =
                 ModificationProfilEleve(
@@ -847,10 +850,11 @@ class MiseAJourEleveServiceTest {
                 .willReturn(listOf("5", "7", "1008", "2003"))
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleve,
-                profilActuel = profilEleve,
-            )
+            val resultat =
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = modificationProfilEleve,
+                    profilActuel = profilEleve,
+                )
 
             // Then
             val nouveauProfil =
@@ -890,6 +894,7 @@ class MiseAJourEleveServiceTest {
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
+            assertThat(resultat).isEqualTo(nouveauProfil)
         }
 
         @Test

@@ -34,7 +34,7 @@ class MiseAJourEleveService(
     fun mettreAJourUnProfilEleve(
         miseAJourDuProfil: ModificationProfilEleve,
         profilActuel: ProfilEleve,
-    ) {
+    ): ProfilEleve.AvecProfilExistant {
         val profilInitial =
             when (profilActuel) {
                 is ProfilEleve.SansCompte -> eleveRepository.creerUnEleve(profilActuel.id)
@@ -77,6 +77,9 @@ class MiseAJourEleveService(
             )
         if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
+            return profilEleveAMettreAJour
+        } else {
+            return profilInitial
         }
     }
 

@@ -106,7 +106,7 @@ data class ProfilDTO(
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
@@ -121,7 +121,7 @@ data class ProfilDTO(
         domaines = profilEleve.domainesInterets,
         corbeilleFormations = profilEleve.corbeilleFormations,
         compteParcoursupAssocie = profilEleve.compteParcoursupLie,
-        voeuxFavoris = voeuxFavoris.map { VoeuFavoriDTO(it) },
+        voeuxFavoris = (voeuxFavoris ?: profilEleve.voeuxFavoris).map { VoeuFavoriDTO(it) },
     )
 
     data class CommuneDTO(

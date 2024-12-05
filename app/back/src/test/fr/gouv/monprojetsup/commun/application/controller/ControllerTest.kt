@@ -40,7 +40,7 @@ abstract class ControllerTest {
     }
 
     companion object {
-        private const val ID_ELEVE = "adcf627c-36dd-4df5-897b-159443a6d49c"
+        const val ID_ELEVE = "adcf627c-36dd-4df5-897b-159443a6d49c"
         const val ID_ENSEIGNANT = "49e8e8c2-5eec-4eae-a90d-992225bbea1b"
 
         val unProfilEleve =

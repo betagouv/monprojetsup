@@ -32,13 +32,14 @@ class ProfilEleveController(
     )
     fun postProfilEleve(
         @RequestBody modificationProfilDTO: ModificationProfilDTO,
-    ): ResponseEntity<Unit> {
+    ): ProfilDTO {
         val eleve = recupererEleve()
-        miseAJourEleveService.mettreAJourUnProfilEleve(
-            miseAJourDuProfil = modificationProfilDTO.toModificationProfilEleve(),
-            profilActuel = eleve,
-        )
-        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
+        val profilEleve =
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = modificationProfilDTO.toModificationProfilEleve(),
+                profilActuel = eleve,
+            )
+        return ProfilDTO(profilEleve)
     }
 
     @GetMapping

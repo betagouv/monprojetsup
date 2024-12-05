@@ -22,7 +22,6 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.then
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -84,51 +83,202 @@ class ProfilEleveControllerTest(
                     ),
             )
 
+        private val nouveauProfil =
+            ProfilEleve.AvecProfilExistant(
+                id = ID_ELEVE,
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS,
+                classe = ChoixNiveau.TERMINALE,
+                baccalaureat = "Générale",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                alternance = ChoixAlternance.INTERESSE,
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME),
+                specialites = listOf("1054"),
+                centresInterets = listOf("T_IDEO2_4812"),
+                moyenneGenerale = 14f,
+                metiersFavoris = listOf("MET_456"),
+                formationsFavorites =
+                    listOf(
+                        FormationFavorite(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            priseDeNote = null,
+                        ),
+                        FormationFavorite(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            priseDeNote = "Ma formation préférée",
+                        ),
+                    ),
+                domainesInterets = listOf("T_ITM_1054", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0001", "fl0002"),
+                voeuxFavoris =
+                    listOf(
+                        VoeuFavori("ta1", false),
+                        VoeuFavori("ta2", false),
+                    ),
+                compteParcoursupLie = false,
+            )
+
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si élève existe et que le service réussi, doit retourner 204`() {
+        fun `si élève existe et que le service réussi, doit retourner 200`() {
+            // Given
+            given(miseAJourEleveService.mettreAJourUnProfilEleve(modificationProfilEleve, unProfilEleve)).willReturn(nouveauProfil)
+
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
-            ).andExpect(status().isNoContent)
-            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(modificationProfilEleve, unProfilEleve)
+            ).andDo(print()).andExpect(status().isOk)
+                .andExpect(content().json(creerReponseNouveauProfilJson()))
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si élève existe et que le service réussi pour une modification vide, doit retourner 204`() {
+        fun `si élève existe et que le service réussi pour une modification vide, doit retourner 200`() {
             // Given
             val modificationProfilEleveVide = ModificationProfilEleve()
+            given(miseAJourEleveService.mettreAJourUnProfilEleve(modificationProfilEleveVide, unProfilEleve)).willReturn(unProfilEleve)
 
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content("{}")
                     .accept(MediaType.APPLICATION_JSON),
-            ).andExpect(status().isNoContent)
-            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleveVide,
-                profilActuel = unProfilEleve,
-            )
+            ).andDo(print()).andExpect(status().isOk)
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "situation": "aucune_idee",
+                          "classe": "terminale",
+                          "baccalaureat": "Générale",
+                          "specialites": [
+                            "1056",
+                            "1054"
+                          ],
+                          "domaines": [
+                            "T_ITM_1054",
+                            "T_ITM_1534",
+                            "T_ITM_1248",
+                            "T_ITM_1351"
+                          ],
+                          "centresInterets": [
+                            "T_ROME_2092381917",
+                            "T_IDEO2_4812"
+                          ],
+                          "metiersFavoris": [
+                            "MET_123",
+                            "MET_456"
+                          ],
+                          "dureeEtudesPrevue": "indifferent",
+                          "alternance": "pas_interesse",
+                          "communesFavorites": [
+                            {
+                              "codeInsee": "75115",
+                              "nom": "Paris",
+                              "latitude": 48.851227,
+                              "longitude": 2.2885659
+                            }
+                          ],
+                          "moyenneGenerale": 14.0,
+                          "formationsFavorites": [
+                            {
+                              "idFormation": "fl1234",
+                              "niveauAmbition": 1,
+                              "priseDeNote": null
+                            },
+                            {
+                              "idFormation": "fl5678",
+                              "niveauAmbition": 3,
+                              "priseDeNote": "Ma formation préférée"
+                            }
+                          ],
+                          "corbeilleFormations": [
+                            "fl0010",
+                            "fl0012"
+                          ],
+                          "compteParcoursupAssocie": true,
+                          "voeuxFavoris": [
+                            {
+                              "idVoeu": "ta1",
+                              "estFavoriParcoursup": true
+                            },
+                            {
+                              "idVoeu": "ta77",
+                              "estFavoriParcoursup": false
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
         }
 
         @ConnecteAvecUnEleve(idEleve = "61a3b1a9-03dd-4fc6-9549-c0e5d1403214")
         @Test
-        fun `si élève n'existe pas et que le service réussi, doit retourner 204`() {
+        fun `si élève n'existe pas et que le service réussi, doit retourner 200`() {
             // Given
             val idProfilInconnu = "61a3b1a9-03dd-4fc6-9549-c0e5d1403214"
             val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
             given(recupererEleveService.recupererEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
+            given(miseAJourEleveService.mettreAJourUnProfilEleve(modificationProfilEleve, profilSansCompte)).willReturn(nouveauProfil)
 
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
-            ).andExpect(status().isNoContent)
-            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleve,
-                profilActuel = profilSansCompte,
-            )
+            ).andDo(print()).andExpect(status().isOk)
+                .andExpect(content().json(creerReponseNouveauProfilJson()))
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b")
+        @Test
+        fun `si enseignant existe, doit retourner 200`() {
+            // Given
+            val unProfilEnseignant =
+                ProfilEleve.AvecProfilExistant(
+                    id = ID_ENSEIGNANT,
+                    situation = SituationAvanceeProjetSup.PROJET_PRECIS,
+                    classe = ChoixNiveau.TERMINALE,
+                    baccalaureat = "NC",
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
+                    specialites = listOf("mat1001", "mat1049"),
+                    centresInterets = null,
+                    moyenneGenerale = 4.9f,
+                    metiersFavoris = null,
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl1234",
+                                niveauAmbition = 1,
+                                priseDeNote = null,
+                            ),
+                            FormationFavorite(
+                                idFormation = "fl5678",
+                                niveauAmbition = 3,
+                                priseDeNote = "Ma formation préférée",
+                            ),
+                        ),
+                    domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                    corbeilleFormations = listOf("fl0012"),
+                    compteParcoursupLie = false,
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta77", false),
+                        ),
+                )
+            given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
+            given(miseAJourEleveService.mettreAJourUnProfilEleve(modificationProfilEleve, unProfilEnseignant)).willReturn(nouveauProfil)
+
+            // When & Then
+            mvc.perform(
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                    .accept(MediaType.APPLICATION_JSON),
+            ).andDo(print()).andExpect(status().isOk)
+                .andExpect(content().json(creerReponseNouveauProfilJson()))
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -197,54 +347,6 @@ class ProfilEleveControllerTest(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
-        }
-
-        @ConnecteAvecUnEnseignant(idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b")
-        @Test
-        fun `si enseignant existe, doit retourner 204`() {
-            // Given
-            val unProfilEnseignant =
-                ProfilEleve.AvecProfilExistant(
-                    id = ID_ENSEIGNANT,
-                    situation = SituationAvanceeProjetSup.PROJET_PRECIS,
-                    classe = ChoixNiveau.TERMINALE,
-                    baccalaureat = "NC",
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
-                    alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
-                    specialites = listOf("mat1001", "mat1049"),
-                    centresInterets = null,
-                    moyenneGenerale = 4.9f,
-                    metiersFavoris = null,
-                    formationsFavorites =
-                        listOf(
-                            FormationFavorite(
-                                idFormation = "fl1234",
-                                niveauAmbition = 1,
-                                priseDeNote = null,
-                            ),
-                            FormationFavorite(
-                                idFormation = "fl5678",
-                                niveauAmbition = 3,
-                                priseDeNote = "Ma formation préférée",
-                            ),
-                        ),
-                    domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                    corbeilleFormations = listOf("fl0012"),
-                    compteParcoursupLie = false,
-                    voeuxFavoris =
-                        listOf(
-                            VoeuFavori("ta1", true),
-                            VoeuFavori("ta77", false),
-                        ),
-                )
-            given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
-
-            // When & Then
-            mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
-                    .accept(MediaType.APPLICATION_JSON),
-            ).andExpect(status().isNoContent)
         }
 
         @ConnecteSansId
@@ -316,6 +418,70 @@ class ProfilEleveControllerTest(
               "corbeilleFormations": [
                 "fl0001",
                 "fl0002"
+              ]
+            }
+            """.trimIndent()
+
+        private fun creerReponseNouveauProfilJson(
+            situation: String = "projet_precis",
+            classe: String = "terminale",
+            dureeEtudesPrevue: String = "longue",
+            alternance: String = "interesse",
+        ) = """
+            {
+              "situation": "$situation",
+              "classe": "$classe",
+              "baccalaureat": "Générale",
+              "specialites": [
+                "1054"
+              ],
+              "domaines": [
+                "T_ITM_1054",
+                "T_ITM_1351"
+              ],
+              "centresInterets": [
+                "T_IDEO2_4812"
+              ],
+              "metiersFavoris": [
+                "MET_456"
+              ],
+              "dureeEtudesPrevue": "$dureeEtudesPrevue",
+              "alternance": "$alternance",
+              "communesFavorites": [
+                {
+                  "codeInsee": "75115",
+                  "nom": "Paris",
+                  "latitude": 48.851227,
+                  "longitude": 2.2885659
+                }
+              ],
+              "moyenneGenerale": 14.0,
+              "formationsFavorites": [
+                {
+                  "idFormation": "fl1234",
+                  "niveauAmbition": 1,
+                  "priseDeNote": null
+                },
+                {
+                  "idFormation": "fl5678",
+                  "niveauAmbition": 3,
+                  "priseDeNote": "Ma formation préférée"
+                }
+              ],
+              "corbeilleFormations": [
+                "fl0001",
+                "fl0002"
+              ],
+              "compteParcoursupAssocie": false,
+              "voeuxFavoris": [
+                {
+                  "idVoeu": "ta1",
+                  "estFavoriParcoursup": false
+                },
+                {
+                  "idVoeu": "ta2",
+                  "estFavoriParcoursup": false
+                }
               ]
             }
             """.trimIndent()
