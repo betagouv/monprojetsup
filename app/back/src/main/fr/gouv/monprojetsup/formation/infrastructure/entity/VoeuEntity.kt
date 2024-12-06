@@ -13,7 +13,7 @@ class VoeuCourtEntity {
     @Column(name = "id", nullable = false)
     lateinit var id: String
 
-    @Column(name = "label", nullable = false)
+    @Column(name = "nom", nullable = false)
     lateinit var label: String
 
     fun toFormationCourte() =
