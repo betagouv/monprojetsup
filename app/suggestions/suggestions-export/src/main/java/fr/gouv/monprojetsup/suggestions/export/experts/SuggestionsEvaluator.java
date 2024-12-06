@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.suggestions.export.experts;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -78,17 +78,17 @@ public class SuggestionsEvaluator {
                 Map<String, Integer> suggestionsRanks = new HashMap<>();
                 int k = 1;
                 for (Suggestion sugg : refCase.suggestions()) {
-                    if(Constants.isFiliere(sugg.fl())) {
-                        suggestionsRanks.put(sugg.fl(), k);
+                    if(Constants.isFiliere(sugg.id())) {
+                        suggestionsRanks.put(sugg.id(), k);
                         k++;
                     }
                 }
                 Suggestion worstExpl = refCase.suggestions()
-                        .stream().filter(s -> Constants.isFiliere(s.fl()) )
+                        .stream().filter(s -> Constants.isFiliere(s.id()) )
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
                 String worst = worstExpl == null ? "null" : worstExpl.humanReadable(labels);
-                String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.fl());
+                String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.id());
 
                 if(refCase.expectations() != null && !refCase.expectations().isEmpty()) {
                     fos.write("\n\n\n***********************************************\n");
@@ -142,8 +142,8 @@ public class SuggestionsEvaluator {
                     if(refCase.suggestions() != null) {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
-                                .filter(s -> Constants.isFiliere(s.fl()))
-                                .map(e -> getOKPrefix(refCase, e.fl()) + data.getLabel(e.fl()))
+                                .filter(s -> Constants.isFiliere(s.id()))
+                                .map(e -> getOKPrefix(refCase, e.id()) + data.getLabel(e.id()))
                                 .collect(Collectors.joining("\n", "", "\n")));
                     }
 
@@ -161,7 +161,7 @@ public class SuggestionsEvaluator {
 
     private static String getOKPrefix(ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
-                .map(SuggestionDTO::fl)
+                .map(ChoiceDTO::id)
                 .filter(Constants::isFiliere)
                 .collect(Collectors.toMap(fl -> fl, fl -> 1));
         int rank = getRank(flCodSugg, favoris);

@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ public record ReferenceCase(
 
     public void turnFavorisToExpectations() {
         if(pf != null) {
-            expectations.addAll(pf.suggApproved().stream().map(SuggestionDTO::fl).toList());
-            rejections.addAll(pf.suggRejected().stream().map(SuggestionDTO::fl).toList());
+            expectations.addAll(pf.suggApproved().stream().map(ChoiceDTO::id).toList());
+            rejections.addAll(pf.suggRejected().stream().map(ChoiceDTO::id).toList());
             pf.removeAllFormationChoices();
         }
     }

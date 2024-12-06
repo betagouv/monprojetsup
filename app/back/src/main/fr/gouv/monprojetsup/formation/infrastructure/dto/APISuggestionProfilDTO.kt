@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
-import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.CorbeilleSuggestionDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.FavorisSuggestionDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO.CorbeilleChoixDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO.FavorisChoixDTO
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionProfilDTO(
@@ -26,8 +26,8 @@ data class APISuggestionProfilDTO(
     val interets: List<String>?,
     @field:JsonProperty(value = "moygen")
     val moyenneGenerale: String?,
-    @field:JsonProperty(value = "choices")
-    val choix: List<SuggestionDTO>?,
+    @field:JsonProperty(value = "choix")
+    val choix: List<ChoixDTO>?,
 ) {
     constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this(
         classe = profilEleve.classe?.apiSuggestionValeur,
@@ -47,28 +47,29 @@ data class APISuggestionProfilDTO(
             },
         choix =
             (
-                profilEleve.metiersFavoris?.map { FavorisSuggestionDTO(it) }
+                profilEleve.metiersFavoris?.map { FavorisChoixDTO(it) }
                     ?: emptyList()
-            ) + (profilEleve.formationsFavorites?.map { FavorisSuggestionDTO(it.idFormation) } ?: emptyList()) +
-                profilEleve.corbeilleFormations.map { CorbeilleSuggestionDTO(it) },
+            ) + (profilEleve.formationsFavorites?.map { FavorisChoixDTO(it.idFormation) } ?: emptyList()) +
+                profilEleve.corbeilleFormations.map { CorbeilleChoixDTO(it) } +
+                profilEleve.voeuxFavoris.map { FavorisChoixDTO(it.idVoeu) },
     )
 }
 
-sealed class SuggestionDTO(
-    @field:JsonProperty(value = "fl")
+sealed class ChoixDTO(
+    @field:JsonProperty(value = "id")
     open val id: String,
     @field:JsonProperty(value = "status")
     val statut: Int, // "statut. \"1\": dans les favoris. \"2\": dans la corbeille."
     @field:JsonProperty(value = "date")
     val date: String? = null,
 ) {
-    data class FavorisSuggestionDTO(
-        @field:JsonProperty(value = "fl")
+    data class FavorisChoixDTO(
+        @field:JsonProperty(value = "id")
         override val id: String,
-    ) : SuggestionDTO(id = id, statut = 1)
+    ) : ChoixDTO(id = id, statut = 1)
 
-    data class CorbeilleSuggestionDTO(
-        @field:JsonProperty(value = "fl")
+    data class CorbeilleChoixDTO(
+        @field:JsonProperty(value = "id")
         override val id: String,
-    ) : SuggestionDTO(id = id, statut = 2)
+    ) : ChoixDTO(id = id, statut = 2)
 }

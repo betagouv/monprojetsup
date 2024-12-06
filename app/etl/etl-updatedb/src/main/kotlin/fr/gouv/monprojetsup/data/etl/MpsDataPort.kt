@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
-import fr.gouv.monprojetsup.data.model.Candidat
+import fr.gouv.monprojetsup.data.model.PanierVoeux
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.Ville
 import fr.gouv.monprojetsup.data.model.Voeu
@@ -35,7 +35,7 @@ interface MpsDataPort {
     fun getDurees(): Map<String, Int?>
     fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>>
     fun getPsupIdToMpsId(): Map<String, String>
-    fun getVoeuxParCandidat(): List<Candidat>
+    fun getPaniersVoeux(): List<PanierVoeux>
     fun getLasToPasIdMapping(): Map<String, String>
     fun getEdges(): List<Triple<String,String,Int>>
     fun getBacs(): List<Bac>

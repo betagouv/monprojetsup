@@ -114,11 +114,11 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
             val formation2 = formationsdb.findById("obsolete").orElse(null)
             assertNotNull(formation2)
-            assertThat(formation2?.obsolete)
+            assertThat(formation2.obsolete)
 
             val voeu2 = voeuxDb.findById("obsolete").orElse(null)
             assertNotNull(voeu2)
-            assertThat(voeu2?.obsolete)
+            assertThat(voeu2.obsolete)
         }
 
     }
@@ -207,7 +207,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var villesDb: SuggestionsVillesDb
 
         @Autowired
-        lateinit var candidatsDb: SuggestionsCandidatsDb
+        lateinit var paniersVoeuxdb: SuggestionsCandidatsDb
 
         @Autowired
         lateinit var edgesDb: SuggestionsEdgesDb
@@ -228,9 +228,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         @Tag("resource-intensive-test")
-        fun `La table des candidats doit être non vide`() {
-            updateSuggestionsDbs.updateCandidatsDb()
-            assertThat(candidatsDb.findAll()).isNotEmpty
+        fun `La table des paniers de voeux doit être non vide`() {
+            updateSuggestionsDbs.updatePaniersVoeuxDb()
+            assertThat(paniersVoeuxdb.findAll()).isNotEmpty
         }
 
         @Test
@@ -238,6 +238,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
             updateSuggestionsDbs.updateEdgesDb()
             assertThat(edgesDb.count()).isGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_SUGGESTIONS_GRAPH)
         }
+
 
     }
 

@@ -52,7 +52,7 @@ record ExplanationTagShort(List<String> ns) {
 
 record ExplanationDuration(String option) {}
 
-record ExplanationSimilarity(String fl, double p) {}
+record ExplanationSimilarity(String id, double p) {}
 
 record ExplanationTypeBac (int percentage, String bac) {}
 
@@ -246,7 +246,7 @@ public class Explanation {
             sb.append("Lien avec:\n\n").append(tags.toExplanation("\n\t", labels)).append("\n");
         }
         if(dur != null) sb.append("Durée: ").append(dur.option()).append("\n");
-        if(simi != null) sb.append("Similarité: ").append(simi.fl()).append("\n");
+        if(simi != null) sb.append("Similarité: ").append(simi.id()).append("\n");
         if(tbac != null) sb.append("Type de bac: ").append(tbac).append("\n");
         if(moygen != null) sb.append("Moyenne générale: ").append(moygen).append("\n");
         if(spec != null) sb.append("Spécialités: ").append(spec).append("\n");

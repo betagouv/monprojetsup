@@ -31,19 +31,19 @@ public record ProfileDTO(
         List<String> interests,
         @Schema(description = "moyenne générale scolaire estimée en terminale, sur 40", example = "28")
         String moygen,
-        @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
-        List<SuggestionDTO> choices,
+        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux, métiers et secteurs d'activité"))
+        List<ChoiceDTO> choix,
         @Schema(description = "statut de réflexion 0/1/2", example = "0")
         String statut
 
 ) {
 
-    public List<SuggestionDTO> suggApproved() {
-        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_APPROVED)).toList();
+    public List<ChoiceDTO> suggApproved() {
+        return choix == null ? List.of() : choix.stream().filter(s -> Objects.equals(s.status(), ChoiceDTO.SUGG_APPROVED)).toList();
     }
 
-    public List<SuggestionDTO> suggRejected() {
-        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_REJECTED)).toList();
+    public List<ChoiceDTO> suggRejected() {
+        return choix == null ? List.of() : choix.stream().filter(s -> Objects.equals(s.status(), ChoiceDTO.SUGG_REJECTED)).toList();
     }
 
     public int bacIndex() {
@@ -58,6 +58,6 @@ public record ProfileDTO(
 
 
     public void removeAllFormationChoices() {
-          choices.removeIf(s -> isFiliere(s.fl()));
+          choix.removeIf(s -> isFiliere(s.id()));
     }
 }

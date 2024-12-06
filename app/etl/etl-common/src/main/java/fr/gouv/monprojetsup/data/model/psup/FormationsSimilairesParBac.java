@@ -7,7 +7,7 @@ import java.util.Map;
 
 record FormationsSimilairesParBac(
         //indexé par I_TC_COD puis par GFlCod
-        Map<Integer, Map<String, Integer>> parBac
+        Map<Integer, Map<String, Long>> parBac
 ) {
     public FormationsSimilairesParBac() {
         this(new HashMap<>());
@@ -17,9 +17,9 @@ record FormationsSimilairesParBac(
         parBac.values().forEach(m -> {
             if (m.size() >= 2) {
                 //bestScore is generally the same filiere, not very meaningful
-                int bestScore = m.values().stream().mapToInt(n -> n).max().orElse(0);
+                long bestScore = m.values().stream().mapToLong(n -> n).max().orElse(0);
                 //this represents the best macth
-                int secondBestScore = m.values().stream().filter(n -> n != bestScore).mapToInt(n -> n).max().orElse(0);
+                long secondBestScore = m.values().stream().filter(n -> n != bestScore).mapToLong(n -> n).max().orElse(0);
                 if (secondBestScore > 0) {
                     m.entrySet().forEach(e -> e.setValue(PsupStatistiques.SIM_FIL_MAX_WEIGHT * e.getValue() / secondBestScore));
                 }

@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record SuggestionDTO(
+public record ChoiceDTO(
             @Schema(example = "fl2014", description = "clé de la formation, du métier ou du secteur d'activité")
-            @NotNull String fl,
+            @NotNull String id,
             @Schema(example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"0", "1", "2" })
             @Nullable Integer status,
 
@@ -25,6 +25,6 @@ public record SuggestionDTO(
     @JsonIgnore
     public boolean isKnown() {
         return status != null
-                && (status == SuggestionDTO.SUGG_APPROVED || status == SuggestionDTO.SUGG_REJECTED);
+                && (status == ChoiceDTO.SUGG_APPROVED || status == ChoiceDTO.SUGG_REJECTED);
     }
 }

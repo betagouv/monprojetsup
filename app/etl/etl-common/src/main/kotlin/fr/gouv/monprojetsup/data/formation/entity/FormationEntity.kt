@@ -125,7 +125,7 @@ class FormationEntity {
         val pctAdmisParSpecialite: Map<String, Int> = mapOf(),
 
         //type de bac générique → formation → score
-        val formationsSimilaires : Map<Int, Map<String,Int>> = mapOf(),
+        val formationsSimilaires : Map<Int, Map<String,Long>> = mapOf(),
 
         ) : Serializable {
 

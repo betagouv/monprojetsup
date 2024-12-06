@@ -26,8 +26,8 @@ import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader.loadLiensFormationsMpsDomainesMps
 import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
-import fr.gouv.monprojetsup.data.model.Candidat
 import fr.gouv.monprojetsup.data.model.LatLng
+import fr.gouv.monprojetsup.data.model.PanierVoeux
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.Ville
 import fr.gouv.monprojetsup.data.model.Voeu
@@ -288,6 +288,7 @@ class MpsDataFromFiles(
         }
         return result
     }
+
 
     private fun exportLiens() {
         val ignorer = getLiensMpsIgnorer()
@@ -852,9 +853,15 @@ class MpsDataFromFiles(
         return psupData.psupKeyToMpsKey
     }
 
-    override fun getVoeuxParCandidat(): List<Candidat> {
-        return psupData.voeuxParCandidat
+    override fun getPaniersVoeux(): List<PanierVoeux> {
+        val idVoeuxConnus = getVoeux().keys
+        return psupData.voeuxParCandidat.map { p ->
+            val id = p.bac
+            val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
+            PanierVoeux(id, voeux)
+        }
     }
+
 
     override fun getLasToPasIdMapping(): Map<String, String> {
         return psupData.lasToPass

@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,10 +53,10 @@ public record ReferenceCases(
         this(new ArrayList<>());
     }
 
-    public static String toExplanationString(List<SuggestionDTO> suggestions, String sep, Map<String,String> labels) {
+    public static String toExplanationString(List<ChoiceDTO> suggestions, String sep, Map<String,String> labels) {
         if (suggestions == null) return sep;
         return suggestions.stream()
-                .map(s -> labels.getOrDefault(s.fl(), s.fl()))
+                .map(s -> labels.getOrDefault(s.id(), s.id()))
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
@@ -135,7 +135,7 @@ public record ReferenceCases(
             fos.write(lineSeparator() + STAR_SEP + lineSeparator());
 
             val suggestions = result.suggestions();
-            fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e ->  labels.getOrDefault(e.fl(), e.fl()))
+            fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e ->  labels.getOrDefault(e.id(), e.id()))
                     .collect(Collectors.joining("\n\t", "\t", "\n")));
 
             if (includeDetails) {
@@ -196,7 +196,7 @@ public record ReferenceCases(
             if(refCase.suggestions() != null) {
                 fos.append("\n\n" + STAR_SEP);
                 fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions().stream()
-                        .map(e -> labels.getOrDefault(e.fl(), e.fl()))
+                        .map(e -> labels.getOrDefault(e.id(), e.id()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
             }
         }
@@ -291,8 +291,7 @@ public record ReferenceCases(
             }
             Suggestion unexpectedNumberOfExplanations = Suggestion.getPendingSuggestion(
                     suggestion1.key(),
-                    responseExpl.liste().get(0).explanations(),
-                    List.of()
+                    responseExpl.liste().get(0).explanations()
             );
             list.add(unexpectedNumberOfExplanations);
         }

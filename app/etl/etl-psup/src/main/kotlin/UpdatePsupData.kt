@@ -47,7 +47,6 @@ class Runner : CommandLineRunner {
 	lateinit var psupPassword : String
 
 	companion object {
-		const val FRONT_PSUP_DATA_FILENAME = "parcoursup/psupDataFront.zip"
 		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
 	}
 
@@ -71,14 +70,6 @@ class Runner : CommandLineRunner {
 			Serialisation.toZippedJson(
 				getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
 				data,
-				true
-			)
-
-			logger.info("Export du legacy front data set")
-			data.minimizeForFront()
-			Serialisation.toZippedJson(
-				getSourceDataFilePath(FRONT_PSUP_DATA_FILENAME),
-				data.stats(),
 				true
 			)
 

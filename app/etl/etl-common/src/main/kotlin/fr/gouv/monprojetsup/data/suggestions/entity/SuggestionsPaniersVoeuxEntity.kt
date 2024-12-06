@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.suggestions.entity
 
-import fr.gouv.monprojetsup.data.model.Candidat
+import fr.gouv.monprojetsup.data.model.PanierVoeux
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
@@ -9,8 +9,8 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "sugg_candidats")
-class SuggestionsCandidatEntity {
+@Table(name = "sugg_paniers_voeux")
+class SuggestionsPaniersVoeuxEntity {
 
     constructor()
 
@@ -18,11 +18,11 @@ class SuggestionsCandidatEntity {
     @GeneratedValue
     val id: Long = 0
 
-    fun toCandidat() : Candidat {
-        return Candidat(bac,ArrayList(voeux))
+    fun toCandidat() : PanierVoeux {
+        return PanierVoeux(bac, ArrayList(voeux))
     }
 
-    constructor(c : Candidat) {
+    constructor(c : PanierVoeux) {
         this.bac = c.bac
         this.voeux = ArrayList(c.voeux)
     }

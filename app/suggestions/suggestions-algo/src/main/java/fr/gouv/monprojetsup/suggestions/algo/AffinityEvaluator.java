@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import lombok.val;
@@ -118,15 +118,15 @@ public class AffinityEvaluator {
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
-        List<SuggestionDTO> approved = pf.suggApproved();
+        List<ChoiceDTO> approved = pf.suggApproved();
         this.flApproved = approved.stream()
                 .filter(s -> s.score() == null || s.score() >= 3)
-                .map(SuggestionDTO::fl).filter(Constants::isMpsFormation).toList();
+                .map(ChoiceDTO::id).filter(Constants::isMpsFormation).toList();
 
-        List<SuggestionDTO> rejectedSuggestions = pf.suggRejected();
+        List<ChoiceDTO> rejectedSuggestions = pf.suggRejected();
 
         if(excludeRejected) {
-            rejected.addAll(rejectedSuggestions.stream().map(SuggestionDTO::fl).toList());
+            rejected.addAll(rejectedSuggestions.stream().map(ChoiceDTO::id).toList());
         }
 
         //precomputing candidats for filieres similaires
@@ -142,7 +142,7 @@ public class AffinityEvaluator {
         if(pf.interests() != null) nonZeroScores.addAll(pf.interests());
 
         //autres formations
-        nonZeroScores.addAll(approved.stream().map(SuggestionDTO::fl).toList());
+        nonZeroScores.addAll(approved.stream().map(ChoiceDTO::id).toList());
 
         isInterestedinHealth = algo.isRelatedToHealth(nonZeroScores);
 

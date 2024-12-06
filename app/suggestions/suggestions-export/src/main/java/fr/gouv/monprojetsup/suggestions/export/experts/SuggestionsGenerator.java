@@ -62,7 +62,7 @@ public class SuggestionsGenerator {
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(
-                    suggestion -> !Constants.isFiliere(suggestion.fl())
+                    suggestion -> !Constants.isFiliere(suggestion.id())
             ));
         }
 

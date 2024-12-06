@@ -35,14 +35,14 @@
         "ci6",
         "ci25"
       ],
-      "choices": [
+      "choix": [
         {
-          "fl": "MET.161",
+          "id": "MET.161",
           "status": 1,
           "score": 4
         },
         {
-          "fl": "fl2042",
+          "id": "fl2042",
           "status": 1,
           "score": 5
         }
@@ -65,14 +65,14 @@
         "dom34","dom32","dom33","dom34","dom35","dom36"
       ],
       "moygen": "10",
-      "choices": [
+      "choix": [
         {
-          "fl": "fl18",
+          "id": "fl18",
           "status": 1,
           "score": 5
         },
         {
-          "fl": "fl481018",
+          "id": "fl481018",
           "status": 2,
           "score": 0
         }

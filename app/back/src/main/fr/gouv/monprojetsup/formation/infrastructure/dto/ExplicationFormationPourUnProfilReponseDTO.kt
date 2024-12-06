@@ -112,7 +112,7 @@ data class APISuggestionExplicationTypeBacDTO(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationSimilariteDTO(
-    @JsonProperty(value = "fl")
+    @JsonProperty(value = "id")
     val formation: String?,
     @JsonProperty(value = "p")
     val pourcentageSimilitude: Double?,

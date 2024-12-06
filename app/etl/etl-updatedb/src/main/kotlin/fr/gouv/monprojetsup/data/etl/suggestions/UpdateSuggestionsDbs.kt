@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.data.etl.suggestions
 
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsPaniersVoeuxEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
@@ -14,7 +14,7 @@ import java.util.logging.Logger
 
 @Repository
 interface SuggestionsCandidatsDb :
-    JpaRepository<SuggestionsCandidatEntity, String>
+    JpaRepository<SuggestionsPaniersVoeuxEntity, String>
 
 @Repository
 interface SuggestionsVillesDb :
@@ -38,9 +38,9 @@ class UpdateSuggestionsDbs(
 
     internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
 
-        if(voeuxOntChange) {
-            logger.info("Mise à jour des voeux candidats")
-            updateCandidatsDb()
+        if (voeuxOntChange) {
+            logger.info("Mise à jour des paniers de voeux")
+            updatePaniersVoeuxDb()
         }
 
         logger.info("Mise à jour des edges")
@@ -54,6 +54,7 @@ class UpdateSuggestionsDbs(
 
     }
 
+
     private fun updateLabelsDb() {
         val labels = mpsDataPort.getLabels()
         val debugLabels = mpsDataPort.getDebugLabels()
@@ -66,11 +67,11 @@ class UpdateSuggestionsDbs(
         batchUpdate.upsertEntities(entities)
     }
 
-    internal fun updateCandidatsDb() {
-        val entities = mpsDataPort.getVoeuxParCandidat()
-            .map { SuggestionsCandidatEntity(it) }
+    internal fun updatePaniersVoeuxDb() {
+        val entities = mpsDataPort.getPaniersVoeux()
+            .map { SuggestionsPaniersVoeuxEntity(it) }
         batchUpdate.setEntities(
-            SuggestionsCandidatEntity::class.simpleName!!,
+            SuggestionsPaniersVoeuxEntity::class.simpleName!!,
             entities
         )
     }
@@ -92,6 +93,5 @@ class UpdateSuggestionsDbs(
             entities
         )
     }
-
 
 }

@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.model.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.model.Candidat;
+import fr.gouv.monprojetsup.data.model.PanierVoeux;
 import fr.gouv.monprojetsup.data.model.Voeu;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
@@ -55,7 +55,7 @@ public record PsupData(
 
         @NotNull Set<Integer> las,
 
-        @NotNull List<Candidat> voeuxParCandidat,
+        @NotNull List<PanierVoeux> voeuxParCandidat,
 
         @NotNull DescriptifsFormations descriptifsFormations,
 
@@ -171,7 +171,7 @@ public record PsupData(
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_DES_ATT")).orElse(null);
     }
 
-    public @NotNull Map<Integer, @NotNull Map<String, @NotNull Integer>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
+    public @NotNull Map<Integer, @NotNull Map<String, @NotNull Long>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
         return  filsim.getStats(psupKeys);
     }
 
@@ -671,11 +671,6 @@ public record PsupData(
         );
     }
 
-
-    public void minimizeForFront() {
-        voeuxParCandidat.clear();
-        stats.minimize();
-    }
 
     public void setBacs(List<Bac> bacs) {
         this.bacs.clear();

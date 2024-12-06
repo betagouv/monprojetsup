@@ -9,7 +9,7 @@ import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.val;
@@ -205,7 +205,7 @@ public class AlgoSuggestions {
         if (maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
         pf.suggRejected().forEach(suggestionDTO -> {
-            String fl = suggestionDTO.fl();
+            String fl = suggestionDTO.id();
             if (affinites.containsKey(fl)) {
                 affinites.put(fl, Affinite.getNoMatch());
             }
@@ -336,7 +336,7 @@ public class AlgoSuggestions {
         } else {
             clesFiltrees = new HashSet<>(edgesKeys.nodes().stream().filter(Constants::isMetier).toList());
         }
-        pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
+        pf.suggRejected().stream().map(ChoiceDTO::id).toList().forEach(clesFiltrees::remove);
 
         return  new AffinityEvaluator(pf, data.getConfig(), this, false).getCandidatesOrderedByPertinence(clesFiltrees);
     }

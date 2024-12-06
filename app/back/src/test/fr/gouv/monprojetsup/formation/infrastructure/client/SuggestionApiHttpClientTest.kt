@@ -362,29 +362,29 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1351"
                         ],
                         "moygen": "28",
-                        "choices": [
+                        "choix": [
                           {
-                            "fl": "MET_123",
+                            "id": "MET_123",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "MET_456",
+                            "id": "MET_456",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl1234",
+                            "id": "fl1234",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl5678",
+                            "id": "fl5678",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl0001",
+                            "id": "fl0001",
                             "status": 2,
                             "date": null
                           }
@@ -521,13 +521,13 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "simi": {
-                            "fl": "fl1",
+                            "id": "fl1",
                             "p": 0.15
                           }
                         },
                         {
                           "simi": {
-                            "fl": "fl7",
+                            "id": "fl7",
                             "p": 0.30
                           }
                         },
@@ -1050,29 +1050,29 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1351"
                         ],
                         "moygen": "28",
-                        "choices": [
+                        "choix": [
                           {
-                            "fl": "MET_123",
+                            "id": "MET_123",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "MET_456",
+                            "id": "MET_456",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl1234",
+                            "id": "fl1234",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl5678",
+                            "id": "fl5678",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl0001",
+                            "id": "fl0001",
                             "status": 2,
                             "date": null
                           }

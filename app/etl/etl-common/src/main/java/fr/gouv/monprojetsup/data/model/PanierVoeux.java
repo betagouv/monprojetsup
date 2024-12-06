@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public record Candidat(
+public record PanierVoeux(
         @NotNull String bac,
         @NotNull List<@NotNull String> voeux
 ) implements Serializable {
-    public Candidat(@NotNull String bac, @NotNull Set<Integer> voeux) {
+    public PanierVoeux(@NotNull String bac, @NotNull Set<Integer> voeux) {
         this(bac, voeux.stream().map(Constants::gTaCodToMpsId).toList());
     }
 }

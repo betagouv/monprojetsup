@@ -6,11 +6,11 @@ import java.util.List;
 
 
 public record Summary(
-            List<Choice> choices
+            List<Choice> choix
     ) {
     @Nullable String getContent() {
-        if (choices == null || choices.isEmpty()) return null;
-        return choices.get(0).message.content;
+        if (choix == null || choix.isEmpty()) return null;
+        return choix.get(0).message.content;
     }
 
     public record Choice(

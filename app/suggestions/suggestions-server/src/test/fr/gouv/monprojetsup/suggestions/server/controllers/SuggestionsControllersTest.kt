@@ -73,14 +73,14 @@ class SuggestionsControllersTest(
                     logger.info("Test du profil ${pair.left}")
                     val profil = pair.right!!
                     val obligatoires =
-                        profil.suggApproved().filter { isFiliere(it.fl) && it.score != null && it.score!! >= 5 }.map { s -> s.fl }
+                        profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 5 }.map { s -> s.id }
                             .toSet()
                     val recommandees =
-                        profil.suggApproved().filter { isFiliere(it.fl) && it.score != null && it.score!! >= 3 }.map { s -> s.fl }
+                        profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 3 }.map { s -> s.id }
                             .toSet()
-                    val deconseillees = profil.suggRejected().filter { isFiliere(it.fl) }.map { s -> s.fl }.toSet()
+                    val deconseillees = profil.suggRejected().filter { isFiliere(it.id) }.map { s -> s.id }.toSet()
 
-                    profil.choices.removeIf { isFiliere(it.fl) }
+                    profil.choix.removeIf { isFiliere(it.id) }
                     val resultat = getSuggestions(profil)
                     val suggestions = resultat.affinites.filter { it.affinite > 0 }.map { it.key }.toSet()
                     val premieresSuggestions =

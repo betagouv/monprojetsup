@@ -22,7 +22,7 @@ l'Innovation,
 package fr.gouv.monprojetsup.data.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.model.Candidat;
+import fr.gouv.monprojetsup.data.model.PanierVoeux;
 import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
@@ -239,7 +239,7 @@ public class ConnecteurBackendSQL {
         data.voeuxParCandidat().clear();
         data.voeuxParCandidat().addAll(
                 voeuxParCandidat.entrySet().stream()
-                        .map(e -> new Candidat(bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS), e.getValue()))
+                        .map(e -> new PanierVoeux(bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS), e.getValue()))
                         .toList()
         );
     }

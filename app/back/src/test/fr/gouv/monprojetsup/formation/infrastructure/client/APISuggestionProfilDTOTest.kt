@@ -4,7 +4,7 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -85,11 +85,11 @@ class APISuggestionProfilDTOTest {
                 moyenneGenerale = "28",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0002"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_123"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_456"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0002"),
                     ),
             )
 
@@ -148,11 +148,11 @@ class APISuggestionProfilDTOTest {
                 moyenneGenerale = "21",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0001"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_123"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_456"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0001"),
                     ),
             )
         private val profilEleveSecondeSTHR =
@@ -190,8 +190,8 @@ class APISuggestionProfilDTOTest {
                 moyenneGenerale = "39",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_001"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_004"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_001"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_004"),
                     ),
             )
         private val profilEleveSecondeTMD =
@@ -237,8 +237,8 @@ class APISuggestionProfilDTOTest {
                 moyenneGenerale = null,
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0001"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0005"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl0001"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl0005"),
                     ),
             )
         private val profilElevePremiere =
@@ -320,9 +320,9 @@ class APISuggestionProfilDTOTest {
                 moyenneGenerale = "9",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0012"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0012"),
                     ),
             )
         private val profilEleveNull =
