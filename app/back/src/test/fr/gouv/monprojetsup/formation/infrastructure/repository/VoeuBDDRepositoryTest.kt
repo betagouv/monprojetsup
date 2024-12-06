@@ -20,13 +20,17 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var voeuJPARepository: VoeuJPARepository
 
     @Autowired
+    lateinit var voeuCourtJPARepository: VoeuCourtJPARepository
+
+    @Autowired
     lateinit var entityManager: EntityManager
 
     lateinit var voeuBDDRepository: VoeuBDDRepository
 
+
     @BeforeEach
     fun setup() {
-        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository, entityManager)
+        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository, voeuCourtJPARepository, entityManager)
     }
 
     @Nested
