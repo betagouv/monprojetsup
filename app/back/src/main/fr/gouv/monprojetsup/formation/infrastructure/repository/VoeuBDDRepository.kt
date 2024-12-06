@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.JoinFormationVoeuQuery
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class VoeuBDDRepository(
     val voeuJPARepository: VoeuJPARepository,
+    val voeuCourtJPARepository: VoeuCourtJPARepository,
     val entityManager: EntityManager,
 ) : VoeuRepository {
     @Transactional(readOnly = true)
@@ -54,6 +56,11 @@ class VoeuBDDRepository(
     override fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String> {
         val existingIds = voeuJPARepository.findExistingIds(idsVoeux)
         return idsVoeux.filterNot { existingIds.contains(it) }
+    }
+
+    override fun recupererLesNomsDesVoeux(idsVoeux: List<String>): List<FormationCourte> {
+        val voeux = voeuCourtJPARepository.findAllByIdIn(idsVoeux)
+        return voeux.map { it.toFormationCourte() }
     }
 
     private fun findAllByIdVoeuIn(idsVoeux: List<String>): List<JoinFormationVoeuQuery> {

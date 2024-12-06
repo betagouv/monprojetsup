@@ -64,8 +64,6 @@ record ExplanationSpecialite (String spe, int pct) {}
 
 record ExplanationSpecialites (List<ExplanationSpecialite> stats) {}
 
-record ExplanationVoeuxFavoris (List<String> voeux) {}
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -82,7 +80,6 @@ public class Explanation {
     @Nullable ExplanationNotes moygen;
     @Nullable ExplanationDebug debug;
     @Nullable ExplanationSpecialites spec;
-    @Nullable ExplanationVoeuxFavoris voeux;
 
     public static @NotNull List<Explanation> merge(@Nullable List<Explanation> explanations) {
         if(explanations == null) return Collections.emptyList();
@@ -166,13 +163,6 @@ public class Explanation {
         e.geo = result;
         return e;
     }
-
-    public static @NotNull Explanation getVoeuxFavoriExplanation(List<String> voeux) {
-        Explanation e = new Explanation();
-        e.voeux = new ExplanationVoeuxFavoris(voeux);
-        return e;
-    }
-
 
     public static @NotNull Explanation getAppExplanation(String option) {
         Explanation e = new Explanation();

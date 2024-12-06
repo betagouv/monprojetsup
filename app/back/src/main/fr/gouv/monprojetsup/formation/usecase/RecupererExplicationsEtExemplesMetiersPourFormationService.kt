@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service
 class RecupererExplicationsEtExemplesMetiersPourFormationService(
     private val suggestionHttpClient: SuggestionHttpClient,
     private val formationRepository: FormationRepository,
+    private val voeuxRepository: VoeuRepository,
     private val baccalaureatRepository: BaccalaureatRepository,
     private val specialitesRepository: SpecialitesRepository,
     private val metierRepository: MetierRepository,
@@ -98,7 +100,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
         val formationsSimilaires =
             if (explications.formationsSimilaires.isNotEmpty()) {
-                formationRepository.recupererLesNomsDesFormations(explications.formationsSimilaires)
+                formationRepository.recupererLesNomsDesFormations(explications.formationsSimilaires) +
+                    voeuxRepository.recupererLesNomsDesVoeux(explications.formationsSimilaires)
             } else {
                 emptyList()
             }
@@ -143,7 +146,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() }.takeUnless {
             it.isEmpty()
         }?.let {
-            formationRepository.recupererLesNomsDesFormations(it.distinct())
+            formationRepository.recupererLesNomsDesFormations(it.distinct()) +
+                voeuxRepository.recupererLesNomsDesVoeux(it.distinct())
         } ?: emptyList()
 
     private fun recupererBaccalaureats(

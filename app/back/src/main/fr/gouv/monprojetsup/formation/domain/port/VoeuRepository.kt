@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.domain.port
 
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 
 interface VoeuRepository {
@@ -16,4 +17,6 @@ interface VoeuRepository {
     ): List<Voeu>
 
     fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String>
+
+    fun recupererLesNomsDesVoeux(idsVoeux: List<String>): List<FormationCourte>
 }

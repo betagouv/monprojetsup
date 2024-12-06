@@ -53,13 +53,7 @@ class FormationBDDRepository(
     @Transactional(readOnly = true)
     override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte> {
         val formations = formationJPARepository.findAllByIdIn(idsFormations)
-        return idsFormations.mapNotNull { idFormation ->
-            val formation = formations.firstOrNull { formation -> formation.id == idFormation }
-            if (formation == null) {
-                logguerFormationInconnue(idFormation)
-            }
-            formation?.toFormationCourte()
-        }
+        return formations.map { it.toFormationCourte() }
     }
 
     @Transactional(readOnly = true)

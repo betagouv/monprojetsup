@@ -727,7 +727,7 @@ public class AffinityEvaluator {
         val voeux = flConnectedToVoeuxFavori.getOrDefault(fl, List.of());
         val result = voeux.isEmpty() ? NO_MATCH_SCORE : FULL_MATCH_MULTIPLIER;
         if(result > 0 && expl != null) {
-            expl.explanations.add(Explanation.getVoeuxFavoriExplanation(voeux));
+            voeux.forEach(v -> expl.explanations.add(Explanation.getSimilarityExplanation(v, 100)));
         }
         return result;
     }
