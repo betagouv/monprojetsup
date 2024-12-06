@@ -1,10 +1,10 @@
-import { VoeuFavori, type Élève } from "@/features/élève/domain/élève.interface";
+import { VoeuÉlève, type Élève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
 export class MettreÀJourVoeuxÉlèveUseCase {
   public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
 
-  public async run(élève: Élève, idsVoeuxÀModifier: VoeuFavori["id"][]): Promise<Élève | Error> {
+  public async run(élève: Élève, idsVoeuxÀModifier: VoeuÉlève["id"][]): Promise<Élève | Error> {
     const voeux = new Map(élève.voeuxFavoris?.map((voeu) => [voeu.id, voeu]));
 
     for (const idVoeu of idsVoeuxÀModifier) {

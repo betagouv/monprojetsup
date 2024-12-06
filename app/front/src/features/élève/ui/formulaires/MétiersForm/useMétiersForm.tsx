@@ -1,23 +1,20 @@
 import { type UseMétiersFormArgs } from "./MétiersForm.interface";
 import { métiersValidationSchema } from "./MétiersForm.validation";
-import useMétiersFavorisMétiersForm from "./useMétiersFavorisMétiersForm";
 import useSituationMétiersMétiersForm from "./useSituationMétiersMétiersForm";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { useEffect } from "react";
 
 export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseMétiersFormArgs) {
-  const { register, erreurs, mettreÀJourÉlève, setValue, getValues } = useÉlèveForm({
+  const { mettreÀJourMétiersFavorisÉlève, élève } = useÉlève();
+  const { setValue, getValues, handleSubmit } = useÉlèveForm({
     schémaValidation: métiersValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
   const situationMétiersMétiersForm = useSituationMétiersMétiersForm({
-    setValue,
-    getValues,
-  });
-
-  const métiersFavorisMétiersForm = useMétiersFavorisMétiersForm({
     setValue,
     getValues,
   });
@@ -46,14 +43,22 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
       return;
     }
 
-    await mettreÀJourÉlève(event);
+    if (situationMétiersMétiersForm.optionSélectionnée === "aucune_idee" && élève?.métiersFavoris) {
+      await mettreÀJourMétiersFavorisÉlève(élève?.métiersFavoris);
+    }
+
+    await handleSubmit(async () => {
+      await àLaSoumissionDuFormulaireAvecSuccès?.();
+    })();
   };
+
+  // Garder synchronisé la valeur react-hook-form et le profil de l'élève
+  useEffect(() => {
+    setValue("métiersFavoris", élève?.métiersFavoris ?? []);
+  }, [setValue, élève?.métiersFavoris]);
 
   return {
     mettreÀJourÉlève: soumettreFormulaire,
-    erreurs,
-    register,
     situationMétiers: situationMétiersMétiersForm,
-    ...métiersFavorisMétiersForm,
   };
 }

@@ -29,6 +29,7 @@ import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructu
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
 import { MettreÀJourFormationsFavoritesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourFormationsFavoritesÉlève.ts";
+import { MettreÀJourMétiersFavorisÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourMétiersFavorisÉlève";
 import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
 import { MettreÀJourSpécialitésÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourSpécialitésÉlève";
 import { MettreÀJourVoeuxÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourVoeuxÉlève";
@@ -75,6 +76,8 @@ export class Dépendances {
   public readonly mettreÀJourCommunesÉlèveUseCase: MettreÀJourCommunesÉlèveUseCase;
 
   public readonly mettreÀJourFormationsFavoritesÉlèveUseCase: MettreÀJourFormationsFavoritesÉlèveUseCase;
+
+  public readonly mettreÀJourMétiersFavorisÉlèveUseCase: MettreÀJourMétiersFavorisÉlèveUseCase;
 
   public readonly récupérerFicheFormationUseCase: RécupérerFicheFormationUseCase;
 
@@ -139,6 +142,7 @@ export class Dépendances {
     this.mettreÀJourFormationsFavoritesÉlèveUseCase = new MettreÀJourFormationsFavoritesÉlèveUseCase(
       this._élèveRepository,
     );
+    this.mettreÀJourMétiersFavorisÉlèveUseCase = new MettreÀJourMétiersFavorisÉlèveUseCase(this._élèveRepository);
 
     // Formations
     this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);

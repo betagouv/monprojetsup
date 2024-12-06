@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 
 export default function useCommentaire() {
   const [status, setStatus] = useState<ChampZoneDeTexteProps["status"]>();
-  const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
+  const { mettreÀJourUneFormationFavorite, élève } = useÉlève();
   const formationAffichée = élémentAffichéListeEtAperçuStore();
 
   const commentaireParDéfaut = useMemo(() => {

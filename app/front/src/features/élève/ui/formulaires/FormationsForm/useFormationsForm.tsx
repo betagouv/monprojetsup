@@ -8,7 +8,7 @@ import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèv
 import { useEffect } from "react";
 
 export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseFormationsFormArgs) {
-  const { mettreÀJourFormationsFavoritesÉlève, élève } = useÉlève({});
+  const { mettreÀJourFormationsFavoritesÉlève, élève } = useÉlève();
   const { setValue, getValues, handleSubmit } = useÉlèveForm({
     schémaValidation: formationsValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,

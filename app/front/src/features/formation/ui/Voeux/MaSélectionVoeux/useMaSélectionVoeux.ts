@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export default function useMaSélectionVoeux() {
-  const { élève } = useÉlève({});
+  const { élève } = useÉlève();
   const { voeuVersFavori } = useVoeu();
   const formationAffichée = élémentAffichéListeEtAperçuStore();
   const { data: formation } = useQuery(récupérerFicheFormationQueryOptions(formationAffichée.id));

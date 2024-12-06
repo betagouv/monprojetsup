@@ -41,6 +41,7 @@ export const constantes = {
   },
   MÉTIERS: {
     CHAMP_MÉTIERS_FAVORIS: "métiersFavoris",
+    NB_PAR_PAGE: 10,
     NB_CARACTÈRES_MIN_RECHERCHE: 2,
     NB_CARACTÈRES_MAX_RECHERCHE: 100,
   },

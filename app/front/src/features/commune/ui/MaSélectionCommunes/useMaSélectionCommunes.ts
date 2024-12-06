@@ -4,7 +4,7 @@ import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useMemo } from "react";
 
 export default function useMaSélectionCommunes() {
-  const { élève } = useÉlève({});
+  const { élève } = useÉlève();
   const { communeVersFavori } = useCommune();
 
   const favoris = useMemo(() => {

@@ -3,7 +3,7 @@ import { Spécialité } from "@/features/référentielDonnées/domain/référent
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 
 export default function useSpécialité() {
-  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève({});
+  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève();
 
   const spécialitéVersFavori = (spécialité: Spécialité): Favori => {
     const estFavorite = élève?.spécialités?.some((spécialitéFavorite) => spécialitéFavorite === spécialité.id) ?? false;

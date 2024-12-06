@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-nested-functions */
 import { InscriptionTestHelper } from "./inscriptionTestHelper";
 import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
@@ -141,28 +142,61 @@ test.describe("Inscription élève - Formations", () => {
   });
 
   test.describe("Si j'avais sélectionné des formations", () => {
-    test("En changeant le champ 'Avancement' elles ne sont pas réinitialisées", async ({ page }) => {
-      // GIVEN
-      const testhelper = new Test(page);
-      await testhelper.naviguerVersLaPage();
+    test.describe("Si je change le champ 'Avancement' à 'Aucune idée'", () => {
+      test.describe("Si je change à nouveau le champ 'Avancement' à 'Quelques pistes'", () => {
+        test("mes formations précédemment sélectionnées sont toujours présentes", async ({ page }) => {
+          // GIVEN
+          const testhelper = new Test(page);
+          await testhelper.naviguerVersLaPage();
 
-      // WHEN
-      await testhelper.renseignerChampSituationFormations(
-        i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
-      );
-      await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
-      await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_FORMATION).click();
-      await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_FORMATION).click();
-      await testhelper.renseignerChampSituationFormations(i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL);
-      await testhelper.renseignerChampSituationFormations(
-        i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
-      );
+          // WHEN
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
+          );
+          await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
+          await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_FORMATION).click();
+          await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_FORMATION).click();
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL,
+          );
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
+          );
 
-      // THEN
-      await expect(
-        testhelper.champRechercheSélecteurMultiple(i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL),
-      ).toHaveText("");
-      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+          // THEN
+          await expect(
+            testhelper.champRechercheSélecteurMultiple(i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL),
+          ).toHaveText("");
+          await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+        });
+      });
+
+      test.describe("Si je soumets je formulaire", () => {
+        test("mes formations précédemment sélectionnées sont supprimées", async ({ page }) => {
+          // GIVEN
+          const testhelper = new Test(page);
+          await testhelper.naviguerVersLaPage();
+
+          // WHEN
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
+          );
+          await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
+          await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_FORMATION).click();
+          await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_FORMATION).click();
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL,
+          );
+          await testhelper.soumettreLeFormulaire();
+          await page.goBack();
+          await testhelper.renseignerChampSituationFormations(
+            i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
+          );
+
+          // THEN
+          await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(0);
+        });
+      });
     });
   });
 

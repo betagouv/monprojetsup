@@ -3,7 +3,7 @@ import { Commune } from "@/features/commune/domain/commune.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 
 export default function useCommune() {
-  const { élève, mettreÀJourCommunesÉlève } = useÉlève({});
+  const { élève, mettreÀJourCommunesÉlève } = useÉlève();
 
   const communeVersFavori = (commune: Commune): Favori => {
     const estFavorite =

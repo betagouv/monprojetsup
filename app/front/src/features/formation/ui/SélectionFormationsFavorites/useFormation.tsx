@@ -3,7 +3,7 @@ import { Formation } from "@/features/formation/domain/formation.interface.ts";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 
 export default function useFormation() {
-  const { élève, mettreÀJourFormationsFavoritesÉlève } = useÉlève({});
+  const { élève, mettreÀJourFormationsFavoritesÉlève } = useÉlève();
 
   const formationVersFavori = (formation: Formation): Favori => {
     const estFavorite =

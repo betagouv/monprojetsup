@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function useVoeu() {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { élève, mettreÀJourVoeuxÉlève } = useÉlève({});
+  const { élève, mettreÀJourVoeuxÉlève } = useÉlève();
 
   const générerUrlParcoursup = (voeuId: Voeu["id"], bacs: Bac[]) => {
     const idTypeBacParcoursup = bacs.find((baccalaureat) => baccalaureat.id === élève?.bac)?.idCarteParcoursup;

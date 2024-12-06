@@ -1,4 +1,4 @@
-import { type useIntérêtsFormArgs } from "./IntérêtsForm.interface";
+import { type UseIntérêtsFormArgs } from "./IntérêtsForm.interface";
 import { centresIntérêtsValidationSchema } from "./IntérêtsForm.validation";
 import { actionsToastStore } from "@/components/Toast/useToast/useToast";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -7,7 +7,7 @@ import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèv
 import { useQuery } from "@tanstack/react-query";
 import { useId } from "react";
 
-export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccès }: useIntérêtsFormArgs) {
+export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseIntérêtsFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
   const { déclencherToast } = actionsToastStore();
 

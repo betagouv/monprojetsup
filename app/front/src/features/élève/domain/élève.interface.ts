@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/redundant-type-aliases */
+
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import {
   type AlternanceÉlève,
@@ -7,18 +9,20 @@ import {
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
-// eslint-disable-next-line sonarjs/redundant-type-aliases
-export type IdSpécialité = string;
+type Id = string;
 
-export type CommuneFavorite = Omit<Commune, "codePostal">;
-
-export type FormationFavorite = {
+export type MétierÉlève = Id;
+export type SpécialitéÉlève = Id;
+export type DomaineÉlève = Id;
+export type CentreIntêretÉlève = Id;
+export type FormationMasquéeÉlève = Id;
+export type CommuneÉlève = Omit<Commune, "codePostal">;
+export type FormationÉlève = {
   id: string;
   niveauAmbition: 1 | 2 | 3 | null;
   commentaire: string | null;
 };
-
-export type VoeuFavori = {
+export type VoeuÉlève = {
   id: string;
   estParcoursup: boolean;
 };
@@ -28,17 +32,17 @@ export type Élève = {
   situation: SituationÉlève | null;
   classe: ClasseÉlève | null;
   bac: BacÉlève | null;
-  spécialités: IdSpécialité[] | null;
-  domaines: string[] | null;
-  centresIntérêts: string[] | null;
-  métiersFavoris: string[] | null;
+  spécialités: SpécialitéÉlève[] | null;
+  domaines: DomaineÉlève[] | null;
+  centresIntérêts: CentreIntêretÉlève[] | null;
+  métiersFavoris: MétierÉlève[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
   moyenneGénérale: number | null;
-  communesFavorites: CommuneFavorite[] | null;
-  formationsFavorites: FormationFavorite[] | null;
-  voeuxFavoris: VoeuFavori[] | null;
-  formationsMasquées: string[] | null;
+  communesFavorites: CommuneÉlève[] | null;
+  formationsFavorites: FormationÉlève[] | null;
+  voeuxFavoris: VoeuÉlève[] | null;
+  formationsMasquées: FormationMasquéeÉlève[] | null;
 };
 
 export const situationÉlève = [

@@ -261,6 +261,9 @@ export const localeFR = {
         LABEL: "Métiers envisagés",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les métiers qui pourraient t’intéresser",
         SÉLECTIONNÉS: "Métier(s) sélectionné(s)",
+        MA_SÉLECTION: {
+          AUCUN: "Aucun métier sélectionné",
+        },
       },
     },
     ÉTUDE: {

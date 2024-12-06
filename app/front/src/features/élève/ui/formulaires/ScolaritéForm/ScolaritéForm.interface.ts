@@ -4,11 +4,11 @@ import { type UseFormGetValues, type UseFormSetValue, type UseFormWatch } from "
 
 export type ScolaritéFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void> | void;
 };
 
 export type UseScolaritéFormArgs = {
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès: ScolaritéFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
 };
 
 export type UseMoyenneScolaritéFormArgs = {

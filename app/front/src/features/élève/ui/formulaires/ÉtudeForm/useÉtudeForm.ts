@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseÉtudeFormArgs) {
-  const { élève } = useÉlève({});
+  const { élève } = useÉlève();
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
 
   const { register, erreurs, mettreÀJourÉlève, setValue } = useÉlèveForm({

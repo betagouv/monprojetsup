@@ -7,7 +7,7 @@ export type SituationFormationsÉlève = (typeof situationFormationsÉlève)[num
 
 export type FormationsFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void>;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void> | void;
 };
 
 export type UseFormationsFormArgs = {

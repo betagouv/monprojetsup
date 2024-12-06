@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export default function useMaSélectionSpécialités() {
-  const { élève } = useÉlève({});
+  const { élève } = useÉlève();
   const { spécialitéVersFavori } = useSpécialité();
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
 

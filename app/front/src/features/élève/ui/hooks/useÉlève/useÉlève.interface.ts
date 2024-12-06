@@ -1,3 +1,3 @@
 export type UseÉlèveArgs = {
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaMiseÀJourÉlèveAvecSuccès?: () => Promise<void> | void;
 };

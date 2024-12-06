@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuFormulaireAvecSuccès }: UseÉlèveFormArgs) {
-  const { mettreÀJourÉlève, élève } = useÉlève({ àLaSoumissionDuFormulaireAvecSuccès });
+  const { mettreÀJourÉlève, élève } = useÉlève({ àLaMiseÀJourÉlèveAvecSuccès: àLaSoumissionDuFormulaireAvecSuccès });
 
   const {
     register,

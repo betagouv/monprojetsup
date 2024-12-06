@@ -12,7 +12,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
   const estMasquée =
     élève?.formationsMasquées?.some((formationsMasquée) => formationsMasquée === formation.id) ?? false;
 
-  const { mettreÀJourÉlève } = useÉlève({});
+  const { mettreÀJourÉlève } = useÉlève();
 
   const ajouterEnFavori = async () => {
     const formationsFavorites = [

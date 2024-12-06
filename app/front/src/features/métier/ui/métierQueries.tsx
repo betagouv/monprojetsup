@@ -1,4 +1,5 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
+import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 import { queryOptions } from "@tanstack/react-query";
@@ -7,9 +8,7 @@ export const récupérerMétierQueryOptions = (métierId: Métier["id"] | null) 
   queryOptions({
     queryKey: ["métiers", métierId],
     queryFn: async () => {
-      if (métierId === null) {
-        return null;
-      }
+      if (métierId === null) return null;
 
       const réponse = await dépendances.récupérerMétierUseCase.run(métierId);
 
@@ -39,14 +38,13 @@ export const récupérerMétiersQueryOptions = (métierIds: Array<Métier["id"]>
 
       return réponse;
     },
-    enabled: true,
   });
 
 export const rechercherMétiersQueryOptions = (recherche?: string) =>
   queryOptions({
     queryKey: ["métiers", "rechercher", recherche],
     queryFn: async () => {
-      if (recherche === undefined) return [];
+      if (recherche === undefined) return null;
 
       const réponse = await dépendances.rechercherMétiersUseCase.run(recherche);
 
@@ -54,7 +52,10 @@ export const rechercherMétiersQueryOptions = (recherche?: string) =>
         throw réponse;
       }
 
+      for (const métier of réponse) {
+        queryClient.setQueryData(["métiers", métier.id], métier);
+      }
+
       return réponse;
     },
-    enabled: false,
   });

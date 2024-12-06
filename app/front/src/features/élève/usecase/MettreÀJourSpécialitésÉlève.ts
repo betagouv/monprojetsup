@@ -1,10 +1,10 @@
-import { IdSpécialité, type Élève } from "@/features/élève/domain/élève.interface";
+import { SpécialitéÉlève, type Élève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
 export class MettreÀJourSpécialitésÉlèveUseCase {
   public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
 
-  public async run(élève: Élève, idsSpécialitésÀModifier: IdSpécialité[]): Promise<Élève | Error> {
+  public async run(élève: Élève, idsSpécialitésÀModifier: SpécialitéÉlève[]): Promise<Élève | Error> {
     const spécialités = new Set(élève.spécialités);
 
     for (const idSpécialité of idsSpécialitésÀModifier) {

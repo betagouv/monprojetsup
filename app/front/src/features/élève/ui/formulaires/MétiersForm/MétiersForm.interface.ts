@@ -7,11 +7,11 @@ export type SituationMétiersÉlève = (typeof situationMétiersÉlève)[number]
 
 export type MétiersFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void> | void;
 };
 
 export type UseMétiersFormArgs = {
-  àLaSoumissionDuFormulaireAvecSuccès?: MétiersFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
+  àLaSoumissionDuFormulaireAvecSuccès: MétiersFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
 };
 
 export type UseMétiersFavorisMétiersFormArgs = {

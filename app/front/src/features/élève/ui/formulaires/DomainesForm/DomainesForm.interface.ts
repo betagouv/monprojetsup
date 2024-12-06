@@ -1,9 +1,9 @@
-export type useDomainesFormArgs = {
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
-};
-
 export type DomainesFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void> | void;
   niveauDeTitreCatégories: "h2" | "h3";
+};
+
+export type UseDomainesFormArgs = {
+  àLaSoumissionDuFormulaireAvecSuccès: DomainesFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
 };

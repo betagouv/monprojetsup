@@ -1,7 +1,7 @@
-import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
+import { type CommuneÉlève } from "@/features/élève/domain/élève.interface";
 
 export type VoeuxOngletUneCommuneProps = {
-  codeCommune: CommuneFavorite["codeInsee"];
+  codeCommune: CommuneÉlève["codeInsee"];
 };
 
 export type UseVoeuxOngletUneCommuneArgs = {

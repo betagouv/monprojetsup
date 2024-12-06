@@ -12,7 +12,7 @@ import { useEffect, useMemo } from "react";
 
 export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseScolaritéFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève({});
+  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève();
   const { register, erreurs, mettreÀJourÉlève, watch, setValue, getValues } = useÉlèveForm({
     schémaValidation: scolaritéValidationSchema(référentielDonnées?.bacs ?? []),
     àLaSoumissionDuFormulaireAvecSuccès,

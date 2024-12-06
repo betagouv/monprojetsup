@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function useFormationMasquée({ formation }: UseFormationMasquéeArgs) {
   const { data: élève } = useQuery(élèveQueryOptions);
 
-  const { mettreÀJourÉlève } = useÉlève({});
+  const { mettreÀJourÉlève } = useÉlève();
 
   const démasquerUneFormation = async () => {
     const formationsMasquées = élève?.formationsMasquées ?? [];

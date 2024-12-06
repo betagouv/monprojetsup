@@ -7,7 +7,11 @@ import { type UseFormGetValues, type UseFormSetValue } from "react-hook-form";
 
 export type ÉtudeFormProps = {
   formId: string;
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+  àLaSoumissionDuFormulaireAvecSuccès?: () => Promise<void> | void;
+};
+
+export type UseÉtudeFormArgs = {
+  àLaSoumissionDuFormulaireAvecSuccès: ÉtudeFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
 };
 
 export type DuréeÉtudesPrévueOptions = Array<{
@@ -19,10 +23,6 @@ export type AlternanceOptions = Array<{
   valeur: AlternanceÉlève;
   label: string;
 }>;
-
-export type UseÉtudeFormArgs = {
-  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
-};
 
 export type UseCommunesÉtudeFormArgs = {
   setValue: UseFormSetValue<Élève>;
