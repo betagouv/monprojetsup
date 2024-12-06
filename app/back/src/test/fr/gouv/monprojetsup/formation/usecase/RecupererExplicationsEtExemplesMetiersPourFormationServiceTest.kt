@@ -13,6 +13,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
@@ -42,6 +43,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
 
     @Mock
     lateinit var formationRepository: FormationRepository
+
+    @Mock
+    lateinit var voeuRepository: VoeuRepository
 
     @Mock
     lateinit var baccalaureatRepository: BaccalaureatRepository
@@ -363,6 +367,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     FormationCourte(id = "fl7", nom = "Classe préparatoire aux études supérieures - Littéraire"),
                 )
             given(formationRepository.recupererLesNomsDesFormations(listOf("fl1", "fl7"))).willReturn(formationCourtes)
+            given(voeuRepository.recupererLesNomsDesVoeux(listOf("fl1", "fl7"))).willReturn(emptyList())
             // When
             val resultat =
                 recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
@@ -721,6 +726,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 ),
             )
+            given(voeuRepository.recupererLesNomsDesVoeux(formationsDistinctes)).willReturn(emptyList())
             val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005", "fl0006")
             val metier12 = mock(Metier::class.java)
             given(metier12.id).willReturn("MET.12")

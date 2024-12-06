@@ -326,7 +326,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesNomsDesFormations {
         @Test
         @Sql("classpath:formation.sql")
-        fun `Doit retourner les noms des formations dans l'ordre demandé en ignorant celles inconnues et les loggant`() {
+        fun `Doit retourner les noms des formations trié par id`() {
             // Given
             val idsFormations = listOf("fl0001", "idInconnu", "fl0003", "", "fl0002")
 
@@ -337,25 +337,10 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             val attendu =
                 listOf(
                     FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
-                    FormationCourte(id = "fl0003", nom = "ENSA"),
                     FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
+                    FormationCourte(id = "fl0003", nom = "ENSA"),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(
-                logger,
-            ).should().error(
-                type = "FORMATION_ABSENTE_BDD",
-                message = "La formation idInconnu n'est pas présente en base",
-                parametres = mapOf("idFormationAbsente" to "idInconnu"),
-            )
-            then(
-                logger,
-            ).should().error(
-                type = "FORMATION_ABSENTE_BDD",
-                message = "La formation  n'est pas présente en base",
-                parametres = mapOf("idFormationAbsente" to ""),
-            )
-            then(logger).shouldHaveNoMoreInteractions()
         }
     }
 
