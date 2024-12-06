@@ -52,7 +52,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     })();
   };
 
-  // Garder synchroniser la valeur react-hook-form et le profil de l'élève
+  // Garder synchronisé la valeur react-hook-form et le profil de l'élève
   useEffect(() => {
     setValue("formationsFavorites", élève?.formationsFavorites ?? []);
   }, [setValue, élève?.formationsFavorites]);

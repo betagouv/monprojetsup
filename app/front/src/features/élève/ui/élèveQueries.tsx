@@ -12,8 +12,12 @@ export const mutationÉlèveKeys = {
   FORMATIONS: "mettreÀJourFormationsFavoritesÉlève",
 };
 
+export const queryÉlèveKeys = {
+  PROFIL: "élève",
+};
+
 export const élèveQueryOptions = queryOptions({
-  queryKey: ["élève"],
+  queryKey: [queryÉlèveKeys.PROFIL],
   queryFn: async () => {
     const réponse = await dépendances.récupérerProfilÉlèveUseCase.run();
 
@@ -31,8 +35,8 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.PROFIL], {
 
     return réponse;
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries(élèveQueryOptions);
+  onSuccess: (profilÉlève) => {
+    queryClient.setQueryData([queryÉlèveKeys.PROFIL], profilÉlève);
   },
 });
 
@@ -44,8 +48,8 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.SPÉCIALITÉS], {
 
     return réponse;
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries(élèveQueryOptions);
+  onSuccess: (profilÉlève) => {
+    queryClient.setQueryData([queryÉlèveKeys.PROFIL], profilÉlève);
   },
 });
 
@@ -57,8 +61,8 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.VOEUX], {
 
     return réponse;
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries(élèveQueryOptions);
+  onSuccess: (profilÉlève) => {
+    queryClient.setQueryData([queryÉlèveKeys.PROFIL], profilÉlève);
   },
 });
 
@@ -70,8 +74,8 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.COMMUNES], {
 
     return réponse;
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries(élèveQueryOptions);
+  onSuccess: (profilÉlève) => {
+    queryClient.setQueryData([queryÉlèveKeys.PROFIL], profilÉlève);
   },
 });
 
@@ -89,7 +93,7 @@ queryClient.setMutationDefaults([mutationÉlèveKeys.FORMATIONS], {
 
     return réponse;
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries(élèveQueryOptions);
+  onSuccess: (profilÉlève) => {
+    queryClient.setQueryData([queryÉlèveKeys.PROFIL], profilÉlève);
   },
 });

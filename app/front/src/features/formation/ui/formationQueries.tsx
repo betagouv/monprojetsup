@@ -1,4 +1,5 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
+import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 import { queryOptions } from "@tanstack/react-query";
@@ -37,6 +38,10 @@ export const récupérerFichesFormationsQueryOptions = (formationIds: Array<Fich
         throw réponse;
       }
 
+      for (const fiche of réponse) {
+        queryClient.setQueryData(["formations", "fiche", fiche.id], fiche);
+      }
+
       return réponse;
     },
   });
@@ -54,6 +59,10 @@ export const récupérerFormationsQueryOptions = (formationIds: Array<Formation[
         throw réponse;
       }
 
+      for (const formation of réponse) {
+        queryClient.setQueryData(["formations", formation.id], formation);
+      }
+
       return réponse;
     },
   });
@@ -68,6 +77,10 @@ export const rechercherFichesFormationsQueryOptions = (recherche?: string) =>
 
       if (réponse instanceof Error) {
         throw réponse;
+      }
+
+      for (const fiche of réponse) {
+        queryClient.setQueryData(["formations", "fiche", fiche.id], fiche);
       }
 
       return réponse;
@@ -87,6 +100,10 @@ export const rechercherFormationsQueryOptions = (recherche?: string) =>
         throw réponse;
       }
 
+      for (const formation of réponse) {
+        queryClient.setQueryData(["formations", formation.id], formation);
+      }
+
       return réponse;
     },
   });
@@ -98,6 +115,10 @@ export const suggérerFormationsQueryOptions = queryOptions({
 
     if (réponse instanceof Error) {
       throw réponse;
+    }
+
+    for (const fiche of réponse) {
+      queryClient.setQueryData(["formations", "fiche", fiche.id], fiche);
     }
 
     return réponse;

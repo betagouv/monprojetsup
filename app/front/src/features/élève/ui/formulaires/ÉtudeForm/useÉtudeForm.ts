@@ -34,6 +34,7 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
       label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS[alternance].LABEL,
     })) ?? [];
 
+  // Garder synchronisé la valeur react-hook-form et le profil de l'élève
   useEffect(() => {
     setValue("communesFavorites", élève?.communesFavorites ?? []);
   }, [élève?.communesFavorites]);
