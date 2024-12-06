@@ -27,7 +27,6 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
 
     lateinit var voeuBDDRepository: VoeuBDDRepository
 
-
     @BeforeEach
     fun setup() {
         voeuBDDRepository = VoeuBDDRepository(voeuJPARepository, voeuCourtJPARepository, entityManager)
