@@ -5,9 +5,9 @@ import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import lombok.val;
@@ -83,7 +83,10 @@ public class AffinityEvaluator {
     private Double moyGenEstimee;
 
     /* list of formations selected.  */
-    private final List<String> flApproved;
+    private final Set<String> flApproved;
+
+    /* list of formations connected to a voeux favoris.  */
+    private final Map<String,List<String>> flConnectedToVoeuxFavori;
 
     /* list of formations in the bin.  */
     private final Set<String> rejected =  new HashSet<>();
@@ -121,7 +124,14 @@ public class AffinityEvaluator {
         List<ChoiceDTO> approved = pf.suggApproved();
         this.flApproved = approved.stream()
                 .filter(s -> s.score() == null || s.score() >= 3)
-                .map(ChoiceDTO::id).filter(Constants::isMpsFormation).toList();
+                .map(ChoiceDTO::id).filter(Constants::isMpsFormation).collect(Collectors.toSet());
+
+        val voeux = pf.choix().stream()
+                .filter(ChoiceDTO::isApproved)
+                .map(ChoiceDTO::id)
+                .filter(fr.gouv.monprojetsup.data.Constants::isVoeu)
+                .toList();
+        this.flConnectedToVoeuxFavori = new HashMap<>(algo.getFormationsConnectedToVoeux(voeux));
 
         List<ChoiceDTO> rejectedSuggestions = pf.suggRejected();
 
@@ -275,6 +285,7 @@ public class AffinityEvaluator {
         Map<String, Double> scores = new HashMap<>(
                 Map.ofEntries(
                         entry(Config.BONUS_SIM, getBonusSimilaires(fl, pf.bacIndex(), expl)),
+                        entry(Config.BONUS_VOEU_FAVORI, getBonusVoeuxFavori(fl, expl)),
                         entry(BONUS_TAGS, getBonusTags(fl, expl))
                 )
         );
@@ -517,17 +528,17 @@ public class AffinityEvaluator {
             String fl,
             int bacIndex,
             Explanations expl,
-            List<String> ok,
+            Set<String> ok,
             Set<String> okCodes
     ) {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
-        Map<String, Integer> sim = algo.getFormationsSimilaires(fl, bacIndex);
+        Map<String, Long> sim = algo.getFormationsSimilaires(fl, bacIndex);
         if (sim.isEmpty()) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
         for (String approved : ok) {
-            int simScore = sim.getOrDefault(approved, 0);
+            long simScore = sim.getOrDefault(approved, 0L);
             if (simScore > 0) {
                 double simi = 1.0 * simScore / PsupStatistiques.SIM_FIL_MAX_WEIGHT;
                 bonus += simi;
@@ -709,5 +720,17 @@ public class AffinityEvaluator {
                 examples
         );
     }
+
+    private double getBonusVoeuxFavori(String fl, Explanations expl) {
+        if(flApproved.contains(fl)) return NO_MATCH_SCORE;
+
+        val voeux = flConnectedToVoeuxFavori.getOrDefault(fl, List.of());
+        val result = voeux.isEmpty() ? NO_MATCH_SCORE : FULL_MATCH_MULTIPLIER;
+        if(result > 0 && expl != null) {
+            expl.explanations.add(Explanation.getVoeuxFavoriExplanation(voeux));
+        }
+        return result;
+    }
+
 
 }

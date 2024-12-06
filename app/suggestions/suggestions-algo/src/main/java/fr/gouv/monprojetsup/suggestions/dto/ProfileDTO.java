@@ -39,11 +39,11 @@ public record ProfileDTO(
 ) {
 
     public List<ChoiceDTO> suggApproved() {
-        return choix == null ? List.of() : choix.stream().filter(s -> Objects.equals(s.status(), ChoiceDTO.SUGG_APPROVED)).toList();
+        return choix == null ? List.of() : choix.stream().filter(ChoiceDTO::isApproved).toList();
     }
 
     public List<ChoiceDTO> suggRejected() {
-        return choix == null ? List.of() : choix.stream().filter(s -> Objects.equals(s.status(), ChoiceDTO.SUGG_REJECTED)).toList();
+        return choix == null ? List.of() : choix.stream().filter(ChoiceDTO::isRejected).toList();
     }
 
     public int bacIndex() {

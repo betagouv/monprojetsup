@@ -74,6 +74,7 @@ public final class Config {
     public static final String BONUS_APPRENTISSAGE = "app";
     public static final String BONUS_TAGS = "tags";
     public static final String BONUS_SIM = "sim";
+    public static final String BONUS_VOEU_FAVORI = "fav";
     public static final String BONUS_DURATION = "duration";
     public static final String BONUS_GEO = "geo";
     public static final String BONUS_TYPE_BAC = "typebac";
@@ -90,6 +91,7 @@ public final class Config {
             BONUS_SPECIALITE_BAC_PRO, "spécialité",
             BONUS_DURATION,"durée",
             BONUS_SIM,"similarité avec autres favoris",
+            BONUS_VOEU_FAVORI,"voeu favori",
             BONUS_MOY_GEN,"moyenne générale",
             BONUS_TYPE_BAC,"type de bac",
             BONUS_APPRENTISSAGE,"preférences apprentissage",
@@ -106,6 +108,7 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_NOTES = 1.0E-01;
+    static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
 
     @JsonIgnore
     private final transient Map<String, Double> minMultipliers = new HashMap<>(Map.ofEntries(
@@ -117,11 +120,12 @@ public final class Config {
             entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
-            entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES)
+            entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES),
+            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
     ));
     @JsonIgnore
     private final transient List<String> personalCriteria = new ArrayList<>(
-            List.of(BONUS_TAGS, BONUS_SIM)
+            List.of(BONUS_TAGS, BONUS_SIM, BONUS_VOEU_FAVORI)
     );
 
 

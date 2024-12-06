@@ -1,10 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChoiceDTO(
@@ -22,9 +23,11 @@ public record ChoiceDTO(
     public static final int SUGG_REJECTED = 2;
 
 
-    @JsonIgnore
-    public boolean isKnown() {
-        return status != null
-                && (status == ChoiceDTO.SUGG_APPROVED || status == ChoiceDTO.SUGG_REJECTED);
+    public boolean isApproved() {
+        return Objects.equals(status, SUGG_APPROVED);
+    }
+
+    public boolean isRejected() {
+        return Objects.equals(status, SUGG_REJECTED);
     }
 }

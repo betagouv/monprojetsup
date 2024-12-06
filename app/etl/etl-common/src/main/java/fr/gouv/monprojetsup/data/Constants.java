@@ -70,6 +70,10 @@ public class Constants {
         return FORMATION_PREFIX + cle;
     }
 
+    public static boolean isVoeu(String id) {
+        return id.startsWith(FORMATION_PREFIX);
+    }
+
     public static final String LAS_MPS_ID = gFlCodToMpsId(LAS_CONSTANT);
     public static final String PPPE_MPS_ID = gFlCodToMpsId(PPPE_CONSTANT);
 

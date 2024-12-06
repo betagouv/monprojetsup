@@ -14,8 +14,9 @@ import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO
 import org.apache.commons.lang3.tuple.ImmutablePair
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -42,6 +43,10 @@ class ImmutablePairDeserializer : JsonDeserializer<ImmutablePair<String, Profile
     }
 }
 
+data class SuggestionsScenario(
+    val name: String,
+    val profil: ProfileDTO
+)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -56,51 +61,67 @@ class SuggestionsControllersTest(
     @Value("\${profilsReferencePath}")
     lateinit var resourceFile: Resource
 
-    @Nested
-    inner class `Quand on appelle la route des suggestions` {
+    // Initialize the file path dynamically before tests
+    @org.junit.jupiter.api.BeforeAll
+    fun setUp() {
+        testFile = resourceFile
+    }
 
+    companion object {
+        private const val ENDPOINT_SUGGESTION = "/api/1.2/suggestions"
 
-        @Test
-        fun `les suggestions sont conformes aux profils de référence`() {
-            // given
-            //load fichier de proils de référence
-            val type = object : TypeToken<List<ImmutablePair<String, ProfileDTO>>>() {}.type
-            resourceFile.file.bufferedReader().use { reader ->
+        private lateinit var testFile: Resource
+
+        @JvmStatic
+        fun provideScenarios(): List<SuggestionsScenario> {
+            val type = object : TypeToken<List<SuggestionsScenario>>() {}.type
+            testFile.file.bufferedReader().use { reader ->
                 val gsonBuilder = GsonBuilder()
                 gsonBuilder.registerTypeAdapter(ImmutablePair::class.java, ImmutablePairDeserializer())
-                val profils = gsonBuilder.create().fromJson<List<ImmutablePair<String, ProfileDTO>>>(reader, type)
-                profils.filter { it.right != null && it.right!!.suggApproved().isNotEmpty() }.forEach { pair ->
-                    logger.info("Test du profil ${pair.left}")
-                    val profil = pair.right!!
-                    val obligatoires =
-                        profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 5 }.map { s -> s.id }
-                            .toSet()
-                    val recommandees =
-                        profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 3 }.map { s -> s.id }
-                            .toSet()
-                    val deconseillees = profil.suggRejected().filter { isFiliere(it.id) }.map { s -> s.id }.toSet()
-
-                    profil.choix.removeIf { isFiliere(it.id) }
-                    val resultat = getSuggestions(profil)
-                    val suggestions = resultat.affinites.filter { it.affinite > 0 }.map { it.key }.toSet()
-                    val premieresSuggestions =
-                        resultat.affinites.sortedBy { -it.affinite }.take(20).map { it.key }.toSet()
-
-                    //pour chacun on veut voir les 5 dans les premiers et les autres pas trop loin et on ne veut pas voir la corbeille
-                    if(obligatoires.isNotEmpty()) {
-                        assertThat(suggestions).containsAll(obligatoires)
-                        assertThat(premieresSuggestions).containsAll(obligatoires)
-                    }
-                    if(recommandees.isNotEmpty()) {
-                        assertThat(suggestions).containsAll(recommandees)
-                    }
-                    if(deconseillees.isNotEmpty()) {
-                        assertThat(suggestions).doesNotContainAnyElementsOf(deconseillees)
-                    }
-                }
+                return gsonBuilder.create().fromJson<List<SuggestionsScenario>>(reader, type)
             }
         }
     }
+
+    @ParameterizedTest
+    @MethodSource("provideScenarios")
+    fun `les suggestions sont conformes aux profils de référence`(scenario: SuggestionsScenario) {
+        // given
+        //load fichier de proils de référence
+        logger.info("Test du profil ${scenario.name}")
+        val profil = scenario.profil
+        if(profil.choix == null) {
+            return
+        }
+        val obligatoires =
+            profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 5 }
+                .map { s -> s.id }
+                .toSet()
+        val recommandees =
+            profil.suggApproved().filter { isFiliere(it.id) && it.score != null && it.score!! >= 3 }
+                .map { s -> s.id }
+                .toSet()
+        val deconseillees = profil.suggRejected().filter { isFiliere(it.id) }.map { s -> s.id }.toSet()
+
+        profil.choix.removeIf { isFiliere(it.id) }
+        val resultat = getSuggestions(profil)
+        val suggestions = resultat.affinites.filter { it.affinite > 0 }.map { it.key }.toSet()
+        val premieresSuggestions =
+            resultat.affinites.sortedBy { -it.affinite }.take(20).map { it.key }.toSet()
+
+        //pour chacun on veut voir les 5 dans les premiers et les autres pas trop loin et on ne veut pas voir la corbeille
+        if (obligatoires.isNotEmpty()) {
+            assertThat(suggestions).containsAll(obligatoires)
+            assertThat(premieresSuggestions).containsAll(obligatoires)
+        }
+        if (recommandees.isNotEmpty()) {
+            assertThat(suggestions).containsAll(recommandees)
+        }
+        if (deconseillees.isNotEmpty()) {
+            assertThat(suggestions).doesNotContainAnyElementsOf(deconseillees)
+        }
+    }
+
 
     private fun getSuggestions(profil: ProfileDTO): GetAffinitiesServiceDTO.Response {
         val requete = Gson().toJson(mapOf("profile" to profil))
@@ -130,7 +151,4 @@ class SuggestionsControllersTest(
         // exemple préférence Bordeaux et foi est la licence informatique de bordeaux
     }
 
-    companion object {
-        private const val ENDPOINT_SUGGESTION = "/api/1.2/suggestions"
-    }
 }

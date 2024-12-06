@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.suggestions.port.ConfigPort;
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
+import fr.gouv.monprojetsup.suggestions.port.FormationsVoeuxPort;
 import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class SuggestionsData {
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
     private final FormationsMetiersPort formationsMetierPort;
+    private final FormationsVoeuxPort formationsVoeuxPort;
     private final VillesPort villesPort;
     private final ConfigPort configPort;
 
@@ -53,13 +55,15 @@ public class SuggestionsData {
             FormationsPort formationsPort,
             VillesPort villesPort,
             FormationsMetiersPort formationsMetierPort,
-            ConfigPort configPort
+            ConfigPort configPort,
+            FormationsVoeuxPort formationsVoeuxPort
             ) {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
         this.formationsPort = formationsPort;
         this.villesPort = villesPort;
         this.formationsMetierPort = formationsMetierPort;
+        this.formationsVoeuxPort = formationsVoeuxPort;
         this.configPort = configPort;
         val activeConfig = configPort.retrieveActiveConfig();
         if(activeConfig == null) {
@@ -100,7 +104,7 @@ public class SuggestionsData {
         return labelsPort.retrieveDebugLabels();
     }
 
-    public @NotNull Map<String, Integer> getFormationsSimilaires(String formationId, int typeBac) {
+    public @NotNull Map<String, Long> getFormationsSimilaires(String formationId, int typeBac) {
         val f = formationsPort.retrieveFormation(formationId).orElse(null);
         if(f == null) return Map.of();
         return f.stats().formationsSimilaires().getOrDefault(typeBac, Map.of());
@@ -253,4 +257,7 @@ public class SuggestionsData {
         ));
     }
 
+    public List<String> getFormationsOfVoeu(String idVoeu) {
+        return formationsVoeuxPort.getFormationsOfVoeu(idVoeu);
+    }
 }

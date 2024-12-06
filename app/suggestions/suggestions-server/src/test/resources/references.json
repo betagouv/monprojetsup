@@ -1,7 +1,31 @@
 [
   {
-    "left": "expert1",
-    "right": {
+    "name": "voeuFavoriEntraineFormation",
+    "profil": {
+      "niveau": "term",
+      "bac": "Générale",
+      "duree": "long",
+      "apprentissage": "C",
+      "geo_pref": [],
+      "spe_classes": [],
+      "interests": [],
+      "choix": [
+        {
+          "id": "ta5421",
+          "status": 1,
+          "score": 5
+        },
+        {
+          "id": "fl11",
+          "status": 1,
+          "score": 5
+        }
+      ]
+    }
+  },
+  {
+    "name": "expert1",
+    "profil": {
       "niveau": "term",
       "bac": "STD2A",
       "duree": "court",
@@ -18,8 +42,8 @@
     }
   },
   {
-    "left": "expert1",
-    "right": {
+    "name": "expert1",
+    "profil": {
       "niveau": "term",
       "bac": "Générale",
       "duree": "long",
@@ -50,8 +74,8 @@
     }
   },
   {
-    "left": "expert1",
-    "right": {
+    "name": "expert1",
+    "profil": {
       "niveau": "term",
       "bac": "Générale",
       "duree": "long",
@@ -64,7 +88,6 @@
       "interests": [
         "dom34","dom32","dom33","dom34","dom35","dom36"
       ],
-      "moygen": "10",
       "choix": [
         {
           "id": "fl18",

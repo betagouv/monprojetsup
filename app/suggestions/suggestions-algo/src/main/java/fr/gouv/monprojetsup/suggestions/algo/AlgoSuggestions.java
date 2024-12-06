@@ -418,8 +418,8 @@ public class AlgoSuggestions {
     }
 
 
-    private final ConcurrentHashMap<Pair<String,Integer>, Map<String, Integer>> formationsSimilaires = new ConcurrentHashMap<>();
-    public Map<String, Integer> getFormationsSimilaires(String fl, int i) {
+    private final ConcurrentHashMap<Pair<String,Integer>, Map<String, Long>> formationsSimilaires = new ConcurrentHashMap<>();
+    public Map<String, Long> getFormationsSimilaires(String fl, int i) {
         return formationsSimilaires.computeIfAbsent(Pair.of(fl, i), z -> data.getFormationsSimilaires(fl, i));
     }
 
@@ -474,4 +474,13 @@ public class AlgoSuggestions {
         return formationIds.computeIfAbsent( "", z->data.getFormationIds());
     }
 
+    private final ConcurrentHashMap<String, List<String>> voeuToFormationsIds = new ConcurrentHashMap<>();
+    public Map<String,List<String>> getFormationsConnectedToVoeux(List<String> voeux) {
+        val result = new HashMap<String,List<String>>();
+        voeux.forEach(v -> {
+            val formations = voeuToFormationsIds.computeIfAbsent(v, z -> data.getFormationsOfVoeu(v));
+            formations.forEach(s -> result.computeIfAbsent(s, z -> new ArrayList<>()).add(v));
+        });
+        return result;
+    }
 }
