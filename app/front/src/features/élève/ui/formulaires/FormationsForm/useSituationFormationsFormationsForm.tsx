@@ -14,8 +14,8 @@ export default function useSituationFormationsFormationsForm({
   setValue,
 }: UseSituationFormationsFormationsFormArgs) {
   const optionSélectionnéeAuChargement = (): SituationFormationsÉlève | null => {
-    const formationsFavorites = getValues(constantes.FORMATIONS.CHAMP_FORMATIONS_FAVORITES);
-    return formationsFavorites && formationsFavorites.length > 0 ? "quelques_pistes" : null;
+    const formationsSélectionnées = getValues(constantes.FORMATIONS.CHAMP_FORMATIONS_FAVORITES);
+    return formationsSélectionnées && formationsSélectionnées.length > 0 ? "quelques_pistes" : null;
   };
 
   const [optionSélectionnée, setOptionSélectionnée] = useState<SituationFormationsÉlève | null>(

@@ -4,7 +4,7 @@ import { type MétierRepository } from "@/features/métier/infrastructure/métie
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 
 export class métierInMemoryRepository implements MétierRepository {
-  private MÉTIERS: Métier[] = [
+  private _MÉTIERS: Métier[] = [
     {
       id: "MET_1",
       nom: "contrôleur aérien / contrôleuse aérienne",
@@ -120,14 +120,14 @@ export class métierInMemoryRepository implements MétierRepository {
   ];
 
   public async récupérer(métierId: string): Promise<Métier | Error> {
-    return this.MÉTIERS.find((métier) => métier.id === métierId) ?? new RessourceNonTrouvéeErreur();
+    return this._MÉTIERS.find((métier) => métier.id === métierId) ?? new RessourceNonTrouvéeErreur();
   }
 
   public async récupérerPlusieurs(métierIds: string[]): Promise<Métier[] | Error> {
-    return this.MÉTIERS.filter((métier) => métierIds.includes(métier.id));
+    return this._MÉTIERS.filter((métier) => métierIds.includes(métier.id));
   }
 
   public async rechercher(recherche: string): Promise<Métier[] | Error> {
-    return this.MÉTIERS.filter((métier) => métier.nom.toLowerCase().includes(recherche.toLowerCase()));
+    return this._MÉTIERS.filter((métier) => métier.nom.toLowerCase().includes(recherche.toLowerCase()));
   }
 }

@@ -14,11 +14,6 @@ export type UseMétiersFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès: MétiersFormProps["àLaSoumissionDuFormulaireAvecSuccès"];
 };
 
-export type UseMétiersFavorisMétiersFormArgs = {
-  setValue: UseFormSetValue<Élève>;
-  getValues: UseFormGetValues<Élève>;
-};
-
 export type UseSituationMétiersMétiersFormArgs = {
   setValue: UseFormSetValue<Élève>;
   getValues: UseFormGetValues<Élève>;

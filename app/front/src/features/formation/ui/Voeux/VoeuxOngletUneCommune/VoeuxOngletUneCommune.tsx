@@ -36,22 +36,24 @@ const VoeuxOngletUneCommune = ({ codeCommune }: VoeuxOngletUneCommuneProps) => {
       </div>
       <div>
         <div className="grid gap-6">
-          <div className="*:mb-2">
-            <Titre
-              niveauDeTitre="h4"
-              styleDeTitre="text--md"
-            >
-              {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.TITRE}
-            </Titre>
+          <div>
+            <div className="*:mb-2">
+              <Titre
+                niveauDeTitre="h4"
+                styleDeTitre="text--md"
+              >
+                {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.TITRE}
+              </Titre>
+            </div>
+            {voeux.length > 0 ? (
+              <ListeDeVoeuxSuggérés voeux={voeux} />
+            ) : (
+              <p className="fr-text--sm mb-0">
+                {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ} {rayonSélectionné}{" "}
+                {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ_SUITE}
+              </p>
+            )}
           </div>
-          {voeux.length > 0 ? (
-            <ListeDeVoeuxSuggérés voeux={voeux} />
-          ) : (
-            <p className="fr-text--sm mb-0">
-              {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ} {rayonSélectionné}{" "}
-              {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ_SUITE}
-            </p>
-          )}
           <hr className="pb-[1px]" />
           <div>
             <MaSélectionVoeux />

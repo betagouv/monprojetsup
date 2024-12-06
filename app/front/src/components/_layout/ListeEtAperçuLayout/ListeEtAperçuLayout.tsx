@@ -1,5 +1,5 @@
 import { type ListeEtAperçuLayoutProps } from "./ListeEtAperçuLayout.interface";
-import { afficherBarreLatéraleEnMobileListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { afficherBarreLatéraleEnMobileListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 
 const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps) => {
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();

@@ -1,17 +1,17 @@
 import { Favori } from "@/components/SélecteurFavoris/Favori/Favori.interface";
-import { Spécialité } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import useÉlèveMutation from "@/features/élève/ui/hooks/useÉlèveMutation/useÉlèveMutation";
+import { Spécialité } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
 export default function useSpécialité() {
-  const { élève, mettreÀJourSpécialitésÉlève } = useÉlève();
+  const { estSpécialitéFavoritePourÉlève } = useÉlève();
+  const { mettreÀJourSpécialitésÉlève } = useÉlèveMutation();
 
   const spécialitéVersFavori = (spécialité: Spécialité): Favori => {
-    const estFavorite = élève?.spécialités?.some((spécialitéFavorite) => spécialitéFavorite === spécialité.id) ?? false;
-
     return {
       id: spécialité.id,
       nom: spécialité.nom,
-      estFavori: estFavorite,
+      estFavori: estSpécialitéFavoritePourÉlève(spécialité.id),
       callbackMettreÀJour: () => mettreÀJourSpécialitésÉlève([spécialité.id]),
     };
   };

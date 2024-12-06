@@ -1,109 +1,83 @@
-import { type UseÉlèveArgs } from "./useÉlève.interface";
 import {
   CommuneÉlève,
-  type FormationÉlève,
+  FormationÉlève,
   MétierÉlève,
   SpécialitéÉlève,
   VoeuÉlève,
-  type Élève,
 } from "@/features/élève/domain/élève.interface";
-import { mutationÉlèveKeys, élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
-export default function useÉlève({ àLaMiseÀJourÉlèveAvecSuccès }: UseÉlèveArgs = {}) {
+export default function useÉlève() {
   const { data: élève } = useQuery(élèveQueryOptions);
-  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: [mutationÉlèveKeys.PROFIL] });
-  const mutationSpécialitésÉlève = useMutation<
-    Élève,
-    unknown,
-    { élève: Élève; idsSpécialitésÀModifier: SpécialitéÉlève[] }
-  >({ mutationKey: [mutationÉlèveKeys.SPÉCIALITÉS] });
-  const mutationVoeuxÉlève = useMutation<Élève, unknown, { élève: Élève; idsVoeuxÀModifier: VoeuÉlève["id"][] }>({
-    mutationKey: [mutationÉlèveKeys.VOEUX],
-  });
-  const mutationCommunesÉlève = useMutation<Élève, unknown, { élève: Élève; communesÀModifier: CommuneÉlève[] }>({
-    mutationKey: [mutationÉlèveKeys.COMMUNES],
-  });
-  const mutationFormationsFavoritesÉlève = useMutation<
-    Élève,
-    unknown,
-    { élève: Élève; idsFormationsÀModifier: FormationÉlève["id"][] }
-  >({
-    mutationKey: [mutationÉlèveKeys.FORMATIONS],
-  });
-  const mutationMétiersFavorisÉlève = useMutation<
-    Élève,
-    unknown,
-    { élève: Élève; idsMétiersFavorisÀModifier: MétierÉlève[] }
-  >({
-    mutationKey: [mutationÉlèveKeys.MÉTIERS],
-  });
 
-  const mettreÀJourÉlève = async (changements: Partial<Élève>) => {
-    if (!élève) return;
+  const aAssociéSonCompteParcoursup = useMemo(
+    (): boolean => élève?.compteParcoursupAssocié ?? false,
+    [élève?.compteParcoursupAssocié],
+  );
 
-    await mutationÉlève.mutateAsync({ ...élève, ...changements });
-    await àLaMiseÀJourÉlèveAvecSuccès?.();
+  const auMoinsUnMétierFavori = useMemo(
+    (): boolean => (élève?.métiersFavoris && élève?.métiersFavoris?.length > 0) ?? false,
+    [élève?.métiersFavoris],
+  );
+
+  const auMoinsUneFormationFavorite = useMemo(
+    (): boolean => (élève?.formations && élève?.formations?.length > 0) ?? false,
+    [élève?.formations],
+  );
+
+  const auMoinsUnDomaineFavori = useMemo(
+    (): boolean => (élève?.domaines && élève?.domaines?.length > 0) ?? false,
+    [élève?.domaines],
+  );
+
+  const auMoinsUnCentreIntêretFavori = useMemo(
+    (): boolean => (élève?.centresIntérêts && élève?.centresIntérêts?.length > 0) ?? false,
+    [élève?.centresIntérêts],
+  );
+
+  const estMétierFavori = (idMétier: MétierÉlève): boolean => {
+    return élève?.métiersFavoris?.includes(idMétier) ?? false;
   };
 
-  const mettreÀJourSpécialitésÉlève = async (idsSpécialitésÀModifier: SpécialitéÉlève[]) => {
-    if (!élève) return;
-
-    await mutationSpécialitésÉlève.mutateAsync({ élève, idsSpécialitésÀModifier });
+  const estFormationFavorite = (idFormation: FormationÉlève): boolean => {
+    return élève?.formations?.includes(idFormation) ?? false;
   };
 
-  const mettreÀJourVoeuxÉlève = async (idsVoeuxÀModifier: VoeuÉlève["id"][]) => {
-    if (!élève) return;
-
-    await mutationVoeuxÉlève.mutateAsync({ élève, idsVoeuxÀModifier });
+  const estFormationMasquée = (idFormation: FormationÉlève): boolean => {
+    return élève?.formationsMasquées?.includes(idFormation) ?? false;
   };
 
-  const mettreÀJourCommunesÉlève = async (communesÀModifier: CommuneÉlève[]) => {
-    if (!élève) return;
-
-    await mutationCommunesÉlève.mutateAsync({ élève, communesÀModifier });
+  const estCommuneFavorite = (codeInsee: CommuneÉlève["codeInsee"]): boolean => {
+    return élève?.communesFavorites?.some((communeFavorite) => communeFavorite.codeInsee === codeInsee) ?? false;
   };
 
-  const mettreÀJourFormationsFavoritesÉlève = async (idsFormationsÀModifier: FormationÉlève["id"][]) => {
-    if (!élève) return;
-
-    await mutationFormationsFavoritesÉlève.mutateAsync({ élève, idsFormationsÀModifier });
+  const estVoeuFavori = (idVoeu: VoeuÉlève["id"]): boolean => {
+    return élève?.voeuxFavoris?.some((voeuFavori) => voeuFavori.id === idVoeu) ?? false;
   };
 
-  const mettreÀJourMétiersFavorisÉlève = async (idsMétiersFavorisÀModifier: MétierÉlève[]) => {
-    if (!élève) return;
-
-    await mutationMétiersFavorisÉlève.mutateAsync({ élève, idsMétiersFavorisÀModifier });
+  const estVoeuFavoriProvenantDeParcoursup = (idVoeu: VoeuÉlève["id"]): boolean => {
+    return élève?.voeuxFavoris?.find((voeuFavori) => voeuFavori.id === idVoeu)?.estParcoursup ?? false;
   };
 
-  const mettreÀJourUneFormationFavorite = async (
-    formationId: FormationÉlève["id"],
-    changements: Partial<FormationÉlève>,
-  ) => {
-    if (!élève) return;
-
-    const nouvellesFormationsFavorites =
-      élève.formationsFavorites?.map((formationFavorite) => {
-        if (formationFavorite.id === formationId) {
-          return { ...formationFavorite, ...changements };
-        }
-
-        return formationFavorite;
-      }) ?? [];
-
-    await mettreÀJourÉlève({
-      formationsFavorites: nouvellesFormationsFavorites,
-    });
+  const estSpécialitéFavorite = (idSpécialité: SpécialitéÉlève): boolean => {
+    return élève?.spécialités?.includes(idSpécialité) ?? false;
   };
 
   return {
     élève,
-    mettreÀJourÉlève,
-    mettreÀJourUneFormationFavorite,
-    mettreÀJourFormationsFavoritesÉlève,
-    mettreÀJourMétiersFavorisÉlève,
-    mettreÀJourSpécialitésÉlève,
-    mettreÀJourVoeuxÉlève,
-    mettreÀJourCommunesÉlève,
+    élèveAAssociéSonCompteParcoursup: aAssociéSonCompteParcoursup,
+    élèveAuMoinsUnMétierFavori: auMoinsUnMétierFavori,
+    élèveAuMoinsUneFormationFavorite: auMoinsUneFormationFavorite,
+    élèveAuMoinsUnDomaineFavori: auMoinsUnDomaineFavori,
+    élèveAuMoinsUnCentreIntêretFavori: auMoinsUnCentreIntêretFavori,
+    estMétierFavoriPourÉlève: estMétierFavori,
+    estFormationFavoritePourÉlève: estFormationFavorite,
+    estFormationMasquéePourÉlève: estFormationMasquée,
+    estCommuneFavoritePourÉlève: estCommuneFavorite,
+    estVoeuFavoriPourÉlève: estVoeuFavori,
+    estVoeuFavoriProvenantDeParcoursupPourÉlève: estVoeuFavoriProvenantDeParcoursup,
+    estSpécialitéFavoritePourÉlève: estSpécialitéFavorite,
   };
 }

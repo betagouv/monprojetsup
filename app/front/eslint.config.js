@@ -78,6 +78,7 @@ export default [
       "perfectionist/sort-union-types": "off",
       "perfectionist/sort-switch-case": "off",
       "perfectionist/sort-intersection-types": "off",
+      "perfectionist/sort-modules": "off",
       "canonical/destructuring-property-newline": "off",
       "canonical/import-specifier-newline": "off",
       "canonical/filename-match-regex": "off",

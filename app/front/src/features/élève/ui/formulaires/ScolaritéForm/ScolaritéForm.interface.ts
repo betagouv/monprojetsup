@@ -1,5 +1,5 @@
-import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type Élève } from "@/features/élève/domain/élève.interface";
+import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type UseFormGetValues, type UseFormSetValue, type UseFormWatch } from "react-hook-form";
 
 export type ScolaritéFormProps = {

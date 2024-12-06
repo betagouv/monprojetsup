@@ -19,9 +19,11 @@ export class TestHelper {
         alternance: null,
         moyenneGénérale: null,
         communesFavorites: null,
-        formationsFavorites: null,
+        formations: null,
         voeuxFavoris: null,
         formationsMasquées: null,
+        ambitions: null,
+        notesPersonnelles: null,
         ...argumentsProfilÉlève,
       };
 
@@ -43,9 +45,11 @@ export class TestHelper {
       communesFavorites: [],
       moyenneGénérale: 15,
       duréeÉtudesPrévue: "courte",
-      formationsFavorites: [],
+      formations: [],
       voeuxFavoris: [],
       formationsMasquées: [],
+      ambitions: [],
+      notesPersonnelles: [],
     };
 
     await this.initialiserProfilÉlèveParDéfaut(profilÉlève);

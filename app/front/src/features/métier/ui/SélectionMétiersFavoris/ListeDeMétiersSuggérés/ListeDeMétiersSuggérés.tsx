@@ -1,7 +1,7 @@
 import { ListeDeMétiersSuggérésProps } from "./ListeDeMétiersSuggérés.interface";
 import ListeDeFavoris from "@/components/SélecteurFavoris/ListeDeFavoris/ListeDeFavoris";
 import { constantes } from "@/configuration/constantes";
-import useMétier from "@/features/métier/ui/SélectionMétiersFavoris/useMétier";
+import useMétier from "@/features/métier/ui/useMétier";
 
 const ListeDeMétiersSuggérés = ({ métiers }: ListeDeMétiersSuggérésProps) => {
   const { métierVersFavori } = useMétier();

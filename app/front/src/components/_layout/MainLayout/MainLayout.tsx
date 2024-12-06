@@ -2,6 +2,7 @@ import Entête from "@/components/_layout/Entête/Entête";
 import PiedDePage from "@/components/_layout/PiedDePage/PiedDePage";
 import LienÉvitement from "@/components/LienÉvitement/LienÉvitement";
 import Toast from "@/components/Toast/Toast";
+import { constantes } from "@/configuration/constantes";
 import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 import { Outlet, ScrollRestoration } from "@tanstack/react-router";
 
@@ -14,12 +15,20 @@ const MainLayout = () => {
     <>
       <LienÉvitement />
       <Entête />
-      <main id="contenu">
-        <ScrollRestoration />
+      <main
+        id={constantes.ACCESSIBILITÉ.CONTENU_ID}
+        tabIndex={-1}
+      >
+        <ScrollRestoration getKey={(location) => location.pathname} />
         <Toast />
         <Outlet />
       </main>
-      <PiedDePage />
+      <section
+        id={constantes.ACCESSIBILITÉ.PIED_DE_PAGE_ID}
+        tabIndex={-1}
+      >
+        <PiedDePage />
+      </section>
     </>
   );
 };

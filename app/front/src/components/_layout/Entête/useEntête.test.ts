@@ -3,7 +3,7 @@ import useEntête from "./useEntête";
 import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
-import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { useRouterState } from "@tanstack/react-router";
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -12,7 +12,7 @@ vi.mock("@tanstack/react-router", () => ({
   useRouterState: vi.fn(),
 }));
 
-vi.mock("@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur", () => ({
+vi.mock("@/features/utilisateur/ui/useUtilisateur", () => ({
   default: vi.fn(),
 }));
 
@@ -66,7 +66,7 @@ describe("useEntête", () => {
   describe("Lorsque l'utilisateur n'est pas connecté", () => {
     beforeAll(() => {
       vi.mocked(useRouterState).mockReturnValue(mockUseRouterState("/"));
-      vi.mocked(useUtilisateur).mockResolvedValue(utilisateurNonConnecté);
+      vi.mocked(useUtilisateur).mockReturnValue(utilisateurNonConnecté);
     });
 
     it("affiche un seul lien d'accès rapide pour se connecter", () => {

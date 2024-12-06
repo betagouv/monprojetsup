@@ -1,4 +1,4 @@
-import TableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/TableauDeBordÉlève/TableauDeBordÉlève";
+import TableauDeBordÉlèvePage from "@/features/élève/ui/TableauDeBordÉlèvePage/TableauDeBordÉlèvePage";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
@@ -8,5 +8,5 @@ const tableauDeBordSearchSchema = z.object({
 
 export const Route = createFileRoute("/_auth/")({
   validateSearch: (searchParamètres) => tableauDeBordSearchSchema.parse(searchParamètres),
-  component: TableauDeBordÉlève,
+  component: TableauDeBordÉlèvePage,
 });

@@ -4,7 +4,7 @@ import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const BoutonsActionsFicheMétier = ({ métier, taille }: BoutonsActionsFicheMétierProps) => {
-  const { estFavori, ajouterEnFavori, supprimerDesFavoris } = useBoutonsActionsMétier({
+  const { estFavori, mettreÀJourMétiersÉlève } = useBoutonsActionsMétier({
     métier,
   });
 
@@ -12,7 +12,7 @@ const BoutonsActionsFicheMétier = ({ métier, taille }: BoutonsActionsFicheMét
     <div className="grid justify-start justify-items-start gap-4 sm:grid-flow-col">
       {!estFavori && (
         <Bouton
-          auClic={ajouterEnFavori}
+          auClic={() => mettreÀJourMétiersÉlève([métier.id])}
           icône={{ position: "gauche", classe: "fr-icon-heart-line" }}
           label={i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
           taille={taille}
@@ -29,7 +29,7 @@ const BoutonsActionsFicheMétier = ({ métier, taille }: BoutonsActionsFicheMét
             {i18n.COMMUN.AJOUTÉ_À_MA_SÉLECTION}
           </div>
           <Bouton
-            auClic={supprimerDesFavoris}
+            auClic={() => mettreÀJourMétiersÉlève([métier.id])}
             icône={{ position: "gauche", classe: "fr-icon-close-line" }}
             label={i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
             taille={taille}

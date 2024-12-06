@@ -1,14 +1,13 @@
-/* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import {
   AlternanceÉlève,
   DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
-import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";

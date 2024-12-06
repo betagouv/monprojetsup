@@ -1,5 +1,5 @@
-import useÉtudeForm from "./useÉtudeForm";
 import { type ÉtudeFormProps } from "./ÉtudeForm.interface";
+import useÉtudeForm from "./useÉtudeForm";
 import { i18n } from "@/configuration/i18n/i18n";
 import MaSélectionCommunes from "@/features/commune/ui/MaSélectionCommunes/MaSélectionCommunes";
 import RechercheCommunes from "@/features/commune/ui/RechercheCommunes/RechercheCommunes";

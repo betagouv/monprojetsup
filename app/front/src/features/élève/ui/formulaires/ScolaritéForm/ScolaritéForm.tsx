@@ -75,9 +75,10 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           )}
         </div>
       )}
-      {spécialitésBac?.length > 0 && (
+      {valeurBac && spécialitésBac?.length > 0 && (
         <fieldset className="grid gap-6 border-0 p-0">
           <RechercheSpécialités
+            bac={valeurBac}
             key={valeurBac}
             spécialitésBac={spécialitésBac}
           />

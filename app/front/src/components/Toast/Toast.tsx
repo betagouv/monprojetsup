@@ -4,7 +4,7 @@ import {
   estOuvertToastStore,
   titreToastStore,
   typeToastStore,
-} from "./useToast/useToast";
+} from "./useToastStore/useToastStore";
 import { router } from "@/configuration/lib/tanstack-router";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import * as ToastRadix from "@radix-ui/react-toast";

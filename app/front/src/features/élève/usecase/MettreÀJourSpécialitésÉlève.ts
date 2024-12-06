@@ -1,4 +1,4 @@
-import { SpécialitéÉlève, type Élève } from "@/features/élève/domain/élève.interface";
+import { type Élève, SpécialitéÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
 export class MettreÀJourSpécialitésÉlèveUseCase {

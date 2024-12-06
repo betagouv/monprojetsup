@@ -1,7 +1,7 @@
 import { ListeDeFormationsSuggéréesProps } from "./ListeDeFormationsSuggérées.interface";
 import ListeDeFavoris from "@/components/SélecteurFavoris/ListeDeFavoris/ListeDeFavoris";
 import { constantes } from "@/configuration/constantes";
-import useFormation from "@/features/formation/ui/SélectionFormationsFavorites/useFormation.tsx";
+import useFormation from "@/features/formation/ui/useFormation";
 
 const ListeDeFormationsSuggérées = ({ formations }: ListeDeFormationsSuggéréesProps) => {
   const { formationVersFavori } = useFormation();

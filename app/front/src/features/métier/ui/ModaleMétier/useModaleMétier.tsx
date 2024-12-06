@@ -5,7 +5,7 @@ import { ModalProps } from "@codegouvfr/react-dsfr/Modal";
 import { useMemo } from "react";
 
 export default function useModaleMétier({ métier }: UseModaleMétierArgs) {
-  const { estFavori, ajouterEnFavori, supprimerDesFavoris } = useBoutonsActionsMétier({
+  const { estFavori, mettreÀJourMétiersÉlève } = useBoutonsActionsMétier({
     métier,
   });
 
@@ -24,7 +24,7 @@ export default function useModaleMétier({ métier }: UseModaleMétierArgs) {
           iconId: "fr-icon-heart-line",
           iconPosition: "left",
           size: "large",
-          onClick: async () => await ajouterEnFavori(),
+          onClick: () => mettreÀJourMétiersÉlève([métier.id]),
           doClosesModal: false,
         },
       ];
@@ -38,11 +38,11 @@ export default function useModaleMétier({ métier }: UseModaleMétierArgs) {
         iconPosition: "left",
         priority: "secondary",
         size: "large",
-        onClick: async () => await supprimerDesFavoris(),
+        onClick: () => mettreÀJourMétiersÉlève([métier.id]),
         doClosesModal: false,
       },
     ];
-  }, [ajouterEnFavori, estFavori, supprimerDesFavoris]);
+  }, [estFavori, mettreÀJourMétiersÉlève, métier.id]);
 
   const titre = useMemo(() => {
     if (!estFavori) return métier.nom;

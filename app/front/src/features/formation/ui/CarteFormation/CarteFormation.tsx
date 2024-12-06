@@ -1,11 +1,11 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
 import Carte from "@/components/Carte/Carte";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import { useQuery } from "@tanstack/react-query";
 
 const CarteFormation = ({
   id,
@@ -15,22 +15,12 @@ const CarteFormation = ({
   communes,
   sélectionnée = false,
 }: CarteFormationProps) => {
-  const { data: élève } = useQuery(élèveQueryOptions);
-
-  const NOMBRE_MÉTIERS_À_AFFICHER = 3;
-
-  const estUneFormationFavorite = () => {
-    return élève?.formationsFavorites?.some((formationFavorite) => formationFavorite.id === id) ?? false;
-  };
-
-  const estUneFormationMasquée = () => {
-    return élève?.formationsMasquées?.includes(id) ?? false;
-  };
+  const { estFormationFavoritePourÉlève, estFormationMasquéePourÉlève } = useÉlève();
 
   return (
     <Carte
-      estFavori={estUneFormationFavorite()}
-      estMasqué={estUneFormationMasquée()}
+      estFavori={estFormationFavoritePourÉlève(id)}
+      estMasqué={estFormationMasquéePourÉlève(id)}
       id={id}
       sélectionnée={sélectionnée}
       titre={titre}
@@ -41,14 +31,16 @@ const CarteFormation = ({
         <div className="grid gap-3">
           <p className="fr-text--sm mb-0 text-[--text-label-grey]">{i18n.CARTE_FORMATION.MÉTIERS_ACCESSIBLES}</p>
           <ul className="m-0 flex list-none flex-wrap justify-start gap-2 p-0">
-            {métiersAccessibles.slice(0, NOMBRE_MÉTIERS_À_AFFICHER).map((métier) => (
+            {métiersAccessibles.slice(0, constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER).map((métier) => (
               <li key={métier.id}>
                 <Tag small>{métier.nom}</Tag>
               </li>
             ))}
-            {métiersAccessibles.length > NOMBRE_MÉTIERS_À_AFFICHER && (
+            {métiersAccessibles.length > constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER && (
               <li>
-                <Tag small>{`+${(métiersAccessibles.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}</Tag>
+                <Tag
+                  small
+                >{`+${(métiersAccessibles.length - constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER).toString()}`}</Tag>
               </li>
             )}
           </ul>

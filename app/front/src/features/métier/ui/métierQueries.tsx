@@ -30,10 +30,22 @@ export const récupérerMétiersQueryOptions = (métierIds: Array<Métier["id"]>
     queryFn: async () => {
       if (métierIds.length === 0) return [];
 
+      const donnéesExistantesEnCache = métierIds.map((métierId) =>
+        queryClient.getQueryData<Métier>(["métiers", métierId]),
+      );
+
+      if (donnéesExistantesEnCache.every((donnée) => donnée !== undefined)) {
+        return donnéesExistantesEnCache;
+      }
+
       const réponse = await dépendances.récupérerMétiersUseCase.run(métierIds);
 
       if (réponse instanceof Error) {
         throw réponse;
+      }
+
+      for (const métier of réponse) {
+        queryClient.setQueryData(["métiers", métier.id], métier);
       }
 
       return réponse;

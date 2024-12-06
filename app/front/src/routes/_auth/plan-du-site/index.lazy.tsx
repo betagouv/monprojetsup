@@ -1,4 +1,4 @@
-import PlanDuSitePage from "@/features/pages-pied-de-page/ui/PlanDuSitePage/PlanDuSitePage.tsx";
+import PlanDuSitePage from "@/features/pagesObligatoires/ui/PlanDuSitePage/PlanDuSitePage";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/_auth/plan-du-site/")({

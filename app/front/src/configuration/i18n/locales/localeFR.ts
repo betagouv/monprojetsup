@@ -150,7 +150,7 @@ export const localeFR = {
           AUCUN: "Aucun établissement sélectionné en favoris",
         },
       },
-      COMMENTAIRE: {
+      NOTE_PERSONNELLE: {
         LABEL: "Note additionnelle",
         BOUTON: "Enregistrer",
       },
@@ -483,7 +483,7 @@ export const localeFR = {
   },
   ACCESSIBILITÉ: {
     CHARGEMENT: "Chargement",
-    FAVORIS: "Favoris",
+    FAVORI: "Favori",
     LISTE_SUGGESTIONS_FAVORIS: "Éléments correspondants",
     LISTE_FAVORIS_SÉLECTIONNÉS: "Éléments sélectionnés",
     MASQUÉ: "Masqué",
@@ -500,6 +500,7 @@ export const localeFR = {
     ONGLETS_VOEUX: "Établissements par ville",
     VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
     FERMER_MODALE: "Fermer la fenêtre modale",
+    ACCÈS_RAPIDE: "Accès rapide",
     CONTENU: "Contenu",
     PIED_PAGE: "Pied de page",
     NOUVEAUX_RÉSULATS: "nouveaux résultats",

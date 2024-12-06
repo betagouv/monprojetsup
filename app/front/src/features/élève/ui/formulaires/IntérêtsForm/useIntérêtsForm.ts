@@ -1,9 +1,9 @@
 import { type UseIntérêtsFormArgs } from "./IntérêtsForm.interface";
 import { centresIntérêtsValidationSchema } from "./IntérêtsForm.validation";
-import { actionsToastStore } from "@/components/Toast/useToast/useToast";
+import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
 import { i18n } from "@/configuration/i18n/i18n";
-import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useId } from "react";
 

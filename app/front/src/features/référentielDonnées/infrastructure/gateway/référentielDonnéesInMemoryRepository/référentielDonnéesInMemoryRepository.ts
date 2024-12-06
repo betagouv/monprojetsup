@@ -3,7 +3,7 @@ import { type RéférentielDonnées } from "@/features/référentielDonnées/dom
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 
 export class RéférentielDonnéesInMemoryRepository implements RéférentielDonnéesRepository {
-  private RÉFÉRENTIEL_DONNÉES: RéférentielDonnées = {
+  private _RÉFÉRENTIEL_DONNÉES: RéférentielDonnées = {
     élève: {
       situations: ["aucune_idee", "quelques_pistes", "projet_precis"],
       classes: ["seconde", "premiere", "terminale"],
@@ -3070,6 +3070,6 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
   };
 
   public async récupérer(): Promise<RéférentielDonnées | Error> {
-    return this.RÉFÉRENTIEL_DONNÉES;
+    return this._RÉFÉRENTIEL_DONNÉES;
   }
 }

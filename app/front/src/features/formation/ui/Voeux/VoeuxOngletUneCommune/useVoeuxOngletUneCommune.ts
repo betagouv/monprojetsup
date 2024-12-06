@@ -1,11 +1,11 @@
 import { type UseVoeuxOngletUneCommuneArgs } from "./VoeuxOngletUneCommune.interface.tsx";
-import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore.ts";
 import { constantes } from "@/configuration/constantes";
 import { récupérerFicheFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
-const rayons = constantes.FICHE_FORMATION.RAYONS_RECHERCHE_VOEUX;
+const rayons = constantes.VOEUX.RAYONS_RECHERCHE;
 export default function useVoeuxOngletUneCommune({ codeCommune }: UseVoeuxOngletUneCommuneArgs) {
   const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
 

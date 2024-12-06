@@ -10,7 +10,7 @@ import BoutonsActionsFicheMétier from "@/features/métier/ui/BoutonsActionsMét
 import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const FicheMétier = ({ id }: FicheMétierProps) => {
   const { data: métier, isFetching: chargementEnCours } = useQuery(récupérerMétierQueryOptions(id));
@@ -18,7 +18,9 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
 
   if (métier === null) return null;
 
-  scrollTo({ top: 0 });
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [id]);
 
   if (!métier || chargementEnCours) return <AnimationChargement />;
 
@@ -63,7 +65,7 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
                 0,
                 afficherToutesLesFormations
                   ? métier.formations.length
-                  : constantes.FICHE_MÉTIER.NB_FORMATIONS_À_AFFICHER,
+                  : constantes.MÉTIERS.FICHES.NB_FORMATIONS_À_AFFICHER,
               )
               .map((formation) => (
                 <li key={formation.id}>
@@ -81,7 +83,7 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
                   </LienInterne>
                 </li>
               ))}
-            {métier.formations.length > constantes.FICHE_MÉTIER.NB_FORMATIONS_À_AFFICHER &&
+            {métier.formations.length > constantes.MÉTIERS.FICHES.NB_FORMATIONS_À_AFFICHER &&
               !afficherToutesLesFormations && (
                 <li
                   className="*:p-0"

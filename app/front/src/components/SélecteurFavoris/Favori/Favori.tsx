@@ -40,15 +40,25 @@ const Favori = ({
         pressed={estFavori}
         title={title}
       >
-        <BoutonSquelette
-          aria-hidden="true"
-          icône={{
-            classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
-          }}
-          label={i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
-          taille="petit"
-          variante="tertiaire"
-        />
+        {icôneEstFavori === "fr-icon-heart-fill" ? (
+          <BoutonSquelette
+            aria-hidden="true"
+            icône={{
+              classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
+            }}
+            label={i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
+            taille="petit"
+            variante="tertiaire"
+          />
+        ) : (
+          <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
+            <img
+              alt=""
+              className="h-4 w-4"
+              src={icôneEstFavori}
+            />
+          </div>
+        )}
       </Toggle>
     </>
   );

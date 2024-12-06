@@ -17,14 +17,19 @@ export type DomaineÉlève = Id;
 export type CentreIntêretÉlève = Id;
 export type FormationMasquéeÉlève = Id;
 export type CommuneÉlève = Omit<Commune, "codePostal">;
-export type FormationÉlève = {
-  id: string;
-  niveauAmbition: 1 | 2 | 3 | null;
-  commentaire: string | null;
-};
+export type FormationÉlève = Id;
 export type VoeuÉlève = {
-  id: string;
+  id: Id;
   estParcoursup: boolean;
+};
+export type NotePersonnelleFormationÉlève = {
+  idFormation: Id;
+  note: string | null;
+};
+
+export type AmbitionFormationÉlève = {
+  idFormation: Id;
+  ambition: 1 | 2 | 3 | null;
 };
 
 export type Élève = {
@@ -40,9 +45,11 @@ export type Élève = {
   alternance: AlternanceÉlève | null;
   moyenneGénérale: number | null;
   communesFavorites: CommuneÉlève[] | null;
-  formationsFavorites: FormationÉlève[] | null;
+  formations: FormationÉlève[] | null;
   voeuxFavoris: VoeuÉlève[] | null;
   formationsMasquées: FormationMasquéeÉlève[] | null;
+  notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
+  ambitions: AmbitionFormationÉlève[] | null;
 };
 
 export const situationÉlève = [

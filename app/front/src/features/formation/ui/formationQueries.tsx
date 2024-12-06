@@ -53,6 +53,14 @@ export const récupérerFormationsQueryOptions = (formationIds: Array<Formation[
     queryFn: async () => {
       if (formationIds.length === 0) return [];
 
+      const donnéesExistantesEnCache = formationIds.map((formationId) =>
+        queryClient.getQueryData<Formation>(["formations", formationId]),
+      );
+
+      if (donnéesExistantesEnCache.every((donnée) => donnée !== undefined)) {
+        return donnéesExistantesEnCache;
+      }
+
       const réponse = await dépendances.récupérerFormationsUseCase.run(formationIds);
 
       if (réponse instanceof Error) {

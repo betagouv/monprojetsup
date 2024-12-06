@@ -1,9 +1,9 @@
-import { useListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
-import DétailFormationPage from "@/features/formation/ui/DétailFormationPage/DétailFormationPage";
+import { useListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import FormationPage from "@/features/formation/ui/FormationPage/FormationPage";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/formations/")({
-  component: DétailFormationPage,
+  component: FormationPage,
   loader: ({ context: { queryClient }, cause }) => {
     if (cause !== "stay") {
       const listeEtAperçuStore = useListeEtAperçuStore.getState();

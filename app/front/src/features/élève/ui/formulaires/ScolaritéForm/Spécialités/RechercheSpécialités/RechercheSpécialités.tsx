@@ -6,8 +6,8 @@ import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import ListeDeSpécialitésSuggérées from "@/features/élève/ui/formulaires/ScolaritéForm/Spécialités/ListeDeSpécialitésSuggérées/ListeDeSpécialitésSuggérées";
 
-const RechercheSpécialités = ({ spécialitésBac }: RechercheSpécialitésProps) => {
-  const { rechercher, spécialitésSuggérées, rechercheEnCours } = useRechercheSpécialités({ spécialitésBac });
+const RechercheSpécialités = ({ spécialitésBac, bac }: RechercheSpécialitésProps) => {
+  const { rechercher, spécialitésSuggérées, rechercheEnCours } = useRechercheSpécialités({ spécialitésBac, bac });
 
   return (
     <div>

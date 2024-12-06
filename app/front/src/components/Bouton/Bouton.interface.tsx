@@ -4,7 +4,7 @@ import { AriaRole } from "react";
 export type BoutonProps = {
   label: BoutonSqueletteProps["label"];
   type: HTMLButtonElement["type"];
-  auClic?: () => Promise<void> | void;
+  auClic?: () => Promise<unknown> | void;
   taille?: BoutonSqueletteProps["taille"];
   variante?: BoutonSqueletteProps["variante"];
   désactivé?: boolean;

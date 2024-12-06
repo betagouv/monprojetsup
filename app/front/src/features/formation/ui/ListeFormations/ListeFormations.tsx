@@ -1,9 +1,9 @@
 import { type ListeFormationsProps } from "./ListeFormations.interface";
-import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import BoutonRetourAuxSuggestions from "@/features/formation/ui/BoutonRetourAuxSuggestions/BoutonRetourAuxSuggestions";
 import CarteFormation from "@/features/formation/ui/CarteFormation/CarteFormation";
+import BoutonRetourAuxSuggestions from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BoutonRetourAuxSuggestions/BoutonRetourAuxSuggestions";
 
 const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps) => {
   const élémentAffiché = élémentAffichéListeEtAperçuStore();

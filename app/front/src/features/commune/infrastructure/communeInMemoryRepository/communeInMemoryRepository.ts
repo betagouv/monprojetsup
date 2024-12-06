@@ -3,7 +3,7 @@ import { type Commune } from "@/features/commune/domain/commune.interface";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 
 export class communeInMemoryRepository implements CommuneRepository {
-  private COMMUNES: Commune[] = [
+  private _COMMUNES: Commune[] = [
     {
       codeInsee: "67482",
       codePostal: "",
@@ -91,6 +91,6 @@ export class communeInMemoryRepository implements CommuneRepository {
   ];
 
   public async rechercher(recherche: string): Promise<Commune[] | Error> {
-    return this.COMMUNES.filter((commune) => commune.nom.toLowerCase().includes(recherche.toLowerCase()));
+    return this._COMMUNES.filter((commune) => commune.nom.toLowerCase().includes(recherche.toLowerCase()));
   }
 }

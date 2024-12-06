@@ -1,10 +1,10 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
-import { Voeu } from "@/features/formation/domain/formation.interface";
+import { Formation, Voeu } from "@/features/formation/domain/formation.interface";
 import { queryOptions } from "@tanstack/react-query";
 
-export const rechercheVoeuxQueryOptions = (voeux: Voeu[], recherche?: string) =>
+export const rechercheVoeuxQueryOptions = (idFormation: Formation["id"], voeux: Voeu[], recherche?: string) =>
   queryOptions({
-    queryKey: ["voeux", "recherche", recherche],
+    queryKey: ["voeux", idFormation, "recherche", recherche],
     queryFn: () => {
       if (recherche === undefined) return null;
 

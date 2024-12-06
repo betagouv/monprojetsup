@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unassigned-import */
-import "./configuration/i18n/i18next";
-import { userManagerOIDCClient, àLaConnexionOIDCClientCallback } from "./configuration/lib/oidc-client";
+import { àLaConnexionOIDCClientCallback, userManagerOIDCClient } from "./configuration/lib/oidc-client";
 import { queryClient } from "./configuration/lib/tanstack-query";
 import { router } from "./configuration/lib/tanstack-router";
 import "@/style/global.scss";

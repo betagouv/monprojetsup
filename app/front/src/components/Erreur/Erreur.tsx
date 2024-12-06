@@ -4,7 +4,7 @@ import PiedDePage from "@/components/_layout/PiedDePage/PiedDePage";
 import LienÉvitement from "@/components/LienÉvitement/LienÉvitement";
 import Toast from "@/components/Toast/Toast";
 import { i18n } from "@/configuration/i18n/i18n";
-import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import {
   NonAutoriséErreurHttp,
   NonIdentifiéErreurHttp,
@@ -28,7 +28,7 @@ const Erreur = ({ erreur }: ErreurProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [erreur]);
 
-  scrollTo({ top: 0 });
+  window.scrollTo({ top: 0 });
 
   if (erreur instanceof NonIdentifiéErreurHttp || erreur instanceof NonAutoriséErreurHttp) return null;
 

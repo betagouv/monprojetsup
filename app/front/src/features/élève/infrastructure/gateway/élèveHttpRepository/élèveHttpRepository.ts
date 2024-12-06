@@ -31,9 +31,11 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         alternance: null,
         moyenneGénérale: null,
         communesFavorites: null,
-        formationsFavorites: null,
+        formations: null,
         voeuxFavoris: null,
         formationsMasquées: null,
+        notesPersonnelles: null,
+        ambitions: null,
       });
 
       return await this.récupérerProfil();
@@ -95,10 +97,10 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       communesFavorites: élève.communesFavorites ?? undefined,
       corbeilleFormations: élève.formationsMasquées ?? undefined,
       formationsFavorites:
-        élève.formationsFavorites?.map((formationFavorite) => ({
-          idFormation: formationFavorite.id,
-          niveauAmbition: formationFavorite.niveauAmbition ?? 0,
-          priseDeNote: formationFavorite.commentaire ?? undefined,
+        élève.formations?.map((idFormation) => ({
+          idFormation,
+          niveauAmbition: élève.ambitions?.find((ambition) => ambition.idFormation === idFormation)?.ambition ?? 0,
+          priseDeNote: élève.notesPersonnelles?.find((note) => note.idFormation === idFormation)?.note ?? undefined,
         })) ?? undefined,
       voeuxFavoris:
         élève.voeuxFavoris?.map((voeuFavori) => ({
@@ -123,18 +125,23 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       moyenneGénérale: élève.moyenneGenerale ?? null,
       communesFavorites: élève.communesFavorites ?? null,
       formationsMasquées: élève.corbeilleFormations ?? null,
-      formationsFavorites:
-        élève.formationsFavorites?.map((formationFavorite) => ({
-          id: formationFavorite.idFormation,
-          niveauAmbition: [1, 2, 3].includes(formationFavorite.niveauAmbition)
-            ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
-            : null,
-          commentaire: formationFavorite.priseDeNote ?? null,
-        })) ?? null,
+      formations: élève.formationsFavorites?.map(({ idFormation }) => idFormation) ?? null,
       voeuxFavoris:
         élève.voeuxFavoris?.map((voeu) => ({
           id: voeu.idVoeu,
           estParcoursup: voeu.estFavoriParcoursup,
+        })) ?? null,
+      notesPersonnelles:
+        élève.formationsFavorites?.map((formationFavorite) => ({
+          idFormation: formationFavorite.idFormation,
+          note: formationFavorite.priseDeNote ?? null,
+        })) ?? null,
+      ambitions:
+        élève.formationsFavorites?.map((formationFavorite) => ({
+          idFormation: formationFavorite.idFormation,
+          ambition: [1, 2, 3].includes(formationFavorite.niveauAmbition)
+            ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
+            : null,
         })) ?? null,
     };
   }

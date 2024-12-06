@@ -1,7 +1,7 @@
-import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { récupérerFicheFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import useVoeu from "@/features/formation/ui/Voeux/useVoeu";
-import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 

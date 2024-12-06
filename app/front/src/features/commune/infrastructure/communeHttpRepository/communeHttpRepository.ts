@@ -8,7 +8,7 @@ export class communeHttpRepository implements CommuneRepository {
 
   public async rechercher(recherche: string): Promise<Commune[] | Error> {
     const réponse = await this._httpClient.récupérer<RechercherCommunesRéponseHttp>({
-      endpoint: `https://api-adresse.data.gouv.fr/search/?q=${recherche}&limit=20&type=municipality`,
+      endpoint: `https://api-adresse.data.gouv.fr/search/?q=${encodeURI(recherche)}&limit=20&type=municipality`,
       méthode: "GET",
     });
 

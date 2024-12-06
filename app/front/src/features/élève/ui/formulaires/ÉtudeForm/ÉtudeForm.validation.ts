@@ -4,14 +4,16 @@ import { z } from "zod";
 
 export const étudeValidationSchema = z.object({
   duréeÉtudesPrévue: z
-    .enum(duréeÉtudesPrévueÉlève, {
+    .enum([...duréeÉtudesPrévueÉlève, ""], {
       errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
     })
+    .transform((valeur) => (valeur === "" ? null : valeur))
     .nullable(),
   alternance: z
-    .enum(alternanceÉlève, {
+    .enum([...alternanceÉlève, ""], {
       errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
     })
+    .transform((valeur) => (valeur === "" ? null : valeur))
     .nullable(),
   communesFavorites: z
     .object({

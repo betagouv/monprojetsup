@@ -12,7 +12,7 @@ export default function useLayout() {
   const blocMarque: HeaderProps["brandTop"] = (
     <>
       République
-      <br />
+      <br role="presentation" />
       Française
     </>
   );

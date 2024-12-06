@@ -3,11 +3,11 @@ import { rechercheSpécialitésQueryOptions } from "@/features/élève/ui/formul
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-export default function useRechercheSpécialités({ spécialitésBac }: UseRechercheSpécialitésArgs) {
+export default function useRechercheSpécialités({ bac, spécialitésBac }: UseRechercheSpécialitésArgs) {
   const [spécialitéRecherchée, setSpécialitéRecherchée] = useState<string>();
 
   const { data: spécialitésSuggérées, isFetching: rechercheEnCours } = useQuery(
-    rechercheSpécialitésQueryOptions(spécialitésBac, spécialitéRecherchée),
+    rechercheSpécialitésQueryOptions(bac, spécialitésBac, spécialitéRecherchée),
   );
 
   return {

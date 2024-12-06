@@ -1,7 +1,7 @@
-/* eslint-disable sonarjs/rules-of-hooks */
-import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
-import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/ParcoursInscriptionÉlève/useInscriptionÉlèveStore/useInscriptionÉlèveStore";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { Paths } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useRouterState } from "@tanstack/react-router";
@@ -14,6 +14,7 @@ export default function useÉlèveRedirection() {
   const routerState = useRouterState();
   const utilisateur = useUtilisateur();
   const { data: élève } = useQuery(élèveQueryOptions);
+  const { élèveAuMoinsUnDomaineFavori, élèveAuMoinsUnCentreIntêretFavori } = useÉlève();
   const étapesInscription = étapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
@@ -22,11 +23,11 @@ export default function useÉlèveRedirection() {
     const critèresRemplissagePourÉtapesInscription = [
       Boolean(élève?.situation),
       Boolean(élève?.classe),
-      élève?.domaines && élève.domaines.length > 0,
-      élève?.centresIntérêts && élève.centresIntérêts.length > 0,
+      élèveAuMoinsUnDomaineFavori,
+      élèveAuMoinsUnCentreIntêretFavori,
       Boolean(élève?.métiersFavoris),
       Boolean(élève?.communesFavorites),
-      Boolean(élève?.formationsFavorites),
+      Boolean(élève?.formations),
     ];
 
     const indexÉtapeNonRemplie = critèresRemplissagePourÉtapesInscription.findIndex((étape) => !étape);

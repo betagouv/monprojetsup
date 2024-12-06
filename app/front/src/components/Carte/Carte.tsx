@@ -1,5 +1,5 @@
 import { type CarteProps } from "./Carte.interface";
-import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -39,7 +39,7 @@ const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée }: C
               aria-hidden="true"
               className="fr-icon-heart-fill fr-icon--sm rounded bg-[--background-contrast-error] px-1 text-[--text-default-error]"
             />
-            <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
+            <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORI}</span>
           </div>
         )}
         {estMasqué && (

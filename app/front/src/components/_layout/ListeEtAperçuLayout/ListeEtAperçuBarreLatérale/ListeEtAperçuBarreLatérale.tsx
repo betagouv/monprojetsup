@@ -2,7 +2,7 @@ import { type ListeEtAperçuBarreLatéraleProps } from "./ListeEtAperçuBarreLat
 import {
   actionsListeEtAperçuStore,
   afficherBarreLatéraleEnMobileListeEtAperçuStore,
-} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+} from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
 

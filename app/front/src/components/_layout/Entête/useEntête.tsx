@@ -1,7 +1,7 @@
 import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
-import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
