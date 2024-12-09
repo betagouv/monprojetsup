@@ -2,6 +2,7 @@ import explorerSVG from "@/assets/explorer.svg";
 import favorisSVG from "@/assets/favoris.svg";
 import profilSVG from "@/assets/profil.svg";
 import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
+import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import { CartePrimaireTableauDeBordÉlèveProps } from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève.interface";
 import { getRouteApi } from "@tanstack/react-router";
@@ -48,5 +49,7 @@ export default function useTableauDeBordÉlèvePage() {
 
   return {
     cartes,
+    associationParcoursupPossible:
+      environnement.VITE_PARCOURSUP_OAUTH2_URL && environnement.VITE_PARCOURSUP_OAUTH2_CLIENT,
   };
 }

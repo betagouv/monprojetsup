@@ -40,6 +40,9 @@ export const localeFR = {
     COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
   },
+  PAGE_COOKIES: {
+    TITRE_PAGE: "Cookies",
+  },
   PAGE_DÉCLARATION_ACCESSIBILITÉ: {
     TITRE_PAGE: "Déclaration accessibilité",
   },

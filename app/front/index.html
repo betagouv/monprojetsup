@@ -27,11 +27,11 @@
   <meta name="theme-color" content="#000091">
   <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
-      script-src 'self';
+      script-src 'self' %VITE_MATOMO_URL% 'nonce-matomoxB6v44';
       style-src 'self' 'unsafe-inline';
       img-src 'self' data:;
-      connect-src 'self' %VITE_API_URL% %VITE_KEYCLOAK_URL% https://api-adresse.data.gouv.fr *.ingest.de.sentry.io;
-      frame-src 'self' %VITE_APP_URL% %VITE_KEYCLOAK_URL%;
+      connect-src 'self' %VITE_API_URL% %VITE_KEYCLOAK_URL% https://api-adresse.data.gouv.fr *.ingest.de.sentry.io %VITE_MATOMO_URL%;
+      frame-src 'self' %VITE_APP_URL% %VITE_KEYCLOAK_URL% %VITE_MATOMO_URL%;
       font-src 'self';
       object-src 'self';
       worker-src blob:;
@@ -45,5 +45,24 @@
   <div id="app" class="h-full grid grid-rows-[auto_1fr_auto]"></div>
   <script type="module" src="/src/app.tsx"></script>
 </body>
+
+<!-- Matomo -->
+<script nonce="matomoxB6v44">
+  const matomoURL = '%VITE_MATOMO_URL%';
+  const matomoSiteId = '%VITE_MATOMO_SITE_ID%';
+
+  if (matomoURL && matomoSiteId) {
+    var _paq = window._paq = window._paq || [];
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var url = matomoURL;
+      _paq.push(['setTrackerUrl', url + 'matomo.php']);
+      _paq.push(['setSiteId', matomoSiteId]);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = url + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+  }
+</script>
+<!-- End Matomo Code -->
 
 </html>

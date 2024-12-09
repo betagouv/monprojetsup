@@ -29,7 +29,7 @@ export default function usePiedDePage() {
       text: i18n.PIED_DE_PAGE.LIENS_INTERNES.DONNÉES_PERSONNELLES,
     },
     {
-      linkProps: { to: "/" },
+      linkProps: { to: "/cookies" },
       text: i18n.PIED_DE_PAGE.LIENS_INTERNES.GESTION_COOKIES,
     },
   ];

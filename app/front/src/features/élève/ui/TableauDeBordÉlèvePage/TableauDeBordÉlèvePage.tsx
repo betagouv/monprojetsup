@@ -12,7 +12,7 @@ import CarteTémoignageÉlève from "@/features/élève/ui/TableauDeBordÉlèveP
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
-  const { cartes } = useTableauDeBordÉlèvePage();
+  const { cartes, associationParcoursupPossible } = useTableauDeBordÉlèvePage();
 
   return (
     <>
@@ -60,16 +60,18 @@ const TableauDeBordÉlèvePage = () => {
           </ul>
           <hr className="mb-4 mt-10" />
           <ul
-            className={`grid list-none grid-cols-1 gap-6 p-0 ${environnement.VITE_PARCOURSUP_OAUTH2_URL ? "md:grid-cols-2" : ""} `}
+            className={`grid list-none grid-cols-1 gap-6 p-0 ${associationParcoursupPossible ? "md:grid-cols-2" : ""} `}
           >
-            {environnement.VITE_PARCOURSUP_OAUTH2_URL && (
+            {associationParcoursupPossible && (
               <li>
                 <CarteParcourSupÉlève />
               </li>
             )}
-            <li>
-              <CarteAvisÉlève />
-            </li>
+            {environnement.VITE_LAISSER_AVIS_URL && (
+              <li>
+                <CarteAvisÉlève />
+              </li>
+            )}
           </ul>
         </div>
       </div>

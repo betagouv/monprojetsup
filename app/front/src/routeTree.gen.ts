@@ -28,6 +28,7 @@ const AuthPlanDuSiteIndexLazyImport = createFileRoute('/_auth/plan-du-site/')()
 const AuthDeclarationAccessibliteIndexLazyImport = createFileRoute(
   '/_auth/declaration-accessiblite/',
 )()
+const AuthCookiesIndexLazyImport = createFileRoute('/_auth/cookies/')()
 const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
   '/_auth/eleve/_inscription/inscription/scolarite/',
 )()
@@ -102,6 +103,14 @@ const AuthDeclarationAccessibliteIndexLazyRoute =
       (d) => d.Route,
     ),
   )
+
+const AuthCookiesIndexLazyRoute = AuthCookiesIndexLazyImport.update({
+  id: '/cookies/',
+  path: '/cookies/',
+  getParentRoute: () => AuthRoute,
+} as any).lazy(() =>
+  import('./routes/_auth/cookies/index.lazy').then((d) => d.Route),
+)
 
 const AuthFormationsIndexRoute = AuthFormationsIndexImport.update({
   id: '/formations/',
@@ -261,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFormationsIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/cookies/': {
+      id: '/_auth/cookies/'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof AuthCookiesIndexLazyImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/declaration-accessiblite/': {
       id: '/_auth/declaration-accessiblite/'
       path: '/declaration-accessiblite'
@@ -393,6 +409,7 @@ interface AuthRouteChildren {
   AuthEleveRoute: typeof AuthEleveRouteWithChildren
   AuthFavorisIndexRoute: typeof AuthFavorisIndexRoute
   AuthFormationsIndexRoute: typeof AuthFormationsIndexRoute
+  AuthCookiesIndexLazyRoute: typeof AuthCookiesIndexLazyRoute
   AuthDeclarationAccessibliteIndexLazyRoute: typeof AuthDeclarationAccessibliteIndexLazyRoute
   AuthPlanDuSiteIndexLazyRoute: typeof AuthPlanDuSiteIndexLazyRoute
   AuthProfilIndexLazyRoute: typeof AuthProfilIndexLazyRoute
@@ -403,6 +420,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthEleveRoute: AuthEleveRouteWithChildren,
   AuthFavorisIndexRoute: AuthFavorisIndexRoute,
   AuthFormationsIndexRoute: AuthFormationsIndexRoute,
+  AuthCookiesIndexLazyRoute: AuthCookiesIndexLazyRoute,
   AuthDeclarationAccessibliteIndexLazyRoute:
     AuthDeclarationAccessibliteIndexLazyRoute,
   AuthPlanDuSiteIndexLazyRoute: AuthPlanDuSiteIndexLazyRoute,
@@ -418,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
+  '/cookies': typeof AuthCookiesIndexLazyRoute
   '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
   '/profil': typeof AuthProfilIndexLazyRoute
@@ -437,6 +456,7 @@ export interface FileRoutesByTo {
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
+  '/cookies': typeof AuthCookiesIndexLazyRoute
   '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
   '/profil': typeof AuthProfilIndexLazyRoute
@@ -459,6 +479,7 @@ export interface FileRoutesById {
   '/_auth/eleve/_inscription': typeof AuthEleveInscriptionRouteWithChildren
   '/_auth/favoris/': typeof AuthFavorisIndexRoute
   '/_auth/formations/': typeof AuthFormationsIndexRoute
+  '/_auth/cookies/': typeof AuthCookiesIndexLazyRoute
   '/_auth/declaration-accessiblite/': typeof AuthDeclarationAccessibliteIndexLazyRoute
   '/_auth/plan-du-site/': typeof AuthPlanDuSiteIndexLazyRoute
   '/_auth/profil/': typeof AuthProfilIndexLazyRoute
@@ -481,6 +502,7 @@ export interface FileRouteTypes {
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/cookies'
     | '/declaration-accessiblite'
     | '/plan-du-site'
     | '/profil'
@@ -499,6 +521,7 @@ export interface FileRouteTypes {
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/cookies'
     | '/declaration-accessiblite'
     | '/plan-du-site'
     | '/profil'
@@ -519,6 +542,7 @@ export interface FileRouteTypes {
     | '/_auth/eleve/_inscription'
     | '/_auth/favoris/'
     | '/_auth/formations/'
+    | '/_auth/cookies/'
     | '/_auth/declaration-accessiblite/'
     | '/_auth/plan-du-site/'
     | '/_auth/profil/'
@@ -564,6 +588,7 @@ export const routeTree = rootRoute
         "/_auth/eleve",
         "/_auth/favoris/",
         "/_auth/formations/",
+        "/_auth/cookies/",
         "/_auth/declaration-accessiblite/",
         "/_auth/plan-du-site/",
         "/_auth/profil/"
@@ -603,6 +628,10 @@ export const routeTree = rootRoute
     },
     "/_auth/formations/": {
       "filePath": "_auth/formations/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/cookies/": {
+      "filePath": "_auth/cookies/index.lazy.tsx",
       "parent": "/_auth"
     },
     "/_auth/declaration-accessiblite/": {

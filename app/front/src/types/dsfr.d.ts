@@ -10,5 +10,8 @@ declare module "@codegouvfr/react-dsfr/spa" {
 export declare global {
   interface Window {
     dsfr: Function;
+    _paq: {
+      push: (argument: unknown[]) => void;
+    };
   }
 }
