@@ -42,8 +42,8 @@ class SuggestionsControllers(
         return getSuggestionsService.handleRequestAndExceptions(request)
     }
 
-    @Operation(summary = "Produit des explications au sujet de l'affinité d'un profil à une formation.",
-        description = "Produit des explications au sujet de l'affinité d'un profil à une formation." +
+    @Operation(summary = "Génère des explications au sujet de l'affinité d'un profil à une formation.",
+        description = "Génère des explications au sujet de l'affinité d'un profil à une formation." +
                 "Les explications sont des éléments sur la cohérence entre les différents éléments de profil et les caractéristiques de la formation." +
                 "Par exemple la cohérence avec les préférences géographiques ou les centres d'intérêts du candidat.")
     @PostMapping("/$EXPLANATIONS_ENDPOINT")

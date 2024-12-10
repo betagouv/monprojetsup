@@ -17,7 +17,7 @@ public abstract class MyService<T,U> {
 
     public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
         try {
-            logger.debug("\n*******************************************************\n\n\t" + getServiceName() + "\n\n");
+            logger.debug("\n*******************************************************\n\n\t{}\n\n", getServiceName());
             logger.debug(new GsonBuilder().setPrettyPrinting().create().toJson(req));
             return handleRequest(req);
         } catch (Exception e) {
