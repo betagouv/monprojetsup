@@ -68,3 +68,11 @@ Assurez-vous de disposer de java en version >= 19
 Certains tests sont trop gourmands en ressources mémoire pour être exécuté sur une CI standard.
 Dans le code les tests sont annotés avec `@Tag("resource-intensive-test")`.
 Ces tests sont désactivés dans le profile maven "ci".
+
+## Génération des données de référence MPS à partir des données IDEO, Onisep et Parcoursup
+
+La base de l'indexation des données de référence de MonProjetSup est constituée de données provenant de 3 sources : IDEO, Onisep et Parcoursup.
+Pour générer les données de référence de MonProjetSup à partir des données de ces 3 sources, il faut suivre les étapes suivantes :
+- la base de l'indexation est le système de g_fl_cod de Parcoursup
+- certains g_fl_cod sont regroupés en familles de g_fl_cod, ou g_fr_cod
+- 
