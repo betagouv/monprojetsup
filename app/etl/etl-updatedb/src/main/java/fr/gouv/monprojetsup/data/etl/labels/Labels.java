@@ -166,6 +166,7 @@ public class Labels {
                 libelle
                         .replace(" - Sciences, technologie, santé - ", " - ")
                         .replace("L1", "Licence")
+                        .replace("LP", "Licence Professionnelle")
                         .replace("CPGE", "Classes prépa (CPGE)")
                         .replace("CUPGE", "Classes prépa universitaires (CUPGE)")
                 ;
