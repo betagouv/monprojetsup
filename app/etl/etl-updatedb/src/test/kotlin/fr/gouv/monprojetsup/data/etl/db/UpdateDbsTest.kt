@@ -73,7 +73,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         @Tag("resource-intensive-test")
-        fun `Les tables des formations est correctement remplie`() {
+        fun `La tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsDb() }
             assertDoesNotThrow { updateFormationDbs.updateVoeuxDb() }
             val formations = formationsdb.findAll()
