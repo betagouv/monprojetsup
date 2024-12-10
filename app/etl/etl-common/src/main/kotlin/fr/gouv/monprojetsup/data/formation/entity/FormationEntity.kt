@@ -59,7 +59,7 @@ class FormationEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "liens", columnDefinition = "jsonb")
-    lateinit var liens: List<LienEntity>
+    var liens: List<LienEntity> = listOf()
 
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "mots_clefs", nullable = true)
@@ -73,7 +73,7 @@ class FormationEntity {
         joinColumns = [JoinColumn(name = "id_formation")] ,
         inverseJoinColumns = [JoinColumn(name = "id_voeu")]
     )
-    lateinit var voeux: List<VoeuEntity>
+    var voeux: List<VoeuEntity>? = listOf()
 
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     var labelDetails: String? = null
@@ -105,7 +105,7 @@ class FormationEntity {
             || descriptifGeneral.isNullOrEmpty()
             || formationsAssociees.isNullOrEmpty()
             || motsClefs.isNullOrEmpty()
-            || voeux.isEmpty()
+            || voeux.isNullOrEmpty()
             || liens.isEmpty()
             || duree == null
             ) {
@@ -157,7 +157,7 @@ class FormationEntity {
             apprentissage ?: false,
             duree ?: -1,
             las,
-            voeux.map { it.toVoeu() },
+            voeux?.map { it.toVoeu() }.orEmpty(),
             stats.toStats(),
             formationsAssociees ?: emptyList(),
         )

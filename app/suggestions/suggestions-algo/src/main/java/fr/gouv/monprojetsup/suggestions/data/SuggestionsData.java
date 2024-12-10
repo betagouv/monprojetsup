@@ -110,8 +110,8 @@ public class SuggestionsData {
         return f.stats().formationsSimilaires().getOrDefault(typeBac, Map.of());
     }
 
-    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String id) {
-        return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(List.of());
+    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String formationId) {
+        return formationsPort.retrieveFormation(formationId).map(Formation::getVoeuxCoords).orElse(List.of());
     }
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {

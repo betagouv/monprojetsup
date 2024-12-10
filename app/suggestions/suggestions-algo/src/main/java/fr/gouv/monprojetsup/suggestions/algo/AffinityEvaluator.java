@@ -355,8 +355,8 @@ public class AffinityEvaluator {
 
     private double getBonusTypeBac(String grp, Explanations expl) {
         if (bac.equals(TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
-        Integer nbAdmisTousBac = algo.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
-        Integer nbAdmisBac = algo.getNbAdmis(grp, bac);
+        @Nullable Integer nbAdmisTousBac = algo.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
+        @Nullable Integer nbAdmisBac = algo.getNbAdmis(grp, bac);
         if(nbAdmisTousBac != null && nbAdmisBac == null) return NO_MATCH_SCORE;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = FULL_MATCH_MULTIPLIER * nbAdmisBac / nbAdmisTousBac;

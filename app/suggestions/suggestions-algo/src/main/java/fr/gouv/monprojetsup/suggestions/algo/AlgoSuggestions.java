@@ -433,8 +433,8 @@ public class AlgoSuggestions {
         return capacites.computeIfAbsent(fl, data::getCapacity);
     }
 
-    private final ConcurrentHashMap<Pair<String,String>, Integer> nbAdmis = new ConcurrentHashMap<>();
-    public Integer getNbAdmis(String grp, String bac) {
+    private final ConcurrentHashMap<Pair<String,String>, @Nullable Integer> nbAdmis = new ConcurrentHashMap<>();
+    public @Nullable Integer getNbAdmis(String grp, String bac) {
         return nbAdmis.computeIfAbsent(Pair.of(grp, bac), z -> data.getNbAdmis(grp, bac));
     }
 
