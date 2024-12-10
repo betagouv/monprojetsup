@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional
 interface FormationsVoeuxJpaRepository : JpaRepository<FormationVoeuEntity, String> {
     @Query("SELECT id_formation FROM ref_join_formation_voeu WHERE id_voeu = ?1", nativeQuery = true)
     fun getFormationsOfVoeu(voeuId: String) :  List<String>
+
+    @Query("SELECT id_voeu FROM ref_join_formation_voeu WHERE id_formation = ?1", nativeQuery = true)
+    fun getVoeuxOfFormation(voeuId: String) :  List<String>
 }
 
 @Repository
@@ -26,6 +29,11 @@ open class FormationsVoeuxsDb(
     @Transactional(readOnly = true)
     override fun getFormationsOfVoeu(voeuId: String): List<String> {
         return db.getFormationsOfVoeu(voeuId)
+    }
+
+    @Transactional(readOnly = true)
+    override fun getVoeuxOfFormation(formationId: String): List<String> {
+        return db.getVoeuxOfFormation(formationId)
     }
 
 }

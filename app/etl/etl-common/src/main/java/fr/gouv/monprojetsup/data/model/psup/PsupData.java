@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.BPJEPS_PSUP_FR_COD;
 import static fr.gouv.monprojetsup.data.Constants.CMI_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.IEP_PSUP_FR_COD;
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.Constants.MIN_NB_ADMIS_FOR_BAC_ACTIF;
@@ -198,7 +199,19 @@ public record PsupData(
                 .mapToInt(Integer::intValue)
                 .max()
                 .orElse(0);
-        return result > 0 ? result : null;
+
+        val result2
+                = psupKeys.stream()
+                .filter(k -> k.startsWith(FILIERE_PREFIX)).map(Constants::mpsIdToGFlCod)
+                .map(filieres::get)
+                .filter(Objects::nonNull)
+                .map(this::getDuree)
+                .filter(Objects::nonNull)
+                .mapToInt(Integer::intValue)
+                .max()
+                .orElse(0);
+
+        return result2 > 0 ? result2 : (result > 0 ? result : null);
     }
 
     @Nullable
@@ -369,7 +382,7 @@ public record PsupData(
         //L1 droit bizarre
         String l1Droit = "fl2002";
         String l1DroitInnovation = "fl250";
-        String l1DroitInnovationLAS = "flfl1002079";
+        String l1DroitInnovationLAS = "fl1002079";
         flToGrp.put(l1DroitInnovation, l1Droit);
         flToGrp.put(l1DroitInnovationLAS, l1Droit);
 

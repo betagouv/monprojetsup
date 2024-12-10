@@ -11,4 +11,5 @@ public interface FormationsVoeuxPort {
 
     List<String> getFormationsOfVoeu(@NotNull String voeuId);
 
+    List<String>  getVoeuxOfFormation(@NotNull String formationId);
 }

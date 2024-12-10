@@ -49,7 +49,7 @@ public class Constants {
     public static final String CENTRE_INTERETS_ROME = "T-ROME.";
 
     private static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
-    private static final String FILIERE_PREFIX = "fl";//like g_fl_cod
+    public static final String FILIERE_PREFIX = "fl";//like g_fl_cod
     public static final String FORMATION_PREFIX = "ta";//like g_ta_cod
 
     public static final int MAX_DISTANCE_VILLE_VOEU_KM = 100;

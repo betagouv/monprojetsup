@@ -5,14 +5,9 @@ import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.stats.Middle50
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -65,16 +60,6 @@ class FormationEntity {
     @Column(name = "mots_clefs", nullable = true)
     var motsClefs: List<String>? = null
 
-    /** begin ajouts suggestions **/
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinTable(
-        name = "ref_join_formation_voeu",
-        joinColumns = [JoinColumn(name = "id_formation")] ,
-        inverseJoinColumns = [JoinColumn(name = "id_voeu")]
-    )
-    var voeux: List<VoeuEntity>? = listOf()
-
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     var labelDetails: String? = null
 
@@ -105,7 +90,6 @@ class FormationEntity {
             || descriptifGeneral.isNullOrEmpty()
             || formationsAssociees.isNullOrEmpty()
             || motsClefs.isNullOrEmpty()
-            || voeux.isNullOrEmpty()
             || liens.isEmpty()
             || duree == null
             ) {
@@ -157,7 +141,6 @@ class FormationEntity {
             apprentissage ?: false,
             duree ?: -1,
             las,
-            voeux?.map { it.toVoeu() }.orEmpty(),
             stats.toStats(),
             formationsAssociees ?: emptyList(),
         )

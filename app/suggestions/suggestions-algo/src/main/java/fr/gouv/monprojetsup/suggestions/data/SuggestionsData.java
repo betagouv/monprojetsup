@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
+import fr.gouv.monprojetsup.data.formation.entity.FormationVoeuEntity;
 import fr.gouv.monprojetsup.data.model.Edge;
 import fr.gouv.monprojetsup.data.model.Formation;
 import fr.gouv.monprojetsup.data.model.LatLng;
@@ -14,6 +15,7 @@ import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsVoeuxPort;
 import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
+import fr.gouv.monprojetsup.suggestions.port.VoeuxPort;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -45,6 +47,7 @@ public class SuggestionsData {
     private final FormationsPort formationsPort;
     private final FormationsMetiersPort formationsMetierPort;
     private final FormationsVoeuxPort formationsVoeuxPort;
+    private final VoeuxPort voeuxPort;
     private final VillesPort villesPort;
     private final ConfigPort configPort;
 
@@ -56,7 +59,8 @@ public class SuggestionsData {
             VillesPort villesPort,
             FormationsMetiersPort formationsMetierPort,
             ConfigPort configPort,
-            FormationsVoeuxPort formationsVoeuxPort
+            FormationsVoeuxPort formationsVoeuxPort,
+            VoeuxPort voeuxPort
             ) {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
@@ -64,6 +68,7 @@ public class SuggestionsData {
         this.villesPort = villesPort;
         this.formationsMetierPort = formationsMetierPort;
         this.formationsVoeuxPort = formationsVoeuxPort;
+        this.voeuxPort = voeuxPort;
         this.configPort = configPort;
         val activeConfig = configPort.retrieveActiveConfig();
         if(activeConfig == null) {
@@ -111,7 +116,8 @@ public class SuggestionsData {
     }
 
     public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String formationId) {
-        return formationsPort.retrieveFormation(formationId).map(Formation::getVoeuxCoords).orElse(List.of());
+        val voeuxIds = formationsVoeuxPort.getVoeuxOfFormation(formationId);
+        return voeuxPort.retrieveCoords(voeuxIds);
     }
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {
@@ -150,8 +156,7 @@ public class SuggestionsData {
     }
 
     public int getNbVoeux(String formationId) {
-        val f = formationsPort.retrieveFormation(formationId);
-        return f.map(Formation::nbVoeux).orElse(0);
+        return formationsVoeuxPort.getVoeuxOfFormation(formationId).size();
     }
 
     public int getCapacity(@NotNull String formationId) {
@@ -246,7 +251,9 @@ public class SuggestionsData {
 
     public int p50NbFormations() {
         return p50(
-                formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
+                formationsVoeuxPort.findAll().stream().collect(
+                        Collectors.groupingBy(FormationVoeuEntity::getIdFormation)
+                ).values().stream().map(List::size).toList()
         );
     }
 

@@ -110,7 +110,7 @@ class UpdateFormationDbs(
             )
         }
 
-        val voeuxIds = voeuxEntities.keys
+        val voeuxIds : Set<String> = HashSet(voeuxEntities.keys)
 
         val nbFormationsVoeuxBefore = formationVoeuxDb.findAll().count()
         val nbFormationsVoeuxAfter = formationsVoeuxEntities.count()
