@@ -12,7 +12,6 @@ import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.AJACCIO
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.BASTIA
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.FORT_DE_FRANCE
-import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.GRENOBLE
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.LYON
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MONTREUIL

@@ -46,6 +46,4 @@ class VoeuEntity {
 
     @Column(name = "obsolete", nullable = false)
     var obsolete: Boolean = false
-
-    fun toFormationCourte() = FormationCourte(this.id, this.nom)
 }

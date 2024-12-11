@@ -1164,15 +1164,15 @@ class MiseAJourEleveServiceTest {
     @ParameterizedTest
     @MethodSource("provideArgumentsForScenariosModifVoeux")
     fun `scénarios de modifications de voeux`(scenario: ScenarioCasNominalModifVoeux) {
-        val voeuxRequetés = scenario.voeuxFavorisActuels.map { it.idVoeu }
-        val voeuxMappés =
+        val voeuxRequetes = scenario.voeuxFavorisActuels.map { it.idVoeu }
+        val voeuxMappes =
             voeuxMaps
                 .filterKeys { it in scenario.formations }
-                .map { it.key to it.value.filter { v -> v.id in voeuxRequetés } }
+                .map { it.key to it.value.filter { v -> v.id in voeuxRequetes } }
                 .toMap()
 
         // Given
-        given(voeuRepository.recupererVoeux(voeuxRequetés)).willReturn(voeuxMappés)
+        given(voeuRepository.recupererVoeux(voeuxRequetes)).willReturn(voeuxMappes)
         val profilActuel =
             profilEleve.copy(
                 id = scenario.nomScenario,
