@@ -7,7 +7,6 @@ import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.entity.InteretEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class InteretBDDRepository(
@@ -15,24 +14,20 @@ class InteretBDDRepository(
     private val interetSousCategorieJPARepository: InteretSousCategorieJPARepository,
     private val interetCategorieJPARepository: InteretCategorieJPARepository,
 ) : InteretRepository {
-    @Transactional(readOnly = true)
     override fun recupererLesSousCategories(idsSousCategoriesInterets: List<String>): List<InteretSousCategorie> {
         return interetSousCategorieJPARepository.findAllById(idsSousCategoriesInterets).map { it.toInteretSousCategorie() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesInteretsDeSousCategories(idsSousCategoriesInterets: List<String>): List<Interet> {
         return findAllByIdSousCategorieIn(idsSousCategoriesInterets).map { it.toInteret() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererToutesLesCategoriesEtLeursSousCategoriesDInterets(): Map<InteretCategorie, List<InteretSousCategorie>> {
         return interetCategorieJPARepository.findAll().associate {
             it.toInteretCategorie() to it.sousCategories.map { it.toInteretSousCategorie() }
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererIdsCentresInteretsInexistants(ids: List<String>): List<String> {
         val existingIds = interetSousCategorieJPARepository.findExistingIds(ids)
         return ids.filterNot { existingIds.contains(it) }

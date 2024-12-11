@@ -5,14 +5,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlento
 import fr.gouv.monprojetsup.formation.domain.port.CommunesAvecVoeuxAuxAlentoursRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class CommunesAvecVoeuxAuxAlentoursBDDRepository(
     private val communesAvecVoeuxAuxAlentoursJPARepository: CommunesAvecVoeuxAuxAlentoursJPARepository,
     private val logger: MonProjetSupLogger,
 ) : CommunesAvecVoeuxAuxAlentoursRepository {
-    @Transactional(readOnly = true)
     override fun recupererVoeuxAutoursDeCommmune(communeFavorites: List<CommuneFavorite>): List<CommuneAvecIdsVoeuxAuxAlentours> {
         val entites = communesAvecVoeuxAuxAlentoursJPARepository.findAllByCodeInseeIn(communeFavorites.map { it.codeInsee })
         return communeFavorites.map { commune ->

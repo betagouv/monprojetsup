@@ -6,7 +6,6 @@ import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.JoinFormationVoeuQuery
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class VoeuBDDRepository(
@@ -14,13 +13,11 @@ class VoeuBDDRepository(
     val voeuCourtJPARepository: VoeuCourtJPARepository,
     val entityManager: EntityManager,
 ) : VoeuRepository {
-    @Transactional(readOnly = true)
     override fun recupererVoeux(idsVoeux: List<String>): Map<String, List<Voeu>> {
         return findAllByIdVoeuIn(idsVoeux).groupBy { it.idFormation }
             .map { it.key to it.value.map { entity -> entity.toVoeu() } }.toMap()
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesVoeuxDeFormations(
         idsFormations: List<String>,
         obsoletesInclus: Boolean,
@@ -37,7 +34,6 @@ class VoeuBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesVoeuxDUneFormation(
         idFormation: String,
         obsoletesInclus: Boolean,
@@ -52,7 +48,6 @@ class VoeuBDDRepository(
         ).map { it.toVoeu() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String> {
         val existingIds = voeuJPARepository.findExistingIds(idsVoeux)
         return idsVoeux.filterNot { existingIds.contains(it) }

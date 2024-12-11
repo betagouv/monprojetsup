@@ -6,13 +6,11 @@ import fr.gouv.monprojetsup.metier.domain.port.RechercheMetierRepository
 import fr.gouv.monprojetsup.metier.infrastructure.entity.RechercheMetierEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class RechercheMetierBDDRepository(
     private val entityManager: EntityManager,
 ) : RechercheMetierRepository {
-    @Transactional(readOnly = true)
     override fun rechercherMetiersCourts(motRecherche: String): List<ResultatRechercheMetierCourt> {
         val resulat =
             entityManager.createNativeQuery(

@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierQuer
 import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationQuery
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class MetierBDDRepository(
@@ -18,7 +17,6 @@ class MetierBDDRepository(
     private val entityManager: EntityManager,
     private val logger: MonProjetSupLogger,
 ) : MetierRepository {
-    @Transactional(readOnly = true)
     override fun recupererMetiersDeFormations(
         idsFormations: List<String>,
         obsoletesInclus: Boolean,
@@ -49,7 +47,6 @@ class MetierBDDRepository(
         return idsFormations.associateWith { idFormation -> metiers[idFormation]?.map { it.toMetier() } ?: emptyList() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesMetiersAvecSesFormations(ids: List<String>): List<MetierAvecSesFormations> {
         val formationsParIdMetier =
             entityManager.createQuery(
@@ -82,7 +79,6 @@ class MetierBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesMetiers(ids: List<String>): List<Metier> {
         val metiers = metierJPARepository.findAllByIdIn(ids)
         return ids.mapNotNull { idMetier ->
@@ -94,12 +90,10 @@ class MetierBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesMetiersCourts(ids: List<String>): List<MetierCourt> {
         return metierCourtJPARepository.findAllByIdIn(ids).map { it.toMetierCourt() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererIdsMetiersInexistants(ids: List<String>): List<String> {
         val existingIds = metierJPARepository.findExistingIds(ids)
         return ids.filterNot { existingIds.contains(it) }

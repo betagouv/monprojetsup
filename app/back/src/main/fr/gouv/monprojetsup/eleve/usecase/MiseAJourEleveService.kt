@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteReposi
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MiseAJourEleveService(
@@ -30,6 +31,7 @@ class MiseAJourEleveService(
     private val formationRepository: FormationRepository,
     private val eleveRepository: EleveRepository,
 ) {
+    @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
     fun mettreAJourUnProfilEleve(
         miseAJourDuProfil: ModificationProfilEleve,

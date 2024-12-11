@@ -5,12 +5,14 @@ import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.entity.ResultatRechercheMetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.RechercheMetierRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RechercherMetiersService(
     private val rechercheMetierRepository: RechercheMetierRepository,
     private val filtrerRechercheBuilder: FiltrerRechercheBuilder,
 ) {
+    @Transactional(readOnly = true)
     fun rechercherMetiersTriesParScores(
         recherche: String,
         tailleMinimumRecherche: Int,

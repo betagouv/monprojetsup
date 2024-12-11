@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupApiFavorisClient
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RecupererAssociationFormationsVoeuxService(
@@ -14,6 +15,7 @@ class RecupererAssociationFormationsVoeuxService(
     private val parcoursupApiFavorisClient: ParcoursupApiFavorisClient,
     private val logger: MonProjetSupLogger,
 ) {
+    @Transactional(readOnly = true)
     fun recupererVoeuxFavoris(profil: ProfilEleve.AvecProfilExistant): List<VoeuFavori> {
         val result = HashSet(profil.voeuxFavoris)
         try {

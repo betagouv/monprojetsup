@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RecupererFichesFormationsService(
@@ -22,6 +23,7 @@ class RecupererFichesFormationsService(
     private val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
     private val logger: MonProjetSupLogger,
 ) {
+    @Transactional(readOnly = true)
     fun recupererFichesFormationPourProfil(
         profilEleve: ProfilEleve.AvecProfilExistant,
         suggestionsPourUnProfil: SuggestionsPourUnProfil,
@@ -101,6 +103,7 @@ class RecupererFichesFormationsService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun recupererFichesFormation(
         idsFormations: List<String>,
         obsoletesInclus: Boolean,

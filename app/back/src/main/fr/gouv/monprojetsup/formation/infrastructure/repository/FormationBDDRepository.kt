@@ -8,7 +8,6 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.FormationDetailleeEntity
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrElse
 
 @Repository
@@ -18,7 +17,6 @@ class FormationBDDRepository(
     val logger: MonProjetSupLogger,
 ) : FormationRepository {
     @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
-    @Transactional(readOnly = true)
     override fun recupererUneFormation(idFormation: String): Formation {
         val formation: FormationDetailleeEntity =
             formationDetailleeJPARepository.findById(idFormation).getOrElse {
@@ -30,7 +28,6 @@ class FormationBDDRepository(
         return formation.toFormation()
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesFormations(
         idsFormations: List<String>,
         obsoletesInclus: Boolean,
@@ -50,13 +47,11 @@ class FormationBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte> {
         val formations = formationJPARepository.findAllByIdIn(idsFormations)
         return formations.map { it.toFormationCourte() }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererIdsFormationsInexistantes(ids: List<String>): List<String> {
         val existingIds = formationJPARepository.findExistingIds(ids)
         return ids.filterNot { existingIds.contains(it) }

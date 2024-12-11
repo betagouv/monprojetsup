@@ -7,12 +7,14 @@ import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupAuthentClient
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MiseAJourIdParcoursupService(
     private val compteParcoursupRepository: CompteParcoursupRepository,
     private val parcoursupAuthentHttpClient: ParcoursupAuthentClient,
 ) {
+    @Transactional(readOnly = false)
     @Throws(MonProjetSupNotFoundException::class, MonProjetSupBadRequestException::class)
     fun mettreAJourIdParcoursup(
         profil: ProfilEleve.AvecProfilExistant,

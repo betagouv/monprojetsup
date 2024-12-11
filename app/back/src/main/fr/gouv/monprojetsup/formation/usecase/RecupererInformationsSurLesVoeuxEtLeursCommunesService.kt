@@ -112,7 +112,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         return trierUneListeDObjetsParUneListeDIds(idsVoeuxTriesParDistance, voeux) { it.id }
     }
 
-    fun <T> trierUneListeDObjetsParUneListeDIds(
+    private fun <T> trierUneListeDObjetsParUneListeDIds(
         idsTries: List<String>,
         objetsAtrier: List<T>,
         idSelector: (T) -> String,

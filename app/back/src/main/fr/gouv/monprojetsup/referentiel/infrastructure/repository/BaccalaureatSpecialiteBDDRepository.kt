@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
@@ -13,13 +12,11 @@ class BaccalaureatSpecialiteBDDRepository(
     val baccalaureatSpecialiteJPARepository: BaccalaureatSpecialiteJPARepository,
     val specialiteJPARepository: SpecialiteJPARepository,
 ) : BaccalaureatSpecialiteRepository {
-    @Transactional(readOnly = true)
     override fun recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat: String): List<String> {
         val specialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureat(idBaccalaureat)
         return specialites.map { it.id.idSpecialite }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererLesBaccalaureatsAvecLeursSpecialites(): Map<Baccalaureat, List<Specialite>> {
         val baccalaureats = baccalaureatJPARepository.findAll()
         val baccalaureatSpecialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureatIn(baccalaureats.map { it.id })
@@ -34,7 +31,6 @@ class BaccalaureatSpecialiteBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererUnBaccalaureatEtLesIdsDeSesSpecialites(idBaccalaureat: String): Pair<String, List<String>>? {
         return baccalaureatJPARepository.findById(idBaccalaureat).getOrNull()?.let { baccalaureat ->
             val idsSpecialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureat(idBaccalaureat).map { it.id.idSpecialite }

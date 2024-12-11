@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RecupererFicheFormationService(
@@ -19,6 +20,7 @@ class RecupererFicheFormationService(
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
+    @Transactional(readOnly = true)
     @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
         profilEleve: ProfilEleve.AvecProfilExistant?,

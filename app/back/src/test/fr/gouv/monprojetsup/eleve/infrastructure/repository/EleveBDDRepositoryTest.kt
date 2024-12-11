@@ -32,7 +32,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, entityManager, logger)
+        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, logger)
     }
 
     private val profil0f88 =

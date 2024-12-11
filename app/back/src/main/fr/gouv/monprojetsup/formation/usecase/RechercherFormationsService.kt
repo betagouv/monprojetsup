@@ -5,12 +5,14 @@ import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RechercherFormationsService(
     private val rechercheFormationRepository: RechercheFormationRepository,
     private val filtrerRechercheBuilder: FiltrerRechercheBuilder,
 ) {
+    @Transactional(readOnly = true)
     fun rechercheLesFormationsAvecLeurScoreCorrespondantes(
         recherche: String,
         tailleMinimumRecherche: Int,

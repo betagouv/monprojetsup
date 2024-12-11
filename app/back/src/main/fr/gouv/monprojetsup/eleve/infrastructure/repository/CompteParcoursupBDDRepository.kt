@@ -6,7 +6,6 @@ import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.eleve.infrastructure.entity.CompteParcoursupEntity
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
@@ -15,7 +14,6 @@ class CompteParcoursupBDDRepository(
     private val logger: MonProjetSupLogger,
     private val clock: MonProjetSupClock,
 ) : CompteParcoursupRepository {
-    @Transactional(readOnly = false)
     override fun enregistrerIdCompteParcoursup(
         idEleve: String,
         idParcoursup: Int,
@@ -41,7 +39,6 @@ class CompteParcoursupBDDRepository(
         }
     }
 
-    @Transactional(readOnly = true)
     override fun recupererIdCompteParcoursup(idEleve: String): Int? {
         return compteParcoursupJPARepository.findById(idEleve).getOrNull()?.idParcoursup
     }

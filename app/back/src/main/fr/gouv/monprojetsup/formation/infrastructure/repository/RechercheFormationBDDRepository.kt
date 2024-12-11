@@ -6,13 +6,11 @@ import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.RechercheFormationEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class RechercheFormationBDDRepository(
     val entityManager: EntityManager,
 ) : RechercheFormationRepository {
-    @Transactional(readOnly = true)
     override fun rechercherUneFormation(motRecherche: String): List<ResultatRechercheFormationCourte> {
         val resulat =
             entityManager.createNativeQuery(

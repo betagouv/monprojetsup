@@ -7,13 +7,11 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.infrastructure.entity.BaccalaureatEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
     private val entityManager: EntityManager,
 ) : FrequencesCumuleesDesMoyenneDesAdmisRepository {
-    @Transactional(readOnly = true)
     override fun recupererFrequencesCumuleesParBacs(annee: String): Map<Baccalaureat, List<Int>> {
         return findAllByAnneeAndBaccalaureatIdNotIn(
             annee = annee,
@@ -28,7 +26,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         }.toMap()
     }
 
-    @Transactional(readOnly = true)
     override fun recupererFrequencesCumuleesDeTousLesBacs(
         idFormation: String,
         annee: String,
@@ -40,7 +37,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         )
     }
 
-    @Transactional(readOnly = true)
     override fun recupererFrequencesCumuleesDeTousLesBacs(
         idsFormations: List<String>,
         annee: String,

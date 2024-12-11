@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteReposi
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RecupererEleveService(
@@ -21,6 +22,7 @@ class RecupererEleveService(
     private val formationRepository: FormationRepository,
     private val eleveRepository: EleveRepository,
 ) {
+    @Transactional(readOnly = true)
     @Throws(MonProjetSupBadRequestException::class)
     fun recupererEleve(id: String): ProfilEleve {
         return when (val eleveBDD = eleveRepository.recupererUnEleve(id)) {
