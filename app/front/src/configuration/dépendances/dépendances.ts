@@ -1,4 +1,7 @@
 import { environnement } from "@/configuration/environnement";
+import { AnalyticsRepository } from "@/features/analytics/infrastructure/analytics.interface";
+import { AnalyticsConsoleRepository } from "@/features/analytics/infrastructure/analyticsConsoleRepository/analyticsConsoleRepository";
+import { AnalyticsMatomoRepository } from "@/features/analytics/infrastructure/analyticsMatomoRepository/analyticsMatomoRepository";
 import { communeHttpRepository } from "@/features/commune/infrastructure/communeHttpRepository/communeHttpRepository";
 import { communeInMemoryRepository } from "@/features/commune/infrastructure/communeInMemoryRepository/communeInMemoryRepository";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
@@ -64,6 +67,8 @@ export class Dépendances {
 
   private readonly _communeRepository: CommuneRepository;
 
+  public readonly analyticsRepository: AnalyticsRepository;
+
   public readonly logger: Logger;
 
   public readonly récupérerRéférentielDonnéesUseCase: RécupérerRéférentielDonnéesUseCase;
@@ -123,6 +128,10 @@ export class Dépendances {
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, environnement.VITE_API_URL);
 
     // Repositories
+    this.analyticsRepository =
+      environnement.VITE_TEST_MODE || !environnement.VITE_MATOMO_SITE_ID
+        ? new AnalyticsConsoleRepository()
+        : new AnalyticsMatomoRepository();
     this._référentielDonnéesRepository = environnement.VITE_TEST_MODE
       ? new RéférentielDonnéesInMemoryRepository()
       : new RéférentielDonnéesHttpRepository(this._mpsApiHttpClient);
@@ -154,8 +163,14 @@ export class Dépendances {
     this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourVoeuxÉlèveUseCase = new MettreÀJourVoeuxÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourCommunesÉlèveUseCase = new MettreÀJourCommunesÉlèveUseCase(this._élèveRepository);
-    this.mettreÀJourFormationsÉlèveUseCase = new MettreÀJourFormationsÉlèveUseCase(this._élèveRepository);
-    this.mettreÀJourMétiersÉlèveUseCase = new MettreÀJourMétiersÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourFormationsÉlèveUseCase = new MettreÀJourFormationsÉlèveUseCase(
+      this._élèveRepository,
+      this.analyticsRepository,
+    );
+    this.mettreÀJourMétiersÉlèveUseCase = new MettreÀJourMétiersÉlèveUseCase(
+      this._élèveRepository,
+      this.analyticsRepository,
+    );
     this.mettreÀJourFormationsMasquéesÉlèveUseCase = new MettreÀJourFormationsMasquéesÉlèveUseCase(
       this._élèveRepository,
     );

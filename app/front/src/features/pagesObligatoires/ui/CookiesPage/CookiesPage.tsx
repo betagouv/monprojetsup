@@ -1,28 +1,26 @@
 import Titre from "@/components/Titre/Titre.tsx";
-import { Matomo } from "@/configuration/analytics/matomo";
+import { dépendances } from "@/configuration/dépendances/dépendances";
 import { i18n } from "@/configuration/i18n/i18n.ts";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 const CookiesPage = () => {
   const [estOptOutMatomo, setEstOptOutMatomo] = useState<boolean>(false);
 
-  const matomo = useMemo(() => new Matomo(), []);
-
   useLayoutEffect(() => {
     const récupérerOptOutMatomo = async () => {
-      setEstOptOutMatomo(await matomo.estOptOut());
+      setEstOptOutMatomo(await dépendances.analyticsRepository.estOptOut());
     };
 
-    if (matomo.estInitialisé()) {
+    if (dépendances.analyticsRepository.estInitialisé()) {
       void récupérerOptOutMatomo();
     }
-  }, [matomo]);
+  }, []);
 
   return (
     <div className="fr-container pb-20 pt-12 [&_h2]:mb-2 [&_h2]:pt-5">
       <Titre niveauDeTitre="h1">{i18n.PAGE_COOKIES.TITRE_PAGE}</Titre>
-      {matomo.estInitialisé() ? (
+      {dépendances.analyticsRepository.estInitialisé() ? (
         <>
           <p>
             Ce site dépose un petit fichier texte (un « cookie ») sur votre ordinateur lorsque vous le consultez. Cela
@@ -47,7 +45,7 @@ const CookiesPage = () => {
               checked={!estOptOutMatomo}
               label="Suivi des visites (Matomo)"
               onChange={async (checked) => {
-                await matomo.changerConsentementMatomo();
+                await dépendances.analyticsRepository.changerConsentementMatomo();
                 setEstOptOutMatomo(!checked);
               }}
             />

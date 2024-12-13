@@ -1,5 +1,5 @@
 import Erreur from "@/components/Erreur/Erreur";
-import { Matomo } from "@/configuration/analytics/matomo";
+import { dépendances } from "@/configuration/dépendances/dépendances";
 import { router } from "@/configuration/lib/tanstack-router.ts";
 import { type QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext } from "@tanstack/react-router";
@@ -13,7 +13,9 @@ interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   errorComponent: ({ error }) => <Erreur erreur={error} />,
   beforeLoad: () => {
-    const matomo = new Matomo();
-    matomo.envoyerPageVue(router.latestLocation.href);
+    const estUrlDeRedirectionLogin = /session_state=/u.test(router.latestLocation.searchStr);
+    if (!estUrlDeRedirectionLogin) {
+      dépendances.analyticsRepository.envoyerPageVue(router.latestLocation.href);
+    }
   },
 });
