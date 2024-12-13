@@ -22,6 +22,7 @@ const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée }: C
           auClic={() => changerAfficherBarreLatéraleEnMobile(false)}
           hash={id}
           href=""
+          réinitialiserScroll={false}
           variante="neutre"
         >
           <div className="*:mb-0">

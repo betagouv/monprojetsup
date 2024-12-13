@@ -19,7 +19,7 @@ const MainLayout = () => {
         id={constantes.ACCESSIBILITÉ.CONTENU_ID}
         tabIndex={-1}
       >
-        <ScrollRestoration getKey={(location) => location.pathname} />
+        <ScrollRestoration />
         <Toast />
         <Outlet />
       </main>

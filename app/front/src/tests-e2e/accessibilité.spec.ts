@@ -16,6 +16,9 @@ const PAGES_PATH: Array<Paths> = [
   "/eleve/inscription/confirmation",
   "/formations",
   "/favoris",
+  "/cookies",
+  "/declaration-accessiblite",
+  "/plan-du-site",
 ];
 
 class Test extends TestHelper {

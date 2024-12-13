@@ -21,4 +21,5 @@ export type LienInterneProps<H extends Paths> = {
   };
   estUnTag?: boolean;
   auClic?: () => void;
+  réinitialiserScroll?: boolean;
 };

@@ -15,6 +15,7 @@ const LienInterne = <H extends Paths>({
   paramètresPath,
   paramètresSearch,
   auClic,
+  réinitialiserScroll,
 }: LienInterneProps<H>) => {
   const { ariaLabelFormaté, classesCSS, target } = useLien({ ariaLabel, href, taille, variante, icône, estUnTag });
 
@@ -25,6 +26,7 @@ const LienInterne = <H extends Paths>({
       hash={hash}
       onClick={auClic}
       params={paramètresPath}
+      resetScroll={réinitialiserScroll}
       search={paramètresSearch}
       target={target}
       to={href}
