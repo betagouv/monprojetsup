@@ -22,7 +22,6 @@ const FavorisÉlèvePage = () => {
   const { estUnIdDeMétier } = useMétier();
   const routeApi = getRouteApi("/_auth/favoris/");
   const élève = routeApi.useLoaderData();
-
   const { data: formations } = useQuery(récupérerFichesFormationsQueryOptions(élève?.formations ?? []));
 
   const { data: métiers } = useQuery(récupérerMétiersQueryOptions(élève?.métiersFavoris ?? []));

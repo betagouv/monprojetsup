@@ -46,10 +46,11 @@ const Favori = ({
             icône={{
               classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
             }}
-            label={i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
             taille="petit"
             variante="tertiaire"
-          />
+          >
+            {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
+          </BoutonSquelette>
         ) : (
           <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
             <img

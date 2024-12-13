@@ -21,9 +21,10 @@ const CarteAvisÉlève = () => {
       >
         <BoutonSquelette
           icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
-          label={i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.AVIS.BOUTON}
           taille="grand"
-        />
+        >
+          {i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.AVIS.BOUTON}
+        </BoutonSquelette>
       </LienExterne>
     </CarteSecondaireTableauDeBordÉlève>
   );

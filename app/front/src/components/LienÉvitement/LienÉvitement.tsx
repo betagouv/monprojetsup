@@ -14,20 +14,22 @@ const LienÉvitement = () => {
           <li>
             <Bouton
               auClic={() => document.querySelector<HTMLElement>(`#${constantes.ACCESSIBILITÉ.CONTENU_ID}`)?.focus()}
-              label={i18n.ACCESSIBILITÉ.CONTENU}
               type="button"
               variante="quaternaire"
-            />
+            >
+              {i18n.ACCESSIBILITÉ.CONTENU}
+            </Bouton>
           </li>
           <li>
             <Bouton
               auClic={() =>
                 document.querySelector<HTMLElement>(`#${constantes.ACCESSIBILITÉ.PIED_DE_PAGE_ID}`)?.focus()
               }
-              label={i18n.ACCESSIBILITÉ.PIED_PAGE}
               type="button"
               variante="quaternaire"
-            />
+            >
+              {i18n.ACCESSIBILITÉ.PIED_PAGE}
+            </Bouton>
           </li>
         </ul>
       </nav>

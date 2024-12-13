@@ -32,7 +32,10 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
               </LienInterne>
             </p>
           )}
-          <ul className="m-0 grid list-none justify-center gap-6 p-0 lg:justify-normal">
+          <ul
+            aria-label={i18n.ACCESSIBILITÉ.LISTE_FORMATIONS}
+            className="m-0 grid list-none justify-center gap-6 p-0 lg:justify-normal"
+          >
             {formations.map((formation) => (
               <li key={formation.id}>
                 <CarteFormation

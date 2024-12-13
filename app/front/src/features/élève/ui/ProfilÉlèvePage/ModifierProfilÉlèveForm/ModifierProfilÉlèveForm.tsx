@@ -87,9 +87,10 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
         <Bouton
           auClic={fermerToast}
           formId={formulaireId}
-          label={i18n.COMMUN.ENREGISTRER}
           type="submit"
-        />
+        >
+          {i18n.COMMUN.ENREGISTRER}
+        </Bouton>
       </div>
     </Suspense>
   );

@@ -14,13 +14,14 @@ export default function useRecherche({
 
   const lancerRecherche = async (recherche?: string) => {
     setStatusChampDeRecherche(undefined);
+    const rechercheTrimé = recherche?.trim();
 
-    if (!recherche) {
+    if (!rechercheTrimé) {
       await rechercheCallback(undefined);
       return;
     }
 
-    if (recherche.length < nombreDeCaractèresMinimumRecherche) {
+    if (rechercheTrimé.length < nombreDeCaractèresMinimumRecherche) {
       await rechercheCallback(undefined);
       setStatusChampDeRecherche({
         type: "erreur" as const,
@@ -30,7 +31,7 @@ export default function useRecherche({
       return;
     }
 
-    if (recherche.length > nombreDeCaractèresMaximumRecherche) {
+    if (rechercheTrimé.length > nombreDeCaractèresMaximumRecherche) {
       await rechercheCallback(undefined);
       setStatusChampDeRecherche({
         type: "erreur" as const,
@@ -40,7 +41,7 @@ export default function useRecherche({
       return;
     }
 
-    await rechercheCallback(recherche);
+    await rechercheCallback(rechercheTrimé);
   };
 
   useEffect(() => {

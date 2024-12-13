@@ -23,10 +23,11 @@ const ListeEtAperçuBarreLatérale = ({ children, nombreRésultats }: ListeEtApe
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
             icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
-            label={i18n.COMMUN.BOUTON_AFFICHER_CONTENU_PRINCIPAL}
             type="button"
             variante="quaternaire"
-          />
+          >
+            {i18n.COMMUN.BOUTON_AFFICHER_CONTENU_PRINCIPAL}
+          </Bouton>
         </div>
       )}
       {children}

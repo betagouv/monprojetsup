@@ -10,6 +10,7 @@ Elle utilise les technologies Kotlin/Spring Boot.
     * [Lancer la BDD](#lancer-la-bdd)
     * [Lancer le serveur](#lancer-le-serveur)
   * [Comment ajouter une variable d'env](#comment-ajouter-une-variable-denv)
+  * [Mettre à jour les types suite à des changements dans l'api back](#mettre-à-jour-les-types-suite-à-des-changements-dans-lapi-back)
   * [Le linter](#le-linter)
   * [La BDD](#la-bdd)
     * [Les migrations de BDD](#les-migrations-de-bdd)
@@ -66,6 +67,14 @@ NB : N'oubliez pas de lancer l'ETL pour peupler la BDD avec des données de test
 - En local, vous devez tout d'abord définir la variable dans `application.properties` avec une valeur par défaut qui doit pointer vers une variable d'environnement de la machine (c'est ce qui sera utilisé sur les environnements de déploiement)
 - Ajoutez dans le fichier `secrets.properties` la valeur pour votre environnement local
 - Pour le déploiement, vous devez renseigner cette variable et sa valeur dans le Secret Manager Scaleway pour chacun des environnements.
+
+## Mettre à jour les types suite à des changements dans l'api back
+Bien entendu vous êtes le serveur d'API, il convient donc de ne pas casser le contrat d'interface de celle-ci sans apporter de modifications dans la partie front. Si vous êtes amené à faire évoluer l'api vous devez mettre à jour les types côté front. 
+- Assurez-vous d'avoir lancé le serveur back
+- Mettez-vous à la racine du projet front (app/front)
+- Executez la commande `npx openapi-typescript http://localhost:5002/v3/api-docs -o ./src/types/api-mps.d.ts`
+
+NB: Notamment, assurez-vous de toujours renvoyer le nouveau profil de l'élève à jour lors de la modification de celui-ci.
 
 ## Le linter
 Le linter installé est [Ktlint](https://pinterest.github.io/ktlint/0.49.1/install/integrations/)

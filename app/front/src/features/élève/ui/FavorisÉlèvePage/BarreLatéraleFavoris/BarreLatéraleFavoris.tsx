@@ -13,7 +13,7 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
       <div className="text-center">
         <SegmentedControl
           hideLegend
-          legend={i18n.PAGE_FAVORIS.CATÉGORIE}
+          legend={i18n.ACCESSIBILITÉ.CATÉGORIE}
           segments={[
             {
               label: i18n.COMMUN.FORMATION,

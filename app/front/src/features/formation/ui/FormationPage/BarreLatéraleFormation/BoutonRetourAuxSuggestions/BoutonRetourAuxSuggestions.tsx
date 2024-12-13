@@ -15,10 +15,11 @@ const BoutonRetourAuxSuggestions = () => {
       <Bouton
         auClic={() => retournerAuxSuggestions()}
         icône={{ position: "gauche", classe: "fr-icon-arrow-go-back-fill" }}
-        label={i18n.PAGE_FORMATION.RETOUR_AUX_SUGGESTIONS}
         type="button"
         variante="secondaire"
-      />
+      >
+        {i18n.PAGE_FORMATION.RETOUR_AUX_SUGGESTIONS}
+      </Bouton>
     </div>
   );
 };

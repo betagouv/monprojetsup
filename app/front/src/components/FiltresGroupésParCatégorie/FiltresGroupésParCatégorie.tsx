@@ -107,11 +107,12 @@ const FiltresGroupésParCatégorie = ({
                       modaleDomaineCatégorie.open();
                     }}
                     icône={{ position: "gauche", classe: "fr-icon-information-line" }}
-                    label={i18n.COMMUN.DÉTAILS}
                     taille="petit"
                     type="button"
                     variante="secondaire"
-                  />
+                  >
+                    {i18n.COMMUN.DÉTAILS}
+                  </Bouton>
                 )}
               </div>
               <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">

@@ -6,6 +6,72 @@ import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 export class métierInMemoryRepository implements MétierRepository {
   private _MÉTIERS: Métier[] = [
     {
+      id: "MET_815",
+      nom: "Chef/fe de produit touristique",
+      descriptif:
+        "Treck au Népal, safari au Kenya, circuit culturel en Égypte... armé de son téléphone et de son ordinateur, le chef de produit touristique concocte derrière son bureau des voyages de rêve, pour le plaisir des autres.",
+      liens: [
+        {
+          intitulé: "Fiche détaillée Onisep - chef/fe de produit touristique",
+          url: "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.753",
+        },
+        {
+          intitulé: "France Travail - Conception de produits touristiques",
+          url: "https://candidat.francetravail.fr/metierscope/fiche-metier/G1301",
+        },
+      ],
+      formations: [
+        {
+          id: "fl1002093",
+          nom: "L1 - Tourisme - Accès Santé (LAS)",
+        },
+      ],
+    },
+    {
+      id: "MET.434",
+      nom: "Directeur/trice d'office de tourisme",
+      descriptif:
+        "Le directeur d'office de tourisme participe à la promotion d'une ville, d'une région, etc. Il centralise l'offre touristique de son territoire et développe des produits pour les différents publics, en concertation avec les professionnels et les élus.",
+      liens: [
+        {
+          intitulé: "Fiche détaillée Onisep - directeur/trice d'office de tourisme",
+          url: "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.434",
+        },
+        {
+          intitulé: "France Travail - Promotion du tourisme local",
+          url: "https://candidat.francetravail.fr/metierscope/fiche-metier/G1102",
+        },
+      ],
+      formations: [
+        {
+          id: "fl1002093",
+          nom: "L1 - Tourisme - Accès Santé (LAS)",
+        },
+      ],
+    },
+    {
+      id: "MET.2",
+      nom: "Directeur/trice d'hôtel",
+      descriptif:
+        "Animateur d'équipe, gestionnaire et commercial, le directeur d'hôtel a tout du chef d'entreprise. Ses responsabilités varient fortement selon le type d'établissement qu'il dirige, mais exigent une présence de tous les instants.",
+      liens: [
+        {
+          intitulé: "Fiche détaillée Onisep - directeur/trice d'hôtel",
+          url: "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.2",
+        },
+        {
+          intitulé: "France Travail - Management d'hôtel-restaurant",
+          url: "https://candidat.francetravail.fr/metierscope/fiche-metier/G1402",
+        },
+      ],
+      formations: [
+        {
+          id: "fl1002093",
+          nom: "L1 - Tourisme - Accès Santé (LAS)",
+        },
+      ],
+    },
+    {
       id: "MET_1",
       nom: "contrôleur aérien / contrôleuse aérienne",
       descriptif:
@@ -63,7 +129,7 @@ export class métierInMemoryRepository implements MétierRepository {
       formations: [],
     },
     {
-      id: "MET_815",
+      id: "MET_814",
       nom: "gestionnaire actif / passif",
       descriptif:
         "<p>Relativement nouveau dans le domaine de l'assurance, le gestionnaire actif/passif met à disposition de sa direction toutes les informations permettant l'évaluation des risques et des opportunités financières permettant d'améliorer les performances.</p>",
@@ -129,5 +195,9 @@ export class métierInMemoryRepository implements MétierRepository {
 
   public async rechercher(recherche: string): Promise<Métier[] | Error> {
     return this._MÉTIERS.filter((métier) => métier.nom.toLowerCase().includes(recherche.toLowerCase()));
+  }
+
+  public async récupérerTous(): Promise<Métier[] | Error> {
+    return this._MÉTIERS;
   }
 }

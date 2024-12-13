@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-nested-functions */
-import { InscriptionTestHelper } from "./inscriptionTestHelper";
 import { i18n } from "@/configuration/i18n/i18n";
+import { InscriptionTestHelper } from "@/tests-e2e/élève/helpers/InscriptionTestHelper";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {
   public FORMATION_RECHERCHÉE = "tourisme";
 
-  public PREMIÈRE_FORMATION = "L1 - Tourisme -  Accès Santé (LAS)";
+  public PREMIÈRE_FORMATION = "L1 - Tourisme - Accès Santé (LAS)";
 
   public SECONDE_FORMATION = "BTS - Tourisme - en apprentissage";
 
@@ -44,7 +44,7 @@ class Test extends InscriptionTestHelper {
   };
 }
 
-test.describe("Inscription élève - Formations", () => {
+test.describe("Formations inscriptions élève", () => {
   test("Le champ situation est obligatoire", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);

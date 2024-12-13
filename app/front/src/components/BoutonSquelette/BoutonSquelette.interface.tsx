@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export type BoutonSqueletteProps = {
-  label: string;
+  children: ReactNode;
   taille?: "petit" | "grand";
   variante?: "secondaire" | "tertiaire" | "quaternaire" | "quinaire";
   icône?: {

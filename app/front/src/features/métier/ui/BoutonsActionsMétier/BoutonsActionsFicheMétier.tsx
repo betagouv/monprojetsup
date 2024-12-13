@@ -14,10 +14,11 @@ const BoutonsActionsFicheMétier = ({ métier, taille }: BoutonsActionsFicheMét
         <Bouton
           auClic={() => mettreÀJourMétiersÉlève([métier.id])}
           icône={{ position: "gauche", classe: "fr-icon-heart-line" }}
-          label={i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
           taille={taille}
           type="button"
-        />
+        >
+          {i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
+        </Bouton>
       )}
       {estFavori && (
         <>
@@ -31,11 +32,12 @@ const BoutonsActionsFicheMétier = ({ métier, taille }: BoutonsActionsFicheMét
           <Bouton
             auClic={() => mettreÀJourMétiersÉlève([métier.id])}
             icône={{ position: "gauche", classe: "fr-icon-close-line" }}
-            label={i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
             taille={taille}
             type="button"
             variante="secondaire"
-          />
+          >
+            {i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
+          </Bouton>
         </>
       )}
     </div>

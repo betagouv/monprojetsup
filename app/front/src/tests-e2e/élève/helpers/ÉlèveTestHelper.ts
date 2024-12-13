@@ -1,18 +1,13 @@
+import { GlobalTestHelper } from "./GlobalTestHelper";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type Page } from "@playwright/test";
 
-export class TestHelper {
-  public PAGE_FORMATIONS = "/formations";
-
-  public PAGE_FAVORIS = "/favoris";
-
-  public PAGE_TABLEAU_DE_BORD = "/";
-
-  public PAGE_PROFIL = "/profil";
-
+export class ÉlèveTestHelper extends GlobalTestHelper {
   public NOM_UTILISATEUR = "nina élève";
 
-  public constructor(protected _page: Page) {}
+  public constructor(protected _page: Page) {
+    super(_page);
+  }
 
   protected initialiserProfilÉlèveParDéfaut = async (profilÉlève: Partial<Élève>) => {
     await this._page.context().addInitScript((argumentsProfilÉlève) => {
@@ -41,8 +36,8 @@ export class TestHelper {
     }, profilÉlève);
   };
 
-  public seConnecterCommeÉlèveAvecParcoursInscriptionTerminé = async () => {
-    const profilÉlève: Élève = {
+  public seConnecterCommeÉlèveAvecParcoursInscriptionTerminé = async (profilÉlève?: Partial<Élève>) => {
+    const profilÉlèveParDéfaut: Élève = {
       compteParcoursupAssocié: false,
       situation: "quelques_pistes",
       classe: "terminale",
@@ -62,14 +57,6 @@ export class TestHelper {
       notesPersonnelles: [],
     };
 
-    await this.initialiserProfilÉlèveParDéfaut(profilÉlève);
-  };
-
-  public toast = () => {
-    return this._page.locator("#contenu").getByRole("status");
-  };
-
-  public lien = (nom: string) => {
-    return this._page.getByRole("link", { name: nom });
+    await this.initialiserProfilÉlèveParDéfaut({ ...profilÉlèveParDéfaut, ...profilÉlève });
   };
 }

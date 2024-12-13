@@ -1,9 +1,9 @@
 import { i18n } from "@/configuration/i18n/i18n";
 import { type Élève } from "@/features/élève/domain/élève.interface";
-import { TestHelper } from "@/tests-e2e/testHelper";
+import { ÉlèveTestHelper } from "@/tests-e2e/élève/helpers/ÉlèveTestHelper";
 import { type Page } from "@playwright/test";
 
-export class InscriptionTestHelper extends TestHelper {
+export class InscriptionTestHelper extends ÉlèveTestHelper {
   public constructor(
     protected _page: Page,
     public readonly urlPageCourante: string,

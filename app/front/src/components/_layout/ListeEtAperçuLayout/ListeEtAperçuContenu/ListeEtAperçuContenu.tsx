@@ -24,10 +24,11 @@ const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
             icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
-            label={i18n.COMMUN.BOUTON_AFFICHER_BARRE_LATÉRALE}
             type="button"
             variante="quaternaire"
-          />
+          >
+            {i18n.COMMUN.BOUTON_AFFICHER_BARRE_LATÉRALE}
+          </Bouton>
         </div>
         {children}
       </div>

@@ -39,7 +39,6 @@ export const récupérerMétiersQueryOptions = (métierIds: Array<Métier["id"]>
       }
 
       const réponse = await dépendances.récupérerMétiersUseCase.run(métierIds);
-
       if (réponse instanceof Error) {
         throw réponse;
       }

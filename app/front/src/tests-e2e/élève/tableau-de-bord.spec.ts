@@ -1,8 +1,8 @@
 import { i18n } from "@/configuration/i18n/i18n";
-import { TestHelper } from "@/tests-e2e/testHelper";
+import { ÉlèveTestHelper } from "@/tests-e2e/élève/helpers/ÉlèveTestHelper";
 import { expect, type Page, test } from "@playwright/test";
 
-class Test extends TestHelper {
+class Test extends ÉlèveTestHelper {
   public constructor(protected _page: Page) {
     super(_page);
   }

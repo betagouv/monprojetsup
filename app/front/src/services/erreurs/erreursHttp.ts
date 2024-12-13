@@ -13,7 +13,7 @@ export class RequêteInvalideErreurHttp extends Error {
 }
 
 export class NonIdentifiéErreurHttp extends Error {
-  estConsignéeManuellement = false;
+  estConsignéeManuellement = true;
 
   constructor(protected contexte: unknown) {
     super();
@@ -25,13 +25,13 @@ export class NonIdentifiéErreurHttp extends Error {
 }
 
 export class NonAutoriséErreurHttp extends Error {
-  estConsignéeManuellement = false;
+  estConsignéeManuellement = true;
 
   constructor(protected contexte: unknown) {
     super();
     Object.setPrototypeOf(this, NonAutoriséErreurHttp.prototype);
     this.name = "HTTP - Erreur 403 - Interdit";
-    dépendances.logger.consigner("warning", this, contexte);
+    dépendances.logger.consigner("info", this, contexte);
     this.estConsignéeManuellement = true;
   }
 }
@@ -49,7 +49,7 @@ export class RessourceNonTrouvéeErreurHttp extends Error {
 }
 
 export class ServeurTemporairementIndisponibleErreurHttp extends Error {
-  estConsignéeManuellement = false;
+  estConsignéeManuellement = true;
 
   constructor(protected contexte: unknown) {
     super();
@@ -88,7 +88,7 @@ export class CodeRéponseInattenduErreurHttp extends Error {
 }
 
 export class RequêteAnnuléeErreurHttp extends Error {
-  estConsignéeManuellement = false;
+  estConsignéeManuellement = true;
 
   constructor(protected contexte: unknown) {
     super();
@@ -100,7 +100,7 @@ export class RequêteAnnuléeErreurHttp extends Error {
 }
 
 export class ErreurRéseauErreurHttp extends Error {
-  estConsignéeManuellement = false;
+  estConsignéeManuellement = true;
 
   constructor(protected contexte: unknown) {
     super();

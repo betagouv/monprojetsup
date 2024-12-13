@@ -2,7 +2,7 @@ import { type BoutonSqueletteProps } from "@/components/BoutonSquelette/BoutonSq
 import { AriaRole } from "react";
 
 export type BoutonProps = {
-  label: BoutonSqueletteProps["label"];
+  children: BoutonSqueletteProps["children"];
   type: HTMLButtonElement["type"];
   auClic?: () => Promise<unknown> | void;
   taille?: BoutonSqueletteProps["taille"];

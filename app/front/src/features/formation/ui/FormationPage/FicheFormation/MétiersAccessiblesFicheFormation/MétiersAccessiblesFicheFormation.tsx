@@ -35,11 +35,15 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
               icône={
                 estMétierFavoriPourÉlève(métier.id) ? { position: "gauche", classe: "fr-icon-heart-fill" } : undefined
               }
-              label={métier.nom}
               taille="petit"
               type="button"
               variante="tertiaire"
-            />
+            >
+              <>
+                {estMétierFavoriPourÉlève(métier.id) && <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORI} </span>}
+                {métier.nom}
+              </>
+            </Bouton>
           </li>
         ))}
       </ul>

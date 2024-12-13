@@ -21,10 +21,11 @@ const NotePersonnelleFormation = () => {
       />
       <div className="sm:mt-7">
         <Bouton
-          label={i18n.PAGE_FORMATION.CHOIX.NOTE_PERSONNELLE.BOUTON}
           type="submit"
           variante="tertiaire"
-        />
+        >
+          {i18n.PAGE_FORMATION.CHOIX.NOTE_PERSONNELLE.BOUTON}
+        </Bouton>
       </div>
     </form>
   );

@@ -1,5 +1,5 @@
-import { InscriptionTestHelper } from "./inscriptionTestHelper";
 import { i18n } from "@/configuration/i18n/i18n";
+import { InscriptionTestHelper } from "@/tests-e2e/élève/helpers/InscriptionTestHelper";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {

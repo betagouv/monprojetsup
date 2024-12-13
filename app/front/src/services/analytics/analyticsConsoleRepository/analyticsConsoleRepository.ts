@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import { AnalyticsRepository } from "@/features/analytics/infrastructure/analytics.interface";
+
+import { AnalyticsRepository } from "@/services/analytics/analytics.interface";
 
 export class AnalyticsConsoleRepository implements AnalyticsRepository {
   private _estOptout = false;

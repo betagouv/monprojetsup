@@ -1,6 +1,6 @@
 import { type CommuneHttp, type RechercherCommunesRéponseHttp } from "./communeHttpRepository.interface";
 import { type Commune } from "@/features/commune/domain/commune.interface";
-import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
+import { type CommuneRepository } from "@/features/commune/infrastructure/gateway/communeRepository.interface";
 import { type HttpClient } from "@/services/httpClient/httpClient";
 
 export class communeHttpRepository implements CommuneRepository {

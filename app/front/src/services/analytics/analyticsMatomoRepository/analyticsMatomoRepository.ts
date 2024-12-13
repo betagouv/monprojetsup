@@ -1,5 +1,5 @@
 import { environnement } from "@/configuration/environnement.ts";
-import { AnalyticsRepository } from "@/features/analytics/infrastructure/analytics.interface";
+import { AnalyticsRepository } from "@/services/analytics/analytics.interface";
 
 export class AnalyticsMatomoRepository implements AnalyticsRepository {
   public estInitialisé() {

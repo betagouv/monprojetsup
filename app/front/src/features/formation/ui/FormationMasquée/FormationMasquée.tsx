@@ -21,10 +21,11 @@ const FormationMasquée = ({ formation }: FormationMasquéeProps) => {
       <Bouton
         auClic={() => mettreÀJourFormationsMasquéesÉlève([formation.id])}
         icône={{ classe: "fr-icon-arrow-go-back-line", position: "gauche" }}
-        label={i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.BOUTON_NE_PLUS_MASQUER}
         type="button"
         variante="secondaire"
-      />
+      >
+        {i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.BOUTON_NE_PLUS_MASQUER}
+      </Bouton>
     </div>
   );
 };

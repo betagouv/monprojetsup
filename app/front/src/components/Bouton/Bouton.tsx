@@ -3,7 +3,7 @@ import { type BoutonProps } from "./Bouton.interface";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 
 const Bouton = ({
-  label,
+  children,
   type,
   auClic,
   taille,
@@ -27,10 +27,11 @@ const Bouton = ({
     >
       <BoutonSquelette
         icône={icône}
-        label={label}
         taille={taille}
         variante={variante}
-      />
+      >
+        {children}
+      </BoutonSquelette>
     </button>
   );
 };

@@ -1,6 +1,6 @@
-import { AnalyticsRepository } from "@/features/analytics/infrastructure/analytics.interface";
 import { type Élève, MétierÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
+import { AnalyticsRepository } from "@/services/analytics/analytics.interface";
 
 export class MettreÀJourMétiersÉlèveUseCase {
   public constructor(

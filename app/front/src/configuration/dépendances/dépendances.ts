@@ -1,10 +1,7 @@
 import { environnement } from "@/configuration/environnement";
-import { AnalyticsRepository } from "@/features/analytics/infrastructure/analytics.interface";
-import { AnalyticsConsoleRepository } from "@/features/analytics/infrastructure/analyticsConsoleRepository/analyticsConsoleRepository";
-import { AnalyticsMatomoRepository } from "@/features/analytics/infrastructure/analyticsMatomoRepository/analyticsMatomoRepository";
-import { communeHttpRepository } from "@/features/commune/infrastructure/communeHttpRepository/communeHttpRepository";
-import { communeInMemoryRepository } from "@/features/commune/infrastructure/communeInMemoryRepository/communeInMemoryRepository";
-import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
+import { communeHttpRepository } from "@/features/commune/infrastructure/gateway/communeHttpRepository/communeHttpRepository";
+import { communeInMemoryRepository } from "@/features/commune/infrastructure/gateway/communeInMemoryRepository/communeInMemoryRepository";
+import { type CommuneRepository } from "@/features/commune/infrastructure/gateway/communeRepository.interface";
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
@@ -43,6 +40,9 @@ import { RéférentielDonnéesHttpRepository } from "@/features/référentielDon
 import { RéférentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { RécupérerRéférentielDonnéesUseCase } from "@/features/référentielDonnées/usecase/RécupérerRéférentielDonnées";
+import { AnalyticsRepository } from "@/services/analytics/analytics.interface";
+import { AnalyticsConsoleRepository } from "@/services/analytics/analyticsConsoleRepository/analyticsConsoleRepository";
+import { AnalyticsMatomoRepository } from "@/services/analytics/analyticsMatomoRepository/analyticsMatomoRepository";
 import { HttpClient } from "@/services/httpClient/httpClient";
 import { ConsoleLogger } from "@/services/logger/consoleLogger/consoleLogger";
 import { Logger } from "@/services/logger/logger.interface";

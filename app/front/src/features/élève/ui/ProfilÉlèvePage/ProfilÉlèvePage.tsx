@@ -42,10 +42,11 @@ const ProfilÉlèvePage = () => {
               )}
               <Bouton
                 auClic={async () => await utilisateur.seDéconnecter()}
-                label={i18n.PAGE_PROFIL.SE_DÉCONNECTER}
                 type="button"
                 variante="quaternaire"
-              />
+              >
+                {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
+              </Bouton>
             </div>
             <Tabs
               label={i18n.PAGE_PROFIL.TITRE}

@@ -91,11 +91,12 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
                 >
                   <Bouton
                     auClic={() => setAfficherToutesLesFormations(true)}
-                    label={i18n.PAGE_FAVORIS.AFFICHER_FORMATIONS_SUPPLÉMENTAIRES}
                     taille="petit"
                     type="button"
                     variante="secondaire"
-                  />
+                  >
+                    {i18n.PAGE_FAVORIS.AFFICHER_FORMATIONS_SUPPLÉMENTAIRES}
+                  </Bouton>
                 </li>
               )}
           </ul>

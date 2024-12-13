@@ -18,10 +18,11 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           <Bouton
             auClic={() => mettreÀJourFormationsÉlève([formation.id])}
             icône={{ position: "gauche", classe: "fr-icon-heart-line" }}
-            label={i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
             taille={constantes.FORMATIONS.FICHES.TAILLE_BOUTONS_ACTIONS}
             type="button"
-          />
+          >
+            {i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
+          </Bouton>
         )}
         {estFavorite && (
           <>
@@ -35,31 +36,34 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             <Bouton
               auClic={() => mettreÀJourFormationsÉlève([formation.id])}
               icône={{ position: "gauche", classe: "fr-icon-close-line" }}
-              label={i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
               taille={constantes.FORMATIONS.FICHES.TAILLE_BOUTONS_ACTIONS}
               type="button"
               variante="secondaire"
-            />
+            >
+              {i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
+            </Bouton>
           </>
         )}
         {!estFavorite && !estMasquée && (
           <Bouton
             auClic={() => mettreÀJourFormationsMasquéesÉlève([formation.id])}
             icône={{ position: "gauche", classe: "fr-icon-eye-off-line" }}
-            label={i18n.COMMUN.NE_PLUS_VOIR}
             taille={constantes.FORMATIONS.FICHES.TAILLE_BOUTONS_ACTIONS}
             type="button"
             variante="secondaire"
-          />
+          >
+            {i18n.COMMUN.NE_PLUS_VOIR}
+          </Bouton>
         )}
         {!estFavorite && estMasquée && (
           <Bouton
             auClic={() => mettreÀJourFormationsMasquéesÉlève([formation.id])}
             icône={{ position: "gauche", classe: "fr-icon-eye-line" }}
-            label={i18n.COMMUN.AFFICHER_À_NOUVEAU}
             taille={constantes.FORMATIONS.FICHES.TAILLE_BOUTONS_ACTIONS}
             type="button"
-          />
+          >
+            {i18n.COMMUN.AFFICHER_À_NOUVEAU}
+          </Bouton>
         )}
       </div>
       {estFavorite && (

@@ -54,11 +54,12 @@ const ListeDeFavoris = ({
         <div className="mt-2 *:p-0">
           <Bouton
             auClic={afficherPlusDeFavoris}
-            label={i18n.COMMUN.FAVORIS.VOIR_PLUS}
             taille="petit"
             type="button"
             variante="quinaire"
-          />
+          >
+            {i18n.COMMUN.FAVORIS.VOIR_PLUS}
+          </Bouton>
         </div>
       )}
     </div>

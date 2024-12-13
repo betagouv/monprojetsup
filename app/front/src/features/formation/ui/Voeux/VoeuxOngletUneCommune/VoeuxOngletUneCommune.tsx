@@ -23,12 +23,11 @@ const VoeuxOngletUneCommune = ({ codeCommune }: VoeuxOngletUneCommuneProps) => {
             >
               <Bouton
                 auClic={() => changerRayonSélectionné(rayon)}
-                label={`${rayon}km`}
                 rôle="link"
                 taille="petit"
                 type="button"
                 variante="quinaire"
-              />
+              >{`${rayon}km`}</Bouton>
               {rayon !== rayons.at(-1) && " • "}
             </li>
           ))}

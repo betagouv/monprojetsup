@@ -16,10 +16,11 @@ const ListeLiensExternesSousFormeBouton = ({ liens }: ListeLiensExternesSousForm
           >
             <BoutonSquelette
               icône={{ position: "droite", classe: "fr-icon-external-link-line" }}
-              label={lien.intitulé}
               taille="petit"
               variante="tertiaire"
-            />
+            >
+              {lien.intitulé}
+            </BoutonSquelette>
           </LienExterne>
         </li>
       ))}

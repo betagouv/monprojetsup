@@ -32,9 +32,10 @@ const ConfirmationInscriptionÉlève = () => {
         >
           <BoutonSquelette
             icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
-            label={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.BOUTON_ACTION}
             taille="grand"
-          />
+          >
+            {i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.BOUTON_ACTION}
+          </BoutonSquelette>
         </LienInterne>
         <hr className="mt-10 pb-10" />
         <div className="bg-[--background-alt-beige-gris-galet]">

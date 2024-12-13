@@ -43,10 +43,11 @@ const CarteParcourSupÉlève = () => {
           <Bouton
             auClic={modaleParcourSup.open}
             icône={{ position: "droite", classe: "fr-icon-refresh-line" }}
-            label={i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PARCOURSUP.BOUTON}
             taille="grand"
             type="button"
-          />
+          >
+            {i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PARCOURSUP.BOUTON}
+          </Bouton>
         )}
       </CarteSecondaireTableauDeBordÉlève>
       <ModaleParcourSup modale={modaleParcourSup} />

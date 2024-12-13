@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { type Commune } from "@/features/commune/domain/commune.interface";
-import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
+import { type CommuneRepository } from "@/features/commune/infrastructure/gateway/communeRepository.interface";
 
 export class communeInMemoryRepository implements CommuneRepository {
   private _COMMUNES: Commune[] = [

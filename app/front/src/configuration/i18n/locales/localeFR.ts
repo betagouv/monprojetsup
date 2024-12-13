@@ -51,7 +51,6 @@ export const localeFR = {
   },
   PAGE_FAVORIS: {
     TITRE_PAGE: pages.FAVORIS,
-    CATÉGORIE: "Catégorie",
     AUCUN_FAVORI: {
       EMOJI: "😅",
       OUPS: "Oups...",
@@ -507,5 +506,8 @@ export const localeFR = {
     CONTENU: "Contenu",
     PIED_PAGE: "Pied de page",
     NOUVEAUX_RÉSULATS: "nouveaux résultats",
+    LISTE_FORMATIONS: "Liste formations",
+    LISTE_MÉTIERS: "Liste métiers",
+    CATÉGORIE: "Catégorie",
   },
 } as const;

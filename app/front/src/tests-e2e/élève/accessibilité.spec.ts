@@ -1,4 +1,4 @@
-import { TestHelper } from "./testHelper";
+import { ÉlèveTestHelper } from "./helpers/ÉlèveTestHelper";
 import { Paths } from "@/types/commons";
 import Axe from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
@@ -21,7 +21,7 @@ const PAGES_PATH: Array<Paths> = [
   "/plan-du-site",
 ];
 
-class Test extends TestHelper {
+class Test extends ÉlèveTestHelper {
   public constructor(protected _page: Page) {
     super(_page);
   }

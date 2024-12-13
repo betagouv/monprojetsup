@@ -126,17 +126,19 @@ const InscriptionÉlèvePage = () => {
               >
                 <BoutonSquelette
                   icône={{ position: "gauche", classe: "fr-icon-arrow-left-line" }}
-                  label={i18n.COMMUN.RETOUR}
                   variante="secondaire"
-                />
+                >
+                  {i18n.COMMUN.RETOUR}
+                </BoutonSquelette>
               </LienInterne>
             )}
             <Bouton
               formId={étapeActuelle?.url}
               icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
-              label={i18n.COMMUN.CONTINUER}
               type="submit"
-            />
+            >
+              {i18n.COMMUN.CONTINUER}
+            </Bouton>
           </div>
         </Suspense>
       </div>

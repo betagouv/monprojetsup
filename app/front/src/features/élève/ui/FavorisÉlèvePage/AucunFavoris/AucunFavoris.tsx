@@ -32,9 +32,10 @@ const AucunFavoris = ({ catégorie }: AucunFavorisProps) => {
         >
           <BoutonSquelette
             icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
-            label={i18n.PAGE_FAVORIS.AUCUN_FAVORI.BOUTON}
             taille="grand"
-          />
+          >
+            {i18n.PAGE_FAVORIS.AUCUN_FAVORI.BOUTON}
+          </BoutonSquelette>
         </LienInterne>
       </div>
     </div>
