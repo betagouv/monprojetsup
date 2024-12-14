@@ -34,7 +34,7 @@ public class Filiere implements Serializable {
 
     public static final int MIN_LENGTH_FOR_FIL_KEYWORD = 3;
 
-    /* libellé (champ G_FL_LIB en base). */
+    /* libellé (champ gFlLib en base). */
     public final String libelle;
 
     /* sigle */

@@ -160,14 +160,14 @@ public record PsupData(
 
     public @Nullable String getRecoScoGeneriques(Integer gFlCod, String key) {
         List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
-        Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString())).findAny();
+        Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("gFlCod", "").equals(gFlCod.toString())).findAny();
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_CON_LYC_" + key)).orElse(null);
     }
 
     public @Nullable String getAttendus(Integer gFlCod) {
         List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
         Optional<Map<String, String>> entry = dataFl.stream()
-                .filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString()))
+                .filter(m -> m.getOrDefault("gFlCod", "").equals(gFlCod.toString()))
                 .findAny();
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_DES_ATT")).orElse(null);
     }
