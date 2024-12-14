@@ -268,10 +268,10 @@ public class ConnecteurJsonCarteSQL {
             stmt.setFetchSize(1_000_000);
             String sql = SELECT
                     //id du groupe de classement
-                    + "fil.G_FL_LIB, "
+                    + "fil.gFlLib, "
                     + "fil.G_FL_SIG, "
-                    + "fil.G_FL_COD, "
-                    + "NVL(fil.G_FL_COD_FI,fil.G_FL_COD), "
+                    + "fil.gFlCod, "
+                    + "NVL(fil.G_FL_COD_FI,fil.gFlCod), "
                     + "fil.G_FL_FLG_APP "
                     + " FROM mps_G_FIL fil";
 

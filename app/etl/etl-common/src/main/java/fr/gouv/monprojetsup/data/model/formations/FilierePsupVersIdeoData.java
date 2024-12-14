@@ -25,8 +25,6 @@ import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
 public record FilierePsupVersIdeoData(
         int gFlCod,
         int gFrCod,
-        String gFrLib,
-        String gFlLib,
         @NotNull ArrayList<@NotNull String> ideoFormationsIds,
         @NotNull ArrayList<@NotNull String> ideoMetiersIds,
         @NotNull ArrayList<@NotNull String> libellesOuClesSousdomainesWeb,
@@ -114,7 +112,7 @@ public record FilierePsupVersIdeoData(
                 {
                     ArrayList<String> ideoFormationsIds1 =
                             new ArrayList<>(
-                                    Arrays.stream(line.IDS_IDEO2()
+                                    Arrays.stream(line.idsideos()
                                                     .split(";"))
                                             .map(String::trim)
                                             .filter(s -> !s.isBlank())
@@ -164,7 +162,7 @@ public record FilierePsupVersIdeoData(
                     ideoFormationsIds1 = new ArrayList<>(ideoFormationsIds1.stream().distinct().sorted().toList());
                     ideoFormationsIds1.removeAll(oldIdeoToNewIdeo.keySet());
 
-                    var lien = line.LIENONISEP()
+                    var lien = line.onisepLink()
                             .replace(ONISEP_URL1, AVENIRS_URL)
                             .replace(ONISEP_URL2, AVENIRS_URL)
                             ;
@@ -173,10 +171,8 @@ public record FilierePsupVersIdeoData(
                     }
 
                     return new FilierePsupVersIdeoData(
-                            line.G_FL_COD(),
-                            line.G_FR_COD(),
-                            line.G_FR_LIB(),
-                            line.G_FL_LIB(),
+                            line.gFlCod(),
+                            line.gFrCod(),
                             ideoFormationsIds1,
                             new ArrayList<>(ideoMetiersIds1),
                             new ArrayList<>(libellesOuClesSousdomainesWeb1),
