@@ -817,6 +817,7 @@ public class OnisepDataLoader {
             Set<String> formationsIdeoDuSup
     ) throws IOException {
         try (val csv = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + filename)) {
+            if(correspondance.isEmpty()) return;
             val headers = List.of(
                     "code " + legataire,
                     "code " + heritier,

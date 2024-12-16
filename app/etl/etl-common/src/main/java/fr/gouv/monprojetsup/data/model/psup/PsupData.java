@@ -135,9 +135,7 @@ public record PsupData(
         bacsKeys.add(TOUS_BACS_CODE_MPS);
 
         val groups = new HashMap<String, Collection<String>>();
-        getVoeuxGroupedByFormation(getFormationsMpsIds()).forEach((key, value) -> {
-                groups.put(key, value.stream().map(Voeu::id).distinct().sorted().toList());
-        });
+        getVoeuxGroupedByFormation(getFormationsMpsIds()).forEach((key, value) -> groups.put(key, value.stream().map(Voeu::id).distinct().sorted().toList()));
 
         StatistiquesAdmisParGroupe statsAdmisParGroupe
                 = stats.createGroupAdmisStatistique(groups, bacsKeys);
@@ -211,16 +209,32 @@ public record PsupData(
                 .max()
                 .orElse(0);
 
-        return result2 > 0 ? result2 : (result > 0 ? result : null);
+        if(result2 > 0) return result2;
+        if(result > 0) return result;
+        return null;
     }
 
     @Nullable
     public Integer getDuree(@NotNull Filiere filiere) {
+
+        var gFrLib = filiere.libelle;
+        var gFrSig = filiere.sigle;
+
+        var filierePsup = formations.filieres.getOrDefault(
+                filiere.cle,
+                formations.filieres.get(filiere.cleFiliere)
+        );
+        if(filierePsup != null) {
+            val gFrCod = filierePsup.gFrCod();
+            if(formations.typesMacros.containsKey(gFrCod)) {
+                gFrLib = formations.typesMacros.get(gFrCod);
+            }
+        }
         return DureesEtudes.getDuree(
                 filiere.cle,
                 filiere.libelle,
-                filiere.libelle,
-                filiere.sigle
+                gFrLib,
+                gFrSig
                 );
     }
 
@@ -613,8 +627,8 @@ public record PsupData(
                 var mpsKey = psupKeyToMpsKey.get(psupKey);
                 if (mpsKey == null) mpsKey = psupKeyToMpsKey.getOrDefault(psupKeyFi, psupKeyFi);
                 total.put(mpsKey, total.getOrDefault(mpsKey, 0) + 1);
-                val IsAapprentissage = filiere.apprentissage();
-                if (IsAapprentissage) {
+                val isApprentissage = filiere.apprentissage();
+                if (isApprentissage) {
                     avecApprentissage.put(mpsKey, avecApprentissage.getOrDefault(mpsKey, 0) + 1);
                 }
             }
@@ -666,7 +680,7 @@ public record PsupData(
                 ));
     }
 
-    private @Nullable Voeu toVoeu(
+    private @NotNull Voeu toVoeu(
             Formation f,
             Map<Integer, DescriptifVoeu> indexedDescriptifs) {
         if(f.libelle == null) {

@@ -70,14 +70,36 @@ record DureesEtudes(
             duree = 4;
         } else if (gFrSig.contains("DNSP")) {
             duree = 3;
-        } else if (gFrSig.equals("DSP")) {
+        } else if (gFrSig.contains("DSP")) {
             duree = 1;
         } else if (gFlLib.contains("Bac +1")) {
-            duree = 3;
+            duree = 1;
+        } else if (gFlLib.contains("Bac +2")) {
+            duree = 2;
+        } else if (gFlLib.contains("bac +2")) {
+            duree = 2;
+        } else if (gFlLib.contains("Bac+6")) {
+            duree = 6;
         } else if (gFrCod == 69) {//Brevet de maitrise compagnons du tour de France
             duree = 2;
         } else if (gFrCod == 49) {//Certificat ede spécialisation
             duree = 1;
+        } else if (gFrSig.equals("EA-AHAA")) {
+            duree = 5;
+        } else if (gFrSig.contains("CMI")) {
+            duree = 5;
+        } else if (gFrSig.contains("CPGE")) {
+            duree = 5;
+        } else if (gFrSig.contains("CS") || gFrLib.contains("Formation professionnelle")) {
+            duree = 1;
+        } else if (gFrCod == 550003) {//certif orthophoniste
+            duree = 3;
+        } else if (gFrCod == 550004) {//certif orthoptiste
+            duree = 3;
+        } else if (gFrSig.contains("ScPo")) {//sciences po
+            duree = 5;
+        } else if (gFrLib.contains("Classe prépa")) {//sciences po
+            duree = 5;
         }
         return duree;
     }
