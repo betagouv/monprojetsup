@@ -216,6 +216,39 @@ public record FicheFormationIdeo(
         String modification_date
 
 ) {
+    public static FicheFormationIdeo setId(FicheFormationIdeo f, String newId) {
+        if (Objects.equals(f.identifiant, newId)) return f;
+        return new FicheFormationIdeo(
+                newId,
+                f.code_scolarite,
+                f.libelle_complet,
+                f.sigle,
+                f.libelle_generique,
+                f.libelle_specifique,
+                f.type_option,
+                f.type_Formation,
+                f.duree_formation,
+                f.descriptif_format_court,
+                f.descriptif_acces,
+                f.url,
+                f.nsfDiscipline,
+                f.niveauCertification,
+                f.niveauEtudes,
+                f.niv_code,
+                f.nature_certificat,
+                f.attendus,
+                f.element_enseignement,
+                f.sous_tutelle,
+                f.descriptif_poursuite_etudes,
+                f.poursuites_etudes,
+                f.metiers_formation,
+                f.sources_numeriques,
+                f.sousDomainesWeb,
+                f.creation_date,
+                f.modification_date
+        );
+    }
+
     public List<String> getMotsCles() {
         List<String> result = new ArrayList<>(List.of(
                 identifiant,

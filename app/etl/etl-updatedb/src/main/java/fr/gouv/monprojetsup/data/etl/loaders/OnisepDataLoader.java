@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -669,7 +670,7 @@ public class OnisepDataLoader {
 
         List<SousDomaineWeb> domainesSansId = loadDomainesideo(sources);
 
-        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo(sources);
+        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo(sources, Map.of());
 
         Map<String, String> sousDomainesAvecId = formationsIdeoAvecFiche.stream()
                 .flatMap(f -> f.getSousdomainesWeb().stream())
@@ -701,17 +702,6 @@ public class OnisepDataLoader {
     }
 
 
-    public static List<FormationIdeoSimple> loadFormationsSimplesIdeo(DataSources sources) throws Exception {
-        val typeToken = new TypeToken<List<FormationIdeoSimple>>(){}.getType();
-        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_FORMATIONS_SIMPLE_PATH), typeToken);
-    }
-
-
-    public static List<MetierIdeoSimple> loadMetiersSimplesIdeo(DataSources sources) throws Exception {
-        val typeToken = new TypeToken<List<MetierIdeoSimple>>(){}.getType();
-        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_METIERS_SIMPLE_PATH), typeToken);
-    }
-
     public static @NotNull Map<String,@NotNull Set<String>> loadOldToNewIdeo(DataSources sources) {
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(IDEO_OLD_TO_NEW_PATH));
         Map<String,@NotNull Set<String>> result = new HashMap<>();
@@ -727,17 +717,48 @@ public class OnisepDataLoader {
         return result;
     }
 
+    public static List<FormationIdeoSimple> loadFormationsSimplesIdeo(
+            DataSources sources,
+            @NotNull Map<String, @NotNull Set<String>> oldIdeoToNewIdeo
+    ) throws Exception {
+        val typeToken = new TypeToken<List<FormationIdeoSimple>>() {
+        }.getType();
+        List<FormationIdeoSimple> result = Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_FORMATIONS_SIMPLE_PATH), typeToken);
+        return result.stream()
+                .filter(f -> f.identifiant() != null)
+                .flatMap(
+                        f ->
+                                oldIdeoToNewIdeo.getOrDefault(f.identifiant(), Set.of(Objects.requireNonNull(f.identifiant())))
+                                        .stream().map(newId -> FormationIdeoSimple.setId(f, newId))
+                ).toList();
+    }
 
 
-    public static List<FicheFormationIdeo> loadFichesFormationsIdeo(DataSources sources) throws Exception {
+    public static List<MetierIdeoSimple> loadMetiersSimplesIdeo(DataSources sources) throws Exception {
+        val typeToken = new TypeToken<List<MetierIdeoSimple>>(){}.getType();
+        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_METIERS_SIMPLE_PATH), typeToken);
+    }
+
+
+    public static List<FicheFormationIdeo> loadFichesFormationsIdeo(
+            DataSources sources,
+            @NotNull Map<String, @NotNull Set<String>> oldIdeoToNewIdeo
+    ) throws Exception {
         JavaType listType = new ObjectMapper().getTypeFactory().constructCollectionType(
                 List.class,
                 FicheFormationIdeo.class
         );
-        return Serialisation.fromZippedXml(
+        List<FicheFormationIdeo> result = Serialisation.fromZippedXml(
                 sources.getSourceDataFilePath(DataSources.IDEO_OD_FORMATIONS_FICHES_PATH),
                 listType
         );
+        return result.stream()
+                .flatMap(
+                        f ->
+                                oldIdeoToNewIdeo.getOrDefault(f.identifiant(), Set.of(Objects.requireNonNull(f.identifiant())))
+                                        .stream().map(newId -> FicheFormationIdeo.setId(f, newId))
+                ).toList();
+
     }
 
     public static List<FicheMetierIdeo> loadFichesMetiersIdeo(DataSources sources) throws IOException {
@@ -756,15 +777,16 @@ public class OnisepDataLoader {
 
     @NotNull
     public static Map<String, @NotNull FormationIdeoDuSup> loadFormationsIdeoDuSup(DataSources sources) throws Exception {
-        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(sources);
-        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(sources);
+
+        val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
+        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(sources, oldIdeoToNewIdeo);
+        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(sources, oldIdeoToNewIdeo);
         val formationsIdeoDuSup = extractFormationsIdeoDuSup(
                 formationsIdeoSansfiche,
                 formationsIdeoAvecFiche
         );
         val metiersIdeoDudup = OnisepDataLoader.loadMetiersSimplesIdeo(sources);
 
-        val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
         val mastersIdeoToLicencesIdeo = loadIdeoHeritagesMastersLicences(sources, formationsIdeoDuSup.keySet(), oldIdeoToNewIdeo);
         injectInFormationsIdeo(formationsIdeoDuSup, mastersIdeoToLicencesIdeo, true);
         updateCreationLien(formationsIdeoDuSup, IDEO_HERITAGES_LICENCES_MASTERS_PATH);
