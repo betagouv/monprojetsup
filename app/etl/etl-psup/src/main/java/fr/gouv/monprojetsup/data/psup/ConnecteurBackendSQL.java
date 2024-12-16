@@ -328,32 +328,32 @@ public class ConnecteurBackendSQL {
 
         LOGGER.info("Récupération des filieres et groupes par filiere");
 
-        String sql = "SELECT gFrCod,gFrLib   " + FROM
+        String sql = "SELECT G_FR_COD,G_FR_LIB   " + FROM
                 + FOR_TYPE_TABLE;
         try (
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(sql)) {
             while (result.next()) {
-                int gFrCod = result.getInt("gFrCod");
-                String gFrLib = result.getString("gFrLib");
+                int gFrCod = result.getInt("G_FR_COD");
+                String gFrLib = result.getString("G_FR_LIB");
                 formations.typesMacros.put(gFrCod, gFrLib);
             }
         }
 
 
-        sql = "SELECT gFlCod,fr.gFrCod,gFrLib,gFlLib,G_FL_FLG_APP,G_FL_COD_FI FROM  "
+        sql = "SELECT G_FL_COD,fr.G_FR_COD,G_FR_LIB,G_FL_LIB,G_FL_FLG_APP,G_FL_COD_FI FROM  "
                 + FIL_TYPE_TABLE + " fil,"
                 + FOR_TYPE_TABLE + " fr "
-                + WHERE + " fil.g_fr_cod=fr.g_fr_cod "
-                + "ORDER BY fr.g_fr_cod,gFlCod";
+                + WHERE + " fil.G_FR_COD=fr.G_FR_COD "
+                + "ORDER BY fr.G_FR_COD,G_FL_COD";
         try (
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(sql)) {
             while (result.next()) {
-                int gFlCod = result.getInt("gFlCod");
-                int gFrCod = result.getInt("gFrCod");
-                String gFrLib = result.getString("gFrLib");
-                String gFlLib = result.getString("gFlLib");
+                int gFlCod = result.getInt("G_FL_COD");
+                int gFrCod = result.getInt("G_FR_COD");
+                String gFrLib = result.getString("G_FR_LIB");
+                String gFlLib = result.getString("G_FL_LIB");
                 boolean isApp = result.getBoolean("G_FL_FLG_APP");
                 int gFlCodFi = result.getInt("G_FL_COD_FI");
                 String libFiliere = gFlLib.startsWith(gFrLib) ? gFlLib : gFrLib + " - " + gFlLib;
