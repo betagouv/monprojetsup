@@ -20,7 +20,7 @@ class LoadersTest {
     @Test
     fun `Doit réussir à récupérer les formations ideo `() {
         // Given
-        val formations = OnisepDataLoader.loadFormationsSimplesIdeo(dataSources, Map.of<Any, Any>())
+        val formations = OnisepDataLoader.loadFormationsSimplesIdeo(dataSources, Map.of())
         // When
         // Then
         Assertions.assertThat(formations).isNotEmpty()
@@ -29,7 +29,7 @@ class LoadersTest {
     @Test
     fun `Doit réussir à récupérer les fiches formations ideo `() {
         // Given
-        val fiches = OnisepDataLoader.loadFichesFormationsIdeo(dataSources, Map.of<Any, Any>())
+        val fiches = OnisepDataLoader.loadFichesFormationsIdeo(dataSources, Map.of())
         // When
         // Then
         Assertions.assertThat(fiches).isNotEmpty()
