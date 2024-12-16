@@ -85,6 +85,7 @@ public record FormationIdeoSimple(
         return (libelleNiveauDeCertification != null && libelleNiveauDeCertification.toLowerCase().contains("bac +")
                 //|| niveauDeCertification != null && niveauxCertif.contains(niveauDeCertification)
                 || niveauDeSortieIndicatif != null && niveauDeSortieIndicatif.toLowerCase().contains("bac +")
+                || this.libelleFormationPrincipal.contains("BPJEPS")
         );
     }
 
@@ -96,11 +97,11 @@ public record FormationIdeoSimple(
         if (libelleTypeFormation != null) result.add(libelleTypeFormation);
         if (libelleFormationPrincipal != null) result.add(libelleFormationPrincipal);
         if (sigleFormation != null) result.add(sigleFormation);
-        if (duree != null) result.add("duree" + duree.replaceAll(" ", "_"));
+        if (duree != null) result.add("duree" + duree.replace(" ", "_"));
         if (domainesousDomaine != null) {
             result.addAll(
                     Arrays.stream(domainesousDomaine
-                            .split("|"))
+                            .split("\\|"))
                             .map(String::trim)
                             .filter(s -> !s.isBlank())
                             .toList()
