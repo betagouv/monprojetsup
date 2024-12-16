@@ -158,16 +158,15 @@ public record PsupData(
 
     public @Nullable String getRecoScoGeneriques(Integer gFlCod, String key) {
         List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
-        Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("gFlCod", "").equals(gFlCod.toString())).findAny();
+        Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString())).findAny();
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_CON_LYC_" + key)).orElse(null);
     }
 
-    public @Nullable String getAttendus(Integer gFlCod) {
-        List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
-        Optional<Map<String, String>> entry = dataFl.stream()
-                .filter(m -> m.getOrDefault("gFlCod", "").equals(gFlCod.toString()))
-                .findAny();
-        return entry.map(stringStringMap -> stringStringMap.get("G_FL_DES_ATT")).orElse(null);
+    public @NotNull Map<Integer,String> getAttendus() {
+        return diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>()).stream()
+                .map(e -> Pair.of(Integer.parseInt(e.get("G_FL_COD")), e.get("G_FL_DES_ATT")))
+                .filter(p -> p.getRight() != null)
+                .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
     }
 
     public @NotNull Map<Integer, @NotNull Map<String, @NotNull Long>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
