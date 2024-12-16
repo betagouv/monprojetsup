@@ -63,11 +63,11 @@ class OnisepDataLoaderTest {
     fun `Licence d histoire ne mène pas à directeur de golf ni technicienne de forge`() {
         val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(
             dataSources,
-            Map.of<Any, Any>()
+            Map.of()
         )
         val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(
             dataSources,
-            Map.of<Any, Any>()
+            Map.of()
         )
         val formationsIdeoDuSup = OnisepDataLoader.extractFormationsIdeoDuSup(
             formationsIdeoSansfiche,
