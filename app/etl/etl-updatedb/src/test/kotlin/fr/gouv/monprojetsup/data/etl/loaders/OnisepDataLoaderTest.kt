@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.util.Map
 
 
 @SpringBootTest(classes = [DataSources::class] )
@@ -60,8 +61,14 @@ class OnisepDataLoaderTest {
 
     @Test
     fun `Licence d histoire ne mène pas à directeur de golf ni technicienne de forge`() {
-        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(dataSources)
-        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(dataSources)
+        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(
+            dataSources,
+            Map.of<Any, Any>()
+        )
+        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(
+            dataSources,
+            Map.of<Any, Any>()
+        )
         val formationsIdeoDuSup = OnisepDataLoader.extractFormationsIdeoDuSup(
             formationsIdeoSansfiche,
             formationsIdeoAvecFiche

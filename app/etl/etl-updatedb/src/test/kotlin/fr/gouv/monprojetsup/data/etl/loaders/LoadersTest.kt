@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.util.Map
 
 @SpringBootTest(classes = [DataSources::class] )
 @ActiveProfiles("test")
@@ -19,7 +20,7 @@ class LoadersTest {
     @Test
     fun `Doit réussir à récupérer les formations ideo `() {
         // Given
-        val formations = OnisepDataLoader.loadFormationsSimplesIdeo(dataSources)
+        val formations = OnisepDataLoader.loadFormationsSimplesIdeo(dataSources, Map.of<Any, Any>())
         // When
         // Then
         Assertions.assertThat(formations).isNotEmpty()
@@ -28,7 +29,7 @@ class LoadersTest {
     @Test
     fun `Doit réussir à récupérer les fiches formations ideo `() {
         // Given
-        val fiches = OnisepDataLoader.loadFichesFormationsIdeo(dataSources)
+        val fiches = OnisepDataLoader.loadFichesFormationsIdeo(dataSources, Map.of<Any, Any>())
         // When
         // Then
         Assertions.assertThat(fiches).isNotEmpty()

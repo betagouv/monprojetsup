@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +39,10 @@ public record FilierePsupVersIdeoData(
             Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
 
         try {
-            lines.generateDiagnostic(formationsIdeo.values().stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()));
+            val allIdeos = new HashSet<String>();
+            allIdeos.addAll(formationsIdeo.keySet());
+            allIdeos.addAll(oldIdeoToNewIdeo.keySet());
+            lines.generateDiagnostic(allIdeos);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

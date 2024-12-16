@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public record FormationIdeoSimple(
         /*
@@ -52,6 +53,26 @@ public record FormationIdeoSimple(
 
         List<String> enseignements
 ) {
+    public static FormationIdeoSimple setId(FormationIdeoSimple f, String newId) {
+        if(Objects.equals(f.identifiant(), newId)) return f;
+        return new FormationIdeoSimple(
+                f.codeNsf,
+                f.sigleTypeFormation,
+                f.libelleTypeFormation,
+                f.libelleFormationPrincipal,
+                f.sigleFormation,
+                f.duree,
+                f.niveauDeSortieIndicatif,
+                f.codeRncp,
+                f.niveauDeCertification,
+                f.libelleNiveauDeCertification,
+                f.tutelle,
+                f.urlEtIdOnisep.replace(Objects.requireNonNull(f.identifiant()), newId),
+                f.domainesousDomaine,
+                f.enseignements
+        );
+    }
+
     public @Nullable String identifiant() {
         if (urlEtIdOnisep == null) return null;
         int pos = urlEtIdOnisep.lastIndexOf('/');
