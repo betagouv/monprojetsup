@@ -65,9 +65,13 @@ class UpdateFormationDbs(
         logger.info("Mise à jour de la table des formations")
         updateFormationsDb()
         logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
+        val isForcedUpdate = checkForcedUpdate()
         val nbPairesVoeuxFormationsAChange = updateVoeuxDb()
-        if(nbPairesVoeuxFormationsAChange || checkForcedUpdate()) {
+        if(isForcedUpdate || nbPairesVoeuxFormationsAChange) {
             logger.info("Mise à jour de la table de correspondance ville voeux")
+            if(isForcedUpdate) {
+                batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
+            }
             updateVillesVoeuxDb()
         }
 

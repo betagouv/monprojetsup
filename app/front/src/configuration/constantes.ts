@@ -23,7 +23,7 @@ export const constantes = {
     NB_PAR_PAGE: 5,
     NB_CARACTÈRES_MIN_RECHERCHE: 3,
     NB_CARACTÈRES_MAX_RECHERCHE: 50,
-    RAYONS_RECHERCHE: [10, 20, 50],
+    RAYONS_RECHERCHE: [10, 50, 200],
   },
   COMMUNES: {
     NB_PAR_PAGE: 5,

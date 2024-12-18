@@ -52,7 +52,7 @@ public class Constants {
     public static final String FILIERE_PREFIX = "fl";//like g_fl_cod
     public static final String FORMATION_PREFIX = "ta";//like g_ta_cod
 
-    public static final int MAX_DISTANCE_VILLE_VOEU_KM = 100;
+    public static final int MAX_DISTANCE_VILLE_VOEU_KM = 300;
 
     public static final String CODE_COMMUNE_INSEE_PARIS_VINGTIEME = "75120";
 
