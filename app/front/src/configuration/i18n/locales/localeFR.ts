@@ -310,7 +310,7 @@ export const localeFR = {
         },
       },
       COMMUNES_ENVISAGÉES: {
-        LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
+        LABEL: "Y a-t-il des villes près desquelles tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
         MA_SÉLECTION: {
