@@ -15,6 +15,7 @@ const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée }: C
   return (
     <div
       className={`fr-enlarge-link grid w-full max-w-[500px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
+      data-selected={sélectionnée ?? false}
     >
       <div className="grid grid-flow-col items-baseline justify-between gap-1">
         <LienInterne

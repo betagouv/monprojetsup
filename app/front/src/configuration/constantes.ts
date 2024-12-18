@@ -16,6 +16,8 @@ export const constantes = {
   ACCESSIBILITÉ: {
     CONTENU_ID: "contenu",
     PIED_DE_PAGE_ID: "pied-de-page",
+    FICHE_ID: "fiche",
+    LISTE_CARTES_ID: "liste-cartes",
   },
   VOEUX: {
     NB_PAR_PAGE: 5,

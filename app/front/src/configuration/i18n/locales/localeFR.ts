@@ -504,6 +504,8 @@ export const localeFR = {
     FERMER_MODALE: "Fermer la fenêtre modale",
     ACCÈS_RAPIDE: "Accès rapide",
     CONTENU: "Contenu",
+    FOCUS_FICHE: "Déplacer focus sur la fiche",
+    FOCUS_RÉSULTATS: "Déplacer focus sur les résultats",
     PIED_PAGE: "Pied de page",
     NOUVEAUX_RÉSULATS: "nouveaux résultats",
     LISTE_FORMATIONS: "Liste formations",

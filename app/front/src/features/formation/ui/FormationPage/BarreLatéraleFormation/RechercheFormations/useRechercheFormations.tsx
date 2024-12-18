@@ -23,7 +23,7 @@ export default function useRechercheFormations() {
     } else if (recherche) {
       setStatus(undefined);
       rechercher(recherche);
-      document.querySelector("#liste-formations")?.scrollTo({ top: 0 });
+      document.querySelector(`#${constantes.ACCESSIBILITÉ.LISTE_CARTES_ID}`)?.scrollTo({ top: 0 });
     } else {
       réinitialiserRecherche();
     }

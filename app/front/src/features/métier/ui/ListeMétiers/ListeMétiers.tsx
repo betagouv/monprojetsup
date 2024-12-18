@@ -1,4 +1,5 @@
 import { type ListeMétiersProps } from "./ListeMétiers.interface";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import CarteMétier from "@/features/métier/ui/CarteMétier/CarteMétier";
 import { useLocation } from "@tanstack/react-router";
@@ -9,7 +10,7 @@ const ListeMétiers = ({ métiers }: ListeMétiersProps) => {
   return (
     <div
       className="grid h-full justify-center gap-6 px-2 pb-6 lg:justify-normal lg:overflow-y-auto lg:px-6"
-      id="liste-métiers"
+      id={constantes.ACCESSIBILITÉ.LISTE_CARTES_ID}
     >
       <ul
         aria-label={i18n.ACCESSIBILITÉ.LISTE_MÉTIERS}

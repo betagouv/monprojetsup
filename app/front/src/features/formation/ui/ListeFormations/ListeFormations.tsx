@@ -1,6 +1,7 @@
 import { type ListeFormationsProps } from "./ListeFormations.interface";
 import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import CarteFormation from "@/features/formation/ui/CarteFormation/CarteFormation";
 import BoutonRetourAuxSuggestions from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BoutonRetourAuxSuggestions/BoutonRetourAuxSuggestions";
@@ -11,7 +12,7 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
   return (
     <div
       className="grid h-full justify-center gap-6 px-2 pb-6 lg:justify-normal lg:overflow-y-auto lg:px-6"
-      id="liste-formations"
+      id={constantes.ACCESSIBILITÉ.LISTE_CARTES_ID}
     >
       {formations.length === 0 && affichéSurLaPage === "ficheFormation" ? (
         <>

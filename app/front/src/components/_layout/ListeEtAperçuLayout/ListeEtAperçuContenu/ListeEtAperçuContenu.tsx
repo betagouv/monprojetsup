@@ -4,6 +4,7 @@ import {
   afficherBarreLatéraleEnMobileListeEtAperçuStore,
 } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import Bouton from "@/components/Bouton/Bouton";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
@@ -19,7 +20,22 @@ const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
       <div
         aria-live="assertive"
         className="pb-12 pt-6 lg:pl-14"
+        id={constantes.ACCESSIBILITÉ.FICHE_ID}
+        tabIndex={-1}
       >
+        <div className="fr-skiplinks bg-transparent">
+          <Bouton
+            auClic={() =>
+              document
+                .querySelector<HTMLElement>(`#${constantes.ACCESSIBILITÉ.LISTE_CARTES_ID} div[data-selected="true"] a`)
+                ?.focus()
+            }
+            type="button"
+            variante="quinaire"
+          >
+            {i18n.ACCESSIBILITÉ.FOCUS_RÉSULTATS}
+          </Bouton>
+        </div>
         <div className="ml-[-1rem] pb-6 lg:hidden">
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}

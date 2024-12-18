@@ -1,5 +1,6 @@
 import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import Bouton from "@/components/Bouton/Bouton";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const BoutonRetourAuxSuggestions = () => {
@@ -7,7 +8,7 @@ const BoutonRetourAuxSuggestions = () => {
 
   const retournerAuxSuggestions = () => {
     réinitialiserRecherche();
-    document.querySelector("#liste-formations")?.scrollTo({ top: 0 });
+    document.querySelector(`#${constantes.ACCESSIBILITÉ.LISTE_CARTES_ID}`)?.scrollTo({ top: 0 });
   };
 
   return (
