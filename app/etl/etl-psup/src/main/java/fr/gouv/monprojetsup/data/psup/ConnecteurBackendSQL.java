@@ -129,7 +129,6 @@ public class ConnecteurBackendSQL {
 
         recupererNomsfilieres(data, filActives);
         recupererNomsFilieresManquantsEtMostCles(data, filActives);
-        recupererLiensOnisep(data, filActives);
         recupererFilieresSimilaires(data);
         recupererDureesEtudes(data);
         recupererFormations(data);
@@ -252,7 +251,7 @@ public class ConnecteurBackendSQL {
     }
 
     private void recupererDiversPsup(PsupData data) throws SQLException {
-        Map<String, List<Map<String, String>>> o = exportSelectToObject(this.conn,
+        Map<String,String> tables = new HashMap<>(
                 Map.of("c_jur_adm", "select * from mps_c_jur_adm",
                         "c_jur_adm_comments", "select * from user_col_comments where table_name like '%C_JUR_ADM%' and comments is not null",
                         "g_for_tau_reu", "select * from g_for_tau_reu",
@@ -265,6 +264,16 @@ public class ConnecteurBackendSQL {
                         "mps_prepas_slt_bacs_pro", "select g_ta_cod from mps_prepas_slt_bacs_pro"
                 )
         );
+        tables.put("g_rap_pub", "select * from mps_g_rap_pub");
+        tables.put("g_for", "select * from mps_g_for");
+        tables.put("g_fil", "select * from mps_g_fil");
+        tables.put("g_tri_ins", "select * from mps_g_tri_ins");
+        tables.put("sp_g_tri_aff", "select * from mps_aff");
+        tables.put("b_com", "select * from b_com");
+        tables.put("filieres_actuelles", "select * from mps_filieres_actuelles");
+        tables.put("v_eta", "select * from mps_v_eta");
+        tables.put("v_fil_car", "select * from mps_v_fil_car");
+        Map<String, List<Map<String, String>>> o = exportSelectToObject(this.conn,tables);
         data.diversPsup().putAll(o);
         recupererDescriptions(data);
     }
@@ -309,7 +318,7 @@ public class ConnecteurBackendSQL {
 
     private void recupererFormations(PsupData data) throws Exception {
 
-
+        //TODO: use diversPsup instead, and include SIG
         Formations formations = new Formations();
 
         LOGGER.info("Récupération des filieres et groupes par filiere");
@@ -327,6 +336,7 @@ public class ConnecteurBackendSQL {
         }
 
 
+        //TODO: use diversPsup instead
         sql = "SELECT G_FL_COD,fr.G_FR_COD,G_FR_LIB,G_FL_LIB,G_FL_FLG_APP,G_FL_COD_FI FROM  "
                 + FIL_TYPE_TABLE + " fil,"
                 + FOR_TYPE_TABLE + " fr "
@@ -359,7 +369,7 @@ public class ConnecteurBackendSQL {
                 "lng, " +
                 "lat," +
                 "commune," +
-                "code_commune FROM mps_formations "
+                "code_commune FROM mps_formations_actuelles "
                 + " ORDER BY G_FL_COD_AFF,C_GP_COD";
         LOGGER.info(sql);
         int filieresManquantes = 0;
@@ -456,10 +466,10 @@ public class ConnecteurBackendSQL {
     }
 
     private void recupererDureesEtudes(PsupData data) throws SQLException {
-
+        //TODO: à faire dans l'etl sur la base des infos récupérées dans divers
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod,g_fr_cod,g_fl_lib, g_fr_lib,g_fr_sig from mps_filieres2";
+            String sql = "select g_fl_cod,g_fr_cod,g_fl_lib, g_fr_lib,g_fr_sig from mps_filieres_actuelles";
             LOGGER.info(sql);
 
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -490,7 +500,7 @@ public class ConnecteurBackendSQL {
                     data.addFiliereSimilaire(
                             rs.getInt("g_fl_cod_ori"),
                             rs.getInt("g_fl_cod_sim"),
-                            rs.getInt("g_fs_sco"),
+                            Math.toIntExact(rs.getLong("g_fs_sco")),
                             rs.getInt("i_tc_cod")
                     );
                 }
@@ -553,32 +563,6 @@ public class ConnecteurBackendSQL {
         return sources2;
     }
 
-    /**
-     * Recupère les liens onisep pour chaque filière
-     *
-     * @param data les données
-     * @param filActives les filières intéressantes
-     */
-    private void recupererLiensOnisep(PsupData data, Set<Integer> filActives) throws SQLException {
-        try (Statement stmt = conn.createStatement()) {
-            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
-            ConnecteurBackendSQL.LOGGER.info("Récupération des liens Onisep ");
-            stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod, g_fl_lie_inf from mps_liens_onisep";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gFlCod = result.getInt(1);
-                    if(filActives.contains(gFlCod)) {
-                        String lien = result.getString(2);
-                        data.ajouterLienFiliereOnisep(gFlCod, lien);
-                    }
-                }
-            }
-
-        }
-
-    }
 
 
     //group bac mat

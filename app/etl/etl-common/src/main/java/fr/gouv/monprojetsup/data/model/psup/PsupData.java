@@ -66,9 +66,6 @@ public record PsupData(
 
         @NotNull TagsSources motsCles,
 
-        //liens onisep, par filière
-        @NotNull Map<String, @NotNull String> liensOnisep,
-
         fr.gouv.monprojetsup.data.model.stats.PsupStatistiques stats,
 
         @NotNull List<@NotNull Bac> bacs
@@ -92,7 +89,6 @@ public record PsupData(
                 new HashMap<>(),
                 new TreeMap<>(),
                 new TagsSources(),
-                new TreeMap<>(),
                 new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(),
                 new ArrayList<>()
         );
@@ -140,10 +136,6 @@ public record PsupData(
                         Map.Entry::getKey,
                         e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
                 ));
-    }
-
-    public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
-        liensOnisep.put(gFlCodToMpsId(gFlCod), lien);
     }
 
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
