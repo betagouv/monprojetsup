@@ -133,9 +133,7 @@ public record PsupData(
 
         val bacsKeys = new HashSet<>(getBacs().stream().map(Bac::key).toList());
         bacsKeys.add(TOUS_BACS_CODE_MPS);
-
-        val groups = new HashMap<String, Collection<String>>();
-        getVoeuxGroupedByFormation(getFormationsMpsIds()).forEach((key, value) -> groups.put(key, value.stream().map(Voeu::id).distinct().sorted().toList()));
+        val groups = getGtaToMpsIdMapping();
 
         StatistiquesAdmisParGroupe statsAdmisParGroupe
                 = stats.createGroupAdmisStatistique(groups, bacsKeys);
@@ -146,6 +144,21 @@ public record PsupData(
                 statsAdmisParGroupe.getAdmisParGroupes(),
                 statsAdmisParGroupe.getStatsSpecialites()
         );
+    }
+
+
+    public Map<String, String> getGtaToMpsIdMapping() {
+        val gtaToFl = formations.formations.values().stream()
+                .collect(Collectors.toMap(
+                        f -> gTaCodToMpsId(f.gTaCod),
+                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
+                ));
+        val psupKeyToMpsKey = getPsupKeyToMpsKey();
+        return gtaToFl.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
+                ));
     }
 
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
