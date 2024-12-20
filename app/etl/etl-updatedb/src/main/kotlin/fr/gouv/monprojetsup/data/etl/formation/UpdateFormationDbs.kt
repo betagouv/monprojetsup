@@ -246,7 +246,11 @@ class UpdateFormationDbs(
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
         logger.info("Récupération des paires villes voeux actuelles")
-        val villesVoeuxActuels = villesVoeuxDb.findAll().associateBy { v -> v.idVille }
+        val villesVoeuxEntities = batchUpdate.getEntities(
+            VilleVoeuxEntity::class.simpleName!!,
+            VilleVoeuxEntity::class.java )
+
+        val villesVoeuxActuels = villesVoeuxEntities.associateBy { v -> v.idVille }
 
         var letter = '_'
 
