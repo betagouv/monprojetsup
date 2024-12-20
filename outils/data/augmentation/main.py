@@ -44,17 +44,14 @@ def get_best_edges(
     res = []
     for dom, row in zip(doms, sims.T):
         dom_id = dom["id"]
-        assert len(row) == len(forms)
 
         indices = np.argsort(row)
         cur_count = 0
         for j in list(indices[-top_k:])[::-1]:
             form_id = forms[j]["id"]
-            form_name = forms[j]["label"]
             is_existing_edge = (form_id, dom_id) in edges
 
             if not is_existing_edge and cur_count < max_count:
-                print("new edge", form_name, dom["nom"], row[j])
                 cur_count += 1
                 res.append(((form_id, dom_id), row[j]))
     return res
