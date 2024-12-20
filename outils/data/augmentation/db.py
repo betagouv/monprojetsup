@@ -95,7 +95,8 @@ def _load_basic_edges(conn: Connection[TupleRow]) -> dict[str, dict[str, str]]:
         ["id", "dst", "src"],
         "sugg_edges",
         extra="""
-        WHERE (src LIKE 'fl%' OR src LIKE 'fr%') AND dst LIKE 'dom%'""",
+        WHERE ((src LIKE 'fl%' OR src LIKE 'fr%') AND dst LIKE 'dom%') OR
+        ((dst LIKE 'fl%' OR dst LIKE 'fr%') AND src LIKE 'dom%')""",
     )
 
 
