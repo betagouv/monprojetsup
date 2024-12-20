@@ -133,7 +133,9 @@ public record PsupData(
 
         val bacsKeys = new HashSet<>(getBacs().stream().map(Bac::key).toList());
         bacsKeys.add(TOUS_BACS_CODE_MPS);
-        val groups = getGtaToMpsIdMapping();
+
+        val groups = new HashMap<String, Collection<String>>();
+        getVoeuxGroupedByFormation(getFormationsMpsIds()).forEach((key, value) -> groups.put(key, value.stream().map(Voeu::id).distinct().sorted().toList()));
 
         StatistiquesAdmisParGroupe statsAdmisParGroupe
                 = stats.createGroupAdmisStatistique(groups, bacsKeys);
