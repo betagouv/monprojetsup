@@ -267,4 +267,8 @@ public class SuggestionsData {
     public List<String> getFormationsOfVoeu(String idVoeu) {
         return formationsVoeuxPort.getFormationsOfVoeu(idVoeu);
     }
+
+    public void saveAlgoEdges(@NotNull Map<String, Set<String>> edges) {
+        edgesPort.setAlgoEdges(edges.entrySet().stream().flatMap(e -> e.getValue().stream().map(dst -> new Edge(e.getKey(),dst))).toList());
+    }
 }
