@@ -166,6 +166,8 @@ public class AlgoSuggestions {
         before.removeAll(after);
         LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 
+        data.saveAlgoEdges(edgesKeys.edges());
+
 
     }
 

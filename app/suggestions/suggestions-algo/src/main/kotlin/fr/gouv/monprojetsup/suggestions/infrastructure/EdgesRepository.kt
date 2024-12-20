@@ -4,6 +4,9 @@ import fr.gouv.monprojetsup.data.model.Edge
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,7 +14,12 @@ import org.springframework.transaction.annotation.Transactional
 interface EdgeJPARepository : JpaRepository<SuggestionsEdgeEntity, String> {
     fun findByType(typ: Int): List<SuggestionsEdgeEntity>
 
-    fun findBySrc(src: String): List<SuggestionsEdgeEntity>
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM SuggestionsEdgeEntity WHERE type = :typeEdge")
+    fun deleteByType(
+        @Param("typeEdge") typeEdge: Int,
+    )
 
 }
 
@@ -24,6 +32,13 @@ open class EdgesRepository(
     @Transactional(readOnly = true)
     override fun retrieveEdgesOfType(type: Int): MutableList<Edge> {
         return edgeJPARepository.findByType(type).map { it.toEdge() }.toMutableList()
+    }
+
+
+    @Transactional(readOnly = false)
+    override fun setEdgesOfType(edges: List<Edge>, typeEdge: Int) {
+        edgeJPARepository.deleteByType(typeEdge)
+        edgeJPARepository.saveAllAndFlush(edges.map { SuggestionsEdgeEntity(it.src,it.dst, typeEdge) })
     }
 
 }
