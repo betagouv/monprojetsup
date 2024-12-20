@@ -148,6 +148,21 @@ public record PsupData(
         );
     }
 
+
+    public Map<String, String> getGtaToMpsIdMapping() {
+        val gtaToFl = formations.formations.values().stream()
+                .collect(Collectors.toMap(
+                        f -> gTaCodToMpsId(f.gTaCod),
+                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
+                ));
+        val psupKeyToMpsKey = getPsupKeyToMpsKey();
+        return gtaToFl.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
+                ));
+    }
+
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
         return getRecoScoGeneriques(gFlCod, "PREM");
     }

@@ -10,6 +10,10 @@ export class MettreÀJourProfilÉlèveUseCase {
       Pick<Élève, "situation" | "classe" | "bac" | "duréeÉtudesPrévue" | "alternance" | "moyenneGénérale">
     >,
   ): Promise<Élève | Error> {
-    return await this._élèveRepository.mettreÀJourProfil({ ...profilÉlève, ...changementsProfilÉlève });
+    return await this._élèveRepository.mettreÀJourProfil({
+      ...profilÉlève,
+      ...changementsProfilÉlève,
+      spécialités: changementsProfilÉlève.bac === profilÉlève.bac ? profilÉlève.spécialités : [],
+    });
   }
 }
