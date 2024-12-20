@@ -29,6 +29,7 @@ class SuggestionsEdgeEntity {
         const val TYPE_EDGE_LAS_TO_PASS: Int = 7
         const val TYPE_EDGE_ATOME_ELEMENT: Int = 8
         const val TYPE_EDGE_METIERS_FORMATIONS_PSUP: Int = 9
+        const val TYPE_EDGE_ALGO: Int = 10
     }
 
     @Id
