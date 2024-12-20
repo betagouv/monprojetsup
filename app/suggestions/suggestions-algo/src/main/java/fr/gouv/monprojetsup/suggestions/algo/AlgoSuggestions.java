@@ -278,7 +278,7 @@ public class AlgoSuggestions {
                             .map(Pair::getLeft)
                             .collect(Collectors.groupingBy(typesFormations::get, Collectors.counting()));
 
-            //on trie les 10 prochains candidats en fonction de leur afffinité,
+            //on trie les 10 prochains candidats en fonction de leur affinité,
             //avec un malus multiplicatif pour celles qui sont déjà beaucoup apparues lors des 10 derniers résultats
             val shortListSortedStream = shortListStream
                     .sorted(Comparator.comparingDouble(
