@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsEdgesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsVillesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.VilleVoeuxEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import org.assertj.core.api.Assertions.assertThat
@@ -66,7 +67,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Tag("resource-intensive-test")
         fun `La table ville voeux est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
-            val villesVoeux = villesVoeuxDb.findAll()
+            val villesVoeux = batchUpdate.getEntities(
+                VilleVoeuxEntity::class.simpleName!!,
+                VilleVoeuxEntity::class.java )
             assertThat(villesVoeux).isNotEmpty
             assertThat(villesVoeux.filter { it.idVille == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }).isNotEmpty()
         }
