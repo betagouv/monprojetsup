@@ -71,7 +71,7 @@ public record Affinite(
     }
 
     private static double roundScore(double affinite, double finalMaxScore) {
-        return Math.max(0.0, Math.min(1.0, Math.round((affinite / finalMaxScore) * 10e6) / 10e6));
+        return Math.max(0.0, Math.min(1.0, affinite / finalMaxScore));
     }
 
     public @NotNull Affinite max(@Nullable Affinite affinite) {
