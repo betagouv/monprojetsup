@@ -39,7 +39,7 @@ public record DescriptifsFormationsMetiers(
         return new Link(label, uri, source);
     }
 
-    private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private static final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
     public static String toParcoursupCarteUrl(@NotNull Collection<String> psupIds) {
         String normalized = psupIds.stream().distinct()

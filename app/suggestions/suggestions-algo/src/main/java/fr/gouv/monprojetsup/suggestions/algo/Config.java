@@ -24,7 +24,6 @@ public final class Config {
     public static final String DUREE_COURTE_PROFILE_VALUE = "court";
     public static final String DUREE_LONGUE_PROFILE_VALUE = "long";
     public static final double MIN_SPEC_PCT_FOR_EXP = 0.1;
-    public static final int ADMISSIBILITY_LOWEST_GRADE = 8;
     public static final int MAX_DISTANCE = 3;
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
     public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
@@ -38,12 +37,6 @@ public final class Config {
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
     static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
-    static final double ZERO_ADMISSIBILITY = 0.001;
-    static final double ADMISSIBILITY_10 = 0.1;//at the first décile
-    static final double ADMISSIBILITY_25 = 0.3;//at the 25 and 75 quartile
-    static final double ADMISSIBILITY_50 = 0.9;//at the 25 and 75 quartile
-    static final double ADMISSIBILITY_75 = 1.0;//at the 25 and 75 quartile
-    static final double ADMISSIBILITY_90 = 1.0;//above the last decile
     static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
     static final double MAX_SCORE_PATH_LENGTH_3 = 0.25;
 
@@ -66,11 +59,7 @@ public final class Config {
     @Getter
     @Setter
     private int verbosityLevel = 0;
-
-    @Getter
-    @Setter
-    private boolean useAutoEvalMoyGen = false;
-
+    
     public static final String BONUS_APPRENTISSAGE = "app";
     public static final String BONUS_TAGS = "tags";
     public static final String BONUS_SIM = "sim";
@@ -80,7 +69,6 @@ public final class Config {
     public static final String BONUS_TYPE_BAC = "typebac";
     public static final String BONUS_SPECIALITE = "spec";
     public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
-    public static final String BONUS_MOY_GEN = "moygen";
     public static final double NO_MATCH_SCORE = 0.0;
 
     public static final double FULL_MATCH_MULTIPLIER = 1.0;
@@ -92,7 +80,6 @@ public final class Config {
             BONUS_DURATION,"durée",
             BONUS_SIM,"similarité avec autres favoris",
             BONUS_VOEU_FAVORI,"voeu favori",
-            BONUS_MOY_GEN,"moyenne générale",
             BONUS_TYPE_BAC,"type de bac",
             BONUS_APPRENTISSAGE,"preférences apprentissage",
             BONUS_GEO,"préférences géographiques"
@@ -107,7 +94,6 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SIM = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
-    static final double MULTIPLIER_FOR_UNFITTED_NOTES = 1.0E-01;
     static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
 
     @JsonIgnore
@@ -120,7 +106,6 @@ public final class Config {
             entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
-            entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES),
             entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
     ));
     @JsonIgnore
