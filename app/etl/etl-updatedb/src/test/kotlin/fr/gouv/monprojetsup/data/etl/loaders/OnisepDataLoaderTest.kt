@@ -56,7 +56,7 @@ class OnisepDataLoaderTest {
 
     @Test
     fun `Il y a suffisament arètes formations métiers`() {
-        assertThat(onisepData.edgesMetiersFormations).hasSizeGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_FORMATIONS_METIERS);
+        assertThat(onisepData.edgesMetiersFormations).hasSizeGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_FORMATIONS_METIERS)
     }
 
     @Test

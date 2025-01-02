@@ -86,16 +86,12 @@ class FormationEntity {
     var stats : StatsEntity = StatsEntity()
 
     fun integrityCheck(): Boolean {
-        if(label.isEmpty()
-            || descriptifGeneral.isNullOrEmpty()
-            || formationsAssociees.isNullOrEmpty()
-            || motsClefs.isNullOrEmpty()
-            || liens.isEmpty()
-            || duree == null
-            ) {
-            return false
-        }
-        return true
+        return !(label.isEmpty()
+                || descriptifGeneral.isNullOrEmpty()
+                || formationsAssociees.isNullOrEmpty()
+                || motsClefs.isNullOrEmpty()
+                || liens.isEmpty()
+                || duree == null)
     }
 
     data class StatsEntity (

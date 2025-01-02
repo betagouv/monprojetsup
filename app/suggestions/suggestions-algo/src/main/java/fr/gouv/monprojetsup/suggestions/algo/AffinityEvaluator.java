@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.model.Ville;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -33,14 +32,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.data.Constants.isMetier;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_10;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_25;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_50;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_75;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_90;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_LOWEST_GRADE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_MOY_GEN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
@@ -51,7 +43,6 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_SCORE_PATH_LENGTH
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MIN_SPEC_PCT_FOR_EXP;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MULTIPLIER_FOR_NOSTATS_BAC;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.ZERO_ADMISSIBILITY;
 import static java.util.Map.entry;
 
 /**
@@ -79,9 +70,6 @@ public class AffinityEvaluator {
 
     private final boolean isBacPro;
 
-    /* estimate of moygen.  */
-    private Double moyGenEstimee;
-
     /* list of formations selected.  */
     private final Set<String> flApproved;
 
@@ -108,16 +96,6 @@ public class AffinityEvaluator {
         if(pfBac == null || pfBac.isBlank()) pfBac = TOUS_BACS_CODE_MPS;
         this.bac = pfBac;
         this.isBacPro = pfBac.equals("P") || pfBac.equals("PA");
-
-        try {
-            this.moyGenEstimee
-                    = (pf.moygen() == null || pf.moygen().isBlank())
-                    ? null
-                    : Double.parseDouble(pf.moygen())
-            ;
-        } catch (NumberFormatException ignored) {
-            this.moyGenEstimee = null;
-        }
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
@@ -231,19 +209,17 @@ public class AffinityEvaluator {
             entries.sort(Comparator.comparing(e -> -e.getValue()));
             entries.forEach(e -> {
                 val key = e.getKey();
-                if(!key.equals(BONUS_MOY_GEN) || cfg.isUseAutoEvalMoyGen()) {
-                    double weight = cfg.minMultipliers().get(key);
-                    val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
-                    expl2.add(Explanation.getDebugExplanation(
-                            label
-                                    + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
-                    ));
-                    calculScoreDetails.append(" ");
-                    calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
-                    calculScoreDetails.append(" (");
-                    calculScoreDetails.append(label);
-                    calculScoreDetails.append(") , ");
-                }
+                double weight = cfg.minMultipliers().get(key);
+                val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
+                expl2.add(Explanation.getDebugExplanation(
+                        label
+                                + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
+                ));
+                calculScoreDetails.append(" ");
+                calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+                calculScoreDetails.append(" (");
+                calculScoreDetails.append(label);
+                calculScoreDetails.append(") , ");
             });
             calculScoreDetails.append(" ]");
 
@@ -303,8 +279,7 @@ public class AffinityEvaluator {
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl)),
                     entry(Config.BONUS_APPRENTISSAGE, getBonusApprentissage(fl, expl)),
                     entry(Config.BONUS_SPECIALITE, getBonusSpecialites(fl, expl)),
-                    entry(Config.BONUS_TYPE_BAC, getBonusTypeBac(fl, expl)),
-                    entry(Config.BONUS_MOY_GEN, getBonusMoyGen2(fl, expl))
+                    entry(Config.BONUS_TYPE_BAC, getBonusTypeBac(fl, expl))
                 )
             );
         }
@@ -370,86 +345,6 @@ public class AffinityEvaluator {
             expl.add(Explanation.getTypeBacExplanation((int) (100 * percentage), bac));
         }
         return bonus;
-    }
-
-
-    private double getBonusMoyGen2(String fl, Explanations expl) {
-        if (moyGenEstimee == null) return FULL_MATCH_MULTIPLIER;
-        val stats = algo.getStatsBac(fl, this.bac);
-        return getBonusNotes(expl, stats, moyGenEstimee);
-    }
-
-    private double getBonusNotes(
-            @Nullable Explanations expl,
-            @Nullable Pair<String, Middle50> stats,
-            double autoEval) {
-        //on va chercher les stats pour ce type de bac et cette filiere
-        if (stats == null || stats.getRight() == null) {
-            if (expl != null && cfg.isUseAutoEvalMoyGen() &&cfg.isVerbose())
-                expl.add(Explanation.getDebugExplanation("Pas de stats pour cette filiere"));
-            return FULL_MATCH_MULTIPLIER;
-        }
-        String bacUtilise = stats.getLeft();
-        Middle50 middle50 = stats.getRight();
-        if (middle50 == null) {
-            if (expl != null && cfg.isUseAutoEvalMoyGen() && cfg.isVerbose())
-                expl.add(Explanation.getDebugExplanation("Pas de middle50 pour cette filiere"));
-            return FULL_MATCH_MULTIPLIER;
-        }
-        double bonus = computeBonusNotes(stats, autoEval);
-        //affiché systématiquement
-        if (expl != null) {
-            expl.add(Explanation.getNotesExplanation(autoEval, middle50, bacUtilise));
-        }
-        return bonus;
-    }
-
-    private double computeBonusNotes(Pair<String, Middle50> stats, double autoEval) {
-        final Middle50 middle50 = stats.getRight();
-        int noteMaxInt = middle50.rangMax();
-        int note = (int) (noteMaxInt * autoEval / 40);
-        //avantage aux details plus exigeantes
-        return (0.7 * computeAdmissibiliteNotes(middle50, note, noteMaxInt)
-                + 0.3 * computeProximiteNotes(middle50, note));
-    }
-
-    private double computeAdmissibiliteNotes(Middle50 middle50, int note, int noteMaxInt) {
-        int lowestGrade = ADMISSIBILITY_LOWEST_GRADE * noteMaxInt / 20;
-        if(note <= lowestGrade) {
-            return ZERO_ADMISSIBILITY;
-        } else if(note <= middle50.rangEch10()) {
-            return ADMISSIBILITY_10 * coef(note, lowestGrade, middle50.rangEch10());
-        } else if(note <= middle50.rangEch25()) {
-            return ADMISSIBILITY_10 + (ADMISSIBILITY_25 - ADMISSIBILITY_10) * coef(note, middle50.rangEch10(), middle50.rangEch25());
-        } else if(note <= middle50.rangEch50()) {
-            return ADMISSIBILITY_25 + (ADMISSIBILITY_50 - ADMISSIBILITY_25) * coef(note, middle50.rangEch25(), middle50.rangEch75());
-        } else if(note <= middle50.rangEch75()) {
-            return ADMISSIBILITY_50 + (ADMISSIBILITY_75 - ADMISSIBILITY_50) * coef(note, middle50.rangEch25(), middle50.rangEch75());
-        } else if(note <= middle50.rangEch90()) {
-            return ADMISSIBILITY_75 + (ADMISSIBILITY_90 - ADMISSIBILITY_75) * coef(note, middle50.rangEch75(), middle50.rangEch90());
-        } else {
-            return ADMISSIBILITY_90;
-        }
-    }
-
-    private double computeProximiteNotes(Middle50 middle50, int note) {
-        if (note >= middle50.rangEch90()) {
-            return 0.0;
-        } else if (note < middle50.rangEch10()) {
-            return 0.0;
-        } else if(note >= middle50.rangEch25() && note <= middle50.rangEch75()) {
-            return 1.0;
-        } else if(note <= middle50.rangEch25()) {
-            return coef(note, middle50.rangEch10(), middle50.rangEch25());
-        } else {
-            return coef(note, middle50.rangEch75(), middle50.rangEch25());
-        }
-    }
-
-    private double coef(int note, int zero, int one) {
-        if(one == zero) return 0.5;
-        double result =  ((double) (note - zero) ) / ((double) (one - zero));
-        return Math.max(0.0, Math.min(1.0, result));
     }
 
     protected double getBonusGeographicAffinity(String fl, Explanations expl) {
