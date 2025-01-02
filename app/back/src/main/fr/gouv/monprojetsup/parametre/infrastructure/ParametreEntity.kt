@@ -10,7 +10,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "parametre")
-class ParametreEntity() {
+class ParametreEntity {
     @Id
     @Enumerated(EnumType.STRING)
     @Column(name = "id", nullable = false)

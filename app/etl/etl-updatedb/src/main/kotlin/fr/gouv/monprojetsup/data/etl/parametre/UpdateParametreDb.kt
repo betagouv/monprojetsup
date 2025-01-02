@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ParametreDb :
-    JpaRepository<ParametreEntity, String> {
-}
+    JpaRepository<ParametreEntity, String>
 
 @Component
 class UpdateParametreDb(
