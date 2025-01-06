@@ -266,7 +266,7 @@ from i_cla_spe_fil_cnd_ins ci, a_rec_grp arg
 where
 --autorisation d'inscription
 i_ci_flg_int = 0
---pour des séries de classes pro
+--pour des filières pro
 AND i_cl_cod in ('P','PA')
 and ci.g_ti_cod=arg.g_ti_cod
 --les cnd inscription sont sur une CPGE
@@ -285,7 +285,7 @@ from i_cla_spe_fil_cnd_ins ci, a_rec_grp arg
 where
 --autorisation d'inscription
 i_ci_flg_int = 0
---pour des séries de classes pro
+--pour des filières pro
 AND i_cl_cod in ('P','PA')
 and ci.g_ti_cod=arg.g_ti_cod
 --les cnd inscription sont sur une CPGE
@@ -295,8 +295,8 @@ AND exists (
            where sp_g_tri_ins.g_ti_cod = ci.g_ti_cod
            and g_tf_cod = 1
            )
---pas de cnd insc sur d'autres classes que les séries pro pour cette formation si tu veux des prépas exclusivement réservées aux pros
---si ça peut être ouvert à d'autres séries comme des bacs technos tu enlèves cette condition.
+--pas de cnd insc sur d'autres classes que les filières pro pour cette formation si tu veux des prépas exclusivement réservées aux pros
+--si ça peut être ouvert à d'autres filières comme des bacs technos tu enlèves cette condition.
 AND NOT EXISTS (
                select 1
                from i_cla_spe_fil_cnd_ins
