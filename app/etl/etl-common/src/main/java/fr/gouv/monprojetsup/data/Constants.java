@@ -40,7 +40,7 @@ public class Constants {
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
     public static final int MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION = 3;
     public static final int MAX_NB_LIENS_PSUP_SUR_FICHE_FORMATION = 3;
-    public static String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
+    public static final String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
 
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
     /* constant added to the las gFlCod indexes */

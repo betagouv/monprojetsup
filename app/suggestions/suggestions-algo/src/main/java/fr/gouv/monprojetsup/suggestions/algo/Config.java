@@ -134,7 +134,7 @@ public final class Config {
         return verbosityLevel >= 2;
     }
 
-    public double getDiversityMultiplicativeMalusBacGen(String bac) {
+    public double getDiversityMultiplicativeMalusBac(String bac) {
         if(bac == null || bac.isEmpty() || bac.startsWith("G") || bac.equals(TOUS_BACS_CODE_MPS)) {
             return diversityMultiplicativeMalusBacGen;
         }

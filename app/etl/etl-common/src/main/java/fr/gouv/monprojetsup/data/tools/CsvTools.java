@@ -97,7 +97,7 @@ public class CsvTools implements Closeable {
     public void appendHeaders(List<String> headers) throws IOException {
         append(headers);
     }
-    public void append(List<String> items) throws IOException {
+    public void append(List<String> items) {
         csvWriter.writeNext(items.toArray(new String[0]));
     }
 

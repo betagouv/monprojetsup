@@ -574,7 +574,7 @@ public class ConnecteurBackendSQL {
 
 
     //group bac mat
-    Map<String, Map<String, Map<String, int[] >>> percCounters = new HashMap<>();
+    final Map<String, Map<String, Map<String, int[] >>> percCounters = new HashMap<>();
 
     void incremente(String bac, String group, String matCod, double note) {
         int[] c = percCounters

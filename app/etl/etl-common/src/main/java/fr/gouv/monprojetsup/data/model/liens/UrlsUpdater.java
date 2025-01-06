@@ -225,8 +225,7 @@ public class UrlsUpdater {
     }
 
     private static String getLabel(@NotNull Map<String, String> labels, String cleanedupKey, String url) {
-        String label = labels.getOrDefault(cleanedupKey, url);
-        return label;
+        return labels.getOrDefault(cleanedupKey, url);
     }
 
     private UrlsUpdater() {}

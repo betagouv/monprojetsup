@@ -17,7 +17,7 @@ record FormationsSimilaires(
     public void add(String gFlCodOri, String gFlCodSim, int gFsSco, int iTcCod) {
         parFiliereOrigine.computeIfAbsent(gFlCodOri, z -> new FormationsSimilairesParBac())
                 .parBac().computeIfAbsent(iTcCod, z -> new HashMap<>())
-                .put(gFlCodSim, Long.valueOf(gFsSco));
+                .put(gFlCodSim, (long) gFsSco);
     }
 
     public void normalize() {

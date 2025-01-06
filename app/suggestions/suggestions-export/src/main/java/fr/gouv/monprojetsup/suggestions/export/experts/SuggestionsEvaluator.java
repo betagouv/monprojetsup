@@ -98,8 +98,6 @@ public class SuggestionsEvaluator {
                     fos.write("\n");
                     fos.write("************ EXPECTATIONS ******************\n");
                     for (String expectation : refCase.expectations()) {//Todo compute distance between expectation and details
-                        /*if(!expectation.contains("parcours coordination et gestion des établissements et services sanitaires ")
-                        || expectation.contains("apprentissage")) continue;*/
                         int rank = getRank(expectation, suggestionsRanks);
                         if (rank > 0) {
                             fos.write("OK rank " + rank + " \t" + expectation + "\n");
@@ -130,29 +128,19 @@ public class SuggestionsEvaluator {
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write(worst);
-                                /*
-                                if (stopOnFirstKO) {
-                                    stoppedBecauseOfKo = true;
-                                    break;
-                                }*/
                             }
                         }
                     }
                     fos.write("\n");
-                    if(refCase.suggestions() != null) {
-                        fos.write("************ ACTUAL SUGGESTIONS ******************\n");
-                        fos.append(refCase.suggestions().stream()
-                                .filter(s -> Constants.isFiliere(s.id()))
-                                .map(e -> getOKPrefix(refCase, e.id()) + data.getLabel(e.id()))
-                                .collect(Collectors.joining("\n", "", "\n")));
-                    }
+                    fos.write("************ ACTUAL SUGGESTIONS ******************\n");
+                    fos.append(refCase.suggestions().stream()
+                            .filter(s -> Constants.isFiliere(s.id()))
+                            .map(e -> getOKPrefix(refCase, e.id()) + data.getLabel(e.id()))
+                            .collect(Collectors.joining("\n", "", "\n")));
 
 
                 }
                 i++;
-                if(stoppedBecauseOfKo && stopOnFirstKO) {
-                    break;
-                }
             }
             fos.flush();
         }
@@ -202,10 +190,12 @@ public class SuggestionsEvaluator {
 
     static String toApprentissageExplanationString(String apprentissage) {
         if (apprentissage == null) return "Non-renseigné";
-        if (apprentissage.equals("A")) return "Indifférent";
-        if (apprentissage.equals("B")) return "Indifférent";
-        if (apprentissage.equals("C")) return "Peu intéressé";
-        return apprentissage;
+        return switch (apprentissage) {
+            case "A" -> "Indifférent";
+            case "B" -> "Indifférent";
+            case "C" -> "Peu intéressé";
+            default -> apprentissage;
+        };
     }
 
 

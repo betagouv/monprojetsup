@@ -27,11 +27,7 @@ public final class Edges {
     }
 
     public Edges(Map<String, Collection<String>> medges, double weight, boolean reverse) {
-        medges.forEach((s, strings) -> {
-            strings.forEach(s1 -> {
-                this.put(s, s1, reverse, weight);
-            });
-        });
+        medges.forEach((s, strings) -> strings.forEach(s1 -> this.put(s, s1, reverse, weight)));
     }
 
     public void put(String a, Collection<String> bs) {
@@ -120,7 +116,7 @@ public final class Edges {
     }
 
     /**
-     * @param node
+     * @param node the node to compute the in degree
      * @return the number of edges going to node
      */
     private int inDegree(String node) {
@@ -131,9 +127,9 @@ public final class Edges {
     /**
      * add some edges with initial weight
      *
-     * @param o
-     * @param reverse
-     * @param weight
+     * @param o the edges to add
+     * @param reverse if true, add the reverse edges
+     * @param weight the weight to apply to the edges
      */
     public void putAll(@Nullable Edges o, boolean reverse, double weight) {
         if (o != null) putAll(o.edges(), reverse, weight);
@@ -234,11 +230,10 @@ public final class Edges {
             String label = globalDict.get(k);
             if (label == null) label = k;
             String finalKey = label;
-            m.entrySet().forEach(e -> {
-                String s = e.getKey();
+            m.forEach((s, value) -> {
                 String val = globalDict.get(s);
                 if (val == null) val = s;
-                put(finalKey, val, false, e.getValue());
+                put(finalKey, val, false, value);
             });
         });
 
@@ -247,8 +242,8 @@ public final class Edges {
     /**
      * the specifics inherit from the generics
      *
-     * @param specificToGeneric
-     * @param coef
+     * @param specificToGeneric the map of specific to generic
+     * @param coef the coefficient to apply to the weights
      */
     public void addEdgesFromMoreGenericItem(Map<String, String> specificToGeneric, double coef) {
 
@@ -263,11 +258,6 @@ public final class Edges {
                 backEdges.forEach((origin, weight) -> put(origin, specific, false, weight * coef));
             }
         });
-        /*
-        Set<String> toErase = specificToGeneric.entrySet().stream().filter(e -> !e.getValue().equals(e.getKey()))
-                .map(e -> e.getKey())
-                .collect(Collectors.toSet());
-                */
     }
 
     public void addTransitiveClosure(String theme, Set<String> transitiveClosureOfTheme) {

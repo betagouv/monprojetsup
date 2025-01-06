@@ -36,7 +36,7 @@ public class SuggestionsGenerator {
     private static final boolean ONLY_FORMATIONS = true;
 
     @Value("${profils.experts.mps.path}")
-    private String profilsExpertPath = "profilsExperts.json";
+    private final String profilsExpertPath = "profilsExperts.json";
 
 
 
