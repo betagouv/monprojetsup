@@ -69,9 +69,7 @@ public class Formations  implements Serializable {
 
 
     public void ajouterSiInconnu(Formations o) {
-        o.formations.forEach((key, value) -> {
-                this.formations.putIfAbsent(key, value);
-        });
+        o.formations.forEach(this.formations::putIfAbsent);
         o.filieres.forEach(this.filieres::putIfAbsent);
         o.typesMacros.forEach(this.typesMacros::putIfAbsent);
         _groupesToFilieres.clear();

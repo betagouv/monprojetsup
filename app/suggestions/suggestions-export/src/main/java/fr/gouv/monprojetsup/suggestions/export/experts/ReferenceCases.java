@@ -171,7 +171,7 @@ public record ReferenceCases(
     }
 
 
-    public static Logger LOGGER = Logger.getLogger(ReferenceCases.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(ReferenceCases.class.getName());
 
 
     public static ReferenceCases loadFromFile(String filename) throws IOException {

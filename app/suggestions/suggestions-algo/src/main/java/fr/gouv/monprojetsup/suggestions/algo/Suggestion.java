@@ -34,7 +34,7 @@ public record Suggestion(
 
     public String humanReadable(Map<String,String> labels) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t" + labels.getOrDefault(id, id));
+        sb.append("\t").append(labels.getOrDefault(id, id));
         sb.append(lineSeparator());
         sb.append(lineSeparator());
         if(expl != null) {

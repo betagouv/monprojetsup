@@ -40,9 +40,8 @@ public class Serialisation {
     }
 
     public static InputStream getRemoteFile(String urlString, String dataDir) throws IOException, InterruptedException {
-        String dirName = dataDir;
         int i = urlString.lastIndexOf('/') + 1;
-        String cacheName = dirName + "/" + urlString.substring(i);
+        String cacheName = dataDir + "/" + urlString.substring(i);
         if (dataDir != null && Files.exists(Path.of(cacheName))) {
             LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
             return new FileInputStream(cacheName);
@@ -56,13 +55,13 @@ public class Serialisation {
                 .header("Content-Type", "application/json")
                 .GET() // or use .POST(), .PUT(), etc.
                 .build();
-        HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = HttpClient.newHttpClient();
         HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
         if (response.statusCode() == HTTP_OK) {
             val stream = response.body();
             if (dataDir != null) {
                 LOGGER.warning("Sauvegarde de " + urlString + " dans le cache " + cacheName);
-                if(!Files.exists(Path.of(dirName))) Files.createDirectories(Path.of(dirName));
+                if (!Files.exists(Path.of(dataDir))) Files.createDirectories(Path.of(dataDir));
                 try (OutputStream out = new FileOutputStream(cacheName)) {
                     stream.transferTo(out);
                 }

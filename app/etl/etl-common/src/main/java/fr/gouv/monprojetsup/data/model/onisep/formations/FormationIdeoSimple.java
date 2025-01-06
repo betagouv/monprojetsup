@@ -89,6 +89,7 @@ public record FormationIdeoSimple(
         );
     }
 
+    @SuppressWarnings("ExtractMethodRecommender")
     public List<String> getMotsCles() {
         List<String> result = new ArrayList<>();
         if (codeNsf != null) result.add("codeNsf" + codeNsf);

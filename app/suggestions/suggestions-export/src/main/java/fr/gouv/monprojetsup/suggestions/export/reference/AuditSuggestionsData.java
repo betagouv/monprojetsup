@@ -89,15 +89,6 @@ public class AuditSuggestionsData {
 
         outputMetiersDiagnostics();
 
-        /*
-        outputRelatedToHealth();
-
-        outputGraph();
-
-        outputSemanticGraph();
-
-        outputMetiersSansFormations();
-        */
     }
 
     private void outputMetiersDiagnostics() throws IOException {
