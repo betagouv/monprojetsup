@@ -41,7 +41,7 @@ public record Path(
 
     @Override
     public String toString() {
-        return nodes.stream().collect(Collectors.joining(" -- ")) + " [sc" + (int) (10000 * weight) + "]";
+        return String.join(" -- ", nodes) + " [sc" + (int) (10000 * weight) + "]";
     }
 
     public String toString(Map<String, String> keyToLabel) {

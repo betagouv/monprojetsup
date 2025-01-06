@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.algo;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.LatLng;
 import fr.gouv.monprojetsup.data.model.Ville;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -68,7 +67,7 @@ public class AlgoSuggestions {
     /* les formations en apprentissage */
     private Set<String> apprentissage;
     /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
-    protected Set<String> las;
+    protected final Set<String> las;
     /* la médiane du nombre d'action de formation dans une formation, permet de définir beaucoup d'offre ou peu d'offre */
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
@@ -244,7 +243,7 @@ public class AlgoSuggestions {
         @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> result = new ArrayList<>();
 
         val config = data.getConfig();
-        val diversityMultiplicativeMalus = config.getDiversityMultiplicativeMalusBacGen(pf.bac());
+        val diversityMultiplicativeMalus = config.getDiversityMultiplicativeMalusBac(pf.bac());
 
         while(!affinities.isEmpty()) {
             int nb = result.size() + 1;
@@ -438,11 +437,6 @@ public class AlgoSuggestions {
     private final ConcurrentHashMap<Pair<String,String>, @Nullable Integer> nbAdmis = new ConcurrentHashMap<>();
     public @Nullable Integer getNbAdmis(String grp, String bac) {
         return nbAdmis.computeIfAbsent(Pair.of(grp, bac), z -> data.getNbAdmis(grp, bac));
-    }
-
-    private final ConcurrentHashMap<Pair<String,String>, Pair<String, Middle50>> statsBac = new ConcurrentHashMap<>();
-    public @Nullable Pair<String, Middle50> getStatsBac(String fl, String bac) {
-        return statsBac.computeIfAbsent(Pair.of(fl, bac), z -> data.getStatsBac(fl, bac));
     }
 
     private final ConcurrentHashMap<String, @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>>> voeuxCoords = new ConcurrentHashMap<>();

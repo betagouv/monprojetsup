@@ -27,7 +27,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
 		<kotlin.code.style>official</kotlin.code.style>
-		<test.excluded.groups></test.excluded.groups>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -1,7 +1,10 @@
 package fr.gouv.monprojetsup.data.formationmetier.entity
 
-import jakarta.persistence.*
-import java.io.Serializable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "ref_join_formation_metier")

@@ -12,6 +12,6 @@ public abstract class MySuggService<T,U> extends MyService<T,U> {
        super();
     }
 
-    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
+    protected abstract @NotNull U handleRequest(@NotNull T req);
 
 }

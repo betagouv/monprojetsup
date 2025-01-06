@@ -13,7 +13,7 @@ public abstract class MyService<T,U> {
 
     private static final Logger logger = LoggerFactory.getLogger(MyService.class);
 
-    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
+    protected abstract @NotNull U handleRequest(@NotNull T req);
 
     public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
         try {

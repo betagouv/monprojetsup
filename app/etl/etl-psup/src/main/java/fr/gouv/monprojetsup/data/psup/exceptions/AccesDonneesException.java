@@ -22,8 +22,6 @@ package fr.gouv.monprojetsup.data.psup.exceptions;
 
 public class AccesDonneesException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
     public AccesDonneesException(AccesDonneesExceptionMessage exceptionMessage, Object... arguments) {
         super(String.format(exceptionMessage.getMessage(), arguments));
     }

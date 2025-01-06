@@ -31,7 +31,7 @@ import java.util.Set;
          * ""information-communication, audiovisuel/communication| commerce, marketing, vente/marketing, vente"
          *
          * @param domaines    the field to extract keys from
-         * @param domainesPro
+         * @param sousDomainesWeb the map of all domaines
          * @return the keys
          */
         public static Set<SousDomaineWeb> extractDomaines(@NotNull String domaines, Map<String, SousDomaineWeb> sousDomainesWeb) {

@@ -3,19 +3,23 @@ package fr.gouv.monprojetsup.data.psup;
 import fr.gouv.monprojetsup.data.model.psup.Filiere;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage;
-import fr.gouv.monprojetsup.data.psup.exceptions.VerificationException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.TYPE_FORMATION;
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.psup.Scores.cleanAndSplit;
 import static fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 
@@ -46,7 +50,7 @@ public class ConnecteurJsonCarteSQL {
             recuperationDesFilieres(entree);
             recuperationDomainesOnisep(entree);
             recuperationFormationsTagguees(entree, config);
-        } catch (SQLException | VerificationException ex) {
+        } catch (SQLException ex) {
             throw new AccesDonneesException(AccesDonneesExceptionMessage.MESSAGE, ex,  String.format(ex.getMessage()), ex);
         }
         return entree;
@@ -55,7 +59,7 @@ public class ConnecteurJsonCarteSQL {
     public static final String G_TA_COD = "g_ta_cod";
     public static final String G_TF_MOT_CLE_MDR = "g_tf_mot_cle_mdr";
 
-    public void recuperationDomainesOnisep(AlgoCarteEntree entree) throws VerificationException, SQLException {
+    public void recuperationDomainesOnisep(AlgoCarteEntree entree) throws SQLException {
 
         try (Statement stmt = connection.createStatement()) {
             LOGGER.info("Récupération des secteursActivite onisep v2");

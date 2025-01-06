@@ -10,7 +10,7 @@ public class DataSources {
 
     /* the directory containing the data */
     @Value("${dataRootDirectory}")
-    private String dataRootDirectory = "./";
+    private final String dataRootDirectory = "./";
 
     /* Psup data */
     public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";

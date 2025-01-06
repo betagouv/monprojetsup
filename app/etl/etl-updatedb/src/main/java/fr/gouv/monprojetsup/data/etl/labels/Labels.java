@@ -106,15 +106,9 @@ public class Labels {
     public static Map<String, String> getLabelsOriginauxPsup(@NotNull PsupData psupData) {
         val result = new HashMap<String, String>();
 
-        psupData.formations().formations.forEach((key, formation) -> {
-            result.put(gTaCodToMpsId(key), formation.libelle);
-        });
-        psupData.filieres().forEach((key, filiere) -> {
-            result.put(Constants.gFlCodToMpsId(key), filiere.libelle);
-        });
-        psupData.formations().typesMacros.forEach((key, libelle) -> {
-            result.put(gFrCodToMpsId(key), libelle);
-        });
+        psupData.formations().formations.forEach((key, formation) -> result.put(gTaCodToMpsId(key), formation.libelle));
+        psupData.filieres().forEach((key, filiere) -> result.put(Constants.gFlCodToMpsId(key), filiere.libelle));
+        psupData.formations().typesMacros.forEach((key, libelle) -> result.put(gFrCodToMpsId(key), libelle));
 
         return result;
 
