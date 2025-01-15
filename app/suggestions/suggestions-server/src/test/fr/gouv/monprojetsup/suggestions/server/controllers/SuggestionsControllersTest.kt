@@ -78,7 +78,7 @@ class SuggestionsControllersTest(
             testFile.file.bufferedReader().use { reader ->
                 val gsonBuilder = GsonBuilder()
                 gsonBuilder.registerTypeAdapter(ImmutablePair::class.java, ImmutablePairDeserializer())
-                return gsonBuilder.create().fromJson<List<SuggestionsScenario>>(reader, type)
+                return gsonBuilder.create().fromJson(reader, type)
             }
         }
     }
