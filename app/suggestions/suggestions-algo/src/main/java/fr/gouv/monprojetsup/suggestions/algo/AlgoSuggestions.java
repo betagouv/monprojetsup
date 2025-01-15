@@ -200,22 +200,12 @@ public class AlgoSuggestions {
                                 fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
                         ));
 
-        //computing maximal score for etalonnage
+        //scaling scores with respect to maximal score
         double maxScore = affinites.values().stream().mapToDouble(Affinite::affinite).max().orElse(1.0);
-
         if (maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
-
-        pf.suggRejected().forEach(suggestionDTO -> {
-            String fl = suggestionDTO.id();
-            if (affinites.containsKey(fl)) {
-                affinites.put(fl, Affinite.getNoMatch());
-            }
-        });
-
-
-        //rounding to 6 digits
         double finalMaxScore = maxScore;
-        affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
+        affinites.entrySet().forEach(e -> e.setValue(Affinite.scale(e.getValue(), finalMaxScore)));
+
         return affinites.entrySet().stream()
                 .map(Pair::of)
                 .toList();

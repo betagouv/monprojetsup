@@ -157,7 +157,6 @@ public class AffinityEvaluator {
      * @return affinity
      */
     public Affinite getAffinityEvaluation(String fl, boolean inclureDetailsScores) {
-        if (rejected.contains(fl)) return Affinite.getNoMatch();
         return getAffinityAndExplanations(fl, null, null, inclureDetailsScores);
     }
 
@@ -188,14 +187,15 @@ public class AffinityEvaluator {
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
         //en verbose mode, on récupère également les interests
-        TreeMap<String, Double> subScores = cfg.isVerbose() ? new TreeMap<>() : null;
+        boolean includeScores = cfg.isVerbose();
+        TreeMap<String, Double> subScores = includeScores ? new TreeMap<>() : null;
 
         var sortedExpl = new Explanations();
 
         //the computation
-        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, true);
+        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, includeScores);
 
-        if (cfg.isVerbose() && subScores != null) {
+        if (includeScores) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
 
             //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
@@ -248,7 +248,7 @@ public class AffinityEvaluator {
             boolean includeScores
             ) {
 
-         if(rejected.contains(fl)) return Affinite.getNoMatch();
+        if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
 
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
         if (algo.isLas(fl) && !isInterestedinHealth) {
@@ -301,6 +301,8 @@ public class AffinityEvaluator {
         EnumMap<Affinite.SuggestionQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionQuota.class);
         double notSmallDiversity = getNotSmallDiversityScore(fl);
         quotas.put(Affinite.SuggestionQuota.OFFRE_FORMATION, notSmallDiversity);
+
+        if(rejected.contains(fl)) score = NO_MATCH_SCORE;
 
         return new Affinite(score, includeScores ? scores : Map.of(), quotas);
     }
