@@ -43,6 +43,10 @@ public record Affinite(
         return result;
     }
 
+    public Affinite setNoMatchScore() {
+        return new Affinite(NO_MATCH_SCORE, scoresAdequationProfil, scoresDiversiteResultats);
+    }
+
     public enum SuggestionQuota {
         OFFRE_FORMATION,
         PEU_CONNUE
@@ -60,17 +64,17 @@ public record Affinite(
         return new Affinite(NO_MATCH_SCORE, Map.of(), new EnumMap<>(SuggestionQuota.class));
     }
 
-    public static Affinite round(Affinite aff, double finalMaxScore) {
-        double newAffinite = roundScore(aff.affinite, finalMaxScore);
+    public static Affinite scale(Affinite aff, double finalMaxScore) {
+        double newAffinite = scaleScore(aff.affinite, finalMaxScore);
         Map<String,Double> newScoresAdequationProfil = aff.scoresAdequationProfil.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> roundScore(e.getValue(), FULL_MATCH_MULTIPLIER)
+                        e -> scaleScore(e.getValue(), FULL_MATCH_MULTIPLIER)
                 ));
         return new Affinite(newAffinite, newScoresAdequationProfil, aff.scoresDiversiteResultats);
     }
 
-    private static double roundScore(double affinite, double finalMaxScore) {
+    private static double scaleScore(double affinite, double finalMaxScore) {
         return Math.max(0.0, Math.min(1.0, affinite / finalMaxScore));
     }
 
