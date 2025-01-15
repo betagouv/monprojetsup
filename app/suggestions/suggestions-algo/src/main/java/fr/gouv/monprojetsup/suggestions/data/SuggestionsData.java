@@ -84,12 +84,22 @@ public class SuggestionsData {
 
     @Scheduled(fixedDelay = 1000) // Every second
     private void refreshConfig() {
-        // Fetch the latest config from a database, external service, or file
-        val activeConfig = configPort.retrieveActiveConfig();
-        if(activeConfig != null) {
-            this.config = activeConfig;
+        synchronized (this) {
+            // Fetch the latest config from a database, external service, or file
+            val activeConfig = configPort.retrieveActiveConfig();
+            if (activeConfig != null && activeConfig.isViable()) {
+                this.config = activeConfig;
+            }
         }
     }
+
+    public void setConfig(@NotNull Config config) {
+        synchronized (this) {
+            this.config = config;
+            configPort.setActiveConfig(config);
+        }
+    }
+
 
     public @NotNull String getLabel(@NotNull String key) {
         return labelsPort.retrieveLabel(key).orElse(key);
@@ -271,4 +281,5 @@ public class SuggestionsData {
     public void saveAlgoEdges(@NotNull Map<String, Set<String>> edges) {
         edgesPort.setAlgoEdges(edges.entrySet().stream().flatMap(e -> e.getValue().stream().map(dst -> new Edge(e.getKey(),dst))).toList());
     }
+
 }

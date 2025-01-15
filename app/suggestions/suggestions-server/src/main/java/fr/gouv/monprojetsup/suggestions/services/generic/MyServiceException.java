@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.server;
+package fr.gouv.monprojetsup.suggestions.services.generic;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

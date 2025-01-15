@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.services;
 
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
-import fr.gouv.monprojetsup.suggestions.server.MySuggService;
+import fr.gouv.monprojetsup.suggestions.services.generic.MySuggService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

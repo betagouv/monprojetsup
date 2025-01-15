@@ -28,3 +28,15 @@ La Bdd doit avoir été initialisée avec l'etl.
 - Tapez ```mvn -DskipTests=true clean compile install```
 - Lancer le serveur avec ```mvn clean compile -f./suggestions-server exec:java -DskipTests=true -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.server.ApplicationSuggestionsKt```
 
+### Modifier la configuration de l'algorithme de génération des suggestions personnalisées
+La configuration des suggestions est stockée dans la table `sugg_config`.
+Les modifications de cette table sont prises en compte en temps réel par le serveur de suggestions, à 1Hz.
+
+Une autre possibilité est d'utiliser le service `SetSuggestionsConfigService`.
+PAr défaut, ce service est désactivé,
+car son usage doit être restreint aux configurations de développement.
+Il est activable en ajoutant la propriété suivante dans le fichier `secrets.properties`:
+```
+mps.suggestions.dynamic_parameter_service.enabled=true
+```
+L'appel à ce service modifie également la configuration des suggestions stockées dans la table `sugg_config`.

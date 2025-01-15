@@ -209,7 +209,7 @@ public class AffinityEvaluator {
             entries.sort(Comparator.comparing(e -> -e.getValue()));
             entries.forEach(e -> {
                 val key = e.getKey();
-                double weight = cfg.minMultipliers().get(key);
+                double weight = cfg.getMinMultipliers().get(key);
                 val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
                 expl2.add(Explanation.getDebugExplanation(
                         label
@@ -322,7 +322,7 @@ public class AffinityEvaluator {
 
 
     private double getMultiplier(String key, Double value) {
-        val minMultiplier = cfg.minMultipliers().get(key);
+        val minMultiplier = cfg.getMinMultipliers().get(key);
         if (minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;

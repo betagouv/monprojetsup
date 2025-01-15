@@ -6,9 +6,9 @@ import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.val;
@@ -260,12 +260,12 @@ public class AlgoSuggestions {
             //on sélectionne les 10 prochains candidats
             val shortListStream = candidates.stream()
                     .filter(a -> nbQuotasSatisfied.getOrDefault(a.getLeft(), 0) >= maxNbQuotasSatisfied)
-                    .limit(config.DiversityShortListLength)
+                    .limit(config.diversityShortListLength)
                     ;
 
             //on calcule la fréquence d'occurence de chaque type de formation dans les 10 derniers résultats
             val typeFormationsCounters =
-                    result.stream().skip(Math.max(0, result.size() - config.DiversityShortListLength))
+                    result.stream().skip(Math.max(0, result.size() - config.diversityShortListLength))
                             .map(Pair::getLeft)
                             .collect(Collectors.groupingBy(typesFormations::get, Collectors.counting()));
 
@@ -468,5 +468,14 @@ public class AlgoSuggestions {
             formations.forEach(s -> result.computeIfAbsent(s, z -> new ArrayList<>()).add(v));
         });
         return result;
+    }
+
+    public Config setParameters(@NotNull Config config) {
+        data.setConfig(config);
+        return data.getConfig();
+    }
+
+    public Config getConfig() {
+        return data.getConfig();
     }
 }

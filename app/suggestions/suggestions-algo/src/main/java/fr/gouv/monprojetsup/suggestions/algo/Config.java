@@ -42,7 +42,7 @@ public final class Config {
 
     @Getter
     @Setter
-    public long DiversityShortListLength = 10L;
+    public long diversityShortListLength = 10L;
 
     @Getter
     @Setter
@@ -59,7 +59,21 @@ public final class Config {
     @Getter
     @Setter
     private int verbosityLevel = 0;
-    
+
+    @Getter
+    @Setter
+    private Map<String, Double> minMultipliers = new HashMap<>(Map.ofEntries(
+            entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
+            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),
+            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),
+            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),
+            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
+            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
+            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
+            entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
+            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
+    ));
+
     public static final String BONUS_APPRENTISSAGE = "app";
     public static final String BONUS_TAGS = "tags";
     public static final String BONUS_SIM = "sim";
@@ -96,28 +110,11 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
 
-    @JsonIgnore
-    private final transient Map<String, Double> minMultipliers = new HashMap<>(Map.ofEntries(
-            entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
-            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),
-            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),
-            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),
-            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
-            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
-            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
-            entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
-            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
-    ));
+
     @JsonIgnore
     private final transient List<String> personalCriteria = new ArrayList<>(
             List.of(BONUS_TAGS, BONUS_SIM, BONUS_VOEU_FAVORI)
     );
-
-
-    @JsonIgnore
-    public Map<String, Double> minMultipliers() {
-        return minMultipliers;
-    }
 
     @JsonIgnore
     public List<String> personalCriteria() {
@@ -142,5 +139,10 @@ public final class Config {
             return diversityMultiplicativeMalusBacPro;
         }
         return diversityMultiplicativeMalusBacTechno;
+    }
+
+    @JsonIgnore
+    public boolean isViable() {
+        return minMultipliers != null && !minMultipliers.isEmpty();
     }
 }
