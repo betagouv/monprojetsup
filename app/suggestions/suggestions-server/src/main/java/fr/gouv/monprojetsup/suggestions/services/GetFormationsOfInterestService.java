@@ -5,7 +5,7 @@ import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
-import fr.gouv.monprojetsup.suggestions.server.MySuggService;
+import fr.gouv.monprojetsup.suggestions.services.generic.MySuggService;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
