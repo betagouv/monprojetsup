@@ -23,15 +23,13 @@ public record ProfileDTO(
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier (code insee ou nom)", example = "[\"33514\",\"Nantes\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier (code insee)", example = "[\"33514\",\"44001\"]"))
         Set<String> geo_pref,
-        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "spécialités (eds ou spécialités de bac) de terminale choisis ou envisagés", example = "[\"sp757\",\"mat5\"]"))
         Set<String> spe_classes,
         @ArraySchema(arraySchema = @Schema(name = "interests", description = "domaines et intérêts", example = "[\"ci1\",\"ci2\",\"ci3\",\"dom1\", \"dom2\", \"dom3\"]"))
         List<String> interests,
-        @Schema(description = "moyenne générale scolaire estimée en terminale, sur 40", example = "28")
-        String moygen,
-        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux, métiers et secteurs d'activité"))
+        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux et métiers", example = "[\"fl11\",\"fr1\",\"MET.154\",\"ta45761\"]"))
         List<ChoiceDTO> choix,
         @Schema(description = "statut de réflexion 0/1/2", example = "0")
         String statut

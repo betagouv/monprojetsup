@@ -86,8 +86,7 @@ public record ReferenceCases(
                 sep + "duree: '" + pf.duree() + "'\n" +
                 sep + "apprentissage: '" + SuggestionsEvaluator.toApprentissageExplanationString(pf.apprentissage()) + "'\n" +
                 sep + "geo_pref: " + pf.geo_pref() + "'\n" +
-                sep + "spe_classes: " + pf.spe_classes() + "'\n" +
-                sep + "moyenne générale auto-évaluée: '" + pf.moygen() + "'\n";
+                sep + "spe_classes: " + pf.spe_classes();
     }
 
     public void toFile(String refCasesWithSuggestions) throws IOException {
