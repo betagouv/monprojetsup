@@ -240,12 +240,12 @@ class UpdateFormationDbs(
      }
 
 
-    fun isTestProfileActive(): Boolean {
-        return environment.activeProfiles.contains("test")
+    fun isTestSuggestionsProfileActive(): Boolean {
+        return environment.activeProfiles.contains("test_suggestions")
     }
 
     fun updateVillesVoeuxDb() {
-        val onlyParis20 = isTestProfileActive()
+        val onlyParis20 = isTestSuggestionsProfileActive()
 
         val cities = mpsDataPort.getCities()
             .sortedBy { it.nom }
