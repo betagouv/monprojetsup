@@ -241,7 +241,7 @@ class UpdateFormationDbs(
 
 
     fun isTestSuggestionsProfileActive(): Boolean {
-        return environment.activeProfiles.contains("test_suggestions")
+        return environment.activeProfiles.contains("test")
     }
 
     fun updateVillesVoeuxDb() {
