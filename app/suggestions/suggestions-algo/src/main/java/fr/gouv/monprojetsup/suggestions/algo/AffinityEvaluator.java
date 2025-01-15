@@ -157,7 +157,6 @@ public class AffinityEvaluator {
      * @return affinity
      */
     public Affinite getAffinityEvaluation(String fl, boolean inclureDetailsScores) {
-        if (rejected.contains(fl)) return Affinite.getNoMatch();
         return getAffinityAndExplanations(fl, null, null, inclureDetailsScores);
     }
 
@@ -188,14 +187,15 @@ public class AffinityEvaluator {
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
         //en verbose mode, on récupère également les interests
-        TreeMap<String, Double> subScores = cfg.isVerbose() ? new TreeMap<>() : null;
+        boolean includeScores = cfg.isVerbose();
+        TreeMap<String, Double> subScores = includeScores ? new TreeMap<>() : null;
 
         var sortedExpl = new Explanations();
 
         //the computation
-        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, true);
+        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, includeScores);
 
-        if (cfg.isVerbose() && subScores != null) {
+        if (includeScores) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
 
             //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
@@ -209,7 +209,7 @@ public class AffinityEvaluator {
             entries.sort(Comparator.comparing(e -> -e.getValue()));
             entries.forEach(e -> {
                 val key = e.getKey();
-                double weight = cfg.minMultipliers().get(key);
+                double weight = cfg.getMinMultipliers().get(key);
                 val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
                 expl2.add(Explanation.getDebugExplanation(
                         label
@@ -248,7 +248,7 @@ public class AffinityEvaluator {
             boolean includeScores
             ) {
 
-         if(rejected.contains(fl)) return Affinite.getNoMatch();
+        if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
 
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
         if (algo.isLas(fl) && !isInterestedinHealth) {
@@ -302,6 +302,8 @@ public class AffinityEvaluator {
         double notSmallDiversity = getNotSmallDiversityScore(fl);
         quotas.put(Affinite.SuggestionQuota.OFFRE_FORMATION, notSmallDiversity);
 
+        if(rejected.contains(fl)) score = NO_MATCH_SCORE;
+
         return new Affinite(score, includeScores ? scores : Map.of(), quotas);
     }
 
@@ -320,7 +322,7 @@ public class AffinityEvaluator {
 
 
     private double getMultiplier(String key, Double value) {
-        val minMultiplier = cfg.minMultipliers().get(key);
+        val minMultiplier = cfg.getMinMultipliers().get(key);
         if (minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;

@@ -69,7 +69,7 @@ export const localeFR = {
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
     ONGLET_FORMATION: "La formation",
-    ONGLET_DÉTAILS: "Plus de détails",
+    ONGLET_DÉTAILS: "En général",
     ONGLET_CRITÈRES: "Critères d’admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l’année dernière",
@@ -299,7 +299,7 @@ export const localeFR = {
             LABEL: "Pas du tout intéressé(e)",
           },
           indifferent: {
-            LABEL: "Indifférent(e)",
+            LABEL: "Indifférent(e) / je ne sais pas",
           },
           interesse: {
             LABEL: "Intéressé(e)",

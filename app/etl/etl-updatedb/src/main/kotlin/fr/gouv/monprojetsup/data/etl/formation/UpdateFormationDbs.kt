@@ -15,6 +15,7 @@ import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.tools.GeodeticDistance
+import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -56,7 +57,9 @@ class UpdateFormationDbs(
     private val voeuxDb: VoeuxDb,
     private val formationDb: FormationDb,
     private val formationVoeuxDb: FormationVoeuDb,
-    private val parametreDb: UpdateParametreDb
+    private val parametreDb: UpdateParametreDb,
+    private val environment: Environment
+
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
@@ -237,9 +240,16 @@ class UpdateFormationDbs(
      }
 
 
+    fun isTestSuggestionsProfileActive(): Boolean {
+        return environment.activeProfiles.contains("test")
+    }
+
     fun updateVillesVoeuxDb() {
+        val onlyParis20 = isTestSuggestionsProfileActive()
+
         val cities = mpsDataPort.getCities()
             .sortedBy { it.nom }
+            .filter { !onlyParis20 || it.codeInsee == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }
             .associateBy { it.codeInsee }
             .values
 
