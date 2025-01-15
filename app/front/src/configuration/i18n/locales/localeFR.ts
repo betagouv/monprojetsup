@@ -299,7 +299,7 @@ export const localeFR = {
             LABEL: "Pas du tout intéressé(e)",
           },
           indifferent: {
-            LABEL: "Indifférent(e)",
+            LABEL: "Indifférent(e) / je ne sais pas",
           },
           interesse: {
             LABEL: "Intéressé(e)",
