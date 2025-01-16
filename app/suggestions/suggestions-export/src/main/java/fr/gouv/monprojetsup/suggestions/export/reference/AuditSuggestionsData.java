@@ -57,6 +57,7 @@ public class AuditSuggestionsData {
         this.metiers = metiersDb.findAll().stream().map(MetierEntity::getId).collect(Collectors.toSet());
         this.interets = interetsDb.findAll().stream().map(InteretSousCategorieEntity::getId).collect(Collectors.toSet());
         this.formations = formationDb.findAll().stream()
+                .filter(f -> !f.getObsolete())
                 .collect(Collectors.toMap(
                         FormationEntity::getId,
                         f -> f
