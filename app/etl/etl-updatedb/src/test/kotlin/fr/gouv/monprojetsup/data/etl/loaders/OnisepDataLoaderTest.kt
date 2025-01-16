@@ -91,6 +91,11 @@ class OnisepDataLoaderTest {
     }
 
     @Test
+    fun `l'ancien BTS Diététique n'apparaît plus dans le graphe`() {
+        assertThat(onisepData.edgesFormationsDomaines).noneMatch { it.left == Constants.gFlCodToMpsId(TestData.BTS_DIETETIQUE_FL_COD_PSUP_OLD) }
+    }
+
+    @Test
     fun `Il y a suffisament arètes formations métiers`() {
         assertThat(onisepData.edgesMetiersFormations).hasSizeGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_FORMATIONS_METIERS)
     }
