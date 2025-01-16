@@ -32,6 +32,10 @@ class TestData {
         const val BTS_AERONAUTIQUE_FL_COD_PSUP: Int = 393
         const val BTS_AERONAUTIQUE_IDEO_COD: String = "FOR.9627"
 
+        const val BTS_DIETETIQUE_IDEO_COD_OLD: String = "FOR.262"
+        const val BTS_DIETETIQUE_IDEO_COD: String = "FOR.10892"
+        const val BTS_DIETETIQUE_FL_COD_PSUP: Int = 10443
+
         const val CMI_SVT_FL_COD_PSUP: Int = 4039
         const val CMI_SVT_IDEO_COD: String = "FOR.4980"
 
