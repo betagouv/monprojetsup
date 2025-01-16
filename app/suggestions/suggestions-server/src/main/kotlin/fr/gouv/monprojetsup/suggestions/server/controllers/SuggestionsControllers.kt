@@ -31,16 +31,11 @@ import org.springframework.web.bind.annotation.RestController
     """)
 @OpenAPIDefinition(
     info = Info(title = "MonProjetSup API", version = "1.2"),
-    //servers = [ Server(url = "https://monprojetsup.fr/"), Server(url = "http://localhost:8004/") ]
 )
-
-
 class SuggestionsControllers(
     private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
-    private val setSuggestionsConfigService: SetSuggestionsConfigService,
-    private val getSuggestionsConfigService: GetSuggestionsConfigService
 ) {
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/$SUGGESTIONS_ENDPOINT")
@@ -69,17 +64,30 @@ class SuggestionsControllers(
     @GetMapping("/ping")
     fun getPong(): String = getSuggestionsService.checkHealth()
 
+}
+
+@RestController
+@RequestMapping(BASE_PATH)
+@Tag(name = "API Configuration Suggestions MonProjetSup",
+    description = """
+       API de configuration des suggestions.                    
+    """)
+@ConditionalOnProperty(name = ["mps.suggestions.dynamic_parameter_service.enabled"], havingValue = "true", matchIfMissing = false)
+class SuggestionsConfigControllers(
+    private val setSuggestionsConfigService: SetSuggestionsConfigService,
+    private val getSuggestionsConfigService: GetSuggestionsConfigService
+) {
+
     @Operation(summary = "Récupère la configuration courante de l'algorithme de suggestions")
     @GetMapping("/getConfig")
     fun getSuggestionsConfig(): GetSuggestionsConfigServiceDTO.Response =
         getSuggestionsConfigService.handleRequestAndExceptions(GetSuggestionsConfigServiceDTO.Request())
 
-    @ConditionalOnProperty(name = ["mps.suggestions.dynamic_parameter_service.enabled"], havingValue = "true")
     @Operation(summary = "Change la configuration de l'algorithme de suggestions")
     @PostMapping("/setConfig")
     fun setSuggestionsConfig(@RequestBody request: SetSuggestionsConfigServiceDTO.Request): SetSuggestionsConfigServiceDTO.Response =
         setSuggestionsConfigService.handleRequestAndExceptions(request)
-    
+
 }
 
 
