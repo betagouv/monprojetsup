@@ -78,7 +78,8 @@ public record PsupData(
     public static final String C_JUR_ADM = "C_JUR_ADM";
     public static final String A_REC_GRP = "A_REC_GRP";
 
-    public PsupData() {
+    //for Jackson deserialisation
+    private PsupData() {
         this(
                 new HashSet<>(),
                 new FormationsSimilaires(),
@@ -91,7 +92,25 @@ public record PsupData(
                 new HashMap<>(),
                 new TreeMap<>(),
                 new TagsSources(),
-                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(),
+                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(0),
+                new ArrayList<>()
+        );
+    }
+
+    public PsupData(int annee) {
+        this(
+                new HashSet<>(),
+                new FormationsSimilaires(),
+                new DureesEtudes(),
+                new Formations(),
+                new HashMap<>(),
+                new HashSet<>(),
+                new ArrayList<>(),
+                new DescriptifsFormations(),
+                new HashMap<>(),
+                new TreeMap<>(),
+                new TagsSources(),
+                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(annee),
                 new ArrayList<>()
         );
     }

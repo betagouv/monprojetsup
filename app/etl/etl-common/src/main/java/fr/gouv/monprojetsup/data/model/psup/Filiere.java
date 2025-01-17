@@ -48,9 +48,7 @@ public record Filiere (
         /* code identifiant la filière san,s apprentissage dans la base */
         int cleFiliere,
 
-        Set<String> motsClesParcoursup,
-
-        Set<String> motsClesOnisepv2
+        Set<String> motsClesParcoursup
 
         ) implements Serializable {
 
@@ -62,7 +60,7 @@ public record Filiere (
                    int cle, int cleFiliere,
                    boolean apprentissage,
                    boolean isLas) {
-        this(libelle, sigle, cle, apprentissage, isLas, cleFiliere, new HashSet<>() , new HashSet<>());
+        this(libelle, sigle, cle, apprentissage, isLas, cleFiliere, new HashSet<>());
         motsClesParcoursup.add(libelle);
         motsClesParcoursup.add(sigle);
         motsClesParcoursup.addAll(Arrays.asList(sigle.replace('/', ' ').replace('-', ' ').split(" ")));
@@ -70,7 +68,7 @@ public record Filiere (
 
     //used by Jackson
     private Filiere() {
-        this("", "", 0, false, false, 0, new HashSet<>() , new HashSet<>());
+        this("", "", 0, false, false, 0, new HashSet<>());
     }
 
     @Override
