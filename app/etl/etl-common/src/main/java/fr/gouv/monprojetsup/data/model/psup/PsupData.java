@@ -126,7 +126,7 @@ public record PsupData(
         return new ArrayList<>(filieres.values());
     }
     public Collection<Integer> getLasFlCodes() {
-        return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
+        return filieres.values().stream().filter(Filiere::isLas).map(Filiere::cle).toList();
     }
 
     public AdmissionStats buildStats() {
@@ -231,12 +231,12 @@ public record PsupData(
     @Nullable
     public Integer getDuree(@NotNull Filiere filiere) {
 
-        var gFrLib = filiere.libelle;
-        var gFrSig = filiere.sigle;
+        var gFrLib = filiere.libelle();
+        var gFrSig = filiere.sigle();
 
         var filierePsup = formations.filieres.getOrDefault(
-                filiere.cle,
-                formations.filieres.get(filiere.cleFiliere)
+                filiere.cle(),
+                formations.filieres.get(filiere.cleFiliere())
         );
         if(filierePsup != null) {
             val gFrCod = filierePsup.gFrCod();
@@ -245,8 +245,8 @@ public record PsupData(
             }
         }
         return DureesEtudes.getDuree(
-                filiere.cle,
-                filiere.libelle,
+                filiere.cle(),
+                filiere.libelle(),
                 gFrLib,
                 gFrSig
                 );
@@ -275,13 +275,13 @@ public record PsupData(
         this.filieres.putAll(filieres);
         //liste de mots-clés filtrée (pas les villes et les chaines établissement et onisep en entier)
         filieres.values().forEach(filiere -> {
-            if (filActives.contains(filiere.cle)) {
+            if (filActives.contains(filiere.cle())) {
                 //nomsFilieres est initialisé avec les noms de filières de v_car
                 // il n'y a pas tout
                 // typiquement il manque les LAS qui sont récupérés via la carte
-                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle());
                 if(!this.nomsFilieres.containsKey(idfiliere)) {
-                    this.nomsFilieres.put(idfiliere, filiere.libelle);
+                    this.nomsFilieres.put(idfiliere, filiere.libelle());
                 }
             }
         });
