@@ -91,6 +91,11 @@ class MpsDataFromFiles(
             Path.of(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME)),
             PsupData::class.java
         )
+        val psupStats = Serialisation.fromLargeZippedJson(
+            Path.of(dataSources.getSourceDataFilePath(DataSources.STATS_PSUP_DATA_FILENAME)),
+            PsupStatistiques::class.java
+        )
+        psupData.inject(psupStats)
         psupData.initDurees()
         statistiques = psupData.buildStats()
 
