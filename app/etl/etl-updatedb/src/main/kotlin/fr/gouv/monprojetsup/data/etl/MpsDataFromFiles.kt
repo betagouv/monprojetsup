@@ -86,7 +86,7 @@ class MpsDataFromFiles(
     private fun load() {
         logger.info("Chargement de " + dataSources.getSourceDataFilePath(
             DataSources.BACK_PSUP_DATA_FILENAME))
-        psupData = Serialisation.fromZippedJson(
+        psupData = Serialisation.fromLargeZippedJson(
             dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
             PsupData::class.java
         )
