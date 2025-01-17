@@ -70,17 +70,37 @@ class DefaultRunner : CommandLineRunner {
 				)
 
 			logger.info("Récupération des données backend autres que les stats")
-			val data = conn.recupererData(specialites.eds.keys)
+			val psupData = conn.recupererData(specialites.eds.keys)
 
 			logger.info("Export du backend data au format json  ")
+			val fullBackDataFilename = getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME)
+			val statsFilename = getSourceDataFilePath(PSUP_STATS_FILENAME)
+			val backDataFilename = getSourceDataFilePath(BACK_PSUP_DATA_FILENAME)
+
 			Serialisation.toZippedJson(
-				getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME),
-				data,
+				fullBackDataFilename,
+				psupData,
+				true
+			)
+
+			logger.info("Export des stats au format json  ")
+			Serialisation.toZippedJson(
+				statsFilename,
+				psupData.stats,
+				true
+			)
+
+			logger.info("Minimisation des données")
+			psupData.keepOnlyBackData();
+
+			logger.info("Export des données back au format json  ")
+			Serialisation.toZippedJson(
+				backDataFilename,
+				psupData,
 				true
 			)
 
 		}
-
 
 	}
 
@@ -121,7 +141,8 @@ class SplitRunner : CommandLineRunner {
 			true
 		)
 
-		psupData.stats.clear()
+		logger.info("Minimisation des données")
+		psupData.keepOnlyBackData();
 
 		logger.info("Export des données back au format json  ")
 		Serialisation.toZippedJson(
@@ -132,6 +153,7 @@ class SplitRunner : CommandLineRunner {
 
 
 	}
+
 
 	fun getSourceDataFilePath(filename: String): String {
 		val path = Path.of(dataRootDirectory, filename)
