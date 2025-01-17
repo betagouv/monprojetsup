@@ -146,10 +146,6 @@ public class Serialisation {
         return fromJsonFile(Path.of(path), type);
     }
 
-    public static <T> @NotNull T fromZippedJson(String path, Class<T> type) throws IOException {
-        return fromZippedJson(Path.of(path), type);
-    }
-
     public static <T> @NotNull T fromZippedJson(Path path, Class<T> type) throws IOException {
         try (BufferedInputStream s = new BufferedInputStream(
                 Files.newInputStream(path))

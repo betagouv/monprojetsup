@@ -64,6 +64,7 @@ import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
+import java.nio.file.Path
 import java.util.*
 import java.util.logging.Logger
 
@@ -87,7 +88,7 @@ class MpsDataFromFiles(
         logger.info("Chargement de " + dataSources.getSourceDataFilePath(
             DataSources.BACK_PSUP_DATA_FILENAME))
         psupData = Serialisation.fromLargeZippedJson(
-            dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
+            Path.of(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME)),
             PsupData::class.java
         )
         psupData.initDurees()
