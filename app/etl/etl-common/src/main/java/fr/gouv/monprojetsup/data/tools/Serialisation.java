@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -146,7 +147,7 @@ public class Serialisation {
             ZipInputStream zip = new ZipInputStream(s);
             ZipEntry entry = zip.getNextEntry();
             if (entry == null) throw new RuntimeException("No data in " + path);
-            try (BufferedReader r = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
+            try (JsonReader r = new JsonReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
                 return new Gson().fromJson(r, type);
             }
         }
