@@ -30,45 +30,47 @@ import java.util.Set;
     Une filière de Parcoursup.
     Exemple: "DUT - Production/Mesures physiques"
  */
-public class Filiere implements Serializable {
+public record Filiere (
+        /* libellé (champ gFlLib en base). */
+        String libelle,
+
+        /* sigle */
+        String sigle,
+
+        /* code unique identifiant uniquement la filière dans la base */
+        int cle,
+
+        /* deux versions pour certaines filières: avec ou sans apprentissage */
+        boolean apprentissage,
+
+        boolean isLas,
+
+        /* code identifiant la filière san,s apprentissage dans la base */
+        int cleFiliere,
+
+        Set<String> motsClesParcoursup,
+
+        Set<String> motsClesOnisepv2
+
+        ) implements Serializable {
 
     public static final int MIN_LENGTH_FOR_FIL_KEYWORD = 3;
 
-    /* libellé (champ gFlLib en base). */
-    public final String libelle;
-
-    /* sigle */
-    public final String sigle;
-
-    /* code unique identifiant uniquement la filière dans la base */
-    public final int cle;
-
-    /* deux versions pour certaines filières: avec ou sans apprentissage */
-    public final boolean apprentissage;
-
-    public final boolean isLas;
-
-    /* code identifiant la filière san,s apprentissage dans la base */
-    public final int cleFiliere;
-
-    public final Set<String> motsClesParcoursup = new HashSet<>();
-
-    public final Set<String> motsClesOnisepv2 = new HashSet<>();
 
     public Filiere(String libelle,
                    String sigle,
                    int cle, int cleFiliere,
                    boolean apprentissage,
                    boolean isLas) {
-        this.libelle = libelle;
-        this.sigle = sigle;
-        this.cle = cle;
-        this.cleFiliere = cleFiliere;
-        this.apprentissage = apprentissage;
-        this.isLas = isLas;
+        this(libelle, sigle, cle, apprentissage, isLas, cleFiliere, new HashSet<>() , new HashSet<>());
         motsClesParcoursup.add(libelle);
         motsClesParcoursup.add(sigle);
         motsClesParcoursup.addAll(Arrays.asList(sigle.replace('/', ' ').replace('-', ' ').split(" ")));
+    }
+
+    //used by Jackson
+    private Filiere() {
+        this("", "", 0, false, false, 0, new HashSet<>() , new HashSet<>());
     }
 
     @Override
@@ -84,4 +86,5 @@ public class Filiere implements Serializable {
     public void addMotCles(List<String> chain) {
         chain.forEach(this::addMotCle);
     }
+
 }

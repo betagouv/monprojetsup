@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.tools;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -161,6 +162,7 @@ public class Serialisation {
 
     public static <T> @NotNull T fromLargeZippedJson(Path path, Class<T> type) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try (BufferedInputStream s = new BufferedInputStream(
                 Files.newInputStream(path))
         ) {
