@@ -13,7 +13,8 @@ public class DataSources {
     private String dataRootDirectory = "./";
 
     /* Psup data */
-    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";
+    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBackNoStats.zip";
+    public static final String STATS_PSUP_DATA_FILENAME = "parcoursup/psupStats.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
 
     /* Ideo data */

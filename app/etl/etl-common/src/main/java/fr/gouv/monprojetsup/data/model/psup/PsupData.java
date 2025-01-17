@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParGroupe;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import lombok.val;
@@ -79,6 +80,7 @@ public record PsupData(
     public static final String A_REC_GRP = "A_REC_GRP";
 
     //for Jackson deserialisation
+    @SuppressWarnings("unused")
     private PsupData() {
         this(
                 new HashSet<>(),
@@ -167,20 +169,6 @@ public record PsupData(
         );
     }
 
-
-    public Map<String, String> getGtaToMpsIdMapping() {
-        val gtaToFl = formations.formations.values().stream()
-                .collect(Collectors.toMap(
-                        f -> gTaCodToMpsId(f.gTaCod),
-                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
-                ));
-        val psupKeyToMpsKey = getPsupKeyToMpsKey();
-        return gtaToFl.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
-                ));
-    }
 
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
         return getRecoScoGeneriques(gFlCod, "PREM");
@@ -770,4 +758,7 @@ public record PsupData(
         return result;
     }
 
+    public void inject(@NotNull PsupStatistiques psupStats) {
+        this.stats.set(psupStats);
+    }
 }

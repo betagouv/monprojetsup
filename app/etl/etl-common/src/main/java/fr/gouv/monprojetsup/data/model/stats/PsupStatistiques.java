@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,8 +19,15 @@ public record PsupStatistiques(
         int annee,
 
         /* fréquences cumulées et middle 50 par voeu (ta***) par bac par matière */
-        StatistiquesAdmisParGroupe statsAdmis
+        StatistiquesAdmisParGroupe statsAdmis,
+
+        List<Integer> anneeCopy
 ) implements Serializable {
+
+    public PsupStatistiques {
+        anneeCopy = new ArrayList<>();
+        if(annee != 0) anneeCopy.add(annee);
+    }
 
     public static final int MIN_POPULATION_SIZE_FOR_STATS = 10;
     public static final int SIM_FIL_MAX_WEIGHT = 100000;
@@ -45,17 +54,19 @@ public record PsupStatistiques(
     }
 
     public int getAnnee() {
-        if(annee == 0) throw new IllegalStateException("annee non initialisée");
+        if(annee == 0 && (anneeCopy == null || anneeCopy.isEmpty())) throw new IllegalStateException("annee non initialisée");
+        if(anneeCopy != null && !anneeCopy.isEmpty()) return anneeCopy.get(0);
         return this.annee;
     }
 
     //for jackson deserialization
     private PsupStatistiques() {
-        this(0, new StatistiquesAdmisParGroupe());
+        this(0, new StatistiquesAdmisParGroupe(), null);
     }
 
+
     public PsupStatistiques(int annee) {
-        this(annee, new StatistiquesAdmisParGroupe());
+        this(annee, new StatistiquesAdmisParGroupe(), null);
     }
 
     //trading cpu for memory
@@ -87,4 +98,14 @@ public record PsupStatistiques(
         return result;
     }
 
+    public void clear() {
+        statsAdmis.clear();
+    }
+
+    public void set(@NotNull PsupStatistiques psupStats) {
+        anneeCopy.clear();
+        anneeCopy.add(psupStats.getAnnee());
+        statsAdmis.clear();
+        statsAdmis.parGroupe().putAll(psupStats.statsAdmis.parGroupe());
+    }
 }
