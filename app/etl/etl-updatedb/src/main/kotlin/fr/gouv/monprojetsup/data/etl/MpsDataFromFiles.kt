@@ -335,30 +335,38 @@ class MpsDataFromFiles(
     private fun exportResumesManquants() {
         val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
 
+        val mpsIds = getFormationsMpsIds()
+        val labels = getDebugLabels()
+
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumes.csv").use { csv ->
             val headers = listOf(
                 "code filiere",
                 "intitulé web",
                 "code type formation",
-                "intitule type formation,",
+                "intitule type formation",
                 "url onisep",
                 "url psup",
                 "resume type formation",
-                "resume filiere",
-                "Retours à Onisep"
+                "resume filiere"
             )
             csv.appendHeaders(headers)
             val codesFilieres = mutableSetOf<String>()
             for (line in lines) {
-                val nextLine = mutableListOf<String>()
-                codesFilieres.add(line["code filiere"].orEmpty())
-                for (header in headers) {
-                    nextLine.add(line[header].orEmpty())
+                val codeFiliere = line["code filiere"].orEmpty()
+                val label = labels.getOrDefault(codeFiliere, "")
+                line["intitulé web"] = label
+                if(mpsIds.contains(codeFiliere)) {
+                    val nextLine = mutableListOf<String>()
+                    codesFilieres.add(codeFiliere)
+                    for (header in headers) {
+                        nextLine.add(line[header].orEmpty())
+                    }
+                    csv.append(nextLine)
                 }
-                csv.append(nextLine)
             }
+
             val las = getLasToGenericIdMapping().keys
-            val missingCodesExceptLas = getFormationsMpsIds().filter { it !in codesFilieres && it !in las }
+            val missingCodesExceptLas = mpsIds.filter { it !in codesFilieres && it !in las }
 
             val labels = getLabels()
             val liens = getLiens()
@@ -383,7 +391,6 @@ class MpsDataFromFiles(
                     liensPsup,//url psup
                     "",//resume type formation
                     "",//resume filiere
-                    ""
                 )
                 csv.append(nextLine)
             }
@@ -397,7 +404,6 @@ class MpsDataFromFiles(
                 CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
                 "",//resume type formation
                 "",//resume filiere
-                "",
                 ""
             )
             csv.append(nextLineLas)
