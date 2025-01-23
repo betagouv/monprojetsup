@@ -1,16 +1,22 @@
 import { type Élève, VoeuÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
+import { AnalyticsRepository } from "@/services/analytics/analytics.interface";
 
 export class MettreÀJourVoeuxÉlèveUseCase {
-  public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
+  public constructor(
+    private readonly _élèveRepository: ÉlèveRepository,
+    private readonly _analytics: AnalyticsRepository,
+  ) {}
 
   public async run(élève: Élève, idsVoeuxÀModifier: VoeuÉlève["id"][]): Promise<Élève | Error> {
     const voeux = new Map(élève.voeuxFavoris?.map((voeu) => [voeu.id, voeu]));
 
     for (const idVoeu of idsVoeuxÀModifier) {
       if (voeux.has(idVoeu)) {
+        this._analytics.envoyerÉvènement("Voeux favoris", "Supprimer", idVoeu);
         voeux.delete(idVoeu);
       } else {
+        this._analytics.envoyerÉvènement("Voeux favoris", "Ajouter", idVoeu);
         voeux.set(idVoeu, { id: idVoeu, estParcoursup: false });
       }
     }
