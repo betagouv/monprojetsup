@@ -18,10 +18,8 @@ import java.util.Map;
 
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_FORMATION;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_FORMATION_MOS;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_KEY;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_TYPE_FORMATION;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_TYPE_FORMATION_MOS;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
@@ -73,9 +71,6 @@ public class DescriptifsLoader {
         val lines = CsvTools.readCSV(
                 sources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),
                 ',');
-        String keyFlFr;
-        String keyDescFormation = RESUMES_MPS_RESUME_TYPE_FORMATION;
-        String keyDescFiliere = RESUMES_MPS_RESUME_FORMATION;
         String keyTypeFor = "code type formation";
 
         Map<String, String> resumesTypesformations = new HashMap<>();
@@ -86,13 +81,10 @@ public class DescriptifsLoader {
         for (val line : lines) {
             val frCod = line.get(keyTypeFor);
             val descFormation = line.get(RESUMES_MPS_RESUME_TYPE_FORMATION);
-            val descFormationMos = line.get(RESUMES_MPS_RESUME_TYPE_FORMATION_MOS);
-            if(descFormation == null || descFormationMos == null) {
+            if(descFormation == null) {
                 throw new RuntimeException("No description for " + frCod);
             }
-            if (!frCod.isBlank() && !descFormationMos.isBlank()) {
-                resumesTypesformations.put(frCod, descFormationMos.trim());
-            } else if (!frCod.isBlank() && !descFormation.isBlank()) {
+            if (!frCod.isBlank() && !descFormation.isBlank()) {
                 resumesTypesformations.put(frCod, descFormation.trim());
             }
         }
@@ -110,10 +102,7 @@ public class DescriptifsLoader {
             String frcod = line.getOrDefault(keyTypeFor, "");
 
             String descForm = resumesTypesformations.getOrDefault(frcod, "");
-            String descFiliere = line.get(RESUMES_MPS_RESUME_FORMATION_MOS).trim();
-            if(descFiliere.isBlank()) {
-                descFiliere = line.get(RESUMES_MPS_RESUME_FORMATION).trim();
-            }
+            String descFiliere = line.get(RESUMES_MPS_RESUME_FORMATION).trim();
 
             var descriptif = descriptifs.keyToDescriptifs().computeIfAbsent(flfrcod, z -> new DescriptifFormation(line));
             if (descriptif.getMultiUrls() == null) descriptif.setMultiUrls(new HashSet<>());

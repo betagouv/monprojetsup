@@ -23,6 +23,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -597,7 +599,8 @@ public class OnisepDataLoader {
                         .filter(FormationIdeoSimple::estFormationDuSup)
                         .collect(Collectors.toMap(
                                 FormationIdeoSimple::identifiant,
-                                FormationIdeoDuSup::new
+                                FormationIdeoDuSup::new,
+                                (oldValue, newValue) -> newValue
                         ))
         );
 
@@ -728,8 +731,9 @@ public class OnisepDataLoader {
                 .filter(f -> f.identifiant() != null)
                 .flatMap(
                         f ->
-                                oldIdeoToNewIdeo.getOrDefault(f.identifiant(), Set.of(Objects.requireNonNull(f.identifiant())))
-                                        .stream().map(newId -> FormationIdeoSimple.setId(f, newId))
+                                oldIdeoToNewIdeo.getOrDefault(f.identifiant(),
+                                                Set.of(Objects.requireNonNull(f.identifiant()))).stream()
+                                                .map(newId -> FormationIdeoSimple.setId(f, newId))
                 ).toList();
     }
 
@@ -816,15 +820,23 @@ public class OnisepDataLoader {
             String heritier,
             Set<String> formationsIdeoDuSup
     ) throws IOException {
+        val unknownCorrespondance = correspondance.entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(f -> Pair.of(e.getKey(), f))
+                        .filter(p -> !formationsIdeoDuSup.contains(p.getLeft()) || !formationsIdeoDuSup.contains(p.getRight())))
+                .collect(Collectors.groupingBy(Pair::getLeft, Collectors.mapping(Pair::getRight, Collectors.toSet())));
+
+        if(unknownCorrespondance.isEmpty()) {
+            Files.deleteIfExists(Paths.get(DIAGNOSTICS_OUTPUT_DIR + filename));
+            return;
+        }
         try (val csv = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + filename)) {
-            if(correspondance.isEmpty()) return;
             val headers = List.of(
                     "code " + legataire,
                     "code " + heritier,
                     "code inconnu"
             );
             csv.appendHeaders(headers);
-            correspondance.forEach((master, licences) -> {
+            unknownCorrespondance.forEach((master, licences) -> {
                 if (!formationsIdeoDuSup.contains(master)) {
                     csv.append(List.of(master, String.join(";", licences), master));
                 }

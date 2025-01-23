@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,7 +47,6 @@ public class ConnecteurJsonCarteSQL {
 
         try {
             recuperationDesFilieres(entree);
-            recuperationDomainesOnisep(entree);
             recuperationFormationsTagguees(entree, config);
         } catch (SQLException ex) {
             throw new AccesDonneesException(AccesDonneesExceptionMessage.MESSAGE, ex,  String.format(ex.getMessage()), ex);
@@ -59,33 +57,6 @@ public class ConnecteurJsonCarteSQL {
     public static final String G_TA_COD = "g_ta_cod";
     public static final String G_TF_MOT_CLE_MDR = "g_tf_mot_cle_mdr";
 
-    public void recuperationDomainesOnisep(AlgoCarteEntree entree) throws SQLException {
-
-        try (Statement stmt = connection.createStatement()) {
-            LOGGER.info("Récupération des secteursActivite onisep v2");
-            stmt.setFetchSize(1_000_000);
-            String sql = SELECT +
-                    "g_fl_cod,g_io_met,g_io_dis,g_io_sdm " +
-                    FROM + " g_fil_mot_cle_oni2 oni ";
-
-            LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gFlCod = result.getInt(1);
-                    String metiers = result.getString(2);
-                    String disciplines = result.getString(3);
-                    String sousdomaines = result.getString(4);
-                    Filiere filiere = entree.filieres.get(gFlCod);
-                    if (filiere != null) {
-                        if(metiers != null) Arrays.stream(metiers.split("/")).map(String::trim).forEach(filiere.motsClesOnisepv2::add);
-                        if(disciplines != null) Arrays.stream(disciplines.split(";")).map(String::trim).forEach(filiere.motsClesOnisepv2::add);
-                        if(sousdomaines != null) Arrays.stream(sousdomaines.split(";")).map(String::trim).forEach(filiere.motsClesOnisepv2::add);
-                    }
-                }
-            }
-        }
-    }
-
     public void recuperationFormationsTagguees(AlgoCarteEntree entree, AlgoCarteConfig config) throws AccesDonneesException {
 
         /* L'ensemble des correspondances g_ta_cod/g_tf_cod
@@ -95,11 +66,11 @@ public class ConnecteurJsonCarteSQL {
         LOGGER.info("Chargement des correspondances des types de formations");
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_ta_cod,g_tf_cod from mps_sp_g_tri_aff_typ_for";
+            String sql = "select g_ta_cod,g_tf_cod " + FROM + " mps_sp_g_tri_aff_typ_for";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    int gTaCod = rs.getInt("g_ta_cod");
+                    int gTaCod = rs.getInt(G_TA_COD);
                     int gTfCod = rs.getInt("g_tf_cod");
                     correspondancesTypesFormation
                             .computeIfAbsent(gTaCod, k -> new HashSet<>())
@@ -115,11 +86,11 @@ public class ConnecteurJsonCarteSQL {
         LOGGER.info("Chargement des type de formations");
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_tf_cod, g_tf_mot_cle_mdr from mps_v_typ_for";
+            String sql = "select g_tf_cod, g_tf_mot_cle_mdr "+ FROM + " mps_v_typ_for";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    motsClestypeFormation.put(rs.getInt("g_tf_cod"), rs.getString("g_tf_mot_cle_mdr"));
+                    motsClestypeFormation.put(rs.getInt("g_tf_cod"), rs.getString(G_TF_MOT_CLE_MDR));
                 }
             }
         } catch (SQLException ex) {
@@ -171,7 +142,7 @@ public class ConnecteurJsonCarteSQL {
                     "f_getInfoRegionMDR(e.g_rg_cod, e.g_rg_lib) " + "f_get_info_region_mdr" + "\n" +
                     "\n" +
                     "\n" +
-                    "from\n" +
+                     FROM +
                     "mps_G_FOR fr,\n" +
                     "mps_G_FIL fl,\n" +
                     "mps_aff aff,\n" +
@@ -206,7 +177,7 @@ public class ConnecteurJsonCarteSQL {
                     for (Map.Entry<String, String> entry : config.fieldToSourceType.entrySet()) {
                         String fieldName = entry.getKey();
                         String sourceType = entry.getValue();
-                        if(fieldName.equals("f_get_mots_cles_filiere_onisep_mdr") && config.noOnisep) {
+                        if (fieldName.equals("f_get_mots_cles_filiere_onisep_mdr") && config.noOnisep) {
                             continue;
                         }
                         /* le champ G_TF_MOT_CLE_MDR est traité plus bas,
@@ -219,18 +190,12 @@ public class ConnecteurJsonCarteSQL {
                                 if (chain != null) {
                                     f.donnees.put(fieldName, chain);
                                     if (fil != null
-                                            && (
-                                                    sourceType.equals(FILIERE)
-                                                            || sourceType.equals(TYPE_FORMATION)
-                                                            || fieldName.equalsIgnoreCase("langues_l1_formation_mdr"))
-                                    ) {
-                                        //au niveau filiere on ne recupere les mots cles de mentions que si
-                                        //c'est un LAS
-                                        if(!fieldName.equals("f_get_mots_cles_mentions") || isLAS) {
-                                            boolean split =  !config.noSplitMode || fieldName.startsWith("f_") || fieldName.equals("langues_l1_formation_mdr");
-                                            fil.addMotCles(cleanAndSplit(chain, ignoredWords, split));
-                                        }
+                                            && (sourceType.equals(FILIERE) || sourceType.equals(TYPE_FORMATION) || fieldName.equalsIgnoreCase("langues_l1_formation_mdr"))
+                                            && (!fieldName.equals("f_get_mots_cles_mentions") || isLAS)) {
+                                        boolean split = !config.noSplitMode || fieldName.startsWith("f_") || fieldName.equals("langues_l1_formation_mdr");
+                                        fil.addMotCles(cleanAndSplit(chain, ignoredWords, split));
                                     }
+
                                 }
                             }
                         } catch (Exception e) {
@@ -277,7 +242,7 @@ public class ConnecteurJsonCarteSQL {
                     + "fil.gFlCod, "
                     + "NVL(fil.G_FL_COD_FI,fil.gFlCod), "
                     + "fil.G_FL_FLG_APP "
-                    + " FROM mps_G_FIL fil";
+                    + FROM + " mps_G_FIL fil";
 
             LOGGER.info(sql);
 
@@ -303,7 +268,7 @@ public class ConnecteurJsonCarteSQL {
                     //id du groupe de classement
                     + "distinct G_FL_LIB_aff, "
                     + "G_FL_COD_aff "
-                    + " FROM mps_aff where NVL(G_TA_FLG_FOR_LAS,0)=1";
+                    + FROM + " mps_aff where NVL(G_TA_FLG_FOR_LAS,0)=1";
 
             LOGGER.info(sql);
 
@@ -314,7 +279,7 @@ public class ConnecteurJsonCarteSQL {
                     Filiere f = entree.filieres.get(gFlCod);
                     if (f != null) {
                         int newGFlCod = LAS_CONSTANT + gFlCod;
-                        Filiere filiere = new Filiere(gFlLib, f.sigle, newGFlCod, gFlCod, false, true);
+                        Filiere filiere = new Filiere(gFlLib, f.sigle(), newGFlCod, gFlCod, false, true);
                         entree.filieres.put(newGFlCod, filiere);
                     }
                 }

@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run lint command
-        run: mvn ktlint:check
+        run: mvn ktlint:check --no-transfer-progress
 
   tests:
     name: Tests
@@ -65,10 +65,10 @@ jobs:
         run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
 
       - name: Install etl-common dependency
-        run: mvn -f ../etl/pom.xml clean compile install -DskipTests=true
+        run: mvn -f ../etl/pom.xml clean compile install -DskipTests=true --no-transfer-progress
 
       - name: Initialize test db with reference data
-        run: mvn clean compile -f../etl/etl-updatedb/pom.xml exec:java -Dspring.profiles.active=test_suggestions -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt
+        run: mvn clean compile -f../etl/etl-updatedb/pom.xml exec:java --no-transfer-progress -Dspring.profiles.active=test_suggestions -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt 
         env:
           DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
           DB_USER: ${{ env.APP_DB_USERNAME }}
@@ -76,7 +76,7 @@ jobs:
           MPS_DATA_DIR: ${{ runner.temp }}/mps_data/
   
       - name: Run test command
-        run: JAVA_OPTS="-Xms8g -Xmx8g" mvn test
+        run: MAVEN_OPTS="-Xmx2g -Xms512m" mvn test --no-transfer-progress
         env:
           DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
           DB_USER: ${{ env.APP_DB_USERNAME }}

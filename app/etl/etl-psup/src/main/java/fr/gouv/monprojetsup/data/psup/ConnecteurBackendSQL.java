@@ -127,9 +127,10 @@ public class ConnecteurBackendSQL {
     }
 
     public PsupData recupererData(@NotNull Set<Integer> eds) throws Exception {
-        PsupData data = new PsupData();
 
-        recupererAnnee(data);
+        int annee = recupererAnnee();
+        PsupData data = new PsupData(annee);
+
 
         recupererLas(data);
 
@@ -192,7 +193,7 @@ public class ConnecteurBackendSQL {
         return bacs;
     }
 
-    private void recupererAnnee(PsupData data) throws SQLException {
+    private int recupererAnnee() throws SQLException {
         //mps_annee
         try (Statement stmt = this.conn.createStatement()) {
 
@@ -203,7 +204,7 @@ public class ConnecteurBackendSQL {
             try (ResultSet result = stmt.executeQuery(sql)) {
                 if (result.next()) {
                     Date date = result.getDate(1);
-                    data.stats().setAnnee(date.toLocalDate().getYear());
+                    return date.toLocalDate().getYear();
                 } else {
                     throw new RuntimeException("Echec de la récupération de l'année");
                 }
@@ -547,10 +548,10 @@ public class ConnecteurBackendSQL {
 
         final Map<String, Set<String>> sources = new HashMap<>();
         carte.filieres.values().forEach(filiere -> {
-            if (filActives.contains(filiere.cle)) {
+            if (filActives.contains(filiere.cle())) {
                 //une fois avec et une fois sans accents
-                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
-                String[] chunks = filiere.libelle.split("\\P{L}+");
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle());
+                String[] chunks = filiere.libelle().split("\\P{L}+");
                 for (String s : chunks) {
                     String chunk = s.toLowerCase();
                     if (chunk.length() > 2 && !chunk.matches(".*\\d.*")) {
@@ -558,7 +559,7 @@ public class ConnecteurBackendSQL {
                     }
                 }
 
-                filiere.motsClesParcoursup.forEach(m -> sources.computeIfAbsent(m.trim(), z -> new HashSet<>()).add(idfiliere));
+                filiere.motsClesParcoursup().forEach(m -> sources.computeIfAbsent(m.trim(), z -> new HashSet<>()).add(idfiliere));
             }
         });
         sources.keySet().removeIf(m -> m.matches(".*\\d.*"));//We remove numeric data

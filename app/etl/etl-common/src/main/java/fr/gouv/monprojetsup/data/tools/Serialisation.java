@@ -1,13 +1,25 @@
 package fr.gouv.monprojetsup.data.tools;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -135,10 +147,6 @@ public class Serialisation {
         return fromJsonFile(Path.of(path), type);
     }
 
-    public static <T> @NotNull T fromZippedJson(String path, Class<T> type) throws IOException {
-        return fromZippedJson(Path.of(path), type);
-    }
-
     public static <T> @NotNull T fromZippedJson(Path path, Class<T> type) throws IOException {
         try (BufferedInputStream s = new BufferedInputStream(
                 Files.newInputStream(path))
@@ -146,8 +154,23 @@ public class Serialisation {
             ZipInputStream zip = new ZipInputStream(s);
             ZipEntry entry = zip.getNextEntry();
             if (entry == null) throw new RuntimeException("No data in " + path);
-            try (BufferedReader r = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
+            try (JsonReader r = new JsonReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
                 return new Gson().fromJson(r, type);
+            }
+        }
+    }
+
+    public static <T> @NotNull T fromLargeZippedJson(Path path, Class<T> type) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try (BufferedInputStream s = new BufferedInputStream(
+                Files.newInputStream(path))
+        ) {
+            ZipInputStream zip = new ZipInputStream(s);
+            ZipEntry entry = zip.getNextEntry();
+            if (entry == null) throw new RuntimeException("No data in " + path);
+            try (InputStreamReader inputStream = new InputStreamReader(zip, StandardCharsets.UTF_8)) {
+                return mapper.readValue(inputStream, type);
             }
         }
     }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import kotlin.test.assertNotNull
 
 
 @SpringBootTest(classes = [DataSources::class] )
@@ -51,6 +52,47 @@ class OnisepDataLoaderTest {
     fun `CUPGE Eco Gestion a au moins un metier`() {
         assertThat(onisepData.edgesMetiersFormations).anyMatch { it.right == Constants.gFlCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FL_COD1) }
         assertThat(onisepData.edgesMetiersFormations).anyMatch { it.right == Constants.gFlCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FL_COD2) }
+    }
+
+    @Test
+    fun `le nouveau code de BTS Diététique est pris en compte dans Onisep Data`() {
+        val formationOld =
+            onisepData.formationsIdeo.filter { it.ideo == TestData.BTS_DIETETIQUE_IDEO_COD_OLD }.firstOrNull()
+        assertThat(formationOld).isNull()
+        val formation = onisepData.formationsIdeo.filter { it.ideo == TestData.BTS_DIETETIQUE_IDEO_COD }.firstOrNull()
+        assertThat(formation).isNotNull()
+    }
+
+    @Test
+    fun `BTS Diététique a au moins un domaine et un métier dans les données Onisep`() {
+        val formation = onisepData.formationsIdeo.filter { it.ideo == TestData.BTS_DIETETIQUE_IDEO_COD }.firstOrNull()
+        assertThat(formation).isNotNull()
+        assertNotNull(formation)
+        assertThat(formation.libellesOuClesSousdomainesWeb.isNotEmpty())
+        assertThat(formation.metiers.isNotEmpty())
+    }
+
+    @Test
+    fun `BTS Diététique est bien connecté dans la correspondance`() {
+        val correspondance = onisepData.filieresToFormationsOnisep
+        assertThat(correspondance).isNotNull()
+        assertNotNull(correspondance)
+
+        val correspondanceBTS = correspondance.filter { it.gFlCod == TestData.BTS_DIETETIQUE_FL_COD_PSUP }.firstOrNull()
+        assertThat(correspondanceBTS).isNotNull()
+        assertNotNull(correspondanceBTS)
+
+        assertThat(correspondanceBTS.ideoFormationsIds).contains(TestData.BTS_DIETETIQUE_IDEO_COD)
+    }
+
+    @Test
+    fun `BTS Diététique a au moins un domaine dans le graphe`() {
+        assertThat(onisepData.edgesFormationsDomaines).anyMatch { it.left == Constants.gFlCodToMpsId(TestData.BTS_DIETETIQUE_FL_COD_PSUP) }
+    }
+
+    @Test
+    fun `l'ancien BTS Diététique n'apparaît plus dans le graphe`() {
+        assertThat(onisepData.edgesFormationsDomaines).noneMatch { it.left == Constants.gFlCodToMpsId(TestData.BTS_DIETETIQUE_FL_COD_PSUP_OLD) }
     }
 
     @Test

@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParGroupe;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import lombok.val;
@@ -75,10 +76,14 @@ public record PsupData(
         ) {
     public static final String C_JA_COD = "C_JA_COD";
     public static final String G_TA_COD = "G_TA_COD";
-    public static final String C_JUR_ADM = "C_JUR_ADM";
-    public static final String A_REC_GRP = "A_REC_GRP";
+    public static final String C_JUR_ADM = "c_jur_adm";
+    public static final String A_REC_GRP = "a_rec_grp";
+    public static final String G_FIL_ATT_CON = "g_fil_att_con";
+    public static final String MPS_BACS_SPE = "mps_bacs_spe";
 
-    public PsupData() {
+    //for Jackson deserialisation
+    @SuppressWarnings("unused")
+    private PsupData() {
         this(
                 new HashSet<>(),
                 new FormationsSimilaires(),
@@ -91,7 +96,25 @@ public record PsupData(
                 new HashMap<>(),
                 new TreeMap<>(),
                 new TagsSources(),
-                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(),
+                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(0),
+                new ArrayList<>()
+        );
+    }
+
+    public PsupData(int annee) {
+        this(
+                new HashSet<>(),
+                new FormationsSimilaires(),
+                new DureesEtudes(),
+                new Formations(),
+                new HashMap<>(),
+                new HashSet<>(),
+                new ArrayList<>(),
+                new DescriptifsFormations(),
+                new HashMap<>(),
+                new TreeMap<>(),
+                new TagsSources(),
+                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(annee),
                 new ArrayList<>()
         );
     }
@@ -126,7 +149,7 @@ public record PsupData(
         return new ArrayList<>(filieres.values());
     }
     public Collection<Integer> getLasFlCodes() {
-        return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
+        return filieres.values().stream().filter(Filiere::isLas).map(Filiere::cle).toList();
     }
 
     public AdmissionStats buildStats() {
@@ -149,20 +172,6 @@ public record PsupData(
     }
 
 
-    public Map<String, String> getGtaToMpsIdMapping() {
-        val gtaToFl = formations.formations.values().stream()
-                .collect(Collectors.toMap(
-                        f -> gTaCodToMpsId(f.gTaCod),
-                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
-                ));
-        val psupKeyToMpsKey = getPsupKeyToMpsKey();
-        return gtaToFl.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
-                ));
-    }
-
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
         return getRecoScoGeneriques(gFlCod, "PREM");
     }
@@ -172,13 +181,13 @@ public record PsupData(
     }
 
     public @Nullable String getRecoScoGeneriques(Integer gFlCod, String key) {
-        List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
+        List<Map<String, String>> dataFl = diversPsup().getOrDefault(G_FIL_ATT_CON, new ArrayList<>());
         Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString())).findAny();
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_CON_LYC_" + key)).orElse(null);
     }
 
     public @NotNull Map<Integer,String> getAttendus() {
-        return diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>()).stream()
+        return diversPsup().getOrDefault(G_FIL_ATT_CON, new ArrayList<>()).stream()
                 .map(e -> Pair.of(Integer.parseInt(e.get("G_FL_COD")), e.get("G_FL_DES_ATT")))
                 .filter(p -> p.getRight() != null)
                 .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
@@ -231,12 +240,12 @@ public record PsupData(
     @Nullable
     public Integer getDuree(@NotNull Filiere filiere) {
 
-        var gFrLib = filiere.libelle;
-        var gFrSig = filiere.sigle;
+        var gFrLib = filiere.libelle();
+        var gFrSig = filiere.sigle();
 
         var filierePsup = formations.filieres.getOrDefault(
-                filiere.cle,
-                formations.filieres.get(filiere.cleFiliere)
+                filiere.cle(),
+                formations.filieres.get(filiere.cleFiliere())
         );
         if(filierePsup != null) {
             val gFrCod = filierePsup.gFrCod();
@@ -245,8 +254,8 @@ public record PsupData(
             }
         }
         return DureesEtudes.getDuree(
-                filiere.cle,
-                filiere.libelle,
+                filiere.cle(),
+                filiere.libelle(),
                 gFrLib,
                 gFrSig
                 );
@@ -275,13 +284,13 @@ public record PsupData(
         this.filieres.putAll(filieres);
         //liste de mots-clés filtrée (pas les villes et les chaines établissement et onisep en entier)
         filieres.values().forEach(filiere -> {
-            if (filActives.contains(filiere.cle)) {
+            if (filActives.contains(filiere.cle())) {
                 //nomsFilieres est initialisé avec les noms de filières de v_car
                 // il n'y a pas tout
                 // typiquement il manque les LAS qui sont récupérés via la carte
-                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle());
                 if(!this.nomsFilieres.containsKey(idfiliere)) {
-                    this.nomsFilieres.put(idfiliere, filiere.libelle);
+                    this.nomsFilieres.put(idfiliere, filiere.libelle());
                 }
             }
         });
@@ -535,10 +544,8 @@ public record PsupData(
 
     public Map<String, GrilleAnalyse> getGrillesAnalyseCandidatures() {
 
-        val aRecGrpKey = A_REC_GRP.toLowerCase();
-        val cJurAdmKey = C_JUR_ADM.toLowerCase();
-        if (diversPsup.containsKey(aRecGrpKey) && diversPsup.containsKey(cJurAdmKey)) {
-            val arec = diversPsup.get(aRecGrpKey);
+        if (diversPsup.containsKey(A_REC_GRP) && diversPsup.containsKey(C_JUR_ADM)) {
+            val arec = diversPsup.get(A_REC_GRP);
             Map<Integer, Set<Integer>> juryToFils = new HashMap<>();
             arec.forEach(m -> {
                 if (m.containsKey(C_JA_COD) && m.containsKey(G_TA_COD)) {
@@ -557,7 +564,7 @@ public record PsupData(
 
             val corr = getPsupKeyToMpsKey();
 
-            val jurys = diversPsup.get(cJurAdmKey);
+            val jurys = diversPsup.get(C_JUR_ADM);
             Map<String, Map<String, List<Integer>>> filToPctsListe = new HashMap<>();
             jurys.forEach(m -> {
                 if (m.containsKey(C_JA_COD)) {
@@ -734,7 +741,7 @@ public record PsupData(
     @NotNull
     public Collection<@NotNull SpeBac> getSpesBacs() {
         val result = new ArrayList<@NotNull SpeBac>();
-        val mpsBacsSpe = diversPsup.get("mps_bacs_spe");
+        val mpsBacsSpe = diversPsup.get(MPS_BACS_SPE);
         if(mpsBacsSpe == null)
             throw new RuntimeException("spécialités de bac sont nulles");
         mpsBacsSpe.forEach(m -> {
@@ -751,4 +758,12 @@ public record PsupData(
         return result;
     }
 
+    public void inject(@NotNull PsupStatistiques psupStats) {
+        this.stats.set(psupStats);
+    }
+
+    public void keepOnlyBackData() {
+        stats.clear();
+        this.diversPsup.keySet().retainAll(List.of(G_FIL_ATT_CON, A_REC_GRP, C_JUR_ADM,MPS_BACS_SPE));
+    }
 }

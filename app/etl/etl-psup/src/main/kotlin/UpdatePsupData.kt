@@ -1,5 +1,9 @@
 package fr.gouv.monprojetsup.data.etl
 
+import fr.gouv.monprojetsup.data.etl.DefaultRunner.Companion.BACK_PSUP_DATA_FILENAME
+import fr.gouv.monprojetsup.data.etl.DefaultRunner.Companion.FULL_BACK_PSUP_DATA_FILENAME
+import fr.gouv.monprojetsup.data.etl.DefaultRunner.Companion.PSUP_STATS_FILENAME
+import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL
 import fr.gouv.monprojetsup.data.tools.Serialisation
@@ -28,8 +32,8 @@ open class UpdatePsupData
 
 @Component
 @Slf4j
-@Profile("!test")
-class Runner : CommandLineRunner {
+@Profile("default")
+class DefaultRunner : CommandLineRunner {
 
 
 	private val logger = LoggerFactory.getLogger(UpdatePsupData::class.java)
@@ -47,7 +51,9 @@ class Runner : CommandLineRunner {
 	lateinit var psupPassword : String
 
 	companion object {
-		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
+		const val FULL_BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
+		const val PSUP_STATS_FILENAME = "parcoursup/psupStats.zip"
+		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBackNoStats.zip"
 	}
 
 
@@ -64,17 +70,37 @@ class Runner : CommandLineRunner {
 				)
 
 			logger.info("Récupération des données backend autres que les stats")
-			val data = conn.recupererData(specialites.eds.keys)
+			val psupData = conn.recupererData(specialites.eds.keys)
 
 			logger.info("Export du backend data au format json  ")
+			val fullBackDataFilename = getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME)
+			val statsFilename = getSourceDataFilePath(PSUP_STATS_FILENAME)
+			val backDataFilename = getSourceDataFilePath(BACK_PSUP_DATA_FILENAME)
+
 			Serialisation.toZippedJson(
-				getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
-				data,
+				fullBackDataFilename,
+				psupData,
+				true
+			)
+
+			logger.info("Export des stats au format json  ")
+			Serialisation.toZippedJson(
+				statsFilename,
+				psupData.stats,
+				true
+			)
+
+			logger.info("Minimisation des données")
+			psupData.keepOnlyBackData();
+
+			logger.info("Export des données back au format json  ")
+			Serialisation.toZippedJson(
+				backDataFilename,
+				psupData,
 				true
 			)
 
 		}
-
 
 	}
 
@@ -88,7 +114,56 @@ class Runner : CommandLineRunner {
 
 
 @Component
-@Profile("test")
+@Profile("split", "!test", )
+class SplitRunner : CommandLineRunner {
+
+	private val logger = LoggerFactory.getLogger(UpdatePsupData::class.java)
+
+	@Value("\${dataRootDirectory}")
+	lateinit var dataRootDirectory : String
+
+	override fun run(vararg args: String?) {
+
+		val fullBackDataFilename = getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME)
+		val statsFilename = getSourceDataFilePath(PSUP_STATS_FILENAME)
+		val backDataFilename = getSourceDataFilePath(BACK_PSUP_DATA_FILENAME)
+
+		logger.info("Chargement de " + getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME))
+		val psupData = Serialisation.fromLargeZippedJson(
+			Path.of(fullBackDataFilename),
+			PsupData::class.java
+		)
+
+		logger.info("Export des stats au format json  ")
+		Serialisation.toZippedJson(
+			statsFilename,
+			psupData.stats,
+			true
+		)
+
+		logger.info("Minimisation des données")
+		psupData.keepOnlyBackData();
+
+		logger.info("Export des données back au format json  ")
+		Serialisation.toZippedJson(
+			backDataFilename,
+			psupData,
+			true
+		)
+
+
+	}
+
+
+	fun getSourceDataFilePath(filename: String): String {
+		val path = Path.of(dataRootDirectory, filename)
+		return path.toString()
+	}
+
+}
+
+@Component
+@Profile("test", "!split")
 class TestRunner : CommandLineRunner {
 	override fun run(vararg args: String?) {
 	}

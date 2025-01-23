@@ -107,7 +107,7 @@ public class Labels {
         val result = new HashMap<String, String>();
 
         psupData.formations().formations.forEach((key, formation) -> result.put(gTaCodToMpsId(key), formation.libelle));
-        psupData.filieres().forEach((key, filiere) -> result.put(Constants.gFlCodToMpsId(key), filiere.libelle));
+        psupData.filieres().forEach((key, filiere) -> result.put(Constants.gFlCodToMpsId(key), filiere.libelle()));
         psupData.formations().typesMacros.forEach((key, libelle) -> result.put(gFrCodToMpsId(key), libelle));
 
         return result;
