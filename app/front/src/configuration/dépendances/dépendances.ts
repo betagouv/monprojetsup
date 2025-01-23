@@ -157,11 +157,17 @@ export class Dépendances {
     );
 
     // Élève
-    this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourProfilÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourProfilÉlèveUseCase(
+      this._élèveRepository,
+      this.analyticsRepository,
+    );
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
     this.associerCompteParcourSupÉlèveUseCase = new AssocierCompteParcourSupÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);
-    this.mettreÀJourVoeuxÉlèveUseCase = new MettreÀJourVoeuxÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourVoeuxÉlèveUseCase = new MettreÀJourVoeuxÉlèveUseCase(
+      this._élèveRepository,
+      this.analyticsRepository,
+    );
     this.mettreÀJourCommunesÉlèveUseCase = new MettreÀJourCommunesÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourFormationsÉlèveUseCase = new MettreÀJourFormationsÉlèveUseCase(
       this._élèveRepository,
