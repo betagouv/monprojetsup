@@ -14,7 +14,12 @@ class TraceBDDRepository(
     private val logger: MonProjetSupLogger,
     private val clock: MonProjetSupClock,
 ) : TraceRepository {
-    override fun ajouterTrace(idEleve: String, action: String, param1: String?, param2: String?) {
+    override fun ajouterTrace(
+        idEleve: String,
+        action: String,
+        param1: String?,
+        param2: String?,
+    ) {
         val entity =
             TraceEntity(
                 idEleve = idEleve,

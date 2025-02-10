@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.entity.Trace
 
 interface TraceRepository {
-
     @Throws(MonProjetSupNotFoundException::class)
     fun ajouterTrace(
         idEleve: String,

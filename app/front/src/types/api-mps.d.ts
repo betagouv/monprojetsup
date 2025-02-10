@@ -28,6 +28,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/profil/trace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ajoutTrace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/profil/parcoursup": {
         parameters: {
             query?: never;
@@ -224,57 +240,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/actuator": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator root web endpoint */
-        get: operations["links"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health' */
-        get: operations["health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health/**": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health-path' */
-        get: operations["health-path"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -420,79 +385,6 @@ export interface components {
              */
             estFavoriParcoursup: boolean;
         };
-        Unit: Record<string, never>;
-        AjoutCompteParcoursupDTO: {
-            codeVerifier: string;
-            code: string;
-            redirectUri: string;
-        };
-        AdmissionsParcoursupDTO: {
-            annee: string;
-            parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
-        };
-        BaccalaureatAvecSesSpecialitesDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
-            specialites: components["schemas"]["SpecialitesDTO"][];
-        };
-        BaccalaureatDTO: {
-            id: string;
-            nom: string;
-            idCarteParcoursup: string;
-        };
-        CategorieDomaineAvecDomainesDTO: {
-            categorieDomaine: components["schemas"]["CategorieDomaineDTO"];
-            domaines: components["schemas"]["DomaineDTO"][];
-        };
-        CategorieDomaineDTO: {
-            id: string;
-            nom: string;
-            emoji: string;
-        };
-        CategorieInteretAvecSousCategoriesDTO: {
-            categorieInteret: components["schemas"]["InteretCategorieDTO"];
-            sousCategoriesInterets: components["schemas"]["InteretSousCategorieDTO"][];
-        };
-        DomaineDTO: {
-            id: string;
-            nom: string;
-            description?: string;
-            emoji: string;
-        };
-        InteretCategorieDTO: {
-            id: string;
-            nom: string;
-            emoji: string;
-        };
-        InteretSousCategorieDTO: {
-            id: string;
-            nom: string;
-            description?: string;
-            emoji: string;
-        };
-        PourcentagesMoyenneDTO: {
-            /** Format: float */
-            note: number;
-            /** Format: int32 */
-            pourcentageAdmisAyantCetteMoyenneOuMoins: number;
-        };
-        PourcentagesPourChaqueMoyenneParBaccalaureatDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
-            pourcentages: components["schemas"]["PourcentagesMoyenneDTO"][];
-        };
-        ReferentielDTO: {
-            situations: ("aucune_idee" | "quelques_pistes" | "projet_precis")[];
-            choixNiveau: ("seconde" | "premiere" | "terminale")[];
-            choixAlternance: ("pas_interesse" | "indifferent" | "interesse" | "tres_interesse")[];
-            choixDureeEtudesPrevue: ("indifferent" | "courte" | "longue" | "aucune_idee")[];
-            baccalaureatsAvecLeurSpecialites: components["schemas"]["BaccalaureatAvecSesSpecialitesDTO"][];
-            categoriesDInteretsAvecLeursSousCategories: components["schemas"]["CategorieInteretAvecSousCategoriesDTO"][];
-            categoriesDomaineAvecLeursDomaines: components["schemas"]["CategorieDomaineAvecDomainesDTO"][];
-            admissionsParcoursup: components["schemas"]["AdmissionsParcoursupDTO"];
-        };
-        SpecialitesDTO: {
-            id: string;
-            nom: string;
-        };
         ProfilDTO: {
             /**
              * @description Etat d'avancée du projet de l'élève
@@ -584,6 +476,84 @@ export interface components {
             compteParcoursupAssocie: boolean;
             /** @description Liste des voeux favoris */
             voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
+        };
+        TraceDTO: {
+            action: string;
+            param1?: string;
+            param2?: string;
+        };
+        Unit: Record<string, never>;
+        AjoutCompteParcoursupDTO: {
+            codeVerifier: string;
+            code: string;
+            redirectUri: string;
+        };
+        AdmissionsParcoursupDTO: {
+            annee: string;
+            parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
+        };
+        BaccalaureatAvecSesSpecialitesDTO: {
+            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            specialites: components["schemas"]["SpecialitesDTO"][];
+        };
+        BaccalaureatDTO: {
+            id: string;
+            nom: string;
+            idCarteParcoursup: string;
+        };
+        CategorieDomaineAvecDomainesDTO: {
+            categorieDomaine: components["schemas"]["CategorieDomaineDTO"];
+            domaines: components["schemas"]["DomaineDTO"][];
+        };
+        CategorieDomaineDTO: {
+            id: string;
+            nom: string;
+            emoji: string;
+        };
+        CategorieInteretAvecSousCategoriesDTO: {
+            categorieInteret: components["schemas"]["InteretCategorieDTO"];
+            sousCategoriesInterets: components["schemas"]["InteretSousCategorieDTO"][];
+        };
+        DomaineDTO: {
+            id: string;
+            nom: string;
+            description?: string;
+            emoji: string;
+        };
+        InteretCategorieDTO: {
+            id: string;
+            nom: string;
+            emoji: string;
+        };
+        InteretSousCategorieDTO: {
+            id: string;
+            nom: string;
+            description?: string;
+            emoji: string;
+        };
+        PourcentagesMoyenneDTO: {
+            /** Format: float */
+            note: number;
+            /** Format: int32 */
+            pourcentageAdmisAyantCetteMoyenneOuMoins: number;
+        };
+        PourcentagesPourChaqueMoyenneParBaccalaureatDTO: {
+            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            pourcentages: components["schemas"]["PourcentagesMoyenneDTO"][];
+        };
+        ReferentielDTO: {
+            situations: ("aucune_idee" | "quelques_pistes" | "projet_precis")[];
+            choixNiveau: ("seconde" | "premiere" | "terminale")[];
+            choixAlternance: ("pas_interesse" | "indifferent" | "interesse" | "tres_interesse")[];
+            choixDureeEtudesPrevue: ("indifferent" | "courte" | "longue" | "aucune_idee")[];
+            baccalaureatsAvecLeurSpecialites: components["schemas"]["BaccalaureatAvecSesSpecialitesDTO"][];
+            categoriesDInteretsAvecLeursSousCategories: components["schemas"]["CategorieInteretAvecSousCategoriesDTO"][];
+            categoriesDomaineAvecLeursDomaines: components["schemas"]["CategorieDomaineAvecDomainesDTO"][];
+            admissionsParcoursup: components["schemas"]["AdmissionsParcoursupDTO"];
+        };
+        SpecialitesDTO: {
+            id: string;
+            nom: string;
         };
         FormationCourteDTO: {
             id: string;
@@ -750,10 +720,6 @@ export interface components {
             formations: components["schemas"]["FormationAvecExplicationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
-        Link: {
-            href?: string;
-            templated?: boolean;
-        };
     };
     responses: never;
     parameters: never;
@@ -793,6 +759,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ModificationProfilDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProfilDTO"];
+                };
+            };
+        };
+    };
+    ajoutTrace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TraceDTO"];
             };
         };
         responses: {
@@ -1038,84 +1028,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    links: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/vnd.spring-boot.actuator.v2+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    "health-path": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
                 };
             };
         };

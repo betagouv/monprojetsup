@@ -18,7 +18,6 @@ import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class) // JUnit 5 extension for Mockito
 class TraceRepositoryTest : BDDRepositoryTest() {
-
     @Autowired
     lateinit var traceJPARepository: TraceJPARepository
 

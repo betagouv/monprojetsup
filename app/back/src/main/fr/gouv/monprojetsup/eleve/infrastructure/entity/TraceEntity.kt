@@ -43,11 +43,11 @@ class TraceEntity() {
         this.param2 = param2
     }
 
-    fun toTrace() = Trace(
-        tsp = tsp,
-        action = action,
-        param1 = param1,
-        param2 = param2,
-    )
-
+    fun toTrace() =
+        Trace(
+            tsp = tsp,
+            action = action,
+            param1 = param1,
+            param2 = param2,
+        )
 }
