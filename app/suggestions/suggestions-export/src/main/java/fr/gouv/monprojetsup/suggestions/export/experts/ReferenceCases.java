@@ -81,12 +81,13 @@ public record ReferenceCases(
     }
 
     public static String toExplanationStringShort(ProfileDTO pf, String sep) {
-        return sep + "niveau: '" + pf.niveau() + "'\n" +
+        return sep + "niveau: '" + Objects.requireNonNullElse(pf.niveau(),"null") + "'\n" +
                 sep + "bac: '" + Objects.requireNonNullElse(pf.bac(),"null") + "'\n" +
-                sep + "duree: '" + pf.duree() + "'\n" +
+                sep + "duree: '" + Objects.requireNonNullElse(pf.duree(),"null") + "'\n" +
                 sep + "apprentissage: '" + SuggestionsEvaluator.toApprentissageExplanationString(pf.apprentissage()) + "'\n" +
                 sep + "geo_pref: " + pf.geo_pref() + "'\n" +
-                sep + "spe_classes: " + pf.spe_classes();
+                sep + "spe_classes: " + pf.spe_classes() + "'\n" +
+                sep + "situation: '" + Objects.requireNonNullElse(pf.situation(),"null") + "'\n";
     }
 
     public void toFile(String refCasesWithSuggestions) throws IOException {
@@ -288,11 +289,11 @@ public record ReferenceCases(
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Suggestion unexpectedNumberOfExplanations = Suggestion.getPendingSuggestion(
+            Suggestion suggestion = Suggestion.getSuggestion(
                     suggestion1.key(),
                     responseExpl.liste().get(0).explanations()
             );
-            list.add(unexpectedNumberOfExplanations);
+            list.add(suggestion);
         }
         answer.suggestions().addAll(
                 list
