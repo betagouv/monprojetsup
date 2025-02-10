@@ -54,7 +54,7 @@ data class APISuggestionProfilDTO(
             ) + (profilEleve.formationsFavorites?.map { FavorisChoixDTO(it.idFormation) } ?: emptyList()) +
                 profilEleve.corbeilleFormations.map { CorbeilleChoixDTO(it) } +
                 profilEleve.voeuxFavoris.map { FavorisChoixDTO(it.idVoeu) },
-        situation = profilEleve.situation?.jsonValeur
+        situation = profilEleve.situation?.jsonValeur,
     )
 }
 
