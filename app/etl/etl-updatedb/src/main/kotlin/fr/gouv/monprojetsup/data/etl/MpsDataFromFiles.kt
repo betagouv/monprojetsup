@@ -336,7 +336,7 @@ class MpsDataFromFiles(
         val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
 
         val mpsIds = getFormationsMpsIds()
-        val labels = getDebugLabels()
+        val debugLabels = getDebugLabels()
 
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumes.csv").use { csv ->
             val headers = listOf(
@@ -353,7 +353,7 @@ class MpsDataFromFiles(
             val codesFilieres = mutableSetOf<String>()
             for (line in lines) {
                 val codeFiliere = line["code filiere"].orEmpty()
-                val label = labels.getOrDefault(codeFiliere, "")
+                val label = debugLabels.getOrDefault(codeFiliere, "")
                 line["intitulé web"] = label
                 if(mpsIds.contains(codeFiliere)) {
                     val nextLine = mutableListOf<String>()

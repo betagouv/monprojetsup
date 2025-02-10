@@ -91,6 +91,7 @@ class APISuggestionProfilDTOTest {
                         ChoixDTO.FavorisChoixDTO(id = "fl5678"),
                         ChoixDTO.CorbeilleChoixDTO(id = "fl0002"),
                     ),
+                situation = "projet_precis",
             )
 
         private val profilEleveSeconde =
@@ -123,7 +124,7 @@ class APISuggestionProfilDTOTest {
                 corbeilleFormations = listOf("fl0001"),
                 compteParcoursupLie = true,
                 voeuxFavoris = emptyList(),
-            )
+                )
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
                 classe = "sec",
@@ -154,6 +155,7 @@ class APISuggestionProfilDTOTest {
                         ChoixDTO.FavorisChoixDTO(id = "fl5678"),
                         ChoixDTO.CorbeilleChoixDTO(id = "fl0001"),
                     ),
+                situation = "projet_precis",
             )
         private val profilEleveSecondeSTHR =
             ProfilEleve.AvecProfilExistant(
@@ -173,7 +175,7 @@ class APISuggestionProfilDTOTest {
                 corbeilleFormations = emptyList(),
                 compteParcoursupLie = false,
                 voeuxFavoris = emptyList(),
-            )
+                )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
                 classe = "sec",
@@ -193,7 +195,8 @@ class APISuggestionProfilDTOTest {
                         ChoixDTO.FavorisChoixDTO(id = "MET_001"),
                         ChoixDTO.FavorisChoixDTO(id = "MET_004"),
                     ),
-            )
+                situation = "projet_precis",
+                )
         private val profilEleveSecondeTMD =
             ProfilEleve.AvecProfilExistant(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
@@ -240,7 +243,8 @@ class APISuggestionProfilDTOTest {
                         ChoixDTO.FavorisChoixDTO(id = "fl0001"),
                         ChoixDTO.FavorisChoixDTO(id = "fl0005"),
                     ),
-            )
+                situation = "projet_precis",
+                )
         private val profilElevePremiere =
             ProfilEleve.AvecProfilExistant(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
@@ -271,7 +275,8 @@ class APISuggestionProfilDTOTest {
                 interets = emptyList(),
                 moyenneGenerale = null,
                 choix = emptyList(),
-            )
+                situation = "projet_precis",
+                )
 
         private val profilEleveTerminal =
             ProfilEleve.AvecProfilExistant(
@@ -324,7 +329,8 @@ class APISuggestionProfilDTOTest {
                         ChoixDTO.FavorisChoixDTO(id = "fl5678"),
                         ChoixDTO.CorbeilleChoixDTO(id = "fl0012"),
                     ),
-            )
+                situation = "projet_precis",
+                )
         private val profilEleveNull =
             ProfilEleve.AvecProfilExistant(
                 id = "3e72892b-b6bb-4d5e-b349-81c2adfd292b",
@@ -355,7 +361,8 @@ class APISuggestionProfilDTOTest {
                 interets = emptyList(),
                 moyenneGenerale = null,
                 choix = emptyList(),
-            )
+                situation = "projet_precis",
+                )
 
         @JvmStatic
         fun testsProfileDTO(): Stream<Arguments> =

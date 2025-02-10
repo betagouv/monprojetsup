@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import static fr.gouv.monprojetsup.suggestions.Constants.BR;
-import static fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO.SUGG_PENDING;
 import static java.lang.System.lineSeparator;
 
 /**
@@ -24,12 +23,8 @@ public record Suggestion(
         @Nullable Integer status
 ) {
 
-    public Suggestion(String fl) {
-        this(fl, null, LocalDateTime.now().toString(), SUGG_PENDING);
-    }
-
-    public static Suggestion getPendingSuggestion(String fl, List<Explanation> explanations) {
-        return new Suggestion(fl, explanations, LocalDateTime.now().toString(), SUGG_PENDING);
+    public static Suggestion getSuggestion(String fl, List<Explanation> explanations) {
+        return new Suggestion(fl, explanations, LocalDateTime.now().toString(), null);
     }
 
     public String humanReadable(Map<String,String> labels) {

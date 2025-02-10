@@ -12,14 +12,14 @@ import java.util.Objects;
 public record ChoiceDTO(
             @Schema(example = "fl2014", description = "clé de la formation, du métier ou du secteur d'activité")
             @NotNull String id,
-            @Schema(example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"0", "1", "2" })
+
+            @Schema(example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"1", "2" })
             @Nullable Integer status,
 
             @Schema(example = "1", description = "score. Entre 1 (bof) et 5 (génial).", allowableValues = {"0", "1", "2", "3", "4", "5"} )
             @Nullable Integer score
     ) {
 
-    public static final int SUGG_PENDING = 0;
     public static final int SUGG_APPROVED = 1;
     public static final int SUGG_REJECTED = 2;
 

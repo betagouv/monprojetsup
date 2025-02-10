@@ -29,10 +29,10 @@ public record ProfileDTO(
         Set<String> spe_classes,
         @ArraySchema(arraySchema = @Schema(name = "interests", description = "domaines et intérêts", example = "[\"ci1\",\"ci2\",\"ci3\",\"dom1\", \"dom2\", \"dom3\"]"))
         List<String> interests,
-        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux et métiers", example = "[\"fl11\",\"fr1\",\"MET.154\",\"ta45761\"]"))
+        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux et métiers"))
         List<ChoiceDTO> choix,
-        @Schema(description = "statut de réflexion 0/1/2", example = "0")
-        String statut
+        @Schema(description = "statut de réflexion", example = "quelques_pistes", allowableValues = { "aucune_idee", "quelques_pistes", "projet_precis" })
+        String situation
 
 ) {
 

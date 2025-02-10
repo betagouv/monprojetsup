@@ -28,6 +28,8 @@ data class APISuggestionProfilDTO(
     val moyenneGenerale: String?,
     @field:JsonProperty(value = "choix")
     val choix: List<ChoixDTO>?,
+    @field:JsonProperty(value = "situation")
+    val situation: String?,
 ) {
     constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this(
         classe = profilEleve.classe?.apiSuggestionValeur,
@@ -52,6 +54,7 @@ data class APISuggestionProfilDTO(
             ) + (profilEleve.formationsFavorites?.map { FavorisChoixDTO(it.idFormation) } ?: emptyList()) +
                 profilEleve.corbeilleFormations.map { CorbeilleChoixDTO(it) } +
                 profilEleve.voeuxFavoris.map { FavorisChoixDTO(it.idVoeu) },
+        situation = profilEleve.situation?.jsonValeur
     )
 }
 
