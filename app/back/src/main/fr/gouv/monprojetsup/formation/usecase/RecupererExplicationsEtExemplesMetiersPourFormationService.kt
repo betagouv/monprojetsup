@@ -1,12 +1,10 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
@@ -160,25 +158,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             explicationsGeographique.sortedBy { it.distanceKm }.distinctBy { it.ville }
         return explicationsGeographiquesFiltrees
     }
-
-    private fun recupererExplicationAutoEvaluationMoyenne(
-        explications: ExplicationsSuggestionEtExemplesMetiers,
-    ): ExplicationAutoEvaluationMoyenne? {
-        return explications.autoEvaluationMoyenne?.let {
-            val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.baccalaureatUtilise)
-            explicationAutoEvaluationMoyenne(baccalaureat, it)
-        }
-    }
-
-    private fun explicationAutoEvaluationMoyenne(
-        baccalaureat: Baccalaureat?,
-        autoEvaluationMoyenne: ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne,
-    ) = ExplicationAutoEvaluationMoyenne(
-        baccalaureatUtilise = baccalaureat ?: creerBaccalaureatParDefaut(autoEvaluationMoyenne.baccalaureatUtilise),
-        moyenneAutoEvalue = autoEvaluationMoyenne.echellonDeLaMoyenneAutoEvalue * TAILLE_ECHELLON_NOTES,
-        basIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
-        hautIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
-    )
 
     private fun recupererExplicationTypeBaccalaureat(typeBaccalaureat: TypeBaccalaureat?): ExplicationTypeBaccalaureat? {
         return typeBaccalaureat?.let {

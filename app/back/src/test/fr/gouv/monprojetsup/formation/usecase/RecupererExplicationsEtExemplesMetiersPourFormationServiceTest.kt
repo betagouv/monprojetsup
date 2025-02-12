@@ -67,7 +67,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
 
     private val bacGeneral = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1")
     private val bacPro = Baccalaureat(id = "Professionel", idExterne = "P", nom = "Série Professionnelle", idCarteParcoursup = "3")
-    private val bacSTMG = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2")
 
     private val profil =
         ProfilEleve.AvecProfilExistant(
@@ -603,13 +602,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             given(
                 baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(
                     listOf(
-                        "Général",
-                        "STMG",
                         "P",
+                        "Général",
                     ),
                 ),
             ).willReturn(
-                listOf(bacGeneral, bacPro, bacSTMG),
+                listOf(bacPro, bacGeneral),
             )
             val domainesInteretsMetiersDistincts =
                 listOf(

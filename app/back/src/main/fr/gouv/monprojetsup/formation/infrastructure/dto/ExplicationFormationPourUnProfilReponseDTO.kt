@@ -63,10 +63,7 @@ data class ExplicationEtExemplesDTO(
                     explications.recupererUniqueValeur {
                         it.typeBaccalaureat != null
                     }?.typeBaccalaureat?.toTypeBaccalaureat(),
-                autoEvaluationMoyenne =
-                    explications.recupererUniqueValeur {
-                        it.moyenneGenerale != null
-                    }?.moyenneGenerale?.toAutoEvaluationMoyenne(),
+                autoEvaluationMoyenne = null,
                 interetsDomainesMetiersChoisis = explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
                 exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )

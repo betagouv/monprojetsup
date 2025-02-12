@@ -10,7 +10,6 @@ import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
@@ -361,7 +360,6 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "28",
                         "choix": [
                           {
                             "id": "MET_123",
@@ -536,19 +534,6 @@ class SuggestionApiHttpClientTest {
                           "tbac": {
                             "percentage": 18,
                             "bac": "Général"
-                          }
-                        },
-                        {
-                          "moygen": {
-                            "moy": 29,
-                            "middle50": {
-                              "rangEch10": 20,
-                              "rangEch25": 27,
-                              "rangEch50": 31,
-                              "rangEch75": 33,
-                              "rangEch90": 35
-                            },
-                            "bacUtilise": "Général"
                           }
                         },
                         {
@@ -731,7 +716,6 @@ class SuggestionApiHttpClientTest {
                                     "Pas de stats spécialités pour cette filiere",
                                     "Pas de stats pour cette filiere",
                                     "preférences apprentissage 1 * (1 - 1E-5) + 1E-5",
-                                    "moyenne générale 1 * (1 - 1E-1) + 1E-1",
                                     "EDS 0.5 * (1 - 1E-1) + 1E-1",
                                     "type de bac 0.01 * (1 - 1E-8) + 1E-8",
                                     "durée 0 * (1 - 1E-4) + 1E-4",
@@ -740,23 +724,11 @@ class SuggestionApiHttpClientTest {
                                     "proximité intérêts et favoris 0 * (1 - 1E-8) + 1E-8",
                                     "Scores de diversité: {OFFRE_FORMATION=0.0}",
                                     "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  " +
-                                        "1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  " +
+                                        "0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  " +
                                         "0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  " +
                                         "0 (proximité intérêts et favoris) ,  ]",
                                 ),
-                            autoEvaluationMoyenne =
-                                AutoEvaluationMoyenne(
-                                    echellonDeLaMoyenneAutoEvalue = 29,
-                                    rangs =
-                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                            rangEch10 = 20,
-                                            rangEch25 = 27,
-                                            rangEch50 = 31,
-                                            rangEch75 = 33,
-                                            rangEch90 = 35,
-                                        ),
-                                    baccalaureatUtilise = "Général",
-                                ),
+                            autoEvaluationMoyenne = null,
                             interetsDomainesMetiersChoisis =
                                 listOf(
                                     "T_ROME_731379930",
@@ -1045,7 +1017,6 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "28",
                         "choix": [
                           {
                             "id": "MET_123",
