@@ -317,7 +317,8 @@ class SuggestionApiHttpClientTest {
                     "MET_654",
                     "MET_420",
                     "MET_630"
-                  ]
+                  ],
+                  "situation":"projet_precis"
                 }
                 """.trimIndent().toResponseBody(mediaType)
             val callMock = mock(Call::class.java)
@@ -388,7 +389,8 @@ class SuggestionApiHttpClientTest {
                             "status": 2,
                             "date": null
                           }
-                        ]
+                        ],
+                        "situation":"projet_precis"
                       }
                     }
                     """.trimIndent(),
@@ -1076,7 +1078,8 @@ class SuggestionApiHttpClientTest {
                             "status": 2,
                             "date": null
                           }
-                        ]
+                        ],
+                        "situation":"projet_precis"
                       },
                       "keys":["fl2014"]
                     }

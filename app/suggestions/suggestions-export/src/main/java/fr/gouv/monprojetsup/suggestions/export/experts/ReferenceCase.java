@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 
 import java.util.ArrayList;
 import java.util.List;
