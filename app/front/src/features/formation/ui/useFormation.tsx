@@ -25,3 +25,7 @@ export default function useFormation() {
     formationVersFavori,
   };
 }
+
+export type UseSélectionFormationArgs = {
+  id: string;
+};

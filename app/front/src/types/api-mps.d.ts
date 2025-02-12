@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/trace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ajoute une trace de navigation */
+        post: operations["ajoutTrace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/profil": {
         parameters: {
             query?: never;
@@ -37,6 +54,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Lier à un compte Parcoursup
+         * @description Lie le compte MPS à un compte Parcoursup pour récupération automatique des favoris Parcoursup
+         */
         post: operations["postCompteParcoursup"];
         delete?: never;
         options?: never;
@@ -56,6 +77,26 @@ export interface paths {
          * @description Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.
          */
         get: operations["getReferentielPourInscription"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/profil/progression": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer le niveau de progression pédagogique
+         * @description Récupère le niveau de progression pédagogique, entre 1 et 6
+         */
+        get: operations["getProgressionMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -224,61 +265,17 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/actuator": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator root web endpoint */
-        get: operations["links"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health' */
-        get: operations["health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health/**": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health-path' */
-        get: operations["health-path"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        TraceDTO: {
+            /** @enum {string} */
+            action: "fiche_formation" | "recherche_formation" | "suggestions" | "onglet_fiche_formation" | "lien_externe" | "ajout_favori_formation" | "ajout_favori_metier" | "fiche_metier" | "edition_profil";
+            param1?: string;
+            param2?: string;
+        };
+        Unit: Record<string, never>;
         CommuneDTO: {
             /**
              * @description Code Insee de la ville
@@ -389,12 +386,6 @@ export interface components {
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             /** @description Villes préférées pour étudier */
             communesFavorites?: components["schemas"]["CommuneDTO"][];
-            /**
-             * Format: float
-             * @description Moyenne générale scolaire estimée en terminale
-             * @example 14
-             */
-            moyenneGenerale?: number;
             /** @description Les formations favorites de l'élève */
             formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
             /** @description Les voeux favoris de l'élève */
@@ -420,7 +411,99 @@ export interface components {
              */
             estFavoriParcoursup: boolean;
         };
-        Unit: Record<string, never>;
+        ProfilDTO: {
+            /**
+             * @description Etat d'avancée du projet de l'élève
+             * @example aucune_idee
+             * @enum {string}
+             */
+            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis" | "aucune_idee" | "quelques_pistes" | "projet_precis";
+            /**
+             * @description Classe actuelle
+             * @example terminale
+             * @enum {string}
+             */
+            classe?: "seconde" | "premiere" | "terminale" | "seconde" | "premiere" | "terminale";
+            /**
+             * @description Type de Bac choisi ou envisagé
+             * @example Générale
+             * @enum {string}
+             */
+            baccalaureat?: "NC" | "Générale" | "P" | "PA" | "S2TMD" | "ST2S" | "STAV" | "STD2A" | "STHR" | "STI2D" | "STL" | "STMG";
+            /**
+             * @description Enseignements de spécialité de terminale choisis ou envisagés
+             * @example [
+             *       "mat707",
+             *       "mat700"
+             *     ]
+             */
+            specialites?: string[];
+            /**
+             * @description Domaines d'activité
+             * @example [
+             *       "dom41",
+             *       "dom32",
+             *       "dom26"
+             *     ]
+             */
+            domaines?: string[];
+            /**
+             * @description Centres d'intérêt
+             * @example [
+             *       "ci16",
+             *       "ci27",
+             *       "ci6",
+             *       "ci11"
+             *     ]
+             */
+            centresInterets?: string[];
+            /**
+             * @description Les idées de métiers de l'élève
+             * @example [
+             *       "MET_384",
+             *       "MET_469"
+             *     ]
+             */
+            metiersFavoris?: string[];
+            /**
+             * @description Durée envisagée des études
+             * @example indifferent
+             * @enum {string}
+             */
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee" | "indifferent" | "courte" | "longue" | "aucune_idee";
+            /**
+             * @description Intérêt pour les formations en apprentissage
+             * @example pas_interesse
+             * @enum {string}
+             */
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
+            /** @description Villes préférées pour étudier */
+            communesFavorites?: components["schemas"]["CommuneDTO"][];
+            /** @description Les idées de formations de l'élève */
+            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
+            /**
+             * @description Les formations masquées par l'élève
+             * @example [
+             *       "fl1",
+             *       "fl810505"
+             *     ]
+             */
+            corbeilleFormations?: string[];
+            /**
+             * @description Prénom de l'élève
+             * @example false
+             */
+            compteParcoursupAssocie: boolean;
+            /** @description Liste des voeux favoris */
+            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
+            /**
+             * Format: int32
+             * @description Progression dans les 6 niveaux MPS
+             * @example 1
+             * @enum {integer}
+             */
+            progression?: 1 | 2 | 3 | 4 | 5 | 6;
+        };
         AjoutCompteParcoursupDTO: {
             codeVerifier: string;
             code: string;
@@ -493,97 +576,14 @@ export interface components {
             id: string;
             nom: string;
         };
-        ProfilDTO: {
+        ProgressionDTO: {
             /**
-             * @description Etat d'avancée du projet de l'élève
-             * @example aucune_idee
-             * @enum {string}
+             * Format: int32
+             * @description Progression dans les six niveaux MPS
+             * @example 6
+             * @enum {integer}
              */
-            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis" | "aucune_idee" | "quelques_pistes" | "projet_precis";
-            /**
-             * @description Classe actuelle
-             * @example terminale
-             * @enum {string}
-             */
-            classe?: "seconde" | "premiere" | "terminale" | "seconde" | "premiere" | "terminale";
-            /**
-             * @description Type de Bac choisi ou envisagé
-             * @example Générale
-             * @enum {string}
-             */
-            baccalaureat?: "NC" | "Générale" | "P" | "PA" | "S2TMD" | "ST2S" | "STAV" | "STD2A" | "STHR" | "STI2D" | "STL" | "STMG";
-            /**
-             * @description Enseignements de spécialité de terminale choisis ou envisagés
-             * @example [
-             *       "mat707",
-             *       "mat700"
-             *     ]
-             */
-            specialites?: string[];
-            /**
-             * @description Domaines d'activité
-             * @example [
-             *       "dom41",
-             *       "dom32",
-             *       "dom26"
-             *     ]
-             */
-            domaines?: string[];
-            /**
-             * @description Centres d'intérêt
-             * @example [
-             *       "ci16",
-             *       "ci27",
-             *       "ci6",
-             *       "ci11"
-             *     ]
-             */
-            centresInterets?: string[];
-            /**
-             * @description Les idées de métiers de l'élève
-             * @example [
-             *       "MET_384",
-             *       "MET_469"
-             *     ]
-             */
-            metiersFavoris?: string[];
-            /**
-             * @description Durée envisagée des études
-             * @example indifferent
-             * @enum {string}
-             */
-            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee" | "indifferent" | "courte" | "longue" | "aucune_idee";
-            /**
-             * @description Intérêt pour les formations en apprentissage
-             * @example pas_interesse
-             * @enum {string}
-             */
-            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
-            /** @description Villes préférées pour étudier */
-            communesFavorites?: components["schemas"]["CommuneDTO"][];
-            /**
-             * Format: float
-             * @description Moyenne générale scolaire estimée en terminale
-             * @example 14
-             */
-            moyenneGenerale?: number;
-            /** @description Les idées de formations de l'élève */
-            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
-            /**
-             * @description Les formations mises à la corbeille par l'élève
-             * @example [
-             *       "fl1",
-             *       "fl810505"
-             *     ]
-             */
-            corbeilleFormations?: string[];
-            /**
-             * @description Prénom de l'élève
-             * @example false
-             */
-            compteParcoursupAssocie: boolean;
-            /** @description Liste des voeux favoris */
-            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
+            progression: 1 | 2 | 3 | 4 | 5 | 6;
         };
         FormationCourteDTO: {
             id: string;
@@ -624,15 +624,6 @@ export interface components {
             nomSpecialite: string;
             /** Format: int32 */
             pourcentage: number;
-        };
-        AutoEvaluationMoyenneDTO: {
-            /** Format: float */
-            moyenne: number;
-            /** Format: float */
-            basIntervalleNotes: number;
-            /** Format: float */
-            hautIntervalleNotes: number;
-            baccalaureatUtilise: components["schemas"]["BaccalaureatDTO"];
         };
         CentileDTO: {
             /** Format: int32 */
@@ -676,7 +667,6 @@ export interface components {
             choixEleve?: components["schemas"]["ChoixElevesDTO"];
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
-            autoEvaluationMoyenne?: components["schemas"]["AutoEvaluationMoyenneDTO"];
             detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
         };
         FicheFormationDTO: {
@@ -750,10 +740,6 @@ export interface components {
             formations: components["schemas"]["FormationAvecExplicationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
-        Link: {
-            href?: string;
-            templated?: boolean;
-        };
     };
     responses: never;
     parameters: never;
@@ -763,6 +749,30 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    ajoutTrace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TraceDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
     getProfilEleve: {
         parameters: {
             query?: never;
@@ -802,7 +812,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Unit"];
+                    "*/*": components["schemas"]["ProfilDTO"];
                 };
             };
         };
@@ -847,6 +857,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ReferentielDTO"];
+                };
+            };
+        };
+    };
+    getProgressionMPS: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressionDTO"];
                 };
             };
         };
@@ -1038,84 +1068,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    links: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/vnd.spring-boot.actuator.v2+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    "health-path": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
                 };
             };
         };

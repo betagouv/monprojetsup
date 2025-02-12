@@ -8,10 +8,10 @@ data class FormationFavoriteEntity(
     val niveauAmbition: Int,
     val priseDeNote: String?,
 ) : Serializable {
-    constructor(voeu: FormationFavorite) : this(
-        idFormation = voeu.idFormation,
-        niveauAmbition = voeu.niveauAmbition,
-        priseDeNote = voeu.priseDeNote,
+    constructor(formation: FormationFavorite) : this(
+        idFormation = formation.idFormation,
+        niveauAmbition = formation.niveauAmbition,
+        priseDeNote = formation.priseDeNote,
     )
 
     fun toFormationFavorite() =

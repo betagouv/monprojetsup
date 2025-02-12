@@ -1,11 +1,19 @@
 import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
 import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
 import { type OngletsFicheFormationProps } from "./OngletsFicheFormation.interface";
+import useOngletsFicheFormation from "./useOngletsFicheFormation.tsx";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
+  const ongletsIds = ["onglet_formation", "onglet_details", "onglet_criteres", "onglet_conseils"];
+
+  const { changementOngletFicheFormation } = useOngletsFicheFormation({
+    formation,
+    onglets: ongletsIds,
+  });
+
   const générerLesOnglets = () => {
     const onglets = [];
 
@@ -14,6 +22,7 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
         label: i18n.PAGE_FORMATION.ONGLET_FORMATION,
         content: (
           <OngletFormationFicheFormation
+            id={formation.id}
             liens={formation.liens}
             texte={formation.descriptifs.formation}
           />
@@ -60,6 +69,7 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
   return (
     <Tabs
       label={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
+      onTabChange={changementOngletFicheFormation}
       tabs={générerLesOnglets()}
     />
   );

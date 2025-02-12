@@ -1,9 +1,6 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMALE
-import fr.gouv.monprojetsup.commun.Constantes.NOTE_MINIMALE
-import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
 import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
@@ -48,7 +45,6 @@ class MiseAJourEleveService(
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
         verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
         verifierVoeux(miseAJourDuProfil.voeuxFavoris?.map { it.idVoeu })
-        verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
 
         val nouvellesFormations = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites
         val nouveauxVoeux =
@@ -72,16 +68,15 @@ class MiseAJourEleveService(
                 alternance = miseAJourDuProfil.alternance ?: profilInitial.alternance,
                 communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
                 formationsFavorites = nouvellesFormations,
-                moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
                 corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
                 compteParcoursupLie = profilInitial.compteParcoursupLie,
                 voeuxFavoris = nouveauxVoeux.sortedBy { it.idVoeu },
             )
-        if (profilEleveAMettreAJour != profilInitial) {
+        return if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
-            return profilEleveAMettreAJour
+            profilEleveAMettreAJour
         } else {
-            return profilInitial
+            profilInitial
         }
     }
 
@@ -131,62 +126,68 @@ class MiseAJourEleveService(
         profilInitial: ProfilEleve.AvecProfilExistant,
     ) {
         val formationsFavorites = voeuxDeFormations?.map { it.idFormation }
-        if (formationsFavorites?.distinct()?.size != formationsFavorites?.size) {
-            throw MonProjetSupBadRequestException(
-                code = "FORMATIONS_FAVORITES_EN_DOUBLE",
-                msg = "Une des formations favorites est présentes plusieurs fois",
-            )
-        } else if (corbeilleFormations?.distinct()?.size != corbeilleFormations?.size) {
-            throw MonProjetSupBadRequestException(
-                code = "FORMATIONS_CORBEILLE_EN_DOUBLE",
-                msg = "Une des formations à la corbeille est présentes plusieurs fois",
-            )
-        } else if (!formationsFavorites.isNullOrEmpty() && !corbeilleFormations.isNullOrEmpty()) {
-            if (formationsFavorites.aUneValeurCommune(corbeilleFormations)) {
+        when {
+            formationsFavorites?.distinct()?.size != formationsFavorites?.size -> {
                 throw MonProjetSupBadRequestException(
-                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg = "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
+                    code = "FORMATIONS_FAVORITES_EN_DOUBLE",
+                    msg = "Une des formations favorites est présentes plusieurs fois",
                 )
-            } else {
-                val formationsInexistantes =
-                    formationRepository.recupererIdsFormationsInexistantes(
-                        ids = formationsFavorites + corbeilleFormations,
-                    )
-                if (formationsInexistantes.isNotEmpty()) {
+            }
+            corbeilleFormations?.distinct()?.size != corbeilleFormations?.size -> {
+                throw MonProjetSupBadRequestException(
+                    code = "FORMATIONS_CORBEILLE_EN_DOUBLE",
+                    msg = "Une des formations à la corbeille est présentes plusieurs fois",
+                )
+            }
+            !formationsFavorites.isNullOrEmpty() && !corbeilleFormations.isNullOrEmpty() -> {
+                if (formationsFavorites.aUneValeurCommune(corbeilleFormations)) {
                     throw MonProjetSupBadRequestException(
-                        "FORMATIONS_NON_RECONNUES",
-                        "Les formations $formationsInexistantes envoyées n'existent pas",
+                        code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                        msg = "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
                     )
+                } else {
+                    val formationsInexistantes =
+                        formationRepository.recupererIdsFormationsInexistantes(
+                            ids = formationsFavorites + corbeilleFormations,
+                        )
+                    if (formationsInexistantes.isNotEmpty()) {
+                        throw MonProjetSupBadRequestException(
+                            "FORMATIONS_NON_RECONNUES",
+                            "Les formations $formationsInexistantes envoyées n'existent pas",
+                        )
+                    }
                 }
             }
-        } else if (!formationsFavorites.isNullOrEmpty()) {
-            if (formationsFavorites.aUneValeurCommune(profilInitial.corbeilleFormations)) {
-                throw MonProjetSupBadRequestException(
-                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg = "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
-                )
-            } else {
-                val formationsInexistantes = formationRepository.recupererIdsFormationsInexistantes(ids = formationsFavorites)
-                if (formationsInexistantes.isNotEmpty()) {
+            !formationsFavorites.isNullOrEmpty() -> {
+                if (formationsFavorites.aUneValeurCommune(profilInitial.corbeilleFormations)) {
                     throw MonProjetSupBadRequestException(
-                        "FORMATIONS_NON_RECONNUES",
-                        "Les formations $formationsInexistantes envoyées n'existent pas",
+                        code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                        msg = "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
                     )
+                } else {
+                    val formationsInexistantes = formationRepository.recupererIdsFormationsInexistantes(ids = formationsFavorites)
+                    if (formationsInexistantes.isNotEmpty()) {
+                        throw MonProjetSupBadRequestException(
+                            "FORMATIONS_NON_RECONNUES",
+                            "Les formations $formationsInexistantes envoyées n'existent pas",
+                        )
+                    }
                 }
             }
-        } else if (!corbeilleFormations.isNullOrEmpty()) {
-            if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites?.map { it.idFormation })) {
-                throw MonProjetSupBadRequestException(
-                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg = "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
-                )
-            } else {
-                val formationsInexistantes = formationRepository.recupererIdsFormationsInexistantes(ids = corbeilleFormations)
-                if (formationsInexistantes.isNotEmpty()) {
+            !corbeilleFormations.isNullOrEmpty() -> {
+                if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites?.map { it.idFormation })) {
                     throw MonProjetSupBadRequestException(
-                        "FORMATIONS_NON_RECONNUES",
-                        "Les formations $formationsInexistantes envoyées n'existent pas",
+                        code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                        msg = "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
                     )
+                } else {
+                    val formationsInexistantes = formationRepository.recupererIdsFormationsInexistantes(ids = corbeilleFormations)
+                    if (formationsInexistantes.isNotEmpty()) {
+                        throw MonProjetSupBadRequestException(
+                            "FORMATIONS_NON_RECONNUES",
+                            "Les formations $formationsInexistantes envoyées n'existent pas",
+                        )
+                    }
                 }
             }
         }
@@ -297,18 +298,6 @@ class MiseAJourEleveService(
                 "BACCALAUREAT_NON_RECONNU",
                 "Aucun baccalaureat avec l'id $baccalaureat",
             )
-        }
-    }
-
-    @Throws(MonProjetSupBadRequestException::class)
-    private fun verifierLaMoyenneGenerale(moyenneGenerale: Float?) {
-        moyenneGenerale?.let {
-            if ((it > NOTE_MAXIMALE || it < NOTE_MINIMALE) && it != NOTE_NON_REPONSE) {
-                throw MonProjetSupBadRequestException(
-                    code = "ERREUR_MOYENNE_GENERALE",
-                    msg = "La moyenne générale $it n'est pas dans l'intervalle ${NOTE_MINIMALE.toInt()} et ${NOTE_MAXIMALE.toInt()}",
-                )
-            }
         }
     }
 }

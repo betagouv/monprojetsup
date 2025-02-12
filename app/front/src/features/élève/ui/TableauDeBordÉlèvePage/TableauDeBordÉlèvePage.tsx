@@ -12,7 +12,13 @@ import CarteTémoignageÉlève from "@/features/élève/ui/TableauDeBordÉlèveP
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
-  const { cartes, associationParcoursupPossible } = useTableauDeBordÉlèvePage();
+  const { cartes, associationParcoursupPossible, progression } = useTableauDeBordÉlèvePage();
+
+  const messageProgression =
+    progression &&
+    i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_NIVEAU +
+      progression +
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_FELICITATIONS;
 
   return (
     <>
@@ -43,6 +49,7 @@ const TableauDeBordÉlèvePage = () => {
                   <li>
                     <CarteTémoignageÉlève
                       auteur={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR}
+                      entête={messageProgression || null}
                       rôle={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.RÔLE}
                     >
                       {i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE}{" "}

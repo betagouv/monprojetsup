@@ -3,8 +3,6 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
-import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO.CorbeilleChoixDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO.FavorisChoixDTO
 
@@ -24,8 +22,6 @@ data class APISuggestionProfilDTO(
     val specialites: List<String>?,
     @field:JsonProperty(value = "interests")
     val interets: List<String>?,
-    @field:JsonProperty(value = "moygen")
-    val moyenneGenerale: String?,
     @field:JsonProperty(value = "choix")
     val choix: List<ChoixDTO>?,
     @field:JsonProperty(value = "situation")
@@ -43,10 +39,6 @@ data class APISuggestionProfilDTO(
         preferencesGeographiques = profilEleve.communesFavorites?.map { it.codeInsee },
         specialites = profilEleve.specialites,
         interets = (profilEleve.centresInterets ?: emptyList()) + (profilEleve.domainesInterets ?: emptyList()),
-        moyenneGenerale =
-            profilEleve.moyenneGenerale?.let {
-                if (it == NOTE_NON_REPONSE) null else (it / TAILLE_ECHELLON_NOTES).toInt().toString()
-            },
         choix =
             (
                 profilEleve.metiersFavoris?.map { FavorisChoixDTO(it) }

@@ -41,7 +41,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
@@ -82,7 +81,6 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "28",
                 choix =
                     listOf(
                         ChoixDTO.FavorisChoixDTO(id = "MET_123"),
@@ -105,7 +103,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
-                moyenneGenerale = 10.5f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
@@ -146,7 +143,6 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "21",
                 choix =
                     listOf(
                         ChoixDTO.FavorisChoixDTO(id = "MET_123"),
@@ -168,7 +164,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.CAEN),
                 specialites = listOf("1053", "1055"),
                 centresInterets = emptyList(),
-                moyenneGenerale = 19.5f,
                 metiersFavoris = listOf("MET_001", "MET_004"),
                 formationsFavorites = emptyList(),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
@@ -189,7 +184,6 @@ class APISuggestionProfilDTOTest {
                         "1055",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "39",
                 choix =
                     listOf(
                         ChoixDTO.FavorisChoixDTO(id = "MET_001"),
@@ -208,7 +202,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = emptyList(),
                 specialites = emptyList(),
                 centresInterets = listOf("rechercher_experiences", "chiffres_jongler"),
-                moyenneGenerale = null,
                 metiersFavoris = emptyList(),
                 formationsFavorites =
                     listOf(
@@ -237,7 +230,6 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = emptyList(),
                 specialites = emptyList(),
                 interets = listOf("rechercher_experiences", "chiffres_jongler"),
-                moyenneGenerale = null,
                 choix =
                     listOf(
                         ChoixDTO.FavorisChoixDTO(id = "fl0001"),
@@ -256,7 +248,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.PARIS15EME),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
-                moyenneGenerale = -1.0f,
                 metiersFavoris = emptyList(),
                 formationsFavorites = emptyList(),
                 domainesInterets = emptyList(),
@@ -273,7 +264,6 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = listOf("69123", "75115"),
                 specialites = listOf("1045"),
                 interets = emptyList(),
-                moyenneGenerale = null,
                 choix = emptyList(),
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE.jsonValeur,
             )
@@ -289,7 +279,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = null,
-                moyenneGenerale = 4.9f,
                 metiersFavoris = null,
                 formationsFavorites =
                     listOf(
@@ -322,7 +311,6 @@ class APISuggestionProfilDTOTest {
                         "mat1049",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "9",
                 choix =
                     listOf(
                         ChoixDTO.FavorisChoixDTO(id = "fl1234"),
@@ -342,7 +330,6 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = null,
                 specialites = null,
                 centresInterets = null,
-                moyenneGenerale = null,
                 metiersFavoris = null,
                 formationsFavorites = null,
                 domainesInterets = null,
@@ -359,7 +346,6 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = null,
                 specialites = null,
                 interets = emptyList(),
-                moyenneGenerale = null,
                 choix = emptyList(),
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES.jsonValeur,
             )

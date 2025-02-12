@@ -293,7 +293,6 @@ class RecupererFicheFormationServiceTest {
                 communesFavorites = listOf(CommunesFavorites.CAEN),
                 specialites = listOf("1001", "1049"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(

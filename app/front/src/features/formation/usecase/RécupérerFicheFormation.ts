@@ -5,6 +5,6 @@ export class RécupérerFicheFormationUseCase {
   public constructor(private readonly _formationRepository: FormationRepository) {}
 
   public async run(formationId: FicheFormation["id"]): Promise<FicheFormation | Error> {
-    return await this._formationRepository.récupérerUneFiche(formationId);
+    return this._formationRepository.récupérerUneFiche(formationId);
   }
 }

@@ -36,6 +36,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         formationsMasquées: null,
         notesPersonnelles: null,
         ambitions: null,
+        progression: null,
       });
 
       return await this.récupérerProfil();
@@ -93,7 +94,6 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       metiersFavoris: élève.métiersFavoris ?? undefined,
       dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
       alternance: élève.alternance ?? undefined,
-      moyenneGenerale: élève.moyenneGénérale ?? undefined,
       communesFavorites: élève.communesFavorites ?? undefined,
       corbeilleFormations: élève.formationsMasquées ?? undefined,
       formationsFavorites:
@@ -122,7 +122,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       métiersFavoris: élève.metiersFavoris ?? null,
       duréeÉtudesPrévue: élève.dureeEtudesPrevue ?? null,
       alternance: élève.alternance ?? null,
-      moyenneGénérale: élève.moyenneGenerale ?? null,
+      moyenneGénérale: null,
       communesFavorites: élève.communesFavorites ?? null,
       formationsMasquées: élève.corbeilleFormations ?? null,
       formations: élève.formationsFavorites?.map(({ idFormation }) => idFormation) ?? null,
@@ -143,6 +143,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
             ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
             : null,
         })) ?? null,
+      progression: élève.progression ?? null,
     };
   }
 }

@@ -91,7 +91,6 @@ class RecupererEleveServiceTest {
                         priseDeNote = "Ma formation préférée",
                     ),
                 ),
-            moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
             compteParcoursupLie = true,
             voeuxFavoris =

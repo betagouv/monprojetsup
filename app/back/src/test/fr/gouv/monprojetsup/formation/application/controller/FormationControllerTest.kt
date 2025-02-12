@@ -19,7 +19,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
@@ -131,19 +130,6 @@ class FormationControllerTest(
                             MetierCourt("MET.397", "analyste financier/ère"),
                             MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales"),
                         ),
-                ),
-            explicationAutoEvaluationMoyenne =
-                ExplicationAutoEvaluationMoyenne(
-                    baccalaureatUtilise =
-                        Baccalaureat(
-                            id = "Générale",
-                            idExterne = "Générale",
-                            nom = "Série Générale",
-                            idCarteParcoursup = "1",
-                        ),
-                    moyenneAutoEvalue = 15f,
-                    basIntervalleNotes = 14f,
-                    hautIntervalleNotes = 16f,
                 ),
             formationsSimilaires =
                 listOf(
@@ -904,15 +890,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -1262,15 +1239,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []
@@ -1679,15 +1647,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []
@@ -2123,15 +2082,6 @@ class FormationControllerTest(
                               },
                               "pourcentage": 18
                             },
-                            "autoEvaluationMoyenne": {
-                              "moyenne": 15.0,
-                              "basIntervalleNotes": 14.0,
-                              "hautIntervalleNotes": 16.0,
-                              "baccalaureatUtilise": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              }
-                            },
                             "detailsCalculScore": {
                               "details": []
                             }
@@ -2418,15 +2368,6 @@ class FormationControllerTest(
                                 "nom": "Série Générale"
                               },
                               "pourcentage": 18
-                            },
-                            "autoEvaluationMoyenne": {
-                              "moyenne": 15.0,
-                              "basIntervalleNotes": 14.0,
-                              "hautIntervalleNotes": 16.0,
-                              "baccalaureatUtilise": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              }
                             },
                             "detailsCalculScore": {
                               "details": []
@@ -3344,15 +3285,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -3930,15 +3862,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []
@@ -4649,15 +4572,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -5059,15 +4973,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []

@@ -2,7 +2,7 @@ import { type ListeLiensExternesSousFormeBoutonProps } from "./ListeLiensExterne
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 
-const ListeLiensExternesSousFormeBouton = ({ liens }: ListeLiensExternesSousFormeBoutonProps) => {
+const ListeLiensExternesSousFormeBouton = ({ id, liens }: ListeLiensExternesSousFormeBoutonProps) => {
   if (liens.length === 0) return null;
 
   return (
@@ -12,6 +12,7 @@ const ListeLiensExternesSousFormeBouton = ({ liens }: ListeLiensExternesSousForm
           <LienExterne
             ariaLabel={lien.intitulé}
             href={lien.url}
+            id={id}
             variante="neutre"
           >
             <BoutonSquelette

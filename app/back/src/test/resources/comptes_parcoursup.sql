@@ -32,7 +32,6 @@ VALUES ('AUCUNE_IDEE',
             "longitude": 5.400000
           }
         ]'::jsonb,
-        10.5,
         '{fl0001, fl0002}',
         '[
           {
@@ -77,7 +76,6 @@ VALUES ('QUELQUES_PISTES',
             "longitude": 5.400000
           }
         ]'::jsonb,
-        10.5,
         '{
           fl0001,
           fl0002

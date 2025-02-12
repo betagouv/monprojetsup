@@ -8,6 +8,7 @@ import {
   type DuréeÉtudesPrévueÉlève,
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type components } from "@/types/api-mps";
 
 type Id = string;
 
@@ -18,6 +19,9 @@ export type CentreIntêretÉlève = Id;
 export type FormationMasquéeÉlève = Id;
 export type CommuneÉlève = Omit<Commune, "codePostal">;
 export type FormationÉlève = Id;
+
+export type ProgressionÉlève = NonNullable<components["schemas"]["ProfilDTO"]["progression"]>;
+
 export type VoeuÉlève = {
   id: Id;
   estParcoursup: boolean;
@@ -50,6 +54,7 @@ export type Élève = {
   formationsMasquées: FormationMasquéeÉlève[] | null;
   notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
   ambitions: AmbitionFormationÉlève[] | null;
+  progression: ProgressionÉlève | null;
 };
 
 export const situationÉlève = [

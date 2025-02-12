@@ -54,7 +54,6 @@ abstract class ControllerTest {
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1056", "1054"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
