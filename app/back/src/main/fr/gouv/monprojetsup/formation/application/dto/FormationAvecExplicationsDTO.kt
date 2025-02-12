@@ -8,7 +8,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
@@ -178,7 +177,6 @@ data class FormationAvecExplicationsDTO(
         val choixEleve: ChoixElevesDTO?,
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
-        val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
         val detailsCalculScore: DetailsCalculScoreDTO?,
     ) {
         constructor(explications: ExplicationsSuggestionDetaillees) : this(
@@ -196,10 +194,6 @@ data class FormationAvecExplicationsDTO(
             typeBaccalaureat =
                 explications.explicationTypeBaccalaureat?.let {
                     TypeBaccalaureatDTO(it)
-                },
-            autoEvaluationMoyenne =
-                explications.explicationAutoEvaluationMoyenne?.let {
-                    AutoEvaluationMoyenneDTO(it)
                 },
             detailsCalculScore =
                 DetailsCalculScoreDTO(
@@ -251,20 +245,6 @@ data class FormationAvecExplicationsDTO(
         constructor(explicationGeographique: ExplicationGeographique) : this(
             nomVille = explicationGeographique.ville,
             distanceKm = explicationGeographique.distanceKm,
-        )
-    }
-
-    data class AutoEvaluationMoyenneDTO(
-        val moyenne: Float,
-        val basIntervalleNotes: Float,
-        val hautIntervalleNotes: Float,
-        val baccalaureatUtilise: BaccalaureatDTO,
-    ) {
-        constructor(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne) : this(
-            moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
-            basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
-            hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
-            baccalaureatUtilise = BaccalaureatDTO(autoEvaluationMoyenne.baccalaureatUtilise),
         )
     }
 

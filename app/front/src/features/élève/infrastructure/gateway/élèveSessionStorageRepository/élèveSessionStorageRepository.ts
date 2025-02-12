@@ -16,13 +16,14 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     métiersFavoris: null,
     duréeÉtudesPrévue: null,
     alternance: null,
-    moyenneGénérale: null,
     communesFavorites: null,
     formations: null,
     voeuxFavoris: null,
     formationsMasquées: null,
     ambitions: null,
     notesPersonnelles: null,
+    progression: null,
+    moyenneGénérale: null,
   };
 
   public async récupérerProfil(): Promise<Élève | Error> {

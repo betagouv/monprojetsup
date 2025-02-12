@@ -45,7 +45,10 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
       </div>
       <hr className="mb-3 mt-5" />
       <p className="grid gap-12 whitespace-pre-line">{métier.descriptif}</p>
-      <ListeLiensExternesSousFormeBouton liens={métier.liens} />
+      <ListeLiensExternesSousFormeBouton
+        id={métier.id}
+        liens={métier.liens}
+      />
       {métier.formations.length > 0 && (
         <div className="mt-12">
           <div className="*:mb-4">

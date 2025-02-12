@@ -251,16 +251,8 @@ export class formationHttpRepository implements FormationRepository {
             pourcentageAdmisAnnéePrécédente: explications.typeBaccalaureat?.pourcentage,
           }
         : null,
-      autoEvaluationMoyenne: explications.autoEvaluationMoyenne
-        ? {
-            moyenne: explications.autoEvaluationMoyenne.moyenne,
-            intervalBas: explications.autoEvaluationMoyenne.basIntervalleNotes,
-            intervalHaut: explications.autoEvaluationMoyenne.hautIntervalleNotes,
-            idBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.id,
-            nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
-          }
-        : null,
       explicationsCalcul: explications.detailsCalculScore?.details ?? null,
+      autoEvaluationMoyenne: null,
     };
   };
 
@@ -282,7 +274,6 @@ export class formationHttpRepository implements FormationRepository {
           explications.choixEleve.metiers.length > 0),
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
-      explications.autoEvaluationMoyenne,
     ];
 
     let points = 0;

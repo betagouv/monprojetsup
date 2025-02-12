@@ -84,16 +84,13 @@ data class ProfilDTO(
     @ArraySchema(arraySchema = Schema(description = "Villes préférées pour étudier"))
     @JsonProperty("communesFavorites")
     val communesFavorites: List<CommuneDTO>? = null,
-    @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14")
-    @JsonProperty("moyenneGenerale")
-    val moyenneGenerale: Float? = null,
     @ArraySchema(arraySchema = Schema(description = "Les idées de formations de l'élève"))
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<FormationFavoriteDTO>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
-                description = "Les formations mises à la corbeille par l'élève",
+                description = "Les formations masquées par l'élève",
                 example = "[\"fl1\", \"fl810505\"]",
             ),
     )
@@ -105,8 +102,15 @@ data class ProfilDTO(
     @ArraySchema(arraySchema = Schema(description = "Liste des voeux favoris"))
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
+    @Schema(
+        description = "Progression dans les 6 niveaux MPS",
+        example = "1",
+        allowableValues = ["1", "2", "3", "4", "5", "6"],
+    )
+    @JsonProperty("progression")
+    val progression: Int? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null, progression: Int? = null) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
@@ -115,13 +119,13 @@ data class ProfilDTO(
         formationsFavorites = profilEleve.formationsFavorites?.map { FormationFavoriteDTO(it) },
         communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
         specialites = profilEleve.specialites,
-        moyenneGenerale = profilEleve.moyenneGenerale,
         centresInterets = profilEleve.centresInterets,
         metiersFavoris = profilEleve.metiersFavoris,
         domaines = profilEleve.domainesInterets,
         corbeilleFormations = profilEleve.corbeilleFormations,
         compteParcoursupAssocie = profilEleve.compteParcoursupLie,
         voeuxFavoris = (voeuxFavoris ?: profilEleve.voeuxFavoris).map { VoeuFavoriDTO(it) },
+        progression = progression,
     )
 
     data class CommuneDTO(

@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -52,7 +51,6 @@ data class ExplicationsSuggestionDetaillees(
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
     val formationsSimilaires: List<FormationCourte> = emptyList(),
     val choixEleve: ChoixEleve = ChoixEleve(),
-    val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
     val detailsCalculScore: List<String> = emptyList(),
 ) {

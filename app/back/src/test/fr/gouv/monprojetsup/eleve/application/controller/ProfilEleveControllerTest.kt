@@ -15,6 +15,7 @@ import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -47,6 +48,9 @@ class ProfilEleveControllerTest(
     @MockBean
     lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 
+    @MockBean
+    lateinit var recupererProgressionService: RecupererProgressionService
+
     @Nested
     inner class `Quand on appelle la route POST profil` {
         private val modificationProfilEleve =
@@ -59,7 +63,6 @@ class ProfilEleveControllerTest(
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_456"),
                 formationsFavorites =
                     listOf(
@@ -94,7 +97,6 @@ class ProfilEleveControllerTest(
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_456"),
                 formationsFavorites =
                     listOf(
@@ -180,7 +182,6 @@ class ProfilEleveControllerTest(
                               "longitude": 2.2885659
                             }
                           ],
-                          "moyenneGenerale": 14.0,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",
@@ -246,7 +247,6 @@ class ProfilEleveControllerTest(
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
-                    moyenneGenerale = 4.9f,
                     metiersFavoris = null,
                     formationsFavorites =
                         listOf(
@@ -392,7 +392,6 @@ class ProfilEleveControllerTest(
                   "longitude": 2.2885659
                 }
               ],
-              "moyenneGenerale": 14,
               "formationsFavorites": [
                 {
                   "idFormation": "fl1234",
@@ -455,7 +454,6 @@ class ProfilEleveControllerTest(
                   "longitude": 2.2885659
                 }
               ],
-              "moyenneGenerale": 14.0,
               "formationsFavorites": [
                 {
                   "idFormation": "fl1234",
@@ -541,7 +539,6 @@ class ProfilEleveControllerTest(
                               "longitude": 2.2885659
                             }
                           ],
-                          "moyenneGenerale": 14.0,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",
@@ -617,7 +614,6 @@ class ProfilEleveControllerTest(
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
-                    moyenneGenerale = 4.9f,
                     metiersFavoris = null,
                     formationsFavorites =
                         listOf(
@@ -681,7 +677,6 @@ class ProfilEleveControllerTest(
                               "longitude": 5.4
                             }
                           ],
-                          "moyenneGenerale": 4.9,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",

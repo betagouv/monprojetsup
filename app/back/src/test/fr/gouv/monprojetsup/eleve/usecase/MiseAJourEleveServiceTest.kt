@@ -94,7 +94,6 @@ class MiseAJourEleveServiceTest {
                         priseDeNote = "Ma formation préférée",
                     ),
                 ),
-            moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
             compteParcoursupLie = true,
             voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
@@ -121,7 +120,6 @@ class MiseAJourEleveServiceTest {
                     alternance = null,
                     communesFavorites = null,
                     formationsFavorites = null,
-                    moyenneGenerale = null,
                 )
             given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Général"))
                 .willReturn(listOf("5", "7", "1008", "2003"))
@@ -666,39 +664,6 @@ class MiseAJourEleveServiceTest {
     }
 
     @Nested
-    inner class ErreurMoyenneGenerale {
-        @Test
-        fun `si la moyenne envoyée est strictement inferieure à 0, doit throw BadRequestException`() {
-            // Given
-            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = -0.5f)
-
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("La moyenne générale -0.5 n'est pas dans l'intervalle 0 et 20")
-        }
-
-        @Test
-        fun `si la moyenne envoyée est strictement supérieure à 20, doit throw BadRequestException`() {
-            // Given
-            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = 20.5f)
-
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("La moyenne générale 20.5 n'est pas dans l'intervalle 0 et 20")
-        }
-    }
-
-    @Nested
     inner class CasNominaux {
         @Test
         fun `quand toutes les valeurs sont à null, ne doit rien faire et renvoyer le profil initial`() {
@@ -737,7 +702,6 @@ class MiseAJourEleveServiceTest {
                     alternance = null,
                     communesFavorites = emptyList(),
                     formationsFavorites = emptyList(),
-                    moyenneGenerale = null,
                 )
 
             // When
@@ -794,7 +758,6 @@ class MiseAJourEleveServiceTest {
                                 priseDeNote = null,
                             ),
                         ),
-                    moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
                     voeuxFavoris =
                         listOf(
@@ -883,7 +846,6 @@ class MiseAJourEleveServiceTest {
                                 priseDeNote = null,
                             ),
                         ),
-                    moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
                     compteParcoursupLie = true,
                     voeuxFavoris =
@@ -895,59 +857,6 @@ class MiseAJourEleveServiceTest {
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
             assertThat(resultat).isEqualTo(nouveauProfil)
-        }
-
-        @Test
-        fun `quand la moyenne est à -1, doit la mettre à jour`() {
-            // Given
-            val modificationProfilEleve = ModificationProfilEleve(moyenneGenerale = -1.0f)
-
-            // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleve,
-                profilActuel = profilEleve,
-            )
-
-            // Then
-            val nouveauProfil =
-                ProfilEleve.AvecProfilExistant(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                    situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
-                    classe = ChoixNiveau.SECONDE,
-                    baccalaureat = "Général",
-                    specialites = listOf("4", "1006"),
-                    domainesInterets = listOf("animaux", "agroequipement"),
-                    centresInterets = listOf("linguistique", "voyage"),
-                    metiersFavoris = listOf("MET001"),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
-                    alternance = ChoixAlternance.INDIFFERENT,
-                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
-                    formationsFavorites =
-                        listOf(
-                            FormationFavorite(
-                                idFormation = "fl0010",
-                                niveauAmbition = 1,
-                                priseDeNote = null,
-                            ),
-                            FormationFavorite(
-                                idFormation = "fl0012",
-                                niveauAmbition = 3,
-                                priseDeNote = "Ma formation préférée",
-                            ),
-                        ),
-                    moyenneGenerale = -1.0f,
-                    corbeilleFormations = listOf("fl1234", "fl5678"),
-                    compteParcoursupLie = true,
-                    voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
-                )
-            then(baccalaureatRepository).shouldHaveNoInteractions()
-            then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
-            then(voeuRepository).shouldHaveNoInteractions()
-            then(domaineRepository).shouldHaveNoInteractions()
-            then(interetRepository).shouldHaveNoInteractions()
-            then(metierRepository).shouldHaveNoInteractions()
-            then(formationRepository).shouldHaveNoInteractions()
-            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
         }
 
         @Test

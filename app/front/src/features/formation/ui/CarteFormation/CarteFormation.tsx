@@ -5,6 +5,7 @@ import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
+import useVoirFormation from "@/features/formation/ui/hooks/CarteFormation/useVoirFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
@@ -17,10 +18,12 @@ const CarteFormation = ({
   sélectionnée = false,
 }: CarteFormationProps) => {
   const { estFormationFavoritePourÉlève, estFormationMasquéePourÉlève } = useÉlève();
+  const auClicHandler = () => useVoirFormation(id);
 
   return (
     <>
       <Carte
+        auClicHandler={auClicHandler}
         estFavori={estFormationFavoritePourÉlève(id)}
         estMasqué={estFormationMasquéePourÉlève(id)}
         id={id}

@@ -107,7 +107,6 @@ class FilterTest(
                             "priseDeNote": "Ma formation préférée"
                           }
                         ],
-                        "moyenneGenerale": 14.0,
                         "corbeilleFormations": [
                           "fl0010",
                           "fl0012"
