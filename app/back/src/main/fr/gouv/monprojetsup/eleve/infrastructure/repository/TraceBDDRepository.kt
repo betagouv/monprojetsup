@@ -46,4 +46,10 @@ class TraceBDDRepository(
     override fun getTraces(idEleve: String): List<Trace> {
         return traceJPARepository.findByIdEleve(idEleve).map { it.toTrace() }
     }
+
+    override fun getNbFichesLues(id: String): Int {
+        return traceJPARepository
+            .findByIdEleveAndActionEleve(id, ActionEleve.FICHE_FORMATION)
+            .map { it.param1 }.distinct().count()
+    }
 }

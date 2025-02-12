@@ -90,20 +90,30 @@ data class ProfilDTO(
     @ArraySchema(
         arraySchema =
             Schema(
-                description = "Les formations mises à la corbeille par l'élève",
+                description = "Les formations masquées par l'élève",
                 example = "[\"fl1\", \"fl810505\"]",
             ),
     )
     @JsonProperty("corbeilleFormations")
     val corbeilleFormations: List<String>? = null,
+
     @Schema(description = "Prénom de l'élève", example = "Kévin")
     @JsonProperty("compteParcoursupAssocie")
     val compteParcoursupAssocie: Boolean,
+
     @ArraySchema(arraySchema = Schema(description = "Liste des voeux favoris"))
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
+
+    @Schema(
+        description = "Progression dans les 6 niveaux MPS",
+        example = "1",
+        allowableValues = ["1", "2", "3", "4", "5", "6"],
+    )
+    @JsonProperty("progression")
+    val progression: Int? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null, progression: Int? = null) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
@@ -118,6 +128,7 @@ data class ProfilDTO(
         corbeilleFormations = profilEleve.corbeilleFormations,
         compteParcoursupAssocie = profilEleve.compteParcoursupLie,
         voeuxFavoris = (voeuxFavoris ?: profilEleve.voeuxFavoris).map { VoeuFavoriDTO(it) },
+        progression = progression,
     )
 
     data class CommuneDTO(

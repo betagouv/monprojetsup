@@ -405,11 +405,13 @@ export const localeFR = {
         },
       },
       TÉMOIGNAGE: {
-        AUTEUR: "Charlotte",
+        AUTEUR: "Mathilde",
         RÔLE: "De l’équipe MPS",
+        PHRASE_NIVEAU: "Tu as atteint le niveau ",
+        PHRASE_FELICITATIONS: ", félicitations!",
         PHRASE:
           "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup, en atteignant progressivement les",
-        PHRASE_SUITE: "6 niveaux MPS",
+        PHRASE_SUITE: "6 niveaux MPS.",
       },
     },
   },

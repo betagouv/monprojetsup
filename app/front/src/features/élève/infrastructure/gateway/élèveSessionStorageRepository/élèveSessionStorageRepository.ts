@@ -16,7 +16,6 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     métiersFavoris: null,
     duréeÉtudesPrévue: null,
     alternance: null,
-    moyenneGénérale: null,
     communesFavorites: null,
     formations: null,
     voeuxFavoris: null,

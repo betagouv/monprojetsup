@@ -54,6 +54,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Lier à un compte Parcoursup
+         * @description Lie le compte MPS à un compte Parcoursup pour récupération automatique des favoris Parcoursup
+         */
         post: operations["postCompteParcoursup"];
         delete?: never;
         options?: never;
@@ -73,6 +77,26 @@ export interface paths {
          * @description Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.
          */
         get: operations["getReferentielPourInscription"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/profil/progression": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer le niveau de progression pédagogique
+         * @description Récupère le niveau de progression pédagogique, entre 1 et 6
+         */
+        get: operations["getProgressionMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -461,16 +485,10 @@ export interface components {
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             /** @description Villes préférées pour étudier */
             communesFavorites?: components["schemas"]["CommuneDTO"][];
-            /**
-             * Format: float
-             * @description Moyenne générale scolaire estimée en terminale
-             * @example 14
-             */
-            moyenneGenerale?: number;
             /** @description Les idées de formations de l'élève */
             formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
             /**
-             * @description Les formations mises à la corbeille par l'élève
+             * @description Les formations masquées par l'élève
              * @example [
              *       "fl1",
              *       "fl810505"
@@ -484,6 +502,13 @@ export interface components {
             compteParcoursupAssocie: boolean;
             /** @description Liste des voeux favoris */
             voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
+            /**
+             * Format: int32
+             * @description Progression dans les 6 niveaux MPS
+             * @example 1
+             * @enum {integer}
+             */
+            progression?: 1 | 2 | 3 | 4 | 5 | 6;
         };
         AjoutCompteParcoursupDTO: {
             codeVerifier: string;
@@ -557,6 +582,15 @@ export interface components {
             id: string;
             nom: string;
         };
+        ProgressionDTO: {
+            /**
+             * Format: int32
+             * @description Progression dans les six niveaux MPS
+             * @example 6
+             * @enum {integer}
+             */
+            progression: 1 | 2 | 3 | 4 | 5 | 6;
+        };
         FormationCourteDTO: {
             id: string;
             nom: string;
@@ -596,15 +630,6 @@ export interface components {
             nomSpecialite: string;
             /** Format: int32 */
             pourcentage: number;
-        };
-        AutoEvaluationMoyenneDTO: {
-            /** Format: float */
-            moyenne: number;
-            /** Format: float */
-            basIntervalleNotes: number;
-            /** Format: float */
-            hautIntervalleNotes: number;
-            baccalaureatUtilise: components["schemas"]["BaccalaureatDTO"];
         };
         CentileDTO: {
             /** Format: int32 */
@@ -648,7 +673,6 @@ export interface components {
             choixEleve?: components["schemas"]["ChoixElevesDTO"];
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
-            autoEvaluationMoyenne?: components["schemas"]["AutoEvaluationMoyenneDTO"];
             detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
         };
         FicheFormationDTO: {
@@ -839,6 +863,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ReferentielDTO"];
+                };
+            };
+        };
+    };
+    getProgressionMPS: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressionDTO"];
                 };
             };
         };

@@ -53,7 +53,10 @@ class ProfilEleveController(
     fun getProfilEleve(): ProfilDTO {
         val profil = recupererEleveAvecProfilExistant()
         val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
-        return ProfilDTO(profil, voeuxFavoris)
+        val progression = recupererProgressionService.recupererProgression(
+            profil
+        )
+        return ProfilDTO(profil, voeuxFavoris, progression)
     }
 
     @PostMapping("/parcoursup")

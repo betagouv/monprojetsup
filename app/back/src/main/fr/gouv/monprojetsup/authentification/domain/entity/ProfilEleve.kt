@@ -64,17 +64,22 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             return 100 * result / resultMaximum;
         }
 
-        fun aAuMojnsUnFavoriMPS(): Boolean {
+        fun aAuMoinsUnFavoriMPS(): Boolean {
             return !metiersFavoris.isNullOrEmpty() || !formationsFavorites.isNullOrEmpty()
         }
 
-        fun aAuMojnsTroisFavorisMPS(): Boolean {
+        fun aAuMoinsTroisFavorisMPS(): Boolean {
             return !metiersFavoris.isNullOrEmpty() && metiersFavoris.size >= 3
                     || !formationsFavorites.isNullOrEmpty() && formationsFavorites.size >= 3
         }
 
-        fun aEveluesonNoveauAmbition(): Boolean {
+        fun aEvalueSonNiveauAmbition(): Boolean {
             return !formationsFavorites.isNullOrEmpty() && formationsFavorites.all { it.niveauAmbition > 0 }
+        }
+
+        fun aDesFavorisParcoursup(): Boolean {
+            return !voeuxFavoris.isNullOrEmpty()
+                    && !formationsFavorites.isNullOrEmpty();
         }
 
     }

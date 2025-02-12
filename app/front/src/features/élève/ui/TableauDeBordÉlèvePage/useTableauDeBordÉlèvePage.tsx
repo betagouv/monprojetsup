@@ -6,11 +6,15 @@ import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import { CartePrimaireTableauDeBordÉlèveProps } from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève.interface";
 import { getRouteApi } from "@tanstack/react-router";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useTableauDeBordÉlèvePage() {
   const route = getRouteApi("/_auth/");
   const { associationPS } = route.useSearch();
   const { déclencherToast } = actionsToastStore();
+  const { data: élève } = useQuery(élèveQueryOptions);
+
 
   if (associationPS === "ok") {
     déclencherToast(
@@ -51,5 +55,6 @@ export default function useTableauDeBordÉlèvePage() {
     cartes,
     associationParcoursupPossible:
       environnement.VITE_PARCOURSUP_OAUTH2_URL && environnement.VITE_PARCOURSUP_OAUTH2_CLIENT,
+    progression: élève?.progression
   };
 }

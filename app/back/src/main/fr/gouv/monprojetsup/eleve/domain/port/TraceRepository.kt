@@ -14,4 +14,6 @@ interface TraceRepository {
     )
 
     fun getTraces(idEleve: String): List<Trace>
+
+    fun getNbFichesLues(id: String): Int
 }
