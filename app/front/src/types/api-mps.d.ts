@@ -386,12 +386,6 @@ export interface components {
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             /** @description Villes préférées pour étudier */
             communesFavorites?: components["schemas"]["CommuneDTO"][];
-            /**
-             * Format: float
-             * @description Moyenne générale scolaire estimée en terminale
-             * @example 14
-             */
-            moyenneGenerale?: number;
             /** @description Les formations favorites de l'élève */
             formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
             /** @description Les voeux favoris de l'élève */

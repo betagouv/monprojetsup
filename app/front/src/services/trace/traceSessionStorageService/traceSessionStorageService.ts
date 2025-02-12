@@ -5,13 +5,13 @@ export class TraceSessionStorageService implements TraceService {
     return Promise.resolve();
   }
 
-  public async ajouterTraceFicheMetier(): Promise<void> {}
+  public async ajouterTraceFicheMetier() {}
 
-  public async ajouterTraceRechercheFormation(): Promise<void> {}
+  public async ajouterTraceRechercheFormation() {}
 
-  public async ajouterTraceSuggestions(): Promise<void> {}
+  public async ajouterTraceSuggestions() {}
 
-  public async ajouterTraceOngletFicheFormation(): Promise<void> {}
+  public async ajouterTraceOngletFicheFormation() {}
 
-  public async ajouterTraceLienExterne(): Promise<void> {}
+  public async ajouterTraceLienExterne() {}
 }

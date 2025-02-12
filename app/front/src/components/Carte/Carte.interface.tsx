@@ -7,5 +7,5 @@ export type CarteProps = {
   estMasqué: boolean;
   children: ReactNode;
   sélectionnée?: boolean;
-  auClicHandler: () => Promise<void | Error>;
+  auClicHandler: () => Promise<void>;
 };

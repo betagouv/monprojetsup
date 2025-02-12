@@ -29,6 +29,7 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
         formationsMasquées: null,
         ambitions: null,
         notesPersonnelles: null,
+        progression: null,
         ...argumentsProfilÉlève,
       };
 
@@ -55,6 +56,7 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
       formationsMasquées: [],
       ambitions: [],
       notesPersonnelles: [],
+      progression: 3,
     };
 
     await this.initialiserProfilÉlèveParDéfaut({ ...profilÉlèveParDéfaut, ...profilÉlève });

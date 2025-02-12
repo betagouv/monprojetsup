@@ -94,7 +94,6 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       metiersFavoris: élève.métiersFavoris ?? undefined,
       dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
       alternance: élève.alternance ?? undefined,
-      moyenneGenerale: élève.moyenneGénérale ?? undefined,
       communesFavorites: élève.communesFavorites ?? undefined,
       corbeilleFormations: élève.formationsMasquées ?? undefined,
       formationsFavorites:

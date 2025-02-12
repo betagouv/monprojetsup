@@ -252,6 +252,7 @@ export class formationHttpRepository implements FormationRepository {
           }
         : null,
       explicationsCalcul: explications.detailsCalculScore?.details ?? null,
+      autoEvaluationMoyenne: null,
     };
   };
 
@@ -273,7 +274,6 @@ export class formationHttpRepository implements FormationRepository {
           explications.choixEleve.metiers.length > 0),
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
-      explications.autoEvaluationMoyenne,
     ];
 
     let points = 0;
