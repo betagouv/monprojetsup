@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/trace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ajoute une trace de navigation */
+        post: operations["ajoutTrace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/profil": {
         parameters: {
             query?: never;
@@ -22,22 +39,6 @@ export interface paths {
          * @description  Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)
          */
         post: operations["postProfilEleve"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/profil/trace": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ajoutTrace"];
         delete?: never;
         options?: never;
         head?: never;
@@ -244,6 +245,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        TraceDTO: {
+            /** @enum {string} */
+            action: "fiche_formation" | "recherche_formation" | "suggestions" | "onglet_fiche_formation" | "lien_externe" | "ajout_favori_formation" | "ajout_favori_metier" | "fiche_metier" | "edition_profil";
+            param1?: string;
+            param2?: string;
+        };
+        Unit: Record<string, never>;
         CommuneDTO: {
             /**
              * @description Code Insee de la ville
@@ -477,12 +485,6 @@ export interface components {
             /** @description Liste des voeux favoris */
             voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
         };
-        TraceDTO: {
-            action: string;
-            param1?: string;
-            param2?: string;
-        };
-        Unit: Record<string, never>;
         AjoutCompteParcoursupDTO: {
             codeVerifier: string;
             code: string;
@@ -729,6 +731,30 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    ajoutTrace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TraceDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
     getProfilEleve: {
         parameters: {
             query?: never;
@@ -769,30 +795,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ProfilDTO"];
-                };
-            };
-        };
-    };
-    ajoutTrace: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TraceDTO"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Unit"];
                 };
             };
         };

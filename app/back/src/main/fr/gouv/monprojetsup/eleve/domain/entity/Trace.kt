@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.eleve.domain.entity
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Trace(
-    val tsp: LocalDate?,
-    val action: String,
+    val actionEleve: ActionEleve,
     val param1: String?,
     val param2: String?,
+    val tsp: LocalDateTime?,
 ) {
-    constructor(action: String, param1: String?, param2: String?) : this(null, action, param1, param2)
+    constructor(actionEleve: ActionEleve, param1: String?, param2: String?) : this(actionEleve, param1, param2, null)
 }

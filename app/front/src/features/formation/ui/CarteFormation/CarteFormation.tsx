@@ -7,6 +7,7 @@ import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import useVoirFormation from "@/features/formation/ui/hooks/CarteFormation/useVoirFormation";
 
 const CarteFormation = ({
   id,
@@ -17,6 +18,7 @@ const CarteFormation = ({
   sélectionnée = false,
 }: CarteFormationProps) => {
   const { estFormationFavoritePourÉlève, estFormationMasquéePourÉlève } = useÉlève();
+  const auClicHandler = () => useVoirFormation(id);
 
   return (
     <>
@@ -26,6 +28,7 @@ const CarteFormation = ({
         id={id}
         sélectionnée={sélectionnée}
         titre={titre}
+        auClicHandler={auClicHandler}
       >
         <NombreAffinité affinité={affinité} />
         <CommunesProposantLaFormation communes={communes} />

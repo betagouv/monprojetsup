@@ -5,3 +5,4 @@ export type BarreLatéraleFormationProps = {
   résultatsDeRecherche?: FicheFormation[];
   chargementEnCours: boolean;
 };
+

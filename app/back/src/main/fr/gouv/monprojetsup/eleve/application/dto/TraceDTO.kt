@@ -1,11 +1,12 @@
 package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.monprojetsup.eleve.domain.entity.ActionEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Trace
 
 data class TraceDTO(
     @JsonProperty("action")
-    val action: String,
+    val action: ActionEleve,
     @JsonProperty("param1")
     val param1: String?,
     @JsonProperty("param2")
@@ -13,7 +14,7 @@ data class TraceDTO(
 ) {
     fun toTrace(): Trace {
         return Trace(
-            action = action,
+            actionEleve = action,
             param1 = param1,
             param2 = param2,
         )

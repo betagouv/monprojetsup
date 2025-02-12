@@ -6,6 +6,9 @@ import { RechercherCommunesUseCase } from "@/features/commune/usecase/Rechercher
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
+import { TraceHttpService } from "@/services/trace/traceHttpService/traceHttpService";
+import { type TraceService } from "@/services/trace/trace.interface";
+import { TraceSessionStorageService } from "@/services/trace/traceSessionStorageService/traceSessionStorageService";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourAmbitionsÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourAmbitionsÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
@@ -20,6 +23,9 @@ import { RechercherSpécialitésUseCase } from "@/features/élève/usecase/Reche
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
+import { VoirFormationUseCase } from "@/features/formation/usecase/VoirFormation";
+import { VoirMétierUseCase } from "@/features/formation/usecase/VoirMétier";
+import { SuivreLienExterneUseCase } from "@/components/Lien/LienExterne/usecase/SuivreLienExterne";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
@@ -30,6 +36,7 @@ import { RécupérerFicheFormationUseCase } from "@/features/formation/usecase/R
 import { RécupérerFichesFormationsUseCase } from "@/features/formation/usecase/RécupérerFichesFormations.ts";
 import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations.ts";
 import { SuggérerFormationsUseCase } from "@/features/formation/usecase/SuggérerFormations";
+import { VoirOngletFormationUseCase } from "@/features/formation/usecase/VoirOngletFormation";
 import { métierHttpRepository } from "@/features/métier/infrastructure/gateway/métierHttpRepository/métierHttpRepository";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
@@ -60,6 +67,8 @@ export class Dépendances {
   private readonly _référentielDonnéesRepository: RéférentielDonnéesRepository;
 
   private readonly _élèveRepository: ÉlèveRepository;
+
+  private readonly _traceService: TraceService;
 
   private readonly _formationRepository: FormationRepository;
 
@@ -123,6 +132,14 @@ export class Dépendances {
 
   public readonly rechercherVoeuxUseCase: RechercherVoeuxUseCase;
 
+  public readonly voirOngletFormationUseCase: VoirOngletFormationUseCase;
+
+  public readonly voirFicheFormationUseCase: VoirFormationUseCase
+
+  public readonly voirMétierUseCase: VoirMétierUseCase
+
+  public readonly suivreLienExterne: SuivreLienExterneUseCase
+
   private constructor() {
     this._httpClient = new HttpClient();
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, environnement.VITE_API_URL);
@@ -138,6 +155,9 @@ export class Dépendances {
     this._élèveRepository = environnement.VITE_TEST_MODE
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);
+    this._traceService = environnement.VITE_TEST_MODE
+      ? new TraceSessionStorageService()
+      : new TraceHttpService(this._mpsApiHttpClient);
     this._formationRepository = environnement.VITE_TEST_MODE
       ? new formationInMemoryRepository()
       : new formationHttpRepository(this._mpsApiHttpClient);
@@ -188,13 +208,13 @@ export class Dépendances {
     // Formations
     this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);
     this.récupérerFichesFormationsUseCase = new RécupérerFichesFormationsUseCase(this._formationRepository);
-    this.rechercherFichesFormationsUseCase = new RechercherFichesFormationsUseCase(this._formationRepository);
-    this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
+    this.rechercherFichesFormationsUseCase = new RechercherFichesFormationsUseCase(this._formationRepository, this._traceService);
+    this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository, this._traceService);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
-    this.suggérerFormationsUseCase = new SuggérerFormationsUseCase(this._formationRepository);
+    this.suggérerFormationsUseCase = new SuggérerFormationsUseCase(this._formationRepository, this._traceService);
 
     // Métiers
-    this.récupérerMétierUseCase = new RécupérerMétierUseCase(this._métierRepository);
+    this.récupérerMétierUseCase = new RécupérerMétierUseCase(this._métierRepository, this._traceService);
     this.récupérerMétiersUseCase = new RécupérerMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
 
@@ -206,6 +226,13 @@ export class Dépendances {
 
     // Voeux
     this.rechercherVoeuxUseCase = new RechercherVoeuxUseCase();
+
+    // TraceService
+    this.voirOngletFormationUseCase = new VoirOngletFormationUseCase(this._traceService);
+    this.voirFicheFormationUseCase = new VoirFormationUseCase(this._traceService);
+    this.voirMétierUseCase = new VoirMétierUseCase(this._traceService);
+    this.suivreLienExterne = new SuivreLienExterneUseCase(this._traceService);
+
   }
 
   public static getInstance(): Dépendances {

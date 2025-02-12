@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.clock.MonProjetSupClock
+import fr.gouv.monprojetsup.eleve.domain.entity.ActionEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Trace
 import fr.gouv.monprojetsup.eleve.domain.port.TraceRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
@@ -44,9 +45,9 @@ class AjoutTraceServiceTest {
         given(profil.id).willReturn(idProfil)
 
         // When
-        ajoutTraceService.ajouterTrace(idProfil, Trace("action", "param1", "param2"))
+        ajoutTraceService.ajouterTrace(idProfil, Trace(ActionEleve.AJOUT_FAVORI_METIER, "param1", "param2"))
 
         // Then
-        then(traceRepository).should().ajouterTrace(idProfil, "action", "param1", "param2")
+        then(traceRepository).should().ajouterTrace(idProfil, ActionEleve.AJOUT_FAVORI_METIER, "param1", "param2")
     }
 }

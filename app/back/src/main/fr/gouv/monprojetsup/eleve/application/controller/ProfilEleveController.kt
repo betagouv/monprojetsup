@@ -4,8 +4,6 @@ import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieC
 import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
-import fr.gouv.monprojetsup.eleve.application.dto.TraceDTO
-import fr.gouv.monprojetsup.eleve.usecase.AjoutTraceService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
@@ -25,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
     private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
-    private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
-    private val ajoutTraceService: AjoutTraceService,
+    private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -67,15 +64,4 @@ class ProfilEleveController(
         return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 
-    @PostMapping("/trace")
-    fun ajoutTrace(
-        @RequestBody trace: TraceDTO,
-    ): ResponseEntity<Unit> {
-        val eleve = recupererEleve()
-        ajoutTraceService.ajouterTrace(
-            idEleve = eleve.id,
-            trace = trace.toTrace(),
-        )
-        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
-    }
 }

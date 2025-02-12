@@ -1,4 +1,5 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
+
 import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";

@@ -2,11 +2,11 @@ import { type OngletFormationFicheFormationProps } from "./OngletFormationFicheF
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 
-const OngletFormationFicheFormation = ({ texte, liens }: OngletFormationFicheFormationProps) => {
+const OngletFormationFicheFormation = ({ id, texte, liens }: OngletFormationFicheFormationProps) => {
   return (
     <div className="grid gap-6">
       <TexteTronqué texte={texte} />
-      <ListeLiensExternesSousFormeBouton liens={liens} />
+      <ListeLiensExternesSousFormeBouton id={id} liens={liens} />
     </div>
   );
 };

@@ -25,3 +25,12 @@ export default function useFormation() {
     formationVersFavori,
   };
 }
+
+
+interface UseSélectionFormationReturn {
+  sélectionFormation: (formationId : string) => Promise<void | Error>;
+}
+
+export type UseSélectionFormationArgs = {
+  id: string;
+};

@@ -1,5 +1,6 @@
 import { type LienExterneProps } from "./LienExterne.interface";
 import useLien from "@/components/Lien/useLien";
+import { dépendances } from "@/configuration/dépendances/dépendances";
 
 const LienExterne = ({
   children,
@@ -10,6 +11,7 @@ const LienExterne = ({
   icône,
   estUnTéléchargement,
   estUnTag,
+  id
 }: LienExterneProps) => {
   const { ariaLabelFormaté, classesCSS } = useLien({
     ariaLabel,
@@ -21,6 +23,8 @@ const LienExterne = ({
     estUnTag,
   });
 
+  const auClicHandler = () => dépendances.suivreLienExterne.run(id ?? "", href);
+
   return (
     <a
       aria-label={ariaLabelFormaté}
@@ -29,6 +33,7 @@ const LienExterne = ({
       href={href}
       rel="noreferrer noopener"
       target="_blank"
+      onClick={auClicHandler}
     >
       {children}
     </a>

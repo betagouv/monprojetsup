@@ -8,3 +8,4 @@ export type CarteFormationProps = {
   affinité?: FicheFormation["affinité"];
   sélectionnée?: boolean;
 };
+

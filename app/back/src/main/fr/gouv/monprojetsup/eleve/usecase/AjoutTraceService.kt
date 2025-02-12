@@ -14,6 +14,6 @@ class AjoutTraceService(
         idEleve: String,
         trace: Trace,
     ) {
-        traceRepository.ajouterTrace(idEleve, trace.action, trace.param1, trace.param2)
+        traceRepository.ajouterTrace(idEleve, trace.actionEleve, trace.param1, trace.param2)
     }
 }
