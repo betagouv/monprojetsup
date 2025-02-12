@@ -5,8 +5,8 @@ import Titre from "@/components/Titre/Titre";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
-import ModaleMétier from "@/features/métier/ui/ModaleMétier/ModaleMétier";
 import useVoirMétier from "@/features/formation/ui/hooks/FormationPage/MétiersAccessiblesFicheFormation/useVoirMétier";
+import ModaleMétier from "@/features/métier/ui/ModaleMétier/ModaleMétier";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
   const { estMétierFavoriPourÉlève } = useÉlève();
@@ -32,7 +32,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
               auClic={() => {
                 modaleMétier.open();
                 setMétierSélectionné(métier);
-                useVoirMétier(métier.id);
+                void useVoirMétier(métier.id);
               }}
               icône={
                 estMétierFavoriPourÉlève(métier.id) ? { position: "gauche", classe: "fr-icon-heart-fill" } : undefined

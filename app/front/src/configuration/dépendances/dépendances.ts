@@ -1,3 +1,4 @@
+import { SuivreLienExterneUseCase } from "@/components/Lien/LienExterne/usecase/SuivreLienExterne";
 import { environnement } from "@/configuration/environnement";
 import { communeHttpRepository } from "@/features/commune/infrastructure/gateway/communeHttpRepository/communeHttpRepository";
 import { communeInMemoryRepository } from "@/features/commune/infrastructure/gateway/communeInMemoryRepository/communeInMemoryRepository";
@@ -6,9 +7,6 @@ import { RechercherCommunesUseCase } from "@/features/commune/usecase/Rechercher
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
-import { TraceHttpService } from "@/services/trace/traceHttpService/traceHttpService";
-import { type TraceService } from "@/services/trace/trace.interface";
-import { TraceSessionStorageService } from "@/services/trace/traceSessionStorageService/traceSessionStorageService";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourAmbitionsÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourAmbitionsÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
@@ -23,9 +21,6 @@ import { RechercherSpécialitésUseCase } from "@/features/élève/usecase/Reche
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
-import { VoirFormationUseCase } from "@/features/formation/usecase/VoirFormation";
-import { VoirMétierUseCase } from "@/features/formation/usecase/VoirMétier";
-import { SuivreLienExterneUseCase } from "@/components/Lien/LienExterne/usecase/SuivreLienExterne";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
@@ -36,6 +31,8 @@ import { RécupérerFicheFormationUseCase } from "@/features/formation/usecase/R
 import { RécupérerFichesFormationsUseCase } from "@/features/formation/usecase/RécupérerFichesFormations.ts";
 import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations.ts";
 import { SuggérerFormationsUseCase } from "@/features/formation/usecase/SuggérerFormations";
+import { VoirFormationUseCase } from "@/features/formation/usecase/VoirFormation";
+import { VoirMétierUseCase } from "@/features/formation/usecase/VoirMétier";
 import { VoirOngletFormationUseCase } from "@/features/formation/usecase/VoirOngletFormation";
 import { métierHttpRepository } from "@/features/métier/infrastructure/gateway/métierHttpRepository/métierHttpRepository";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
@@ -55,6 +52,9 @@ import { ConsoleLogger } from "@/services/logger/consoleLogger/consoleLogger";
 import { Logger } from "@/services/logger/logger.interface";
 import { SentryLogger } from "@/services/logger/sentryLogger/sentryLogger";
 import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
+import { type TraceService } from "@/services/trace/trace.interface";
+import { TraceHttpService } from "@/services/trace/traceHttpService/traceHttpService";
+import { TraceSessionStorageService } from "@/services/trace/traceSessionStorageService/traceSessionStorageService";
 
 export class Dépendances {
   // eslint-disable-next-line no-use-before-define
@@ -134,11 +134,11 @@ export class Dépendances {
 
   public readonly voirOngletFormationUseCase: VoirOngletFormationUseCase;
 
-  public readonly voirFicheFormationUseCase: VoirFormationUseCase
+  public readonly voirFicheFormationUseCase: VoirFormationUseCase;
 
-  public readonly voirMétierUseCase: VoirMétierUseCase
+  public readonly voirMétierUseCase: VoirMétierUseCase;
 
-  public readonly suivreLienExterne: SuivreLienExterneUseCase
+  public readonly suivreLienExterne: SuivreLienExterneUseCase;
 
   private constructor() {
     this._httpClient = new HttpClient();
@@ -208,7 +208,10 @@ export class Dépendances {
     // Formations
     this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);
     this.récupérerFichesFormationsUseCase = new RécupérerFichesFormationsUseCase(this._formationRepository);
-    this.rechercherFichesFormationsUseCase = new RechercherFichesFormationsUseCase(this._formationRepository, this._traceService);
+    this.rechercherFichesFormationsUseCase = new RechercherFichesFormationsUseCase(
+      this._formationRepository,
+      this._traceService,
+    );
     this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository, this._traceService);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
     this.suggérerFormationsUseCase = new SuggérerFormationsUseCase(this._formationRepository, this._traceService);
@@ -232,7 +235,6 @@ export class Dépendances {
     this.voirFicheFormationUseCase = new VoirFormationUseCase(this._traceService);
     this.voirMétierUseCase = new VoirMétierUseCase(this._traceService);
     this.suivreLienExterne = new SuivreLienExterneUseCase(this._traceService);
-
   }
 
   public static getInstance(): Dépendances {

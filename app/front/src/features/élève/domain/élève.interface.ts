@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/redundant-type-aliases */
 
-import { type components } from "@/types/api-mps";
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import {
   type AlternanceÉlève,
@@ -9,6 +8,7 @@ import {
   type DuréeÉtudesPrévueÉlève,
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type components } from "@/types/api-mps";
 
 type Id = string;
 
@@ -54,7 +54,7 @@ export type Élève = {
   formationsMasquées: FormationMasquéeÉlève[] | null;
   notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
   ambitions: AmbitionFormationÉlève[] | null;
-  progression: ProgressionÉlève | null
+  progression: ProgressionÉlève | null;
 };
 
 export const situationÉlève = [

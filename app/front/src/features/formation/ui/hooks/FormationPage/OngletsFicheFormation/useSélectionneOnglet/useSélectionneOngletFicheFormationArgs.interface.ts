@@ -1,4 +1,4 @@
 export type UseSélectionneOngletFicheFormationArgs = {
-  formationId : string;
+  formationId: string;
   tabId: string | undefined;
 };

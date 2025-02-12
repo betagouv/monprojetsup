@@ -10,7 +10,7 @@ const BarreLatéraleFormation = ({
   chargementEnCours,
 }: BarreLatéraleFormationProps) => {
   if (!suggestions && !résultatsDeRecherche) return null;
-    
+
   return (
     <>
       <div className="grid gap-6 px-2 lg:px-7">

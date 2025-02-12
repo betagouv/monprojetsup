@@ -5,9 +5,9 @@ import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
+import useVoirFormation from "@/features/formation/ui/hooks/CarteFormation/useVoirFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import useVoirFormation from "@/features/formation/ui/hooks/CarteFormation/useVoirFormation";
 
 const CarteFormation = ({
   id,
@@ -23,12 +23,12 @@ const CarteFormation = ({
   return (
     <>
       <Carte
+        auClicHandler={auClicHandler}
         estFavori={estFormationFavoritePourÉlève(id)}
         estMasqué={estFormationMasquéePourÉlève(id)}
         id={id}
         sélectionnée={sélectionnée}
         titre={titre}
-        auClicHandler={auClicHandler}
       >
         <NombreAffinité affinité={affinité} />
         <CommunesProposantLaFormation communes={communes} />

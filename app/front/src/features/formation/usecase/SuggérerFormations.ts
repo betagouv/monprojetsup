@@ -9,7 +9,7 @@ export class SuggérerFormationsUseCase {
   ) {}
 
   public async run(): Promise<FicheFormation[] | Error> {
-    this._traceService.ajouterTraceSuggestions()
+    void this._traceService.ajouterTraceSuggestions();
     return await this._formationRepository.suggérer();
   }
 }

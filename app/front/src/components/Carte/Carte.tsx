@@ -4,9 +4,7 @@ import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const Carte = (
-  { titre, id, estFavori, estMasqué, children, sélectionnée, auClicHandler }: CarteProps,
-) => {
+const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée, auClicHandler }: CarteProps) => {
   const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
 
   const classEnFonctionDeLaSélection = () => {
@@ -23,7 +21,7 @@ const Carte = (
         <LienInterne
           ariaLabel={titre}
           auClic={() => {
-            auClicHandler();
+            void auClicHandler();
             changerAfficherBarreLatéraleEnMobile(false);
           }}
           hash={id}

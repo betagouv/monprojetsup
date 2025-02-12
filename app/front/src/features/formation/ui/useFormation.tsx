@@ -26,11 +26,6 @@ export default function useFormation() {
   };
 }
 
-
-interface UseSélectionFormationReturn {
-  sélectionFormation: (formationId : string) => Promise<void | Error>;
-}
-
 export type UseSélectionFormationArgs = {
   id: string;
 };

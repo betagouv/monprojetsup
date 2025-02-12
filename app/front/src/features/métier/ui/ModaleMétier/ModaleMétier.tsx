@@ -12,7 +12,10 @@ const ModaleMétier = ({ métier, modale }: ModaleMétierProps) => {
     >
       <div className="grid gap-6">
         <p className="mb-0 whitespace-pre-line">{métier.descriptif}</p>
-        <ListeLiensExternesSousFormeBouton id={métier.id} liens={métier.liens} />
+        <ListeLiensExternesSousFormeBouton
+          id={métier.id}
+          liens={métier.liens}
+        />
       </div>
     </modale.Component>
   );

@@ -251,15 +251,6 @@ export class formationHttpRepository implements FormationRepository {
             pourcentageAdmisAnnéePrécédente: explications.typeBaccalaureat?.pourcentage,
           }
         : null,
-      autoEvaluationMoyenne: explications.autoEvaluationMoyenne
-        ? {
-            moyenne: explications.autoEvaluationMoyenne.moyenne,
-            intervalBas: explications.autoEvaluationMoyenne.basIntervalleNotes,
-            intervalHaut: explications.autoEvaluationMoyenne.hautIntervalleNotes,
-            idBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.id,
-            nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
-          }
-        : null,
       explicationsCalcul: explications.detailsCalculScore?.details ?? null,
     };
   };

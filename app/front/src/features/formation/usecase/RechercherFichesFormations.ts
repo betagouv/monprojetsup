@@ -5,11 +5,11 @@ import { type TraceService } from "@/services/trace/trace.interface";
 export class RechercherFichesFormationsUseCase {
   public constructor(
     private readonly _formationRepository: FormationRepository,
-    private readonly _traceService: TraceService
+    private readonly _traceService: TraceService,
   ) {}
 
   public async run(recherche: string): Promise<FicheFormation[] | Error> {
-    this._traceService.ajouterTraceRechercheFormation(recherche);
+    void this._traceService.ajouterTraceRechercheFormation(recherche);
     return await this._formationRepository.rechercherFichesFormations(recherche);
   }
 }

@@ -2,9 +2,7 @@ import { type FicheFormation } from "@/features/formation/domain/formation.inter
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 
 export class RécupérerFicheFormationUseCase {
-  public constructor(
-    private readonly _formationRepository: FormationRepository
-  ) {}
+  public constructor(private readonly _formationRepository: FormationRepository) {}
 
   public async run(formationId: FicheFormation["id"]): Promise<FicheFormation | Error> {
     return this._formationRepository.récupérerUneFiche(formationId);

@@ -6,7 +6,10 @@ const OngletFormationFicheFormation = ({ id, texte, liens }: OngletFormationFich
   return (
     <div className="grid gap-6">
       <TexteTronqué texte={texte} />
-      <ListeLiensExternesSousFormeBouton id={id} liens={liens} />
+      <ListeLiensExternesSousFormeBouton
+        id={id}
+        liens={liens}
+      />
     </div>
   );
 };
