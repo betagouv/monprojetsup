@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 enum class ActionEleve(
     @JsonValue val jsonValeur: String,
-    ) {
+) {
     FICHE_FORMATION(jsonValeur = "fiche_formation"),
     RECHERCHE_FORMATION(jsonValeur = "recherche_formation"),
     SUGGESTIONS(jsonValeur = "suggestions"),
@@ -14,6 +14,4 @@ enum class ActionEleve(
     AJOUT_FAVORI_METIER(jsonValeur = "ajout_favori_metier"),
     FICHE_METIER(jsonValeur = "fiche_metier"),
     EDITION_PROFIL(jsonValeur = "edition_profil"),
-    ;
-
 }

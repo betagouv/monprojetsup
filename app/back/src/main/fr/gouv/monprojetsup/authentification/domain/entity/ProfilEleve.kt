@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 
 sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
-
     data class AvecProfilExistant(
         override val id: String,
         val situation: SituationAvanceeProjetSup?,
@@ -51,17 +50,17 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
 
         private fun completionProfil(): Int {
             var result = 1
-            if(classe != null) result = result.inc()
-            if(situation != null) result = result.inc()
-            if(!baccalaureat.isNullOrEmpty()) result = result.inc()
-            if(!specialites.isNullOrEmpty()) result = result.inc()
-            if(!domainesInterets.isNullOrEmpty()) result = result.inc()
-            if(!centresInterets.isNullOrEmpty()) result = result.inc()
-            if(dureeEtudesPrevue != null) result = result.inc()
-            if(alternance != null) result = result.inc()
-            if(!communesFavorites.isNullOrEmpty()) result = result.inc()
+            if (classe != null) result = result.inc()
+            if (situation != null) result = result.inc()
+            if (!baccalaureat.isNullOrEmpty()) result = result.inc()
+            if (!specialites.isNullOrEmpty()) result = result.inc()
+            if (!domainesInterets.isNullOrEmpty()) result = result.inc()
+            if (!centresInterets.isNullOrEmpty()) result = result.inc()
+            if (dureeEtudesPrevue != null) result = result.inc()
+            if (alternance != null) result = result.inc()
+            if (!communesFavorites.isNullOrEmpty()) result = result.inc()
             val resultMaximum = 10
-            return 100 * result / resultMaximum;
+            return 100 * result / resultMaximum
         }
 
         fun aAuMoinsUnFavoriMPS(): Boolean {
@@ -69,8 +68,8 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         }
 
         fun aAuMoinsTroisFavorisMPS(): Boolean {
-            return !metiersFavoris.isNullOrEmpty() && metiersFavoris.size >= 3
-                    || !formationsFavorites.isNullOrEmpty() && formationsFavorites.size >= 3
+            return !metiersFavoris.isNullOrEmpty() && metiersFavoris.size >= 3 ||
+                !formationsFavorites.isNullOrEmpty() && formationsFavorites.size >= 3
         }
 
         fun aEvalueSonNiveauAmbition(): Boolean {
@@ -78,12 +77,10 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         }
 
         fun aDesFavorisParcoursup(): Boolean {
-            return !voeuxFavoris.isNullOrEmpty()
-                    && !formationsFavorites.isNullOrEmpty();
+            return !voeuxFavoris.isNullOrEmpty() &&
+                !formationsFavorites.isNullOrEmpty()
         }
-
     }
-
 
     data class SansCompte(override val id: String) : ProfilEleve(id)
 }

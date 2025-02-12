@@ -96,15 +96,12 @@ data class ProfilDTO(
     )
     @JsonProperty("corbeilleFormations")
     val corbeilleFormations: List<String>? = null,
-
     @Schema(description = "Prénom de l'élève", example = "Kévin")
     @JsonProperty("compteParcoursupAssocie")
     val compteParcoursupAssocie: Boolean,
-
     @ArraySchema(arraySchema = Schema(description = "Liste des voeux favoris"))
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
-
     @Schema(
         description = "Progression dans les 6 niveaux MPS",
         example = "1",

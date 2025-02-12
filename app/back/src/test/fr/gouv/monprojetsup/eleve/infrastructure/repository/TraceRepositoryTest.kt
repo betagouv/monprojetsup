@@ -41,7 +41,7 @@ class TraceRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:trace.sql")
         fun `doit ajouter la trace en base`() {
             // Given
-            val dateTimeActuelle = LocalDateTime.of(2024, 11, 15,1,2,3)
+            val dateTimeActuelle = LocalDateTime.of(2024, 11, 15, 1, 2, 3)
             Mockito.`when`(clock.dateTimeActuelle()).thenReturn(dateTimeActuelle)
 
             // When

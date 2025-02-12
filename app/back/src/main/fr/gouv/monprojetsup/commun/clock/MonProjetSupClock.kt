@@ -7,5 +7,6 @@ import java.time.LocalDateTime
 @Component
 class MonProjetSupClock {
     fun dateActuelle(): LocalDate = LocalDate.now()
+
     fun dateTimeActuelle(): LocalDateTime = LocalDateTime.now()
 }

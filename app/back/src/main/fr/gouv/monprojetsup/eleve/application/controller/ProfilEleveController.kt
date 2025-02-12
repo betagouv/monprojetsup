@@ -26,7 +26,7 @@ class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
     private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
     private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
-    private val recupererProgressionService: RecupererProgressionService
+    private val recupererProgressionService: RecupererProgressionService,
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -53,9 +53,10 @@ class ProfilEleveController(
     fun getProfilEleve(): ProfilDTO {
         val profil = recupererEleveAvecProfilExistant()
         val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
-        val progression = recupererProgressionService.recupererProgression(
-            profil
-        )
+        val progression =
+            recupererProgressionService.recupererProgression(
+                profil,
+            )
         return ProfilDTO(profil, voeuxFavoris, progression)
     }
 
@@ -82,10 +83,10 @@ class ProfilEleveController(
     fun getProgressionMPS(): ProgressionDTO {
         val profil = recupererEleveAvecProfilExistant()
         return ProgressionDTO(
-            progression = recupererProgressionService.recupererProgression(
-                profil
-            )
+            progression =
+                recupererProgressionService.recupererProgression(
+                    profil,
+                ),
         )
     }
-
 }

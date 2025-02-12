@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface TraceJPARepository : JpaRepository<TraceEntity, Int> {
     fun findByIdEleve(idEleve: String): List<TraceEntity>
-    fun findByIdEleveAndActionEleve(id: String, actionEleve: ActionEleve): List<TraceEntity>
+
+    fun findByIdEleveAndActionEleve(
+        id: String,
+        actionEleve: ActionEleve,
+    ): List<TraceEntity>
 }

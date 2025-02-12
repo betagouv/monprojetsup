@@ -8,8 +8,7 @@ data class ProgressionDTO(
     @Schema(
         description = "Progression dans les six niveaux MPS",
         example = "6",
-        allowableValues = ["1","2","3","4","5","6"],
+        allowableValues = ["1", "2", "3", "4", "5", "6"],
     )
-    val progression: Int
-) {
-}
+    val progression: Int,
+)
