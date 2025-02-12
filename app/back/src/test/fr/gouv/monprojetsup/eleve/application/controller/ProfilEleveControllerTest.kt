@@ -59,7 +59,6 @@ class ProfilEleveControllerTest(
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_456"),
                 formationsFavorites =
                     listOf(
@@ -94,7 +93,6 @@ class ProfilEleveControllerTest(
                 communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_456"),
                 formationsFavorites =
                     listOf(
@@ -180,7 +178,6 @@ class ProfilEleveControllerTest(
                               "longitude": 2.2885659
                             }
                           ],
-                          "moyenneGenerale": 14.0,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",
@@ -246,7 +243,6 @@ class ProfilEleveControllerTest(
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
-                    moyenneGenerale = 4.9f,
                     metiersFavoris = null,
                     formationsFavorites =
                         listOf(
@@ -392,7 +388,6 @@ class ProfilEleveControllerTest(
                   "longitude": 2.2885659
                 }
               ],
-              "moyenneGenerale": 14,
               "formationsFavorites": [
                 {
                   "idFormation": "fl1234",
@@ -455,7 +450,6 @@ class ProfilEleveControllerTest(
                   "longitude": 2.2885659
                 }
               ],
-              "moyenneGenerale": 14.0,
               "formationsFavorites": [
                 {
                   "idFormation": "fl1234",
@@ -541,7 +535,6 @@ class ProfilEleveControllerTest(
                               "longitude": 2.2885659
                             }
                           ],
-                          "moyenneGenerale": 14.0,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",
@@ -617,7 +610,6 @@ class ProfilEleveControllerTest(
                     communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
-                    moyenneGenerale = 4.9f,
                     metiersFavoris = null,
                     formationsFavorites =
                         listOf(
@@ -681,7 +673,6 @@ class ProfilEleveControllerTest(
                               "longitude": 5.4
                             }
                           ],
-                          "moyenneGenerale": 4.9,
                           "formationsFavorites": [
                             {
                               "idFormation": "fl1234",

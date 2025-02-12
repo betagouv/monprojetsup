@@ -84,9 +84,6 @@ data class ProfilDTO(
     @ArraySchema(arraySchema = Schema(description = "Villes préférées pour étudier"))
     @JsonProperty("communesFavorites")
     val communesFavorites: List<CommuneDTO>? = null,
-    @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14")
-    @JsonProperty("moyenneGenerale")
-    val moyenneGenerale: Float? = null,
     @ArraySchema(arraySchema = Schema(description = "Les idées de formations de l'élève"))
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<FormationFavoriteDTO>? = null,
@@ -115,7 +112,6 @@ data class ProfilDTO(
         formationsFavorites = profilEleve.formationsFavorites?.map { FormationFavoriteDTO(it) },
         communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
         specialites = profilEleve.specialites,
-        moyenneGenerale = profilEleve.moyenneGenerale,
         centresInterets = profilEleve.centresInterets,
         metiersFavoris = profilEleve.metiersFavoris,
         domaines = profilEleve.domainesInterets,

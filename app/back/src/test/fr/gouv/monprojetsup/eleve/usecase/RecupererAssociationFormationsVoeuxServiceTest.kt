@@ -337,7 +337,6 @@ class RecupererAssociationFormationsVoeuxServiceTest {
         alternance = ChoixAlternance.INDIFFERENT,
         communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
         formationsFavorites = formationsFavorites,
-        moyenneGenerale = -1.0f,
         corbeilleFormations = listOf("fl1234", "fl5678"),
         compteParcoursupLie = true,
         voeuxFavoris = voeuxFavoris,

@@ -131,7 +131,6 @@ data class ModificationProfilDTO(
             formationsFavorites = formationsFavorites?.map { it.toFormationFavorite() },
             communesFavorites = communesFavorites?.map { it.toCommuneFavoris() },
             specialites = specialites,
-            moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
             metiersFavoris = metiersFavoris,
             domainesInterets = domaines,

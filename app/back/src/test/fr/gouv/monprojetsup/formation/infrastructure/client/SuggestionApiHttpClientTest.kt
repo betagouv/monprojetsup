@@ -67,7 +67,6 @@ class SuggestionApiHttpClientTest {
             communesFavorites = listOf(CommunesFavorites.PARIS15EME),
             specialites = listOf("mat1001", "mat1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-            moyenneGenerale = 14f,
             metiersFavoris = listOf("MET_123", "MET_456"),
             formationsFavorites =
                 listOf(
@@ -627,11 +626,6 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "debug": {
-                            "expl": "moyenne générale 1 * (1 - 1E-1) + 1E-1"
-                          }
-                        },
-                        {
-                          "debug": {
                             "expl": "EDS 0.5 * (1 - 1E-1) + 1E-1"
                           }
                         },
@@ -667,7 +661,7 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "debug": {
-                            "expl": "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  0 (proximité intérêts et favoris) ,  ]"
+                            "expl": "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  0 (proximité intérêts et favoris) ,  ]"
                           }
                         }
                       ],

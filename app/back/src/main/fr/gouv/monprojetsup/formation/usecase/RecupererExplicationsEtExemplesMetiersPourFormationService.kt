@@ -65,15 +65,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                         formationsSimilaires.firstOrNull { formation -> formation.id == it }
                     }?.distinct() ?: emptyList(),
                 choixEleve = choixEleve[idFormation]!!,
-                explicationAutoEvaluationMoyenne =
-                    explications?.autoEvaluationMoyenne?.let { autoEvaluationMoyenne ->
-                        explicationAutoEvaluationMoyenne(
-                            baccalaureats.firstOrNull { baccalaureat ->
-                                baccalaureat.idExterne == autoEvaluationMoyenne.baccalaureatUtilise
-                            },
-                            autoEvaluationMoyenne,
-                        )
-                    },
                 explicationTypeBaccalaureat =
                     explications?.typeBaccalaureat?.let { typeBaccalaureat ->
                         explicationTypeBaccalaureat(
@@ -127,7 +118,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                 },
             formationsSimilaires = formationsSimilaires,
             choixEleve = choixEleveService.recupererChoixEleve(explications),
-            explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
             detailsCalculScore = autres,
         ) to

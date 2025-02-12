@@ -6,9 +6,7 @@ import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
@@ -82,7 +80,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             communesFavorites = listOf(CommunesFavorites.CAEN),
             specialites = listOf("1001", "1049"),
             centresInterets = listOf("ci29", "ci17", "ci8"),
-            moyenneGenerale = 14f,
             metiersFavoris = listOf("MET.123", "MET.456"),
             formationsFavorites =
                 listOf(
@@ -106,7 +103,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
     @Nested
     inner class RecupererExplicationsPourUneFormation {
         @Test
-        fun `doit retourner les explications duréeEtudesPrévue, alternance et moyenneGeneraleDesAdmis`() {
+        fun `doit retourner les explications duréeEtudesPrévue et alternance`() {
             // Given
             val explication =
                 ExplicationsSuggestionEtExemplesMetiers(
@@ -234,19 +231,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             )
             val explication =
                 ExplicationsSuggestionEtExemplesMetiers(
-                    autoEvaluationMoyenne =
-                        AutoEvaluationMoyenne(
-                            echellonDeLaMoyenneAutoEvalue = 29,
-                            rangs =
-                                ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                    rangEch25 = 12,
-                                    rangEch50 = 14,
-                                    rangEch75 = 16,
-                                    rangEch10 = 10,
-                                    rangEch90 = 17,
-                                ),
-                            baccalaureatUtilise = "Général",
-                        ),
                     typeBaccalaureat =
                         TypeBaccalaureat(
                             nomBaccalaureat = "Général",
@@ -270,14 +254,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                 )
 
             // Then
-            assertThat(resultat.first.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
-                ExplicationAutoEvaluationMoyenne(
-                    moyenneAutoEvalue = 14.5f,
-                    hautIntervalleNotes = 8f,
-                    basIntervalleNotes = 6f,
-                    baccalaureatUtilise = bacGeneral,
-                ),
-            )
             assertThat(resultat.first.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
                 ExplicationTypeBaccalaureat(
                     baccalaureat = bacGeneral,
@@ -294,19 +270,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             )
             val explication =
                 ExplicationsSuggestionEtExemplesMetiers(
-                    autoEvaluationMoyenne =
-                        AutoEvaluationMoyenne(
-                            echellonDeLaMoyenneAutoEvalue = 29,
-                            rangs =
-                                ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                    rangEch25 = 12,
-                                    rangEch50 = 14,
-                                    rangEch75 = 16,
-                                    rangEch10 = 10,
-                                    rangEch90 = 17,
-                                ),
-                            baccalaureatUtilise = "Général",
-                        ),
                     typeBaccalaureat =
                         TypeBaccalaureat(
                             nomBaccalaureat = "Général",
@@ -330,14 +293,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                 )
 
             // Then
-            assertThat(resultat.first.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
-                ExplicationAutoEvaluationMoyenne(
-                    moyenneAutoEvalue = 14.5f,
-                    hautIntervalleNotes = 8f,
-                    basIntervalleNotes = 6f,
-                    baccalaureatUtilise = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général", idCarteParcoursup = "0"),
-                ),
-            )
             assertThat(resultat.first.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
                 ExplicationTypeBaccalaureat(
                     baccalaureat = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général", idCarteParcoursup = "0"),
@@ -603,19 +558,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                         distanceKm = 12,
                                     ),
                                 ),
-                            autoEvaluationMoyenne =
-                                AutoEvaluationMoyenne(
-                                    echellonDeLaMoyenneAutoEvalue = 29,
-                                    rangs =
-                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                            rangEch25 = 10,
-                                            rangEch50 = 14,
-                                            rangEch75 = 15,
-                                            rangEch10 = 9,
-                                            rangEch90 = 19,
-                                        ),
-                                    baccalaureatUtilise = "Général",
-                                ),
                             typeBaccalaureat =
                                 TypeBaccalaureat(
                                     nomBaccalaureat = "P",
@@ -624,19 +566,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ),
                     "fl0003" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            autoEvaluationMoyenne =
-                                AutoEvaluationMoyenne(
-                                    echellonDeLaMoyenneAutoEvalue = 29,
-                                    rangs =
-                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                            rangEch25 = 12,
-                                            rangEch50 = 14,
-                                            rangEch75 = 16,
-                                            rangEch10 = 10,
-                                            rangEch90 = 17,
-                                        ),
-                                    baccalaureatUtilise = "STMG",
-                                ),
                             typeBaccalaureat =
                                 TypeBaccalaureat(
                                     nomBaccalaureat = "Général",
@@ -821,13 +750,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                             distanceKm = 12,
                                         ),
                                     ),
-                                explicationAutoEvaluationMoyenne =
-                                    ExplicationAutoEvaluationMoyenne(
-                                        moyenneAutoEvalue = 14.5f,
-                                        hautIntervalleNotes = 7.5f,
-                                        basIntervalleNotes = 5f,
-                                        baccalaureatUtilise = bacGeneral,
-                                    ),
                                 explicationTypeBaccalaureat =
                                     ExplicationTypeBaccalaureat(
                                         baccalaureat = bacPro,
@@ -839,19 +761,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     "fl0003" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
-                                explicationAutoEvaluationMoyenne =
-                                    ExplicationAutoEvaluationMoyenne(
-                                        moyenneAutoEvalue = 14.5f,
-                                        hautIntervalleNotes = 8f,
-                                        basIntervalleNotes = 6f,
-                                        baccalaureatUtilise =
-                                            Baccalaureat(
-                                                id = "STMG",
-                                                idExterne = "STMG",
-                                                nom = "Série STMG",
-                                                idCarteParcoursup = "2",
-                                            ),
-                                    ),
                                 explicationTypeBaccalaureat =
                                     ExplicationTypeBaccalaureat(
                                         baccalaureat = bacGeneral,
