@@ -20,10 +20,6 @@ export const élèveQueryOptions = queryOptions({
 export const progressionQueryOptions = queryOptions({
   queryKey: [queryÉlèveKeys.PROGRESSION],
   queryFn: async () => {
-    const réponse = await dépendances.récupérerProgressionÉlèveUseCase.run();
-
-    if (réponse instanceof Error) throw réponse;
-
-    return réponse;
+    return await dépendances.récupérerProgressionÉlèveUseCase.run();
   },
 });
