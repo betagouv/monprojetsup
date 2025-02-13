@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { type Élève } from "@/features/élève/domain/élève.interface";
+import { type Élève, ProgressionÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
 export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
@@ -22,7 +22,6 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     formationsMasquées: null,
     ambitions: null,
     notesPersonnelles: null,
-    progression: null,
     moyenneGénérale: null,
   };
 
@@ -36,6 +35,10 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     }
 
     return this._élève;
+  }
+
+  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
+    return 6;
   }
 
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {

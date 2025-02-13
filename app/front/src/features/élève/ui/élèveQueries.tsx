@@ -3,6 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 export const queryÉlèveKeys = {
   PROFIL: "élève",
+  PROGRESSION: "progression",
 };
 
 export const élèveQueryOptions = queryOptions({
@@ -13,5 +14,12 @@ export const élèveQueryOptions = queryOptions({
     if (réponse instanceof Error) throw réponse;
 
     return réponse;
+  },
+});
+
+export const progressionQueryOptions = queryOptions({
+  queryKey: [queryÉlèveKeys.PROGRESSION],
+  queryFn: async () => {
+    return await dépendances.récupérerProgressionÉlèveUseCase.run();
   },
 });

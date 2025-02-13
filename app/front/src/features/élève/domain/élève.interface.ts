@@ -20,7 +20,7 @@ export type FormationMasquéeÉlève = Id;
 export type CommuneÉlève = Omit<Commune, "codePostal">;
 export type FormationÉlève = Id;
 
-export type ProgressionÉlève = NonNullable<components["schemas"]["ProfilDTO"]["progression"]>;
+export type ProgressionÉlève = NonNullable<components["schemas"]["ProfilDTO"]["progression"]> | null;
 
 export type VoeuÉlève = {
   id: Id;
@@ -54,7 +54,6 @@ export type Élève = {
   formationsMasquées: FormationMasquéeÉlève[] | null;
   notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
   ambitions: AmbitionFormationÉlève[] | null;
-  progression: ProgressionÉlève | null;
 };
 
 export const situationÉlève = [

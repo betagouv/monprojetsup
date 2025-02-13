@@ -35,7 +35,7 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     });
   };
 
-  private _récupérerJWT = (): string => {
+  private readonly _récupérerJWT = (): string => {
     const sessionStorageOIDC = sessionStorage.getItem(
       `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
     );
