@@ -3,19 +3,22 @@ import {
   type BodyMettreÀJourProfilÉlèveHTTP,
   type MettreÀJourProfilÉlèveRéponseHTTP,
   type RécupérerProfilÉlèveRéponseHTTP,
+  type RécupérerProgressionÉlèveRéponseHTTP,
 } from "./élèveHttpRepository.interface";
-import { type Élève } from "@/features/élève/domain/élève.interface";
+import { type Élève, ProgressionÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class ÉlèveHttpRepository implements ÉlèveRepository {
-  private _ENDPOINT = "/api/v1/profil" as const;
+  private _ENDPOINT_PROFIL = "/api/v1/profil" as const;
+
+  private _ENDPOINT_PROGRESSION = "/api/v1/profil/progression" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
   public async récupérerProfil(): Promise<Élève | Error> {
-    const réponse = await this._mpsApiHttpClient.get<RécupérerProfilÉlèveRéponseHTTP>(this._ENDPOINT);
+    const réponse = await this._mpsApiHttpClient.get<RécupérerProfilÉlèveRéponseHTTP>(this._ENDPOINT_PROFIL);
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
       await this.mettreÀJourProfil({
@@ -36,7 +39,6 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         formationsMasquées: null,
         notesPersonnelles: null,
         ambitions: null,
-        progression: null,
       });
 
       return await this.récupérerProfil();
@@ -49,9 +51,19 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     return this._mapperVersLeDomaine(réponse);
   }
 
+  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève | Error> {
+    const réponse = await this._mpsApiHttpClient.get<RécupérerProgressionÉlèveRéponseHTTP>(this._ENDPOINT_PROGRESSION);
+
+    if (réponse instanceof RessourceNonTrouvéeErreurHttp || réponse instanceof Error) {
+      return 0;
+    } else {
+      return this._mapperProgressionVersLeDomaine(réponse);
+    }
+  }
+
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {
     const réponse = await this._mpsApiHttpClient.post<MettreÀJourProfilÉlèveRéponseHTTP>(
-      this._ENDPOINT,
+      this._ENDPOINT_PROFIL,
       this._mapperVersLApiMps(élève),
     );
 
@@ -68,7 +80,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     redirectUri: string,
   ): Promise<boolean | Error> {
     const réponse = await this._mpsApiHttpClient.post<AssocierCompteParcourSupÉlèveRéponseHTTP>(
-      `${this._ENDPOINT}/parcoursup`,
+      `${this._ENDPOINT_PROFIL}/parcoursup`,
       {
         codeVerifier,
         code,
@@ -110,6 +122,10 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     };
   }
 
+  private _mapperProgressionVersLeDomaine(progression: RécupérerProgressionÉlèveRéponseHTTP): ProgressionÉlève {
+    return progression.progression;
+  }
+
   private _mapperVersLeDomaine(élève: RécupérerProfilÉlèveRéponseHTTP): Élève {
     return {
       compteParcoursupAssocié: élève.compteParcoursupAssocie ?? false,
@@ -143,7 +159,6 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
             ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
             : null,
         })) ?? null,
-      progression: élève.progression ?? null,
     };
   }
 }

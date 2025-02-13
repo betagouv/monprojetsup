@@ -44,16 +44,20 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             voeuxFavoris = emptyList(),
         )
 
-        fun estProfilComplet(): Boolean {
-            return completionProfil() >= 100
+        fun estProfilComplet(specialitesSelectionnablesParCandidat: List<String>?): Boolean {
+            return completionProfil(specialitesSelectionnablesParCandidat) >= 100
         }
 
-        private fun completionProfil(): Int {
+        private fun completionProfil(specialitesSelectionnablesParCandidat: List<String>?): Int {
             var result = 1
             if (classe != null) result = result.inc()
             if (situation != null) result = result.inc()
-            if (!baccalaureat.isNullOrEmpty()) result = result.inc()
-            if (!specialites.isNullOrEmpty()) result = result.inc()
+            if (!baccalaureat.isNullOrEmpty()) {
+                result = result.inc()
+            }
+            if (specialitesSelectionnablesParCandidat.isNullOrEmpty() || !this.specialites.isNullOrEmpty()) {
+                result = result.inc()
+            }
             if (!domainesInterets.isNullOrEmpty()) result = result.inc()
             if (!centresInterets.isNullOrEmpty()) result = result.inc()
             if (dureeEtudesPrevue != null) result = result.inc()

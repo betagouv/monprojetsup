@@ -4,7 +4,7 @@ import profilSVG from "@/assets/profil.svg";
 import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { progressionQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { CartePrimaireTableauDeBordÉlèveProps } from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève.interface";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ export default function useTableauDeBordÉlèvePage() {
   const route = getRouteApi("/_auth/");
   const { associationPS } = route.useSearch();
   const { déclencherToast } = actionsToastStore();
-  const { data: élève } = useQuery(élèveQueryOptions);
+  const { data: progression } = useQuery(progressionQueryOptions);
 
   if (associationPS === "ok") {
     déclencherToast(
@@ -54,6 +54,6 @@ export default function useTableauDeBordÉlèvePage() {
     cartes,
     associationParcoursupPossible:
       environnement.VITE_PARCOURSUP_OAUTH2_URL && environnement.VITE_PARCOURSUP_OAUTH2_CLIENT,
-    progression: élève?.progression,
+    progression,
   };
 }

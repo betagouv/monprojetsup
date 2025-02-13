@@ -102,15 +102,8 @@ data class ProfilDTO(
     @ArraySchema(arraySchema = Schema(description = "Liste des voeux favoris"))
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
-    @Schema(
-        description = "Progression dans les 6 niveaux MPS",
-        example = "1",
-        allowableValues = ["1", "2", "3", "4", "5", "6"],
-    )
-    @JsonProperty("progression")
-    val progression: Int? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null, progression: Int? = null) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
@@ -125,7 +118,6 @@ data class ProfilDTO(
         corbeilleFormations = profilEleve.corbeilleFormations,
         compteParcoursupAssocie = profilEleve.compteParcoursupLie,
         voeuxFavoris = (voeuxFavoris ?: profilEleve.voeuxFavoris).map { VoeuFavoriDTO(it) },
-        progression = progression,
     )
 
     data class CommuneDTO(

@@ -94,7 +94,7 @@ export interface paths {
         };
         /**
          * Récupérer le niveau de progression pédagogique
-         * @description Récupère le niveau de progression pédagogique, entre 1 et 6
+         * @description Récupère le niveau de progression pédagogique, entre 0 et 6
          */
         get: operations["getProgressionMPS"];
         put?: never;
@@ -499,10 +499,10 @@ export interface components {
             /**
              * Format: int32
              * @description Progression dans les 6 niveaux MPS
-             * @example 1
+             * @example 6
              * @enum {integer}
              */
-            progression?: 1 | 2 | 3 | 4 | 5 | 6;
+            progression?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
         };
         AjoutCompteParcoursupDTO: {
             codeVerifier: string;
@@ -583,7 +583,7 @@ export interface components {
              * @example 6
              * @enum {integer}
              */
-            progression: 1 | 2 | 3 | 4 | 5 | 6;
+            progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
         };
         FormationCourteDTO: {
             id: string;
