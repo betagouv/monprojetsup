@@ -37,7 +37,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     return this._élève;
   }
 
-  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève | Error> {
+  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
     return 6;
   }
 

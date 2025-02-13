@@ -51,7 +51,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     return this._mapperVersLeDomaine(réponse);
   }
 
-  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève | Error> {
+  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
     const réponse = await this._mpsApiHttpClient.get<RécupérerProgressionÉlèveRéponseHTTP>(this._ENDPOINT_PROGRESSION);
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp || réponse instanceof Error) {
