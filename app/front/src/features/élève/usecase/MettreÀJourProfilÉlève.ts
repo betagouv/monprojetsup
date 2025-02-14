@@ -16,10 +16,15 @@ export class MettreÀJourProfilÉlèveUseCase {
   ): Promise<Élève | Error> {
     this._analytics.envoyerÉvènement("Profil", "Mise à jour", "");
 
-    return await this._élèveRepository.mettreÀJourProfil({
+    const élève = {
       ...profilÉlève,
       ...changementsProfilÉlève,
-      spécialités: changementsProfilÉlève.bac === profilÉlève.bac ? profilÉlève.spécialités : [],
-    });
+    };
+
+    if (changementsProfilÉlève.bac !== undefined && changementsProfilÉlève.bac !== profilÉlève.bac) {
+      élève.spécialités = [];
+    }
+
+    return await this._élèveRepository.mettreÀJourProfil(élève);
   }
 }
