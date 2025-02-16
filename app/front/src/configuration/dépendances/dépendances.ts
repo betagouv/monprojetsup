@@ -6,7 +6,6 @@ import { type CommuneRepository } from "@/features/commune/infrastructure/gatewa
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
-import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourAmbitionsÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourAmbitionsÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
@@ -22,6 +21,8 @@ import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/Récupére
 import { RécupérerProgressionÉlèveUseCase } from "@/features/élève/usecase/RécupérerProgressionÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
+import { EstAuthentifiéUseCase } from "@/features/élève/usecase/EstAuthentifié";
+
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
@@ -143,6 +144,8 @@ export class Dépendances {
 
   public readonly suivreLienExterne: SuivreLienExterneUseCase;
 
+  public readonly estAuthentifiéUseCase: EstAuthentifiéUseCase;
+
   private constructor() {
     this._httpClient = new HttpClient();
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, environnement.VITE_API_URL);
@@ -155,9 +158,7 @@ export class Dépendances {
     this._référentielDonnéesRepository = environnement.VITE_TEST_MODE
       ? new RéférentielDonnéesInMemoryRepository()
       : new RéférentielDonnéesHttpRepository(this._mpsApiHttpClient);
-    this._élèveRepository = environnement.VITE_TEST_MODE
-      ? new ÉlèveSessionStorageRepository()
-      : new ÉlèveHttpRepository(this._mpsApiHttpClient);
+    this._élèveRepository = new ÉlèveHttpRepository(this._mpsApiHttpClient);
     this._traceService = environnement.VITE_TEST_MODE
       ? new TraceSessionStorageService()
       : new TraceHttpService(this._mpsApiHttpClient);
@@ -208,6 +209,7 @@ export class Dépendances {
     this.mettreÀJourAmbitionsÉlèveUseCase = new MettreÀJourAmbitionsÉlèveUseCase(this._élèveRepository);
     this.supprimerTousLesMétiersÉlèveUseCase = new SupprimerTousLesMétiersÉlèveUseCase(this._élèveRepository);
     this.supprimerToutesLesFormationsÉlèveUseCase = new SupprimerToutesLesFormationsÉlèveUseCase(this._élèveRepository);
+    this.estAuthentifiéUseCase = new EstAuthentifiéUseCase(this._mpsApiHttpClient);
 
     // Formations
     this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);

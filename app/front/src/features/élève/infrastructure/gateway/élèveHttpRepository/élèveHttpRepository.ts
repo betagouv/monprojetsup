@@ -9,15 +9,23 @@ import { type Élève, ProgressionÉlève } from "@/features/élève/domain/él�
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
+import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 
 export class ÉlèveHttpRepository implements ÉlèveRepository {
-  private _ENDPOINT_PROFIL = "/api/v1/profil" as const;
+  private _ENDPOINT_PROFIL = "/api/v1/auth/profil" as const;
 
-  private _ENDPOINT_PROGRESSION = "/api/v1/profil/progression" as const;
+  private _ENDPOINT_PROGRESSION = "/api/v1/auth/profil/progression" as const;
+
+  private readonly _storageRepository = new ÉlèveSessionStorageRepository();
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
   public async récupérerProfil(): Promise<Élève | Error> {
+
+    if(!this._mpsApiHttpClient.estAuthentifié()) {
+      return this._storageRepository.récupérerProfil();
+    }
+
     const réponse = await this._mpsApiHttpClient.get<RécupérerProfilÉlèveRéponseHTTP>(this._ENDPOINT_PROFIL);
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
@@ -52,6 +60,10 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   }
 
   public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
+    if(!this._mpsApiHttpClient.estAuthentifié()) {
+      return this._storageRepository.récupérerProgressionÉlève();
+    }
+
     const réponse = await this._mpsApiHttpClient.get<RécupérerProgressionÉlèveRéponseHTTP>(this._ENDPOINT_PROGRESSION);
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp || réponse instanceof Error) {
@@ -62,6 +74,11 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   }
 
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {
+    
+    if(!this._mpsApiHttpClient.estAuthentifié()) {
+      return this._storageRepository.mettreÀJourProfil(élève);
+    }
+
     const réponse = await this._mpsApiHttpClient.post<MettreÀJourProfilÉlèveRéponseHTTP>(
       this._ENDPOINT_PROFIL,
       this._mapperVersLApiMps(élève),
@@ -79,6 +96,10 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     code: string,
     redirectUri: string,
   ): Promise<boolean | Error> {
+        if(!this._mpsApiHttpClient.estAuthentifié()) {
+          throw new Error("Non-authentifié");
+        }
+
     const réponse = await this._mpsApiHttpClient.post<AssocierCompteParcourSupÉlèveRéponseHTTP>(
       `${this._ENDPOINT_PROFIL}/parcoursup`,
       {

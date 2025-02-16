@@ -25,7 +25,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { ReactNode, Suspense } from "react";
 
-const InscriptionÉlèvePage = () => {
+const InscriptionÉlèvePage = () => {  
   useSuspenseQuery(élèveQueryOptions);
 
   const navigate = useNavigate();

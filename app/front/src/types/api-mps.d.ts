@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/v1/trace": {
+    "/api/v1/auth/trace": {
         parameters: {
             query?: never;
             header?: never;
@@ -21,7 +21,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/profil": {
+    "/api/v1/auth/profil": {
         parameters: {
             query?: never;
             header?: never;
@@ -45,7 +45,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/profil/parcoursup": {
+    "/api/v1/auth/profil/parcoursup": {
         parameters: {
             query?: never;
             header?: never;
@@ -65,7 +65,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/referentiel": {
+    "/api/v1/public/referentiel": {
         parameters: {
             query?: never;
             header?: never;
@@ -85,27 +85,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/profil/progression": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Récupérer le niveau de progression pédagogique
-         * @description Récupère le niveau de progression pédagogique, entre 0 et 6
-         */
-        get: operations["getProgressionMPS"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/metiers": {
+    "/api/v1/public/metiers": {
         parameters: {
             query?: never;
             header?: never;
@@ -125,7 +105,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/metiers/recherche/succincte": {
+    "/api/v1/public/metiers/recherche/succincte": {
         parameters: {
             query?: never;
             header?: never;
@@ -145,7 +125,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations": {
+    "/api/v1/public/formations": {
         parameters: {
             query?: never;
             header?: never;
@@ -165,7 +145,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations/{idformation}": {
+    "/api/v1/public/formations/{idformation}": {
         parameters: {
             query?: never;
             header?: never;
@@ -185,7 +165,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations/suggestions": {
+    "/api/v1/public/formations/suggestions": {
         parameters: {
             query?: never;
             header?: never;
@@ -205,7 +185,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations/recherche/succincte": {
+    "/api/v1/public/formations/recherche/succincte": {
         parameters: {
             query?: never;
             header?: never;
@@ -225,7 +205,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations/recherche/detaillee": {
+    "/api/v1/public/formations/recherche/detaillee": {
         parameters: {
             query?: never;
             header?: never;
@@ -245,7 +225,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations/fiches": {
+    "/api/v1/public/formations/fiches": {
         parameters: {
             query?: never;
             header?: never;
@@ -257,6 +237,26 @@ export interface paths {
          * @description A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.
          */
         get: operations["getFichesFormations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/profil/progression": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer le niveau de progression pédagogique
+         * @description Récupère le niveau de progression pédagogique, entre 0 et 6
+         */
+        get: operations["getProgressionMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -496,13 +496,6 @@ export interface components {
             compteParcoursupAssocie: boolean;
             /** @description Liste des voeux favoris */
             voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
-            /**
-             * Format: int32
-             * @description Progression dans les 6 niveaux MPS
-             * @example 6
-             * @enum {integer}
-             */
-            progression?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
         };
         AjoutCompteParcoursupDTO: {
             codeVerifier: string;
@@ -575,15 +568,6 @@ export interface components {
         SpecialitesDTO: {
             id: string;
             nom: string;
-        };
-        ProgressionDTO: {
-            /**
-             * Format: int32
-             * @description Progression dans les six niveaux MPS
-             * @example 6
-             * @enum {integer}
-             */
-            progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
         };
         FormationCourteDTO: {
             id: string;
@@ -740,6 +724,15 @@ export interface components {
             formations: components["schemas"]["FormationAvecExplicationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
+        ProgressionDTO: {
+            /**
+             * Format: int32
+             * @description Progression dans les six niveaux MPS
+             * @example 6
+             * @enum {integer}
+             */
+            progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        };
     };
     responses: never;
     parameters: never;
@@ -857,26 +850,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ReferentielDTO"];
-                };
-            };
-        };
-    };
-    getProgressionMPS: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ProgressionDTO"];
                 };
             };
         };
@@ -1068,6 +1041,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    getProgressionMPS: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressionDTO"];
                 };
             };
         };

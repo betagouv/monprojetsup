@@ -49,11 +49,18 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
 
     fun recupererInformationsSurLesVoeuxEtLeursCommunes(
         idsFormations: List<String>,
-        profilEleve: ProfilEleve.AvecProfilExistant,
+        obsoletesInclus: Boolean,
+    ): Map<String, InformationsSurLesVoeuxEtLeursCommunes> {
+        return recupererInformationsSurLesVoeuxEtLeursCommunes(idsFormations, null, obsoletesInclus)
+    }
+
+    fun recupererInformationsSurLesVoeuxEtLeursCommunes(
+        idsFormations: List<String>,
+        profilEleve: ProfilEleve.AvecProfilExistant?,
         obsoletesInclus: Boolean,
     ): Map<String, InformationsSurLesVoeuxEtLeursCommunes> {
         val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus)
-        if (!profilEleve.communesFavorites.isNullOrEmpty()) {
+        if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
             val voeuxAutoursDesCommunesFavorites =
                 communesAvecVoeuxAuxAlentoursRepository.recupererVoeuxAutoursDeCommmune(
                     profilEleve.communesFavorites,
@@ -80,7 +87,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     private fun informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux: List<Voeu>) =
         InformationsSurLesVoeuxEtLeursCommunes(
             voeux = voeux,
-            communesTriees = extraireCommunes(voeux),
+            communesTriees = extraireCommunes(voeux).shuffled(),
             voeuxParCommunesFavorites = emptyList(),
         )
 

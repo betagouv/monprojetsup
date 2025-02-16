@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 
 export default function useTableauDeBordÉlèvePage() {
-  const route = getRouteApi("/_auth/");
+  const route = getRouteApi("/_main/_main");
   const { associationPS } = route.useSearch();
   const { déclencherToast } = actionsToastStore();
   const { data: progression } = useQuery(progressionQueryOptions);

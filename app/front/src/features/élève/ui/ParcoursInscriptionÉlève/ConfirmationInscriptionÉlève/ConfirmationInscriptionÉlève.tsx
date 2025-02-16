@@ -4,8 +4,12 @@ import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const ConfirmationInscriptionÉlève = () => {
+  const { estInitialisé } = useÉlèveRedirection();
+  if (!estInitialisé) return null;
+  
   return (
     <>
       <Head titre={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE} />

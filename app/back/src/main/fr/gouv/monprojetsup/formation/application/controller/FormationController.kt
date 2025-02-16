@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
-import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
+import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieOuPasController
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.AvecProfilExistant
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.SansCompte
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("api/v1/formations")
+@RequestMapping("api/v1/public/formations")
 @Tag(name = "Formation", description = "API des formations proposées sur MonProjetSup")
 class FormationController(
     val suggestionsFormationsService: SuggestionsFormationsService,
@@ -41,7 +41,7 @@ class FormationController(
     val rechercherFormation: RechercherFormationsService,
     val ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder,
     val hateoasBuilder: HateoasBuilder,
-) : AuthentifieController() {
+) : AuthentifieOuPasController() {
     @GetMapping("/suggestions")
     @Operation(
         summary = "Récupère les suggestions de formations",
@@ -56,7 +56,7 @@ class FormationController(
         if (numeroDePage < NUMERO_PREMIERE_PAGE) {
             throw MonProjetSupBadRequestException("PAGINATION_COMMENCE_A_1", "La pagination commence à 1")
         }
-        val profilEleve = recupererEleveAvecProfilExistant()
+        val profilEleve = recupererEleveAvecProfilExistant() ?:  AvecProfilExistant("")
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(

@@ -10,8 +10,12 @@ import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePa
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
 import CarteTémoignageÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteTémoignageÉlève/CarteTémoignageÉlève";
 import { Fragment } from "react/jsx-runtime";
+import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const TableauDeBordÉlèvePage = () => {
+  const { estInitialisé } = useÉlèveRedirection();
+  if (!estInitialisé) return null;
+  
   const { cartes, associationParcoursupPossible, progression } = useTableauDeBordÉlèvePage();
 
   const messageProgression =

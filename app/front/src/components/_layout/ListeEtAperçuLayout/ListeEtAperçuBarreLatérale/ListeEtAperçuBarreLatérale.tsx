@@ -6,7 +6,7 @@ import {
 import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ListeEtAperçuBarreLatérale = ({ children, nombreRésultats }: ListeEtAperçuBarreLatéraleProps) => {
+const ListeEtAperçuBarreLatérale = ({ children, nombreRésultats}: ListeEtAperçuBarreLatéraleProps) => {
   const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 

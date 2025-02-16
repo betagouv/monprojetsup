@@ -7,8 +7,12 @@ import ModifierProfilÉlèveForm from "@/features/élève/ui/ProfilÉlèvePage/M
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useRouterState } from "@tanstack/react-router";
+import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const ProfilÉlèvePage = () => {
+  const { estInitialisé } = useÉlèveRedirection();
+  if (!estInitialisé) return null;
+  
   const utilisateur = useUtilisateur();
   const router = useRouterState();
 

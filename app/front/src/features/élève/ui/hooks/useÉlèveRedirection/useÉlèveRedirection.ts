@@ -18,7 +18,7 @@ export default function useÉlèveRedirection() {
   const étapesInscription = étapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
-    if (utilisateur.id === undefined || !élève) return;
+    if (!élève) return;
 
     const critèresRemplissagePourÉtapesInscription = [
       Boolean(élève?.situation),

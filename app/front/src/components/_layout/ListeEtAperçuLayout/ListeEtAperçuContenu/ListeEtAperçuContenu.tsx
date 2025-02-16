@@ -7,11 +7,14 @@ import Bouton from "@/components/Bouton/Bouton";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
+const ListeEtAperçuContenu = ({ children, forcerMasquageBarreLatérale }: ListeEtAperçuContenuProps) => {
   const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 
   const afficherContenuPrincipal = () => {
+    if (forcerMasquageBarreLatérale) {
+      return "";
+    }
     return afficherBarreLatéraleEnMobile ? "hidden lg:block" : "";
   };
 
@@ -36,7 +39,7 @@ const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
             {i18n.ACCESSIBILITÉ.FOCUS_RÉSULTATS}
           </Bouton>
         </div>
-        <div className="ml-[-1rem] pb-6 lg:hidden">
+        <div className= {forcerMasquageBarreLatérale ? "hidden" : "ml-[-1rem] pb-6 lg:hidden"}>
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
             icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}

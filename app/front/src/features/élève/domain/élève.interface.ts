@@ -20,7 +20,7 @@ export type FormationMasquéeÉlève = Id;
 export type CommuneÉlève = Omit<Commune, "codePostal">;
 export type FormationÉlève = Id;
 
-export type ProgressionÉlève = NonNullable<components["schemas"]["ProfilDTO"]["progression"]> | null;
+export type ProgressionÉlève = NonNullable<components["schemas"]["ProgressionDTO"]["progression"]> | null;
 
 export type VoeuÉlève = {
   id: Id;

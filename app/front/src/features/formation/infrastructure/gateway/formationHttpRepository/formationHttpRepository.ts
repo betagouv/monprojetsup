@@ -11,7 +11,7 @@ import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class formationHttpRepository implements FormationRepository {
-  private _ENDPOINT = "/api/v1/formations" as const;
+  private _ENDPOINT = "/api/v1/public/formations" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
@@ -100,6 +100,7 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async suggérer(): Promise<FicheFormation[] | Error> {
+    
     const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
       `${this._ENDPOINT}/suggestions`,
     );

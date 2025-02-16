@@ -14,13 +14,17 @@ import useMétier from "@/features/métier/ui/useMétier";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
+import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const FavorisÉlèvePage = () => {
+  const { estInitialisé } = useÉlèveRedirection();
+  if (!estInitialisé) return null;
+
   const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const { hash } = useLocation();
   const { estUnIdDeFormation } = useFormation();
   const { estUnIdDeMétier } = useMétier();
-  const routeApi = getRouteApi("/_auth/favoris/");
+  const routeApi = getRouteApi("/_main/favoris/");
   const élève = routeApi.useLoaderData();
   const { data: formations } = useQuery(récupérerFichesFormationsQueryOptions(élève?.formations ?? []));
 
@@ -55,14 +59,14 @@ const FavorisÉlèvePage = () => {
   return (
     <>
       <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
-      <ListeEtAperçuLayout variante="favoris">
+      <ListeEtAperçuLayout variante="favoris" forcerMasquageBarreLatérale={false}>
         <ListeEtAperçuBarreLatérale nombreRésultats={0}>
           <BarreLatéraleFavoris
             formations={formations}
             métiers={métiers}
           />
         </ListeEtAperçuBarreLatérale>
-        <ListeEtAperçuContenu>
+        <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>
           <ContenuFavoris />
         </ListeEtAperçuContenu>
       </ListeEtAperçuLayout>

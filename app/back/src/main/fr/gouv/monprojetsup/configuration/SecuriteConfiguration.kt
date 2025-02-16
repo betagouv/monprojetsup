@@ -31,11 +31,8 @@ class SecuriteConfiguration {
                 authorize("/swagger-resources/*", permitAll)
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/actuator/**", permitAll)
-                authorize("/api/v1/formations/**", permitAll)
-                authorize("/api/v1/metiers/**", permitAll)
-                authorize("/api/v1/referentiel/**", permitAll)
-                authorize("/api/v1/profil/**", authenticated)
-                authorize(anyRequest, authenticated)
+                authorize("/api/v1/auth/**", authenticated)
+                authorize("/api/v1/public/**", permitAll)
             }
             oauth2ResourceServer { jwt {} }
             csrf { disable() }

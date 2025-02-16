@@ -77,7 +77,7 @@ describe("useEntête", () => {
       expect(result.current.accèsRapides).toEqual([
         {
           iconId: "fr-icon-user-fill",
-          linkProps: { to: "/" },
+          linkProps: { to: "/connexion/" },
           text: i18n.ENTÊTE.SE_CONNECTER,
         },
       ]);
