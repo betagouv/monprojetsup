@@ -32,7 +32,7 @@ export default function useEntête() {
   }, [router.location.pathname, utilisateur.id]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
-    if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
+    if (utilisateur.estAuthentifié && router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
       return [
         {
           iconId: "fr-icon-close-line",
@@ -44,7 +44,7 @@ export default function useEntête() {
       ];
     }
 
-    if (!utilisateur.id) {
+    if (!utilisateur.estAuthentifié) {
       return [
         {
           iconId: "fr-icon-user-fill",

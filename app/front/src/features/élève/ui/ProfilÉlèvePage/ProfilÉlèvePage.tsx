@@ -15,6 +15,7 @@ const ProfilÉlèvePage = () => {
   
   const utilisateur = useUtilisateur();
   const router = useRouterState();
+  const estAuthentifié = utilisateur.estAuthentifié;
 
   return (
     <>
@@ -44,6 +45,7 @@ const ProfilÉlèvePage = () => {
               {utilisateur.email && (
                 <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
               )}
+              { estAuthentifié && 
               <Bouton
                 auClic={async () => await utilisateur.seDéconnecter()}
                 type="button"
@@ -51,6 +53,7 @@ const ProfilÉlèvePage = () => {
               >
                 {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
               </Bouton>
+              }
             </div>
             <Tabs
               label={i18n.PAGE_PROFIL.TITRE}
