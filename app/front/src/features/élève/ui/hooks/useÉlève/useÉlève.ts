@@ -81,6 +81,6 @@ export default function useÉlève() {
     estVoeuFavoriPourÉlève: estVoeuFavori,
     estVoeuFavoriProvenantDeParcoursupPourÉlève: estVoeuFavoriProvenantDeParcoursup,
     estSpécialitéFavoritePourÉlève: estSpécialitéFavorite,
-    aUnProfilPermettantUneExpériencePersonnalisée: aUnProfilPermettantUneExpériencePersonnalisée,
+    aUnProfilPermettantUneExpériencePersonnalisée,
   };
 }

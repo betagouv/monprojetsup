@@ -38,8 +38,8 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
       ) : (
         <ListeFormations
           affichéSurLaPage="favoris"
+          estPersonnalisé
           formations={formations ?? []}
-          estPersonnalisé={true}
         />
       )}
     </>

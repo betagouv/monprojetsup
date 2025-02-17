@@ -6,8 +6,8 @@ import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveProgression from "@/features/élève/ui/hooks/useÉlèveProgression/useÉlèveProgression";
-import { useAuth } from "react-oidc-context";
 import { Paths } from "@/types/commons";
+import { useAuth } from "react-oidc-context";
 
 export default function useTableauDeBordÉlèvePage() {
   const élève = useÉlève();

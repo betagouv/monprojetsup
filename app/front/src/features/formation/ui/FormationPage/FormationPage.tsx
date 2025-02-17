@@ -8,6 +8,7 @@ import {
   rechercheListeEtAperçuStore,
 } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import BarreLatéraleFormation from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BarreLatéraleFormation";
 import {
   rechercherFichesFormationsQueryOptions,
@@ -15,7 +16,6 @@ import {
 } from "@/features/formation/ui/formationQueries";
 import useFormation from "@/features/formation/ui/useFormation";
 import useMétier from "@/features/métier/ui/useMétier";
-import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -78,9 +78,9 @@ const FormationPage = () => {
       <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
         <BarreLatéraleFormation
           chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
+          estPersonnalisé={estPersonnalisé}
           résultatsDeRecherche={résultatsDeRecherche}
           suggestions={suggestions}
-          estPersonnalisé={estPersonnalisé}
         />
       </ListeEtAperçuBarreLatérale>
       <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>
