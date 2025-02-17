@@ -1,6 +1,7 @@
+import { Paths } from "@/types/commons";
 export type CartePrimaireTableauDeBordÉlèveProps = {
   titre: string;
   sousTitre: string;
   illustration: string;
-  lien: string;
+  lien: Paths;
 };

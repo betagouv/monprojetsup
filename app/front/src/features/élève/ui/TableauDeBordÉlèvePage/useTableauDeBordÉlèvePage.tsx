@@ -7,6 +7,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveProgression from "@/features/élève/ui/hooks/useÉlèveProgression/useÉlèveProgression";
 import { useAuth } from "react-oidc-context";
+import { Paths } from "@/types/commons";
 
 export default function useTableauDeBordÉlèvePage() {
   const élève = useÉlève();
@@ -16,7 +17,6 @@ export default function useTableauDeBordÉlèvePage() {
   const aAuMoinsUnDomaineFavori = élève.élèveAuMoinsUnDomaineFavori;
   const afficherLesSuggestions = aAuMoinsUnDomaineFavori;
 
-  // useMemo((): CartePrimaireTableauDeBordÉlèveProps[] => {
   const result = [];
 
   if (afficherLesSuggestions) {
@@ -24,7 +24,7 @@ export default function useTableauDeBordÉlèvePage() {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.SOUS_TITRE,
       illustration: explorerSVG,
-      lien: "/formations",
+      lien: "/formations" as Paths,
     });
   }
 
@@ -33,7 +33,7 @@ export default function useTableauDeBordÉlèvePage() {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.FAVORIS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.FAVORIS.SOUS_TITRE,
       illustration: favorisSVG,
-      lien: "/favoris",
+      lien: "/favoris" as Paths,
     });
   }
 
@@ -42,14 +42,14 @@ export default function useTableauDeBordÉlèvePage() {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL.SOUS_TITRE,
       illustration: profilSVG,
-      lien: "/profil",
+      lien: "/profil" as Paths,
     });
   } else {
     result.push({
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL_VIDE.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL_VIDE.SOUS_TITRE,
       illustration: profilSVG,
-      lien: "/eleve/inscription/projet",
+      lien: "/eleve/inscription/projet" as Paths,
     });
   }
 
@@ -58,7 +58,7 @@ export default function useTableauDeBordÉlèvePage() {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.CONNECTE_TOI.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.CONNECTE_TOI.SOUS_TITRE,
       illustration: avenirsSVG,
-      lien: "/connexion",
+      lien: "/connexion" as Paths,
     });
   }
 

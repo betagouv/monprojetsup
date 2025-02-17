@@ -49,6 +49,7 @@ const utilisateurNonConnecté = {
   nom: undefined,
   email: undefined,
   estExpert: false,
+  estAuthentifié: false,
 };
 
 const utilisateurConnecté = {
@@ -56,6 +57,7 @@ const utilisateurConnecté = {
   id: "123",
   prénom: "Jean",
   nom: "Dupont",
+  estAuthentifié: true,
 };
 
 describe("useEntête", () => {
