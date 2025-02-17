@@ -37,7 +37,7 @@ export default function useÉlève() {
     [élève?.centresIntérêts],
   );
 
-  const élèveABesoinDeFaireLeTunnelInscription = useMemo((): boolean => auMoinsUnDomaineFavori, [élève]);
+  const aUnProfilPermettantUneExpériencePersonnalisée = useMemo((): boolean => auMoinsUnDomaineFavori, [élève]);
 
   const estMétierFavori = (idMétier: MétierÉlève): boolean => {
     return élève?.métiersFavoris?.includes(idMétier) ?? false;
@@ -81,6 +81,6 @@ export default function useÉlève() {
     estVoeuFavoriPourÉlève: estVoeuFavori,
     estVoeuFavoriProvenantDeParcoursupPourÉlève: estVoeuFavoriProvenantDeParcoursup,
     estSpécialitéFavoritePourÉlève: estSpécialitéFavorite,
-    élèveABesoinDeFaireLeTunnelInscription,
+    aUnProfilPermettantUneExpériencePersonnalisée: aUnProfilPermettantUneExpériencePersonnalisée,
   };
 }

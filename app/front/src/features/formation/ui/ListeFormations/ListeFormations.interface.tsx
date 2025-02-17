@@ -3,4 +3,5 @@ import { type FicheFormation } from "@/features/formation/domain/formation.inter
 export type ListeFormationsProps = {
   formations: FicheFormation[];
   affichéSurLaPage: "ficheFormation" | "favoris";
+  estPersonnalisé: boolean;
 };

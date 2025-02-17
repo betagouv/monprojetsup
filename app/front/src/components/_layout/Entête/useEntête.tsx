@@ -13,7 +13,7 @@ export default function useEntête() {
   const élève = useÉlève();
 
   const afficherFavoris = élève.élèveAuMoinsUneFormationFavorite || élève.élèveAuMoinsUnMétierFavori;
-  const élèveABesoinDeFaireLeTunnelInscription = élève.élèveABesoinDeFaireLeTunnelInscription;
+  const aUnProfilPermettantUneExpériencePersonnalisée = élève.aUnProfilPermettantUneExpériencePersonnalisée;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
     if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
@@ -37,15 +37,15 @@ export default function useEntête() {
       {
         text: i18n.NAVIGATION.PROFIL,
         linkProps: { to: "/profil" },
-        className: élèveABesoinDeFaireLeTunnelInscription ? "" : "hidden",
+        className: aUnProfilPermettantUneExpériencePersonnalisée ? "" : "hidden",
       },
       {
         text: i18n.NAVIGATION.PROFIL,
         linkProps: { to: "/eleve/inscription/projet" },
-        className: élèveABesoinDeFaireLeTunnelInscription ? "hidden" : "",
+        className: aUnProfilPermettantUneExpériencePersonnalisée ? "hidden" : "",
       },
     ];
-  }, [router.location.pathname, afficherFavoris, élèveABesoinDeFaireLeTunnelInscription]);
+  }, [router.location.pathname, afficherFavoris, aUnProfilPermettantUneExpériencePersonnalisée]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
     if (utilisateur.estAuthentifié && router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {

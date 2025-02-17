@@ -15,6 +15,7 @@ import {
 } from "@/features/formation/ui/formationQueries";
 import useFormation from "@/features/formation/ui/useFormation";
 import useMétier from "@/features/métier/ui/useMétier";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -26,6 +27,7 @@ const FormationPage = () => {
   const { hash } = useLocation();
   const { estUnIdDeFormation } = useFormation();
   const { estUnIdDeMétier } = useMétier();
+  const estPersonnalisé = useÉlève().aUnProfilPermettantUneExpériencePersonnalisée;
 
   const { data: suggestions, isFetching: chargementSuggestionsEnCours } = useQuery({
     ...suggérerFormationsQueryOptions,
@@ -78,6 +80,7 @@ const FormationPage = () => {
           chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
           résultatsDeRecherche={résultatsDeRecherche}
           suggestions={suggestions}
+          estPersonnalisé={estPersonnalisé}
         />
       </ListeEtAperçuBarreLatérale>
       <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>

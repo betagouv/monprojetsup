@@ -69,6 +69,8 @@ export const localeFR = {
     CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
+    SUGGESTIONS_TRIÉES_ALEATOIRE: "Résultats triés aléatoirement... pour les personnaliser complète",
+    SUGGESTIONS_TRIÉES_ALEATOIRE_SUITE: "ton profil ›",
     ONGLET_FORMATION: "La formation",
     ONGLET_DÉTAILS: "En général",
     ONGLET_CRITÈRES: "Critères d’admission",
