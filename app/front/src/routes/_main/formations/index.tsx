@@ -1,17 +1,17 @@
-import { useListeEtAperçuStore } from '@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore'
-import FormationPage from '@/features/formation/ui/FormationPage/FormationPage'
-import { createFileRoute } from '@tanstack/react-router'
+import { useListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import FormationPage from "@/features/formation/ui/FormationPage/FormationPage";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_main/formations/')({
+export const Route = createFileRoute("/_main/formations/")({
   component: FormationPage,
   loader: ({ context: { queryClient }, cause }) => {
-    if (cause !== 'stay') {
-      const listeEtAperçuStore = useListeEtAperçuStore.getState()
-      listeEtAperçuStore.actions.réinitialiserStore()
+    if (cause !== "stay") {
+      const listeEtAperçuStore = useListeEtAperçuStore.getState();
+      listeEtAperçuStore.actions.réinitialiserStore();
 
-      queryClient.removeQueries({ queryKey: ['métiers'] })
-      queryClient.removeQueries({ queryKey: ['formationsSuggestions'] })
-      queryClient.removeQueries({ queryKey: ['formations'] })
+      queryClient.removeQueries({ queryKey: ["métiers"] });
+      queryClient.removeQueries({ queryKey: ["formationsSuggestions"] });
+      queryClient.removeQueries({ queryKey: ["formations"] });
     }
   },
-})
+});

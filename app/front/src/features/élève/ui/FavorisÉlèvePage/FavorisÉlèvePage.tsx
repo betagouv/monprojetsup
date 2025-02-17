@@ -16,7 +16,6 @@ import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const FavorisÉlèvePage = () => {
-
   const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const { hash } = useLocation();
   const { estUnIdDeFormation } = useFormation();
@@ -61,7 +60,10 @@ const FavorisÉlèvePage = () => {
   return (
     <>
       <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
-      <ListeEtAperçuLayout variante="favoris" forcerMasquageBarreLatérale={false}>
+      <ListeEtAperçuLayout
+        forcerMasquageBarreLatérale={false}
+        variante="favoris"
+      >
         <ListeEtAperçuBarreLatérale nombreRésultats={0}>
           <BarreLatéraleFavoris
             formations={formations}

@@ -7,9 +7,9 @@ import {
 } from "./élèveHttpRepository.interface";
 import { type Élève, ProgressionÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
+import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
-import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 
 export class ÉlèveHttpRepository implements ÉlèveRepository {
   private _ENDPOINT_PROFIL = "/api/v1/auth/profil" as const;
@@ -19,29 +19,28 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   private readonly _storageRepository = new ÉlèveSessionStorageRepository();
 
   private readonly profilVierge = {
-        compteParcoursupAssocié: false,
-        situation: null,
-        classe: null,
-        bac: null,
-        spécialités: null,
-        domaines: null,
-        centresIntérêts: null,
-        métiersFavoris: null,
-        duréeÉtudesPrévue: null,
-        alternance: null,
-        communesFavorites: null,
-        formations: null,
-        voeuxFavoris: null,
-        formationsMasquées: null,
-        notesPersonnelles: null,
-        ambitions: null,
-      };
+    compteParcoursupAssocié: false,
+    situation: null,
+    classe: null,
+    bac: null,
+    spécialités: null,
+    domaines: null,
+    centresIntérêts: null,
+    métiersFavoris: null,
+    duréeÉtudesPrévue: null,
+    alternance: null,
+    communesFavorites: null,
+    formations: null,
+    voeuxFavoris: null,
+    formationsMasquées: null,
+    notesPersonnelles: null,
+    ambitions: null,
+  };
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
   public async récupérerProfil(): Promise<Élève | Error> {
-
-    if(!this._mpsApiHttpClient.estAuthentifié()) {
+    if (!this._mpsApiHttpClient.estAuthentifié()) {
       return this._storageRepository.récupérerProfil();
     }
 
@@ -49,29 +48,29 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
 
     if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
       const profilLocal = await this._storageRepository.récupérerProfil();
-      const profilAUtiliser = (profilLocal instanceof Error) ? this.profilVierge : profilLocal;
-      profilAUtiliser.compteParcoursupAssocié = false;      
+      const profilAUtiliser = profilLocal instanceof Error ? this.profilVierge : profilLocal;
+      profilAUtiliser.compteParcoursupAssocié = false;
       await this.mettreÀJourProfil(profilAUtiliser);
       const profilDistant = await this.récupérerProfil();
-      this.effacerProfilLocal();
+      await this.effacerProfilLocal();
       return profilDistant;
     }
 
     if (réponse instanceof Error) {
       return réponse;
     }
-    
-    this.effacerProfilLocal();
+
+    await this.effacerProfilLocal();
 
     return this._mapperVersLeDomaine(réponse);
   }
 
-  private effacerProfilLocal() {
-    this._storageRepository.mettreÀJourProfil(this.profilVierge);
+  private async effacerProfilLocal() {
+    await this._storageRepository.mettreÀJourProfil(this.profilVierge);
   }
 
   public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
-    if(!this._mpsApiHttpClient.estAuthentifié()) {
+    if (!this._mpsApiHttpClient.estAuthentifié()) {
       return this._storageRepository.récupérerProgressionÉlève();
     }
 
@@ -85,8 +84,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   }
 
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {
-    
-    if(!this._mpsApiHttpClient.estAuthentifié()) {
+    if (!this._mpsApiHttpClient.estAuthentifié()) {
       return this._storageRepository.mettreÀJourProfil(élève);
     }
 
@@ -107,9 +105,9 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     code: string,
     redirectUri: string,
   ): Promise<boolean | Error> {
-        if(!this._mpsApiHttpClient.estAuthentifié()) {
-          throw new Error("Non-authentifié");
-        }
+    if (!this._mpsApiHttpClient.estAuthentifié()) {
+      throw new Error("Non-authentifié");
+    }
 
     const réponse = await this._mpsApiHttpClient.post<AssocierCompteParcourSupÉlèveRéponseHTTP>(
       `${this._ENDPOINT_PROFIL}/parcoursup`,

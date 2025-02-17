@@ -20,7 +20,7 @@ export default function useUtilisateur() {
         nom: "élève",
         email: "eleve@example.com",
         estExpert: false,
-        estAuthentifié: false
+        estAuthentifié: false,
       };
     }
 
@@ -30,7 +30,7 @@ export default function useUtilisateur() {
       nom: auth.user?.profile.family_name,
       email: auth.user?.profile.email,
       estExpert: auth.user?.profile.profile === "expert",
-      estAuthentifié: auth.isAuthenticated
+      estAuthentifié: auth.isAuthenticated,
     };
   }, [auth.user]);
 

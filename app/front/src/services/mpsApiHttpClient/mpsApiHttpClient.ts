@@ -13,16 +13,18 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     endpoint: keyof paths,
     paramètresDeRequête?: URLSearchParams,
   ): Promise<O | Error> => {
-    const jwt = this._récupérerJWT()
-    const headers = jwt ? {
-        authorization: `Bearer ${jwt}`,
-      } : {}
+    const jwt = this._récupérerJWT();
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : {};
     return await this._httpClient.récupérer<O>({
       endpoint: paramètresDeRequête
         ? `${this._apiBaseUrl}${endpoint}?${paramètresDeRequête.toString()}`
         : `${this._apiBaseUrl}${endpoint}`,
       méthode: "GET",
-      headers: headers,
+      headers,
     });
   };
 
@@ -37,12 +39,11 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     });
   };
 
-  public estAuthentifié() : boolean {
-    return this._récupérerJWT() != "";
+  public estAuthentifié(): boolean {
+    return this._récupérerJWT() !== "";
   }
 
   private readonly _récupérerJWT = (): string => {
-    
     const sessionStorageOIDC = sessionStorage.getItem(
       `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
     );

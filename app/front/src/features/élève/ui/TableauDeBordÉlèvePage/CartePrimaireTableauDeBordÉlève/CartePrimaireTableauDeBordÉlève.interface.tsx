@@ -1,4 +1,3 @@
-
 export type CartePrimaireTableauDeBordÉlèveProps = {
   titre: string;
   sousTitre: string;

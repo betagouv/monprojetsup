@@ -71,7 +71,7 @@ export class TraceHttpService implements TraceService {
   }
 
   public async ajouterTrace(trace: BodyAjoutTraceHTTP): Promise<void | Error> {
-    if(!this._mpsApiHttpClient.estAuthentifié()) return;
+    if (!this._mpsApiHttpClient.estAuthentifié()) return;
     await this._mpsApiHttpClient.post<AjoutTraceRéponseHTTP>(this._ENDPOINT, trace);
   }
 }

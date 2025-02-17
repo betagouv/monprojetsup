@@ -1,8 +1,8 @@
 import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
-import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
@@ -12,13 +12,14 @@ export default function useEntête() {
   const utilisateur = useUtilisateur();
   const élève = useÉlève();
 
-  const afficherFavoris =  élève.élèveAuMoinsUneFormationFavorite || élève.élèveAuMoinsUnMétierFavori;
+  const afficherFavoris = élève.élèveAuMoinsUneFormationFavorite || élève.élèveAuMoinsUnMétierFavori;
   const élèveABesoinDeFaireLeTunnelInscription = élève.élèveABesoinDeFaireLeTunnelInscription;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
     if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
       return null;
     }
+
     return [
       {
         text: i18n.NAVIGATION.TABLEAU_DE_BORD,
@@ -43,8 +44,8 @@ export default function useEntête() {
         linkProps: { to: "/eleve/inscription/projet" },
         className: élèveABesoinDeFaireLeTunnelInscription ? "hidden" : "",
       },
-    ]
-  }, [router.location.pathname, utilisateur.id, élève]);
+    ];
+  }, [router.location.pathname, afficherFavoris, élèveABesoinDeFaireLeTunnelInscription]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
     if (utilisateur.estAuthentifié && router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
@@ -52,7 +53,9 @@ export default function useEntête() {
         {
           iconId: "fr-icon-close-line",
           buttonProps: {
-            onClick: () => { (async () => await utilisateur.seDéconnecter())(); },
+            onClick: () => {
+              void (async () => await utilisateur.seDéconnecter())();
+            },
           },
           text: i18n.PAGE_PROFIL.SE_DÉCONNECTER,
         },

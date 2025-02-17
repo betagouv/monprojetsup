@@ -15,6 +15,7 @@ const ListeEtAperçuContenu = ({ children, forcerMasquageBarreLatérale }: Liste
     if (forcerMasquageBarreLatérale) {
       return "";
     }
+
     return afficherBarreLatéraleEnMobile ? "hidden lg:block" : "";
   };
 
@@ -39,7 +40,7 @@ const ListeEtAperçuContenu = ({ children, forcerMasquageBarreLatérale }: Liste
             {i18n.ACCESSIBILITÉ.FOCUS_RÉSULTATS}
           </Bouton>
         </div>
-        <div className= {forcerMasquageBarreLatérale ? "hidden" : "ml-[-1rem] pb-6 lg:hidden"}>
+        <div className={forcerMasquageBarreLatérale ? "hidden" : "ml-[-1rem] pb-6 lg:hidden"}>
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
             icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}

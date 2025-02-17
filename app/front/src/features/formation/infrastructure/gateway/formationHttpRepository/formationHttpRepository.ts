@@ -100,7 +100,6 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async suggérer(): Promise<FicheFormation[] | Error> {
-    
     const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
       `${this._ENDPOINT}/suggestions`,
     );

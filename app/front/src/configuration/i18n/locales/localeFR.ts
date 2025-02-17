@@ -384,7 +384,8 @@ export const localeFR = {
         },
         PROFIL_VIDE: {
           TITRE: "Renseigne ton profil pour obtenir des suggestions personalisées",
-          SOUS_TITRE: "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
+          SOUS_TITRE:
+            "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
         },
         CONNECTE_TOI: {
           TITRE: "Connecte-toi à ton compte MPS-Avenir(s)",

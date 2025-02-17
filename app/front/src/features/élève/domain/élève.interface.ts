@@ -56,9 +56,9 @@ export type Élève = {
 };
 
 export type ÉlèveEtProgression = {
-  élève : Élève,
-  progression: ProgressionÉlève
-}
+  élève: Élève;
+  progression: ProgressionÉlève;
+};
 
 export const situationÉlève = [
   "aucune_idee",

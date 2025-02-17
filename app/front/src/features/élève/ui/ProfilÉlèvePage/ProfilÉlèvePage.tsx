@@ -9,7 +9,6 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useRouterState } from "@tanstack/react-router";
 
 const ProfilÉlèvePage = () => {
-  
   const utilisateur = useUtilisateur();
   const router = useRouterState();
 
@@ -41,15 +40,15 @@ const ProfilÉlèvePage = () => {
               {utilisateur.email && (
                 <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
               )}
-              { utilisateur.estAuthentifié && 
-              <Bouton
-                auClic={async () => await utilisateur.seDéconnecter()}
-                type="button"
-                variante="quaternaire"
-              >
-                {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
-              </Bouton>
-              }
+              {utilisateur.estAuthentifié && (
+                <Bouton
+                  auClic={async () => await utilisateur.seDéconnecter()}
+                  type="button"
+                  variante="quaternaire"
+                >
+                  {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
+                </Bouton>
+              )}
             </div>
             <Tabs
               label={i18n.PAGE_PROFIL.TITRE}

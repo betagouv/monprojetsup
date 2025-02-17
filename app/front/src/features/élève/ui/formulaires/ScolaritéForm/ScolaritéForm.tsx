@@ -2,32 +2,22 @@ import { type ScolaritéFormProps } from "./ScolaritéForm.interface";
 import MaSélectionSpécialités from "./Spécialités/MaSélectionSpécialités/MaSélectionSpécialités";
 import RechercheSpécialités from "./Spécialités/RechercheSpécialités/RechercheSpécialités";
 import useScolaritéForm from "./useScolaritéForm";
-import { i18n } from "@/configuration/i18n/i18n";
-import { Select } from "@codegouvfr/react-dsfr/SelectNext";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { Select } from "@codegouvfr/react-dsfr/SelectNext";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ScolaritéFormProps) => {
-
   const { data: élève } = useQuery(élèveQueryOptions);
-  
-  const {
-    mettreÀJourÉlève,
-    erreurs,
-    register,
-    classeOptions,
-    bacOptions,
-    valeurBac,
-    spécialitésBac
-  } = useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
-  useEffect(() => {
+  const { mettreÀJourÉlève, erreurs, register, classeOptions, bacOptions, valeurBac, spécialitésBac } =
+    useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
-  }, [élève, register]);
+  useEffect(() => {}, [register, élève]);
 
-  if(!élève) return (<AnimationChargement />);
+  if (!élève) return <AnimationChargement />;
 
   return (
     <form

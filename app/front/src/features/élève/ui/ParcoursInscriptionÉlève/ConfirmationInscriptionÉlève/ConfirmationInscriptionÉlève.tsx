@@ -9,7 +9,7 @@ import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirec
 const ConfirmationInscriptionÉlève = () => {
   const { estInitialisé } = useÉlèveRedirection();
   if (!estInitialisé) return null;
-  
+
   return (
     <>
       <Head titre={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE} />

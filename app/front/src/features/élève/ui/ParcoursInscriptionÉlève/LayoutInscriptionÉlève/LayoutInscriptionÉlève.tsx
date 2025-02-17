@@ -3,7 +3,6 @@ import { Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const LayoutInscriptionÉlève = () => {
-  
   const { définirÉtapeActuelle } = actionsInscriptionÉlèveStore();
 
   const router = useRouterState();

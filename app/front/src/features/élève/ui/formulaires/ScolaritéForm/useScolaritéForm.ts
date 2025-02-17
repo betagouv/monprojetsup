@@ -54,7 +54,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
 
   // Garder synchronisé la valeur react-hook-form et le profil de l'élève
   useEffect(() => {
-    if(élève){
+    if (élève) {
       setValue("spécialités", élève?.spécialités ?? []);
     }
   }, [élève?.spécialités]);
@@ -66,6 +66,6 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     classeOptions,
     bacOptions,
     valeurBac,
-    spécialitésBac
+    spécialitésBac,
   };
 }

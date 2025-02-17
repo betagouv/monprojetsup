@@ -69,15 +69,25 @@ const FormationPage = () => {
   }
 
   return (
-    <ListeEtAperçuLayout variante="formations" forcerMasquageBarreLatérale={false}>
-      <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0} >
+    <ListeEtAperçuLayout
+      forcerMasquageBarreLatérale={false}
+      variante="formations"
+    >
+      <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
         <BarreLatéraleFormation
           chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
           résultatsDeRecherche={résultatsDeRecherche}
           suggestions={suggestions}
         />
       </ListeEtAperçuBarreLatérale>
-      <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>{élémentAffiché.id && <FicheFormation id={élémentAffiché.id} afficherBoutonFavori={true} />}</ListeEtAperçuContenu>
+      <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>
+        {élémentAffiché.id && (
+          <FicheFormation
+            afficherBoutonFavori
+            id={élémentAffiché.id}
+          />
+        )}
+      </ListeEtAperçuContenu>
     </ListeEtAperçuLayout>
   );
 };

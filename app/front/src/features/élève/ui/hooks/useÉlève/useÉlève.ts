@@ -2,7 +2,6 @@ import {
   CommuneÉlève,
   FormationÉlève,
   MétierÉlève,
-  ProgressionÉlève,
   SpécialitéÉlève,
   VoeuÉlève,
 } from "@/features/élève/domain/élève.interface";
@@ -10,7 +9,7 @@ import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-export default function UseÉlève() {
+export default function useÉlève() {
   const { data: élève } = useQuery(élèveQueryOptions);
 
   const aAssociéSonCompteParcoursup = useMemo(
@@ -38,10 +37,7 @@ export default function UseÉlève() {
     [élève?.centresIntérêts],
   );
 
-  const élèveABesoinDeFaireLeTunnelInscription = useMemo(
-    () : boolean => auMoinsUnDomaineFavori,
-    [élève],
-  );
+  const élèveABesoinDeFaireLeTunnelInscription = useMemo((): boolean => auMoinsUnDomaineFavori, [élève]);
 
   const estMétierFavori = (idMétier: MétierÉlève): boolean => {
     return élève?.métiersFavoris?.includes(idMétier) ?? false;
@@ -85,6 +81,6 @@ export default function UseÉlève() {
     estVoeuFavoriPourÉlève: estVoeuFavori,
     estVoeuFavoriProvenantDeParcoursupPourÉlève: estVoeuFavoriProvenantDeParcoursup,
     estSpécialitéFavoritePourÉlève: estSpécialitéFavorite,
-    élèveABesoinDeFaireLeTunnelInscription: élèveABesoinDeFaireLeTunnelInscription,
+    élèveABesoinDeFaireLeTunnelInscription,
   };
 }

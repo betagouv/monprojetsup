@@ -7,7 +7,7 @@ import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormat
 const BarreLatéraleFormation = ({
   suggestions,
   résultatsDeRecherche,
-  chargementEnCours
+  chargementEnCours,
 }: BarreLatéraleFormationProps) => {
   if (!suggestions && !résultatsDeRecherche) return null;
 

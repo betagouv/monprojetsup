@@ -24,7 +24,6 @@ const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
   }, [id]);
 
   if (!formation || chargementEnCours) return <AnimationChargement />;
-  
 
   return (
     <>
@@ -58,9 +57,9 @@ const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
         />
       </div>
       {afficherBoutonFavori && (
-      <div className="mt-9">
-        <BoutonsActionsFicheFormation formation={formation} />
-      </div>
+        <div className="mt-9">
+          <BoutonsActionsFicheFormation formation={formation} />
+        </div>
       )}
       <hr className="mb-9 mt-5" />
       <div className="grid gap-12">

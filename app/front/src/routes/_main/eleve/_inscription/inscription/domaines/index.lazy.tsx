@@ -1,8 +1,6 @@
-import InscriptionÉlèvePage from '@/features/élève/ui/ParcoursInscriptionÉlève/InscriptionÉlèvePage/InscriptionÉlèvePage'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import InscriptionÉlèvePage from "@/features/élève/ui/ParcoursInscriptionÉlève/InscriptionÉlèvePage/InscriptionÉlèvePage";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute(
-  '/_main/eleve/_inscription/inscription/domaines/',
-)({
+export const Route = createLazyFileRoute("/_main/eleve/_inscription/inscription/domaines/")({
   component: InscriptionÉlèvePage,
-})
+});

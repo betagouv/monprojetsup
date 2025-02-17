@@ -2,21 +2,14 @@ import { type ListeEtAperçuLayoutProps } from "./ListeEtAperçuLayout.interface
 import { afficherBarreLatéraleEnMobileListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 
 const ListeEtAperçuLayout = ({ variante, children, forcerMasquageBarreLatérale }: ListeEtAperçuLayoutProps) => {
-  const afficherBarreLatéraleEnMobile =  !forcerMasquageBarreLatérale && afficherBarreLatéraleEnMobileListeEtAperçuStore();
-
-  const classContent = () => {
-    if(forcerMasquageBarreLatérale) {
-      return "";
-    } else {
-      return "lg:grid lg:grid-cols-[450px_1fr] xl:grid-cols-[490px_1fr]";
-    }
-  }
+  const afficherBarreLatéraleEnMobile =
+    !forcerMasquageBarreLatérale && afficherBarreLatéraleEnMobileListeEtAperçuStore();
 
   const classBackgroundEnFonctionDeAfficherLaBarreLatérale = () => {
-    if(forcerMasquageBarreLatérale) {
+    if (forcerMasquageBarreLatérale) {
       return "bg-white lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-0% lg:to-white lg:to-50%";
     }
-    
+
     if (afficherBarreLatéraleEnMobile && variante === "formations") {
       return "bg-[--background-contrast-beige-gris-galet] lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-50% lg:to-white lg:to-50%";
     }
@@ -32,8 +25,12 @@ const ListeEtAperçuLayout = ({ variante, children, forcerMasquageBarreLatérale
   };
 
   return (
-    <div className={`h-full  ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>
-      <div className={`fr-container h-full ${classContent()}`}>{children}</div>
+    <div className={`h-full ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>
+      <div
+        className={`fr-container h-full ${forcerMasquageBarreLatérale ? "" : "lg:grid lg:grid-cols-[450px_1fr] xl:grid-cols-[490px_1fr]"}`}
+      >
+        {children}
+      </div>
     </div>
   );
 };
