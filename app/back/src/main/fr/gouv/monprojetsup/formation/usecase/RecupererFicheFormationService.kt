@@ -23,7 +23,7 @@ class RecupererFicheFormationService(
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
     private val logger: MonProjetSupLogger,
-    ) {
+) {
     @Transactional(readOnly = true)
     @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
@@ -121,5 +121,4 @@ class RecupererFicheFormationService(
             )
         }
     }
-
 }

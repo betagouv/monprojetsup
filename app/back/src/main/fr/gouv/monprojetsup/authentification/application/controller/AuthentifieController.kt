@@ -24,5 +24,4 @@ abstract class AuthentifieController {
             else -> throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève identifié")
         }
     }
-
 }

@@ -139,7 +139,7 @@ class RecupererFichesFormationsService(
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
                 apprentissage = formation.apprentissage,
                 informationsSurLesVoeuxEtLeursCommunes = recupererInformationsSurLesVoeuxEtLeursCommunes(voeux, formation),
-                )
+            )
         }
     }
 }

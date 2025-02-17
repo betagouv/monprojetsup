@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class SuggestionsFormationsService(
-    val suggestionHttpClient: SuggestionHttpClient
+    val suggestionHttpClient: SuggestionHttpClient,
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     fun recupererLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.AvecProfilExistant?): SuggestionsPourUnProfil {

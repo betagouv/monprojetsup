@@ -35,7 +35,7 @@ sealed class FicheFormation(
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         override val apprentissage: Boolean,
         override val informationsSurLesVoeuxEtLeursCommunes: InformationsSurLesVoeuxEtLeursCommunes,
-        ) : FicheFormation(
+    ) : FicheFormation(
             id = id,
             nom = nom,
             descriptifGeneral = descriptifGeneral,
@@ -49,7 +49,7 @@ sealed class FicheFormation(
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
             apprentissage = apprentissage,
-            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes
+            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
         )
 
     data class FicheFormationPourProfil(
@@ -82,9 +82,8 @@ sealed class FicheFormation(
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
             apprentissage = apprentissage,
-            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes
+            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
         ) {
-
         data class ExplicationTypeBaccalaureat(
             val baccalaureat: Baccalaureat,
             val pourcentage: Int,

@@ -56,7 +56,7 @@ class FormationController(
         if (numeroDePage < NUMERO_PREMIERE_PAGE) {
             throw MonProjetSupBadRequestException("PAGINATION_COMMENCE_A_1", "La pagination commence à 1")
         }
-        val profilEleve = recupererEleveAvecProfilExistant() ?:  AvecProfilExistant("")
+        val profilEleve = recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(

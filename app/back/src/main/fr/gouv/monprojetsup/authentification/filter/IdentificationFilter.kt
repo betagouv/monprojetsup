@@ -28,7 +28,7 @@ class IdentificationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        if(request.requestURI.contains(PUBLIC_URL)) {
+        if (request.requestURI.contains(PUBLIC_URL)) {
             filterChain.doFilter(request, response)
         } else {
             val jwtToken = getToken()
