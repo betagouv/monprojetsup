@@ -21,7 +21,6 @@ import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/Récupére
 import { RécupérerProgressionÉlèveUseCase } from "@/features/élève/usecase/RécupérerProgressionÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
-import { EstAuthentifiéUseCase } from "@/features/élève/usecase/EstAuthentifié";
 
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
@@ -144,8 +143,6 @@ export class Dépendances {
 
   public readonly suivreLienExterne: SuivreLienExterneUseCase;
 
-  public readonly estAuthentifiéUseCase: EstAuthentifiéUseCase;
-
   private constructor() {
     this._httpClient = new HttpClient();
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, environnement.VITE_API_URL);
@@ -209,7 +206,6 @@ export class Dépendances {
     this.mettreÀJourAmbitionsÉlèveUseCase = new MettreÀJourAmbitionsÉlèveUseCase(this._élèveRepository);
     this.supprimerTousLesMétiersÉlèveUseCase = new SupprimerTousLesMétiersÉlèveUseCase(this._élèveRepository);
     this.supprimerToutesLesFormationsÉlèveUseCase = new SupprimerToutesLesFormationsÉlèveUseCase(this._élèveRepository);
-    this.estAuthentifiéUseCase = new EstAuthentifiéUseCase(this._mpsApiHttpClient);
 
     // Formations
     this.récupérerFicheFormationUseCase = new RécupérerFicheFormationUseCase(this._formationRepository);

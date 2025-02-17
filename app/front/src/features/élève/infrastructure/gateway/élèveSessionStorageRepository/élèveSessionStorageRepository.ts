@@ -22,7 +22,6 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     formationsMasquées: null,
     ambitions: null,
     notesPersonnelles: null,
-    moyenneGénérale: null,
   };
 
   public async récupérerProfil(): Promise<Élève | Error> {
@@ -38,7 +37,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
   }
 
   public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
-    return 6;
+    return 0;
   }
 
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {

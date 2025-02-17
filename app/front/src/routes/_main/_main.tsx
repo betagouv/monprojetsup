@@ -1,9 +1,9 @@
 import { queryÉlèveKeys } from '@/features/élève/ui/élèveQueries'
-import TableauDeBordÉlèvePage from '@/features/élève/ui/TableauDeBordÉlèvePage/TableauDeBordÉlèvePage'
 import { createFileRoute } from '@tanstack/react-router'
 import { type QueryClient } from '@tanstack/react-query'
 import { référentielDonnéesQueryOptions } from '@/features/référentielDonnées/ui/référentielDonnéesQueries'
 import { z } from 'zod'
+import MainLayout from '@/components/_layout/MainLayout/MainLayout'
 
 const tableauDeBordSearchSchema = z.object({
   associationPS: z.enum(['ok', 'erreur']).optional(),
@@ -16,7 +16,7 @@ const chargerDonnées = async (queryClient: QueryClient) => {
 export const Route = createFileRoute('/_main/_main')({
   validateSearch: (searchParamètres) =>
     tableauDeBordSearchSchema.parse(searchParamètres),
-  component: TableauDeBordÉlèvePage,
+  component: MainLayout,
   loader: async ({ context: { queryClient }, cause }) => {
     await chargerDonnées(queryClient)
     if (cause !== 'stay') {

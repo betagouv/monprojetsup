@@ -7,15 +7,11 @@ import ModifierProfilÉlèveForm from "@/features/élève/ui/ProfilÉlèvePage/M
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useRouterState } from "@tanstack/react-router";
-import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const ProfilÉlèvePage = () => {
-  const { estInitialisé } = useÉlèveRedirection();
-  if (!estInitialisé) return null;
   
   const utilisateur = useUtilisateur();
   const router = useRouterState();
-  const estAuthentifié = utilisateur.estAuthentifié;
 
   return (
     <>
@@ -45,7 +41,7 @@ const ProfilÉlèvePage = () => {
               {utilisateur.email && (
                 <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
               )}
-              { estAuthentifié && 
+              { utilisateur.estAuthentifié && 
               <Bouton
                 auClic={async () => await utilisateur.seDéconnecter()}
                 type="button"

@@ -9,14 +9,12 @@ import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/Car
 import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/CarteParcourSupÉlève";
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
 import CarteTémoignageÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteTémoignageÉlève/CarteTémoignageÉlève";
+
 import { Fragment } from "react/jsx-runtime";
-import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const TableauDeBordÉlèvePage = () => {
-  const { estInitialisé } = useÉlèveRedirection();
-  if (!estInitialisé) return null;
   
-  const { cartes, associationParcoursupPossible, progression } = useTableauDeBordÉlèvePage();
+  const { cartes, associationParcoursupPossible, progression, estAuthentifié } = useTableauDeBordÉlèvePage();
 
   const messageProgression =
     progression &&
@@ -24,20 +22,22 @@ const TableauDeBordÉlèvePage = () => {
       progression +
       i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_FELICITATIONS;
 
+  const messageTitre = estAuthentifié ? i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_CONNECTE: i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_DECONNECTE;
+  const messageBienvenue = estAuthentifié ? i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_CONNECTE: i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_DECONNECTE;
   return (
     <>
       <Head titre={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
       <div className="h-full bg-[--background-alt-beige-gris-galet] bg-right-top bg-no-repeat lg:bg-[url('/images-de-fond/tableau-de-bord.svg')]">
         <div className="fr-container pb-20 pt-12">
           <div className="*:mb-2 *:font-normal *:text-[--text-mention-grey]">
-            <Titre
+            <Titre 
               niveauDeTitre="h1"
               styleDeTitre="text--sm"
             >
-              {i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE}
+              {messageTitre}
             </Titre>
           </div>
-          <p className="fr-h1 mb-10">{i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE}</p>
+          <p className="fr-h1 mb-10">{messageBienvenue}</p>
           <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
             {cartes.map((carte, index) => (
               <Fragment key={carte.lien}>
@@ -49,7 +49,7 @@ const TableauDeBordÉlèvePage = () => {
                     titre={carte.titre}
                   />
                 </li>
-                {index === 1 && (
+                {index === 1 && estAuthentifié && (
                   <li>
                     <CarteTémoignageÉlève
                       auteur={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR}

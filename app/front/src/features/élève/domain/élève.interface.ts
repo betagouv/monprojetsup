@@ -47,7 +47,6 @@ export type Élève = {
   métiersFavoris: MétierÉlève[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
-  moyenneGénérale: number | null;
   communesFavorites: CommuneÉlève[] | null;
   formations: FormationÉlève[] | null;
   voeuxFavoris: VoeuÉlève[] | null;
@@ -55,6 +54,11 @@ export type Élève = {
   notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
   ambitions: AmbitionFormationÉlève[] | null;
 };
+
+export type ÉlèveEtProgression = {
+  élève : Élève,
+  progression: ProgressionÉlève
+}
 
 export const situationÉlève = [
   "aucune_idee",

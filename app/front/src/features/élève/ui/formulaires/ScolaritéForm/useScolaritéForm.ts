@@ -1,6 +1,5 @@
 import { type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
-import useMoyenneScolaritéForm from "./useMoyenneScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
@@ -15,7 +14,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
   const { élève } = useÉlève();
   const { mettreÀJourProfilÉlève } = useÉlèveMutation();
-  const { register, erreurs, mettreÀJourÉlève, watch, setValue, getValues } = useÉlèveForm({
+  const { register, erreurs, mettreÀJourÉlève, watch, setValue } = useÉlèveForm({
     schémaValidation: scolaritéValidationSchema(référentielDonnées?.bacs ?? []),
     àLaSoumissionDuFormulaireAvecSuccès,
   });
@@ -48,22 +47,17 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
   );
 
   useEffect(() => {
-    if (valeurBac !== élève?.bac) {
+    if (élève && valeurBac && valeurBac !== élève?.bac) {
       void mettreÀJourProfilÉlève({ bac: valeurBac });
     }
   }, [valeurBac]);
 
   // Garder synchronisé la valeur react-hook-form et le profil de l'élève
   useEffect(() => {
-    setValue("spécialités", élève?.spécialités ?? []);
+    if(élève){
+      setValue("spécialités", élève?.spécialités ?? []);
+    }
   }, [élève?.spécialités]);
-
-  const moyenneScolaritéForm = useMoyenneScolaritéForm({
-    référentielDonnées,
-    watch,
-    setValue,
-    getValues,
-  });
 
   return {
     mettreÀJourÉlève,
@@ -72,7 +66,6 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     classeOptions,
     bacOptions,
     valeurBac,
-    spécialitésBac,
-    ...moyenneScolaritéForm,
+    spécialitésBac
   };
 }

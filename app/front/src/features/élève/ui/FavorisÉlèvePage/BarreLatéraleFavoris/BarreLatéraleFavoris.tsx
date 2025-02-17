@@ -26,6 +26,7 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
               label: i18n.COMMUN.MÉTIER,
               nativeInputProps: {
                 defaultChecked: élémentAffiché?.type === "métier",
+                checked: élémentAffiché?.type === "métier",
                 onClick: () => auChangementDeCatégorie("métiers"),
               },
             },

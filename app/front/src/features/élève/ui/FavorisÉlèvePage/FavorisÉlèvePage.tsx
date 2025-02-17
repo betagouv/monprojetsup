@@ -14,11 +14,8 @@ import useMétier from "@/features/métier/ui/useMétier";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
-import useÉlèveRedirection from "@/features/élève/ui/hooks/useÉlèveRedirection/useÉlèveRedirection";
 
 const FavorisÉlèvePage = () => {
-  const { estInitialisé } = useÉlèveRedirection();
-  if (!estInitialisé) return null;
 
   const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const { hash } = useLocation();
@@ -36,9 +33,14 @@ const FavorisÉlèvePage = () => {
         id: formations[0]?.id ?? null,
         type: "formation",
       });
+    } else if (hash === "" && métiers && métiers?.length > 0) {
+      changerÉlémentAffiché({
+        id: métiers[0]?.id ?? null,
+        type: "métier",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changerÉlémentAffiché, formations]);
+  }, [changerÉlémentAffiché, formations, métiers]);
 
   if (!formations || !métiers) {
     return <AnimationChargement />;

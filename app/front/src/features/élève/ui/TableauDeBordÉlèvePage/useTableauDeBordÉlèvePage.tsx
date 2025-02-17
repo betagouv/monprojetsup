@@ -1,59 +1,79 @@
 import explorerSVG from "@/assets/explorer.svg";
 import favorisSVG from "@/assets/favoris.svg";
 import profilSVG from "@/assets/profil.svg";
-import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
+import avenirsSVG from "@/assets/avenirs.svg";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
-import { progressionQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { CartePrimaireTableauDeBordÉlèveProps } from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève.interface";
-import { useQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { useAuth } from "react-oidc-context";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+
 
 export default function useTableauDeBordÉlèvePage() {
-  const route = getRouteApi("/_main/_main");
-  const { associationPS } = route.useSearch();
-  const { déclencherToast } = actionsToastStore();
-  const { data: progression } = useQuery(progressionQueryOptions);
+  const élève = useÉlève();
+  const auth = useAuth();
+  const progression = élève.récupérerProgression;
+  const estAuthentifié =  auth.isAuthenticated;
+  const aAuMoinsUnDomaineFavori = élève.élèveAuMoinsUnDomaineFavori;
+  const afficherLesSuggestions = aAuMoinsUnDomaineFavori;
 
-  if (associationPS === "ok") {
-    déclencherToast(
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.TITRE,
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.DESCRIPTION,
-      "success",
-    );
-  } else if (associationPS === "erreur") {
-    déclencherToast(
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.TITRE,
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.DESCRIPTION,
-      "error",
-    );
-  }
+  //useMemo((): CartePrimaireTableauDeBordÉlèveProps[] => { 
+    const result = [];
 
-  const cartes: CartePrimaireTableauDeBordÉlèveProps[] = [
-    {
+    if(afficherLesSuggestions) {
+      result.push(
+      {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.SOUS_TITRE,
       illustration: explorerSVG,
       lien: "/formations",
-    },
+      });
+    }
+    if(élève.élèveAuMoinsUneFormationFavorite || élève.élèveAuMoinsUnMétierFavori) {
+      result.push(
     {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.FAVORIS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.FAVORIS.SOUS_TITRE,
       illustration: favorisSVG,
       lien: "/favoris",
-    },
+    });
+    }
+    if(afficherLesSuggestions) {
+    result.push(
     {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL.SOUS_TITRE,
       illustration: profilSVG,
       lien: "/profil",
-    },
-  ];
+    });
+    } else {
+    result.push(
+    {
+      titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL_VIDE.TITRE,
+      sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PROFIL_VIDE.SOUS_TITRE,
+      illustration: profilSVG,
+      lien: "/eleve/inscription/projet",
+    });
+    }
+    if(!estAuthentifié) {
+      result.push(
+      {
+        titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.CONNECTE_TOI.TITRE,
+        sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.CONNECTE_TOI.SOUS_TITRE,
+        illustration: avenirsSVG,
+        lien: "/connexion",
+      });
+    }
+    //return result;
+  //},[élève]);
+  const cartes = result;
 
   return {
     cartes,
     associationParcoursupPossible:
-      environnement.VITE_PARCOURSUP_OAUTH2_URL && environnement.VITE_PARCOURSUP_OAUTH2_CLIENT,
+      estAuthentifié && environnement.VITE_PARCOURSUP_OAUTH2_URL && environnement.VITE_PARCOURSUP_OAUTH2_CLIENT,
     progression,
+    estAuthentifié,
+    aAuMoinsUnDomaineFavori
   };
 }
+

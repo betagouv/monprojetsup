@@ -2,6 +2,7 @@ import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
@@ -9,12 +10,15 @@ import { useMemo } from "react";
 export default function useEntête() {
   const router = useRouterState();
   const utilisateur = useUtilisateur();
+  const élève = useÉlève();
+
+  const afficherFavoris =  élève.élèveAuMoinsUneFormationFavorite || élève.élèveAuMoinsUnMétierFavori;
+  const élèveABesoinDeFaireLeTunnelInscription = élève.élèveABesoinDeFaireLeTunnelInscription;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
-    if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION) || !utilisateur.id) {
+    if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
       return null;
     }
-
     return [
       {
         text: i18n.NAVIGATION.TABLEAU_DE_BORD,
@@ -27,9 +31,20 @@ export default function useEntête() {
       {
         text: i18n.NAVIGATION.FAVORIS,
         linkProps: { to: "/favoris" },
+        className: afficherFavoris ? "" : "hidden",
       },
-    ];
-  }, [router.location.pathname, utilisateur.id]);
+      {
+        text: i18n.NAVIGATION.PROFIL,
+        linkProps: { to: "/profil" },
+        className: élèveABesoinDeFaireLeTunnelInscription ? "" : "hidden",
+      },
+      {
+        text: i18n.NAVIGATION.PROFIL,
+        linkProps: { to: "/eleve/inscription/projet" },
+        className: élèveABesoinDeFaireLeTunnelInscription ? "hidden" : "",
+      },
+    ]
+  }, [router.location.pathname, utilisateur.id, élève]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
     if (utilisateur.estAuthentifié && router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
@@ -37,7 +52,7 @@ export default function useEntête() {
         {
           iconId: "fr-icon-close-line",
           buttonProps: {
-            onClick: () => utilisateur.seDéconnecter(),
+            onClick: () => { (async () => await utilisateur.seDéconnecter())(); },
           },
           text: i18n.PAGE_PROFIL.SE_DÉCONNECTER,
         },
@@ -49,7 +64,7 @@ export default function useEntête() {
         {
           iconId: "fr-icon-user-fill",
           linkProps: {
-            to: "/",
+            to: "/connexion",
           },
           text: i18n.ENTÊTE.SE_CONNECTER,
         },

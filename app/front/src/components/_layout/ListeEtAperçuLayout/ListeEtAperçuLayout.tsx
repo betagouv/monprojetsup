@@ -14,7 +14,7 @@ const ListeEtAperçuLayout = ({ variante, children, forcerMasquageBarreLatérale
 
   const classBackgroundEnFonctionDeAfficherLaBarreLatérale = () => {
     if(forcerMasquageBarreLatérale) {
-      return "bg-white lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-0% lg:to-white lg:to-0%";
+      return "bg-white lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-0% lg:to-white lg:to-50%";
     }
     
     if (afficherBarreLatéraleEnMobile && variante === "formations") {
@@ -32,8 +32,8 @@ const ListeEtAperçuLayout = ({ variante, children, forcerMasquageBarreLatérale
   };
 
   return (
-    <div className={`h-full ${classContent()} ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>
-      <div className="fr-container h-full">{children}</div>
+    <div className={`h-full  ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>
+      <div className={`fr-container h-full ${classContent()}`}>{children}</div>
     </div>
   );
 };

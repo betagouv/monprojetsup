@@ -11,7 +11,7 @@ export class MettreÀJourProfilÉlèveUseCase {
   public async run(
     profilÉlève: Élève,
     changementsProfilÉlève: Partial<
-      Pick<Élève, "situation" | "classe" | "bac" | "duréeÉtudesPrévue" | "alternance" | "moyenneGénérale">
+      Pick<Élève, "situation" | "classe" | "bac" | "duréeÉtudesPrévue" | "alternance" >
     >,
   ): Promise<Élève | Error> {
     this._analytics.envoyerÉvènement("Profil", "Mise à jour", "");

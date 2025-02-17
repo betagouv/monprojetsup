@@ -38,10 +38,11 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
   };
 
   public estAuthentifié() : boolean {
-    return this._récupérerJWT() !== "";
+    return this._récupérerJWT() != "";
   }
 
   private readonly _récupérerJWT = (): string => {
+    
     const sessionStorageOIDC = sessionStorage.getItem(
       `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
     );
