@@ -19,7 +19,6 @@ class IdentificationFilter(
 ) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
-        private const val PUBLIC_URL = "public"
         val GRANTED_AUTHORITY_UTILISATEUR = GrantedAuthority { AUTHORITY_UTILISATEUR }
     }
 
@@ -28,24 +27,20 @@ class IdentificationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        if (request.requestURI.contains(PUBLIC_URL)) {
-            filterChain.doFilter(request, response)
-        } else {
-            val jwtToken = getToken()
-            jwtToken?.let {
-                val idIndividu = getIdIndividu(jwtToken)
-                if (idIndividu != null) {
-                    val eleve = recupererEleveService.recupererEleve(idIndividu)
-                    val authenticationEleve =
-                        UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
-                    SecurityContextHolder.getContext().authentication = authenticationEleve
-                } else {
-                    val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnnecte, null, null)
-                    SecurityContextHolder.getContext().authentication = authenticationToken
-                }
+        val jwtToken = getToken()
+        jwtToken?.let {
+            val idIndividu = getIdIndividu(jwtToken)
+            if (idIndividu != null) {
+                val eleve = recupererEleveService.recupererEleve(idIndividu)
+                val authenticationEleve =
+                    UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
+                SecurityContextHolder.getContext().authentication = authenticationEleve
+            } else {
+                val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnnecte, null, null)
+                SecurityContextHolder.getContext().authentication = authenticationToken
             }
-            filterChain.doFilter(request, response)
         }
+        filterChain.doFilter(request, response)
     }
 
     private fun getToken(): Jwt? {

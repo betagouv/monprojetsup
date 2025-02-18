@@ -75,7 +75,7 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
                   <LienInterne
                     ariaLabel={formation.nom}
                     hash={formation.id}
-                    href="/formations"
+                    href="/formation"
                     variante="simple"
                   >
                     {formation.nom}{" "}

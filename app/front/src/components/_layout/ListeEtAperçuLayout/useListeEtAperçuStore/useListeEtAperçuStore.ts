@@ -7,7 +7,8 @@ const étatInitial: ListeEtAperçuStoreState = {
     type: "formation",
   },
   afficherBarreLatéraleEnMobile: true,
-  recherche: undefined,
+  recherche: undefined
+  
 };
 
 export const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({

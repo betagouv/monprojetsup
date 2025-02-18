@@ -60,17 +60,14 @@ const FavorisÉlèvePage = () => {
   return (
     <>
       <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
-      <ListeEtAperçuLayout
-        forcerMasquageBarreLatérale={false}
-        variante="favoris"
-      >
+      <ListeEtAperçuLayout>
         <ListeEtAperçuBarreLatérale nombreRésultats={0}>
           <BarreLatéraleFavoris
             formations={formations}
             métiers={métiers}
           />
         </ListeEtAperçuBarreLatérale>
-        <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>
+        <ListeEtAperçuContenu>
           <ContenuFavoris />
         </ListeEtAperçuContenu>
       </ListeEtAperçuLayout>

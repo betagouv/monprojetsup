@@ -71,10 +71,7 @@ const FormationPage = () => {
   }
 
   return (
-    <ListeEtAperçuLayout
-      forcerMasquageBarreLatérale={false}
-      variante="formations"
-    >
+    <ListeEtAperçuLayout>
       <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
         <BarreLatéraleFormation
           chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
@@ -83,7 +80,7 @@ const FormationPage = () => {
           suggestions={suggestions}
         />
       </ListeEtAperçuBarreLatérale>
-      <ListeEtAperçuContenu forcerMasquageBarreLatérale={false}>
+      <ListeEtAperçuContenu>
         {élémentAffiché.id && (
           <FicheFormation
             afficherBoutonFavori

@@ -96,7 +96,7 @@ describe("useEntête", () => {
 
   describe("Lorsque l'utilisateur est connecté sur une page du parcours d'inscription", () => {
     beforeAll(() => {
-      vi.mocked(useRouterState).mockReturnValue(mockUseRouterState(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION));
+      vi.mocked(useRouterState).mockReturnValue(mockUseRouterState(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION + "projet/"));
       vi.mocked(useUtilisateur).mockReturnValue(utilisateurConnecté);
     });
 

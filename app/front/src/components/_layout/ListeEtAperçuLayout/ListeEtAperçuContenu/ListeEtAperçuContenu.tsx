@@ -6,8 +6,12 @@ import {
 import Bouton from "@/components/Bouton/Bouton";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import { useLocation } from "@tanstack/react-router";
 
-const ListeEtAperçuContenu = ({ children, forcerMasquageBarreLatérale }: ListeEtAperçuContenuProps) => {
+const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
+  const location = useLocation();
+  const forcerMasquageBarreLatérale = location.pathname === "/formation";
+
   const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 

@@ -18,14 +18,12 @@ public class Constants {
     public static final String ONISEP_URL1 = "http://www.onisep.fr";
     public static final String ONISEP_URL2 = "https://www.onisep.fr";
     public static final String CARTE_PARCOURSUP_PREFIX_URI = "https://dossier.parcoursup.fr/Candidat/carte?search=";
-    public static final String PASS_MOT_CLE = "PASS";
     public static final int DUREE_LAS = 5;
     public static final int DUREE_PPPE = 5;
 
     public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
     public static final int IEP_PSUP_FR_COD = 90;
     public static final int BPJEPS_PSUP_FR_COD = 640;
-    public static final int ECOLES_ARTS_PSUP_FR_COD = 27;
     public static final int ECOLES_INGE_PSUP_FR_COD = 21;
     public static final int CMI_PSUP_FR_COD = 22;
     public static final int ECOLE_COMMERCE_PSUP_FR_COD = 24;

@@ -1,7 +1,11 @@
 import { type ListeEtAperçuLayoutProps } from "./ListeEtAperçuLayout.interface";
 import { afficherBarreLatéraleEnMobileListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import { useLocation } from "@tanstack/react-router";
 
-const ListeEtAperçuLayout = ({ variante, children, forcerMasquageBarreLatérale }: ListeEtAperçuLayoutProps) => {
+const ListeEtAperçuLayout = ({ children }: ListeEtAperçuLayoutProps) => {
+  const location = useLocation();
+  const forcerMasquageBarreLatérale = location.pathname === "/formation";
+  const variante = location.pathname.includes("favoris") ? "favoris" : "formations";
   const afficherBarreLatéraleEnMobile =
     !forcerMasquageBarreLatérale && afficherBarreLatéraleEnMobileListeEtAperçuStore();
 

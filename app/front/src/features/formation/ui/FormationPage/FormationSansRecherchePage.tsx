@@ -10,11 +10,8 @@ const FormationSansRecherchePage = () => {
   changerAfficherBarreLatéraleEnMobile(false);
 
   return (
-    <ListeEtAperçuLayout
-      forcerMasquageBarreLatérale
-      variante="formations"
-    >
-      <ListeEtAperçuContenu forcerMasquageBarreLatérale>
+    <ListeEtAperçuLayout>
+      <ListeEtAperçuContenu>
         {hash && (
           <FicheFormation
             afficherBoutonFavori={false}
