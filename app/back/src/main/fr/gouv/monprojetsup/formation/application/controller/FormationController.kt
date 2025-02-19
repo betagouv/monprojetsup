@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.application.controller
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieOuPasController
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.AvecProfilExistant
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PREMIERE_PAGE
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.PARAMETRE_NUMERO_PAGE
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
@@ -55,6 +56,13 @@ class FormationController(
     fun getSuggestionsFormations(
         @RequestBody request: GetSuggestionsDTO,
     ): FormationsAvecExplicationsDTO {
+
+        if(request.numeroDePage < NUMERO_PREMIERE_PAGE) {
+            throw MonProjetSupBadRequestException(
+                code = "PAGE_INVALIDE",
+                msg = "La pagination commence à $NUMERO_PREMIERE_PAGE",
+            )
+        }
         val profilEleve =
             when {
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
@@ -202,10 +210,11 @@ class FormationController(
                 numeroDePageActuelle = request.numeroDePage,
                 tailleLot = TAILLE_LOT_FORMATIONS,
             )
+        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val formations =
             recupererFichesFormationsService.recupererFichesFormationPourProfil(
                 profilEleve = profilEleve,
-                suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve),
+                suggestionsPourUnProfil = suggestions,
                 idsFormations = hateoas.listeCoupee,
                 obsoletesInclus = true,
             )
