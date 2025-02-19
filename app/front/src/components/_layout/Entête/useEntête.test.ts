@@ -1,46 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import useEntête from "./useEntête";
-import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
-import { useRouterState } from "@tanstack/react-router";
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@tanstack/react-router", () => ({
-  useRouterState: vi.fn(),
-}));
 
 vi.mock("@/features/utilisateur/ui/useUtilisateur", () => ({
   default: vi.fn(),
 }));
-
-const mockUseRouterState = (pathname: string) => ({
-  location: {
-    pathname,
-    href: "",
-    search: undefined,
-    searchStr: "",
-    state: {},
-    hash: "",
-  },
-  status: "idle" as const,
-  loadedAt: 0,
-  isLoading: false,
-  isTransitioning: false,
-  matches: [],
-  cachedMatches: [],
-  resolvedLocation: {
-    pathname,
-    href: "",
-    search: undefined,
-    searchStr: "",
-    state: {},
-    hash: "",
-  },
-  statusCode: 0,
-});
 
 const utilisateurNonConnecté = {
   id: undefined,
@@ -67,7 +35,6 @@ describe("useEntête", () => {
 
   describe("Lorsque l'utilisateur n'est pas connecté", () => {
     beforeAll(() => {
-      vi.mocked(useRouterState).mockReturnValue(mockUseRouterState("/"));
       vi.mocked(useUtilisateur).mockReturnValue(utilisateurNonConnecté);
     });
 
@@ -96,7 +63,6 @@ describe("useEntête", () => {
 
   describe("Lorsque l'utilisateur est connecté sur une page du parcours d'inscription", () => {
     beforeAll(() => {
-      vi.mocked(useRouterState).mockReturnValue(mockUseRouterState(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION + "projet/"));
       vi.mocked(useUtilisateur).mockReturnValue(utilisateurConnecté);
     });
 
@@ -127,7 +93,6 @@ describe("useEntête", () => {
 
   describe("Lorsque l'utilisateur est connecté sur d'autres pages", () => {
     beforeAll(() => {
-      vi.mocked(useRouterState).mockReturnValue(mockUseRouterState("/"));
       vi.mocked(useUtilisateur).mockReturnValue(utilisateurConnecté);
     });
 

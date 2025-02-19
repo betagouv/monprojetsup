@@ -17,7 +17,7 @@ import {
 import useFormation from "@/features/formation/ui/useFormation";
 import useMétier from "@/features/métier/ui/useMétier";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const FormationPage = () => {
@@ -25,6 +25,7 @@ const FormationPage = () => {
   const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
   const { hash } = useLocation();
+  const { pathname } = useRouterState().location;
   const { estUnIdDeFormation } = useFormation();
   const { estUnIdDeMétier } = useMétier();
   const estPersonnalisé = useÉlève().aUnProfilPermettantUneExpériencePersonnalisée;
@@ -50,24 +51,17 @@ const FormationPage = () => {
         id: hash,
         type: "formation",
       });
-    } else {
+    } else if (pathname.includes("/formations")) {
       changerÉlémentAffiché({
         id: suggestions?.[0]?.id ?? null,
         type: "formation",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changerÉlémentAffiché, recherche, résultatsDeRecherche, suggestions]);
+  }, [changerÉlémentAffiché, hash, pathname, recherche, résultatsDeRecherche, suggestions]);
 
   if (!résultatsDeRecherche && !suggestions) {
     return <AnimationChargement />;
-  }
-
-  if (hash !== "" && hash !== élémentAffiché.id && (estUnIdDeFormation(hash) || estUnIdDeMétier(hash))) {
-    changerÉlémentAffiché({
-      id: hash,
-      type: "formation",
-    });
   }
 
   return (

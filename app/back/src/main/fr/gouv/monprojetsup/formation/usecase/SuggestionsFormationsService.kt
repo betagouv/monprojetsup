@@ -3,19 +3,20 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.springframework.stereotype.Service
 
 @Service
 class SuggestionsFormationsService(
     val suggestionHttpClient: SuggestionHttpClient,
+    val formationRepository: FormationRepository,
+    val metierRepository: MetierRepository
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
-    fun recupererLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.AvecProfilExistant?): SuggestionsPourUnProfil {
-        if (profilEleve == null) {
-            return suggestionHttpClient.recupererLesSuggestions(ProfilEleve.AvecProfilExistant(""))
-        } else {
-            return suggestionHttpClient.recupererLesSuggestions(profilEleve)
-        }
+    fun recupererLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil {
+        return suggestionHttpClient.recupererLesSuggestions(profilEleve)
     }
+
 }

@@ -37,24 +37,23 @@ const FavorisÉlèvePage = () => {
         id: métiers[0]?.id ?? null,
         type: "métier",
       });
+    } else if (métiers && estUnIdDeMétier(hash)) {
+      changerÉlémentAffiché({
+        id: métiers.some((métier) => métier.id === hash) ? hash : (métiers[0]?.id ?? null),
+        type: "métier",
+      });
+    } else if (formations && estUnIdDeFormation(hash)) {
+      changerÉlémentAffiché({
+        id: formations.some((formation) => formation.id === hash) ? hash : (formations[0]?.id ?? null),
+        type: "formation",
+      });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changerÉlémentAffiché, formations, métiers]);
+  }, [changerÉlémentAffiché, formations, hash, métiers]);
 
   if (!formations || !métiers) {
     return <AnimationChargement />;
-  }
-
-  if (estUnIdDeMétier(hash)) {
-    changerÉlémentAffiché({
-      id: métiers.some((métier) => métier.id === hash) ? hash : (métiers[0]?.id ?? null),
-      type: "métier",
-    });
-  } else if (estUnIdDeFormation(hash)) {
-    changerÉlémentAffiché({
-      id: formations.some((formation) => formation.id === hash) ? hash : (formations[0]?.id ?? null),
-      type: "formation",
-    });
   }
 
   return (

@@ -17,7 +17,7 @@ import { MettreÀJourProfilÉlèveUseCase } from "@/features/élève/usecase/Met
 import { MettreÀJourSpécialitésÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourSpécialitésÉlève";
 import { MettreÀJourVoeuxÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourVoeuxÉlève";
 import { RechercherSpécialitésUseCase } from "@/features/élève/usecase/RechercherSpécialités";
-import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
+import { RécupérerÉlèveUseCase, RécupérerProfilLocalUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { RécupérerProgressionÉlèveUseCase } from "@/features/élève/usecase/RécupérerProgressionÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
@@ -85,6 +85,8 @@ export class Dépendances {
   public readonly mettreÀJourProfilÉlèveUseCase: MettreÀJourProfilÉlèveUseCase;
 
   public readonly récupérerProfilÉlèveUseCase: RécupérerÉlèveUseCase;
+
+  public readonly récupérerProfilLocalUseCase: RécupérerProfilLocalUseCase;
 
   public readonly récupérerProgressionÉlèveUseCase: RécupérerProgressionÉlèveUseCase;
 
@@ -182,6 +184,7 @@ export class Dépendances {
       this.analyticsRepository,
     );
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
+    this.récupérerProfilLocalUseCase = new RécupérerProfilLocalUseCase(this._élèveRepository);
     this.récupérerProgressionÉlèveUseCase = new RécupérerProgressionÉlèveUseCase(this._élèveRepository);
     this.associerCompteParcourSupÉlèveUseCase = new AssocierCompteParcourSupÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);

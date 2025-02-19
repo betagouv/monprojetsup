@@ -25,6 +25,10 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
   };
 
   public async récupérerProfil(): Promise<Élève | Error> {
+    return this.récupérerProfilLocal();
+  }
+
+  public récupérerProfilLocal(): Élève {
     const élève = sessionStorage.getItem(this._SESSION_STORAGE_PREFIX);
 
     if (élève) {

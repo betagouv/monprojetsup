@@ -185,9 +185,7 @@ public class AlgoSuggestions {
             boolean inclureScores
     ) {
         counter.getAndIncrement();
-        //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if (containsNothingPersonal(pf)) {
-            LOGGER.info(Config.NOTHING_PERSONAL);
             return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
         }
         //computing interests of all alive filieres
@@ -222,6 +220,7 @@ public class AlgoSuggestions {
     public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
             boolean inclureScores) {
+
 
         List<Pair<String, Affinite> > affinities = new ArrayList<>(
                 getFormationsAffinities(pf, data.getConfig(), inclureScores)

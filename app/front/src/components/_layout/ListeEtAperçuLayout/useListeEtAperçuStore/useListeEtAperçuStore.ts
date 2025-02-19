@@ -7,8 +7,7 @@ const étatInitial: ListeEtAperçuStoreState = {
     type: "formation",
   },
   afficherBarreLatéraleEnMobile: true,
-  recherche: undefined
-  
+  recherche: undefined,
 };
 
 export const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
@@ -26,7 +25,6 @@ export const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
       set({
         élémentAffiché,
       });
-      window.location.hash = élémentAffiché.id ?? "";
     },
     changerAfficherBarreLatéraleEnMobile: (afficher: boolean) => {
       set({

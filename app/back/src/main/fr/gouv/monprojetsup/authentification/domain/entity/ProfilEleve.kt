@@ -84,6 +84,11 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             return !voeuxFavoris.isNullOrEmpty() &&
                 !formationsFavorites.isNullOrEmpty()
         }
+
+        fun estAnonyme(): Boolean {
+            return domainesInterets.isNullOrEmpty() && formationsFavorites.isNullOrEmpty() && metiersFavoris.isNullOrEmpty() && voeuxFavoris.isEmpty()
+        }
+
     }
 
     data class SansCompte(override val id: String) : ProfilEleve(id)

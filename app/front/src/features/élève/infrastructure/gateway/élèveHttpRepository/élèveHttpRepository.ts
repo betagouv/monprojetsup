@@ -65,6 +65,13 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     return this._mapperVersLeDomaine(réponse);
   }
 
+  public récupérerProfilLocal(): Élève | null {
+    if (this._mpsApiHttpClient.estAuthentifié()) return null;
+    const profilLocal = this._storageRepository.récupérerProfilLocal();
+    if (profilLocal === this.profilVierge) return null;
+    return profilLocal;
+  }
+
   private async effacerProfilLocal() {
     await this._storageRepository.mettreÀJourProfil(this.profilVierge);
   }

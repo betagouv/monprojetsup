@@ -4,11 +4,16 @@ import {
   RécupérerFormationsRéponseHTTP,
   type RécupérerSuggestionsFormationsRéponseHTTP,
 } from "./formationHttpRepository.interface";
+import { dépendances } from "@/configuration/dépendances/dépendances";
+import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
+import { components } from "@/types/api-mps";
+
+type ProfilÉlèveHTTP = components["schemas"]["ProfilDTO"];
 
 export class formationHttpRepository implements FormationRepository {
   private _ENDPOINT = "/api/v1/public/formations" as const;
@@ -30,15 +35,15 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async récupérerPlusieursFiches(formationIds: string[]): Promise<FicheFormation[] | Error> {
-    const paramètresDeRequête = new URLSearchParams();
+    const body = {
+      ids: formationIds,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
 
-    for (const formationId of formationIds) {
-      paramètresDeRequête.append("ids", formationId);
-    }
-
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFichesFormationsRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFichesFormationsRéponseHTTP>(
       `${this._ENDPOINT}/fiches`,
-      paramètresDeRequête,
+      body,
     );
 
     if (réponse instanceof Error) {
@@ -49,16 +54,13 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | Error> {
-    const paramètresDeRequête = new URLSearchParams();
+    const body = {
+      ids: formationIds,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
 
-    for (const formationId of formationIds) {
-      paramètresDeRequête.append("ids", formationId);
-    }
-
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
-      this._ENDPOINT,
-      paramètresDeRequête,
-    );
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFormationsRéponseHTTP>(this._ENDPOINT, body);
 
     if (réponse instanceof Error) {
       return réponse;
@@ -68,12 +70,15 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async rechercherFichesFormations(recherche: string): Promise<FicheFormation[] | Error> {
-    const paramètresDeRequête = new URLSearchParams();
-    paramètresDeRequête.set("recherche", recherche);
+    const body = {
+      recherche,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFichesFormationsRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFichesFormationsRéponseHTTP>(
       `${this._ENDPOINT}/recherche/detaillee`,
-      paramètresDeRequête,
+      body,
     );
 
     if (réponse instanceof Error) {
@@ -84,12 +89,15 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async rechercherFormations(recherche: string): Promise<Formation[] | Error> {
-    const paramètresDeRequête = new URLSearchParams();
-    paramètresDeRequête.set("recherche", recherche);
+    const body = {
+      recherche,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFormationsRéponseHTTP>(
       `${this._ENDPOINT}/recherche/succincte`,
-      paramètresDeRequête,
+      body,
     );
 
     if (réponse instanceof Error) {
@@ -100,8 +108,14 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async suggérer(): Promise<FicheFormation[] | Error> {
-    const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
+    const body = {
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
+
+    const réponse = await this._mpsApiHttpClient.post<RécupérerSuggestionsFormationsRéponseHTTP>(
       `${this._ENDPOINT}/suggestions`,
+      body,
     );
 
     if (réponse instanceof Error) {
@@ -368,5 +382,41 @@ export class formationHttpRepository implements FormationRepository {
 
       return { intitulé: lien.nom, url: lien.url };
     });
+  }
+
+  private _récupérerProfilLocal() {
+    return this._mapperVersLApiMps(dépendances.récupérerProfilLocalUseCase.run());
+  }
+
+  private _mapperVersLApiMps(élève: Élève | null): ProfilÉlèveHTTP | undefined {
+    if (élève === null) {
+      return undefined;
+    }
+
+    return {
+      situation: élève.situation ?? undefined,
+      compteParcoursupAssocie: élève.compteParcoursupAssocié ?? undefined,
+      classe: élève.classe ?? undefined,
+      baccalaureat: élève.bac ?? undefined,
+      specialites: élève.spécialités ?? undefined,
+      domaines: élève.domaines ?? undefined,
+      centresInterets: élève.centresIntérêts ?? undefined,
+      metiersFavoris: élève.métiersFavoris ?? undefined,
+      dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
+      alternance: élève.alternance ?? undefined,
+      communesFavorites: élève.communesFavorites ?? undefined,
+      corbeilleFormations: élève.formationsMasquées ?? undefined,
+      formationsFavorites:
+        élève.formations?.map((idFormation) => ({
+          idFormation,
+          niveauAmbition: élève.ambitions?.find((ambition) => ambition.idFormation === idFormation)?.ambition ?? 0,
+          priseDeNote: élève.notesPersonnelles?.find((note) => note.idFormation === idFormation)?.note ?? undefined,
+        })) ?? undefined,
+      voeuxFavoris:
+        élève.voeuxFavoris?.map((voeuFavori) => ({
+          idVoeu: voeuFavori.id,
+          estFavoriParcoursup: voeuFavori.estParcoursup,
+        })) ?? undefined,
+    };
   }
 }

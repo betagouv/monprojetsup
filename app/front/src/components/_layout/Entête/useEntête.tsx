@@ -8,7 +8,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 export default function useEntête() {
-  const router = useRouterState();
+  const pathname = useRouterState().location.pathname;
   const utilisateur = useUtilisateur();
   const élève = useÉlève();
 
@@ -16,7 +16,7 @@ export default function useEntête() {
   const aUnProfilPermettantUneExpériencePersonnalisée = élève.aUnProfilPermettantUneExpériencePersonnalisée;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
-    if (router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
+    if (pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
       return null;
     }
 
@@ -45,10 +45,10 @@ export default function useEntête() {
         className: aUnProfilPermettantUneExpériencePersonnalisée ? "hidden" : "",
       },
     ];
-  }, [router.location.pathname, afficherFavoris, aUnProfilPermettantUneExpériencePersonnalisée]);
+  }, [aUnProfilPermettantUneExpériencePersonnalisée, afficherFavoris, pathname]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
-    if (utilisateur.estAuthentifié && router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
+    if (utilisateur.estAuthentifié && pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
       return [
         {
           iconId: "fr-icon-close-line",
@@ -91,7 +91,7 @@ export default function useEntête() {
         text: `${utilisateur.prénom} ${utilisateur.nom}`,
       },
     ];
-  }, [router.location.pathname, utilisateur]);
+  }, [pathname, utilisateur]);
 
   return {
     navigation,
