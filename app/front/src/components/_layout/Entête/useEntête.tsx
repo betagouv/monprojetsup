@@ -1,14 +1,11 @@
-import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
-import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 export default function useEntête() {
-  const pathname = useRouterState().location.pathname;
   const utilisateur = useUtilisateur();
   const élève = useÉlève();
 
@@ -16,9 +13,6 @@ export default function useEntête() {
   const aUnProfilPermettantUneExpériencePersonnalisée = élève.aUnProfilPermettantUneExpériencePersonnalisée;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
-    if (pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
-      return null;
-    }
 
     return [
       {
@@ -45,10 +39,10 @@ export default function useEntête() {
         className: aUnProfilPermettantUneExpériencePersonnalisée ? "hidden" : "",
       },
     ];
-  }, [aUnProfilPermettantUneExpériencePersonnalisée, afficherFavoris, pathname]);
+  }, [aUnProfilPermettantUneExpériencePersonnalisée, afficherFavoris]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
-    if (utilisateur.estAuthentifié && pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION)) {
+    if (utilisateur.estAuthentifié) {
       return [
         {
           iconId: "fr-icon-close-line",
@@ -91,7 +85,7 @@ export default function useEntête() {
         text: `${utilisateur.prénom} ${utilisateur.nom}`,
       },
     ];
-  }, [pathname, utilisateur]);
+  }, [utilisateur]);
 
   return {
     navigation,

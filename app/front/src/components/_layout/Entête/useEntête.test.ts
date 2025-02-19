@@ -5,6 +5,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur";
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useRouterState } from "@tanstack/react-router";
 
 vi.mock("@/features/utilisateur/ui/useUtilisateur", () => ({
   default: vi.fn(),

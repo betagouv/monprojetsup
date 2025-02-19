@@ -494,7 +494,7 @@ export const localeFR = {
       SOUS_TITRE: "Essaye de nouveau dans quelques minutes.",
     },
     GÉNÉRIQUE: {
-      EMOJI: "😱",
+      EMOJI: "🤓",
       TITRE: "Oups, on dirait bien un bug",
       SOUS_TITRE: "On a pris note de l'erreur et on corrige ça au plus vite.",
     },
