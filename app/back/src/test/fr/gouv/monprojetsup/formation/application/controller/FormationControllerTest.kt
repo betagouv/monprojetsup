@@ -12,9 +12,9 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
-import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.application.dto.GetFichesFormationsDTO
+import fr.gouv.monprojetsup.formation.application.dto.GetFormationDTO
 import fr.gouv.monprojetsup.formation.application.dto.GetSuggestionsDTO
 import fr.gouv.monprojetsup.formation.application.dto.RechercheFormationsDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
@@ -655,7 +655,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1047,7 +1047,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1436,7 +1436,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1792,25 +1792,12 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteSansId
-        @Test
-        fun `si connecté sans profil, doit retourner 403`() {
-            // When & Then
-            mvc.perform(get(API_FORMATION + "/suggestions")).andDo(print()).andExpect(status().isForbidden)
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get(API_FORMATION + "/suggestions")).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le numéro de page envoyé est inférieur ou égale à 0, alors doit retourner 400`() {
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1854,7 +1841,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1896,7 +1883,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post( "$API_FORMATION/suggestions")
+                post("$API_FORMATION/suggestions")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetSuggestionsDTO(
@@ -1933,7 +1920,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/fl680002"),
+                post("$API_FORMATION")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2220,7 +2216,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2503,12 +2508,20 @@ class FormationControllerTest(
         @Test
         fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
             given(
-                recupererFicheFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+                recupererFicheFormationService.recupererFormation(profilEleve = AvecProfilExistant(""), idFormation = "fl680002"),
             ).willReturn(ficheFormationSansProfil)
-
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2637,12 +2650,6 @@ class FormationControllerTest(
                 )
         }
 
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get(API_FORMATION + "/fl68000")).andDo(print()).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
@@ -2656,7 +2663,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/fl00010"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl00010",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2674,7 +2690,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/inconnu"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "inconnu",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2730,111 +2755,17 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/recherche/succincte?recherche=L1"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "id": "fl1",
-                              "nom": "L1 - Psychologie"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Mathématique"
-                            },
-                            {
-                              "id": "fl3",
-                              "nom": "L1 - Philosophie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
+                post(
+                    "$API_FORMATION/recherche/succincte",
+                ).contentType(MediaType.APPLICATION_JSON).content(
+                    ObjectMapper().writeValueAsString(
+                        RechercheFormationsDTO(
+                            recherche = "L1",
+                            profil = null,
+                            numeroDePage = 1,
+                        ),
                     ),
-                )
-        }
-
-        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
-            // Given
-            val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
-            val rechercheLongueMap =
-                mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 110,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 75,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 150,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 10,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 0,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 150,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
-                )
-            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
-            val formationsOrdonnees =
-                listOf(
-                    FormationAvecSonAffinite("fl1", 0.56f),
-                    FormationAvecSonAffinite("fl7", 0.36f),
-                    FormationAvecSonAffinite("fl3", 1f),
-                    FormationAvecSonAffinite("fl1000", 0f),
-                    FormationAvecSonAffinite("fl17", 0.24f),
-                    FormationAvecSonAffinite("fl20", 0.98f),
-                    FormationAvecSonAffinite("fl10", 0.24f),
-                    FormationAvecSonAffinite("fl18", 0.45f),
-                )
-            given(suggestionsPourUnProfil.formations).willReturn(formationsOrdonnees)
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(suggestionsPourUnProfil)
-            val rechercheTriee =
-                listOf(
-                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                    FormationCourte(id = "fl1000", nom = "BPJEPS"),
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                )
-            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(rechercheLongueMap, formationsOrdonnees))
-                .willReturn(rechercheTriee)
-
-            given(
-                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                    recherche = rechercheDe50Caracteres,
-                    tailleMinimumRecherche = 2,
                 ),
-            ).willReturn(rechercheLongueMap)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheTriee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
-            // When & Then
-            mvc.perform(
-                get(API_FORMATION + "/recherche/succincte?recherche=$rechercheDe50Caracteres"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2842,50 +2773,30 @@ class FormationControllerTest(
                         {
                           "formations": [
                             {
-                              "id": "fl10",
-                              "nom": "DUT Informatique"
-                            },
-                            {
-                              "id": "fl1000",
-                              "nom": "BPJEPS"
-                            },
-                            {
-                              "id": "fl18",
-                              "nom": "L1 - Littérature"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Philosophie"
-                            },
-                            {
                               "id": "fl1",
                               "nom": "L1 - Psychologie"
                             },
                             {
-                              "id": "fl3",
-                              "nom": "CAP Pâtisserie"
-                            },
-                            {
-                              "id": "fl17",
+                              "id": "fl7",
                               "nom": "L1 - Mathématique"
                             },
                             {
-                              "id": "fl20",
-                              "nom": "CAP Boulangerie"
+                              "id": "fl3",
+                              "nom": "L1 - Philosophie"
                             }
                           ],
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
@@ -2899,7 +2810,16 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "/recherche/succincte?recherche=L"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2924,7 +2844,16 @@ class FormationControllerTest(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
                     "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get(API_FORMATION + "/recherche/succincte?recherche=$rechercheDe151Caracteres"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe151Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2974,23 +2903,29 @@ class FormationControllerTest(
                     FormationCourte(id = "fl10", nom = "DUT Informatique"),
                     FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
-
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    rechercheLongue.map {
+                        FormationAvecSonAffinite(it.id, 1.0f)
+                    },
+                )
             given(
                 suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
                     profilEleve = AvecProfilExistant(""),
                 ),
             ).willReturn(
-                SuggestionsPourUnProfil(
-                    emptyList(),
-                    rechercheLongue.map {
-                        FormationAvecSonAffinite(
-                            it.id,
-                            1.0f,
-                        )
-                    },
-                ),
+                suggestions,
             )
             given(ordonnerRechercheFormationsBuilder.trierParScore(mapRechercheLongue)).willReturn(rechercheLongue)
+
+            given(
+                ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                    resultats = mapRechercheLongue,
+                    formationsAvecLeurAffinite = suggestions.formations,
+                ),
+            ).willReturn(rechercheLongue)
+
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -3005,7 +2940,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/recherche/succincte")
+                post("$API_FORMATION/recherche/succincte")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             RechercheFormationsDTO(
@@ -3057,29 +2992,21 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                get(API_FORMATION + "/recherche/succincte?recherche=test"),
-            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -3641,7 +3568,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/recherche/detaillee")
+                post("$API_FORMATION/recherche/detaillee")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             RechercheFormationsDTO(
@@ -4057,7 +3984,7 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/recherche/detaillee")
+                post("$API_FORMATION/recherche/detaillee")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             RechercheFormationsDTO(
@@ -4091,7 +4018,7 @@ class FormationControllerTest(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
                     "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                post(API_FORMATION + "/recherche/detaillee")
+                post("$API_FORMATION/recherche/detaillee")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             RechercheFormationsDTO(
@@ -4191,7 +4118,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/recherche/detaillee")
+                post("$API_FORMATION/recherche/detaillee")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             RechercheFormationsDTO(
@@ -4584,23 +4511,6 @@ class FormationControllerTest(
                     ),
                 )
         }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                post(API_FORMATION + "/recherche/detaillee")
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                        ObjectMapper().writeValueAsString(
-                            RechercheFormationsDTO(
-                                recherche = "test",
-                                profil = null,
-                                numeroDePage = 1,
-                            ),
-                        ),
-                    ).accept(MediaType.APPLICATION_JSON),
-            ).andDo(print()).andExpect(status().isUnauthorized)
-        }
     }
 
     @Nested
@@ -4659,7 +4569,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/fiches")
+                post("$API_FORMATION/fiches")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetFichesFormationsDTO(
@@ -4999,15 +4909,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -5070,7 +4980,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/fiches")
+                post("$API_FORMATION/fiches")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetFichesFormationsDTO(
@@ -5410,15 +5320,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -5453,19 +5363,23 @@ class FormationControllerTest(
                             ),
                     ),
                 )
-            val suggestions = SuggestionsPourUnProfil(
-                emptyList(),
-                listOf("fl1", "fl2").map { FormationAvecSonAffinite(it, 1.0f) }
-            )
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    listOf("fl1", "fl2").map { FormationAvecSonAffinite(it, 1.0f) },
+                )
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(AvecProfilExistant("")))
                 .willReturn(suggestions)
 
-            given(recupererFichesFormationsService
-                .recupererFichesFormationPourProfil(
-                    AvecProfilExistant(""),
-                    suggestions,
-                    listOf("fl1", "fl2"),
-                    true))
+            given(
+                recupererFichesFormationsService
+                    .recupererFichesFormationPourProfil(
+                        AvecProfilExistant(""),
+                        suggestions,
+                        listOf("fl1", "fl2"),
+                        true,
+                    ),
+            )
                 .willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -5481,7 +5395,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/fiches")
+                post("$API_FORMATION/fiches")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetFichesFormationsDTO(
@@ -5495,274 +5409,274 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
+                        {
+                          "formations": [
                             {
-                              "formations": [
-                                {
-                                  "formation": {
-                                    "id": "fl1",
-                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                    "idsFormationsAssociees": [
-                                      "fl0012"
-                                    ],
-                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                    "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                    "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                    "moyenneGeneraleDesAdmis": null,
-                                    "criteresAnalyseCandidature": [
-                                      {
-                                        "nom": "Compétences académiques",
-                                        "pourcentage": 10
-                                      },
-                                      {
-                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                        "pourcentage": 0
-                                      },
-                                      {
-                                        "nom": "Résultats académiques",
-                                        "pourcentage": 18
-                                      },
-                                      {
-                                        "nom": "Savoir-être",
-                                        "pourcentage": 42
-                                      },
-                                      {
-                                        "nom": "Motivation, connaissance",
-                                        "pourcentage": 30
-                                      }
-                                    ],
-                                    "repartitionAdmisAnneePrecedente": {
-                                      "total": 12,
-                                      "parBaccalaureat": []
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 12,
+                                  "parBaccalaureat": []
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
                                     },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
                                     "liens": [
                                       {
                                         "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "communes": [
-                                      {
-                                        "nom": "Paris",
-                                        "codeInsee": "75115"
-                                      },
-                                      {
-                                        "nom": "Paris",
-                                        "codeInsee": "75105"
-                                      },
-                                      {
-                                        "nom": "Montreuil",
-                                        "codeInsee": "93048"
-                                      },
-                                      {
-                                        "nom": "Lyon",
-                                        "codeInsee": "69123"
-                                      },
-                                      {
-                                        "nom": "Strasbourg",
-                                        "codeInsee": "67482"
-                                      },
-                                      {
-                                        "nom": "Marseille",
-                                        "codeInsee": "13055"
-                                      }
-                                    ],
-                                    "voeux": [
-                                      {
-                                        "id": "ta10",
-                                        "nom": "Nom du ta10",
-                                        "commune": {
-                                          "nom": "Lyon",
-                                          "codeInsee": "69123"
-                                        }
-                                      },
-                                      {
-                                        "id": "ta3",
-                                        "nom": "Nom du ta3",
-                                        "commune": {
-                                          "nom": "Paris",
-                                          "codeInsee": "75105"
-                                        }
-                                      },
-                                      {
-                                        "id": "ta11",
-                                        "nom": "Nom du ta11",
-                                        "commune": {
-                                          "nom": "Lyon",
-                                          "codeInsee": "69123"
-                                        }
-                                      },
-                                      {
-                                        "id": "ta32",
-                                        "nom": "Nom du ta32",
-                                        "commune": {
-                                          "nom": "Paris",
-                                          "codeInsee": "75115"
-                                        }
-                                      },
-                                      {
-                                        "id": "ta17",
-                                        "nom": "Nom du ta17",
-                                        "commune": {
-                                          "nom": "Strasbourg",
-                                          "codeInsee": "67482"
-                                        }
-                                      },
-                                      {
-                                        "id": "ta7",
-                                        "nom": "Nom du ta7",
-                                        "commune": {
-                                          "nom": "Marseille",
-                                          "codeInsee": "13055"
-                                        }
-                                      }
-                                    ],
-                                    "communesFavoritesAvecLeursVoeux": [
-                                      {
-                                        "commune": {
-                                          "codeInsee": "75115",
-                                          "nom": "Paris",
-                                          "latitude": 48.851227,
-                                          "longitude": 2.2885659
-                                        },
-                                        "voeuxAvecDistance": [
-                                          {
-                                            "voeu": {
-                                              "id": "ta3",
-                                              "nom": "Nom du ta3",
-                                              "commune": {
-                                                "nom": "Paris",
-                                                "codeInsee": "75105"
-                                              }
-                                            },
-                                            "distanceKm": 3
-                                          },
-                                          {
-                                            "voeu": {
-                                              "id": "ta32",
-                                              "nom": "Nom du ta32",
-                                              "commune": {
-                                                "nom": "Paris",
-                                                "codeInsee": "75115"
-                                              }
-                                            },
-                                            "distanceKm": 5
-                                          }
-                                        ]
-                                      }
-                                    ],
-                                    "metiers": [
-                                      {
-                                        "id": "MET001",
-                                        "nom": "géomaticien/ne",
-                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                        "liens": [
-                                          {
-                                            "nom": "Voir sur l'ONISEP",
-                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "id": "MET002",
-                                        "nom": "documentaliste",
-                                        "descriptif": null,
-                                        "liens": []
-                                      }
-                                    ],
-                                    "tauxAffinite": 100,
-                                    "apprentissage": false
+                                    ]
                                   },
-                                  "explications": {
-                                    "geographique": [],
-                                    "formationsSimilaires": [],
-                                    "dureeEtudesPrevue": null,
-                                    "alternance": null,
-                                    "choixEleve": {
-                                      "interets": [],
-                                      "domaines": [],
-                                      "metiers": []
-                                    },
-                                    "specialitesChoisies": [],
-                                    "typeBaccalaureat": null,
-                                    "detailsCalculScore": {
-                                      "details": []
-                                    }
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
                                   }
+                                ],
+                                "tauxAffinite": 100,
+                                "apprentissage": false
+                              },
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
                                 },
-                                {
-                                  "formation": {
-                                    "id": "fl2",
-                                    "nom": "2eme formation",
-                                    "idsFormationsAssociees": [
-                                      "fl3"
-                                    ],
-                                    "descriptifFormation": null,
-                                    "descriptifDiplome": null,
-                                    "descriptifConseils": null,
-                                    "descriptifAttendus": null,
-                                    "moyenneGeneraleDesAdmis": null,
-                                    "criteresAnalyseCandidature": [],
-                                    "repartitionAdmisAnneePrecedente": null,
-                                    "liens": [],
-                                    "communes": [],
-                                    "voeux": [],
-                                    "communesFavoritesAvecLeursVoeux": [],
-                                    "metiers": [
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "communes": [],
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
                                       {
-                                        "id": "MET001",
-                                        "nom": "géomaticien/ne",
-                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                        "liens": [
-                                          {
-                                            "nom": "Voir sur l'ONISEP",
-                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "id": "MET002",
-                                        "nom": "documentaliste",
-                                        "descriptif": null,
-                                        "liens": []
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "tauxAffinite": 100,
-                                    "apprentissage": false
+                                    ]
                                   },
-                                  "explications": {
-                                    "geographique": [],
-                                    "formationsSimilaires": [],
-                                    "dureeEtudesPrevue": null,
-                                    "alternance": null,
-                                    "choixEleve": {
-                                      "interets": [],
-                                      "domaines": [],
-                                      "metiers": []
-                                    },
-                                    "specialitesChoisies": [],
-                                    "typeBaccalaureat": null,
-                                    "detailsCalculScore": {
-                                      "details": []
-                                    }
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
                                   }
-                                }
-                              ],
-                              "liens": [
-                                {
-                                  "rel": "premier",
-                                  "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
+                                ],
+                                "tauxAffinite": 100,
+                                "apprentissage": false
+                              },
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
                                 },
-                                {
-                                  "rel": "dernier",
-                                  "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                                },
-                                {
-                                  "rel": "actuel",
-                                  "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
-                              ]
+                              }
                             }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
+                            }
+                          ]
+                        }
                         """.trimIndent(),
                     ),
                 )
@@ -5782,7 +5696,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                post(API_FORMATION + "/fiches")
+                post("$API_FORMATION/fiches")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
                             GetFichesFormationsDTO(
@@ -5826,15 +5740,15 @@ class FormationControllerTest(
               "liens": [
                 {
                   "rel": "premier",
-                  "href": "http://localhost/api/v1/public/formations?numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 },
                 {
                   "rel": "dernier",
-                  "href": "http://localhost/api/v1/public/formations?numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 },
                 {
                   "rel": "actuel",
-                  "href": "http://localhost/api/v1/public/formations?numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 }
               ]
             }
@@ -5859,7 +5773,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
         }
@@ -5883,7 +5797,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
         }
@@ -5907,7 +5821,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get(API_FORMATION + "?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
         }

@@ -56,8 +56,7 @@ class FormationController(
     fun getSuggestionsFormations(
         @RequestBody request: GetSuggestionsDTO,
     ): FormationsAvecExplicationsDTO {
-
-        if(request.numeroDePage < NUMERO_PREMIERE_PAGE) {
+        if (request.numeroDePage < NUMERO_PREMIERE_PAGE) {
             throw MonProjetSupBadRequestException(
                 code = "PAGE_INVALIDE",
                 msg = "La pagination commence à $NUMERO_PREMIERE_PAGE",
@@ -108,13 +107,12 @@ class FormationController(
                 else -> request.profil.toProfilExistant()
             }
 
+        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
+
         val formationsTriees =
             ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
                 resultats = resultatRecherche,
-                formationsAvecLeurAffinite =
-                    suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
-                        profilEleve,
-                    ).formations,
+                formationsAvecLeurAffinite = suggestions.formations,
             )
         val hateoas =
             hateoasBuilder.creerHateoas(
@@ -169,7 +167,7 @@ class FormationController(
         return creerFormationsAvecExplicationsDTO(formations, hateoas)
     }
 
-    @PostMapping("/{idformation}")
+    @PostMapping
     @Operation(
         summary = "Récupération d'une formation, mode détaillé",
         description =

@@ -11,7 +11,7 @@ class MetiersTriesParProfilBuilder {
     ): List<Metier> {
         val idMetiersEtLeurIndex = idsMetierTriesParAffinite.mapIndexed { index, idMetier -> Pair(idMetier, index) }.toMap()
         return metiers.sortedBy {
-                idMetiersEtLeurIndex[it.id] ?: metiers.size
-            }
+            idMetiersEtLeurIndex[it.id] ?: metiers.size
+        }
     }
 }

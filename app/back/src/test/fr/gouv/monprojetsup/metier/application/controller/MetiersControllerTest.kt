@@ -257,12 +257,6 @@ class MetiersControllerTest(
                 .andExpect(content().json(resultatMetiers))
         }
 
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358")).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si appel sans ids, doit retourner 400`() {
@@ -569,12 +563,6 @@ class MetiersControllerTest(
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/public/metiers/recherche/succincte?recherche=cheval")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")

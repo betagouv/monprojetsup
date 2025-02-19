@@ -176,7 +176,11 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
             val communes =
                 listOf(CommunesFavorites.LYON, CommunesFavorites.SAINT_MALO, CommunesFavorites.PARIS5EME, CommunesFavorites.GRENOBLE)
             given(profilEleve.communesFavorites).willReturn(communes)
-            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016", obsoletesInclus = true)).willReturn(voeux)
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl2016"), obsoletesInclus = true)).willReturn(
+                mapOf(
+                    "fl2016" to voeux,
+                ),
+            )
             val communesAvecIdsVoeuxAuxAlentours =
                 listOf(
                     CommuneAvecIdsVoeuxAuxAlentours(
