@@ -44,7 +44,6 @@ class FormationController(
     val ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder,
     val hateoasBuilder: HateoasBuilder,
 ) : AuthentifieOuPasController() {
-
     @PostMapping("/suggestions")
     @Operation(
         summary = "Récupère les suggestions de formations",
@@ -55,11 +54,12 @@ class FormationController(
     )
     fun getSuggestionsFormations(
         @RequestBody request: GetSuggestionsDTO,
-        ): FormationsAvecExplicationsDTO {
-        val profilEleve = when{
-            request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-            else -> request.profil.toProfilExistant()
-        }
+    ): FormationsAvecExplicationsDTO {
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> request.profil.toProfilExistant()
+            }
 
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
@@ -92,21 +92,22 @@ class FormationController(
     fun getRechercheFormationSuccincte(
         @RequestBody request: RechercheFormationsDTO,
     ): FormationsCourtesDTO {
-
         val resultatRecherche = recupererLesFormationsAssocieesALaRecherche(request.recherche)
 
-        val profilEleve = when{
-            request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-            else -> request.profil.toProfilExistant()
-        }
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> request.profil.toProfilExistant()
+            }
 
-        val formationsTriees = ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
-            resultats = resultatRecherche,
-            formationsAvecLeurAffinite =
-            suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
-                profilEleve,
-            ).formations,
-        )
+        val formationsTriees =
+            ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                resultats = resultatRecherche,
+                formationsAvecLeurAffinite =
+                    suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
+                        profilEleve,
+                    ).formations,
+            )
         val hateoas =
             hateoasBuilder.creerHateoas(
                 liste = formationsTriees,
@@ -131,15 +132,17 @@ class FormationController(
     ): FormationsAvecExplicationsDTO {
         val resultatRecherche = recupererLesFormationsAssocieesALaRecherche(request.recherche)
 
-        val profilEleve = when{
-            request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-            else -> request.profil.toProfilExistant()
-        }
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> request.profil.toProfilExistant()
+            }
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
-        val formationRechercheesTriees = ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
-            resultats = resultatRecherche,
-            formationsAvecLeurAffinite = suggestions.formations,
-        )
+        val formationRechercheesTriees =
+            ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                resultats = resultatRecherche,
+                formationsAvecLeurAffinite = suggestions.formations,
+            )
         val idsFormations = formationRechercheesTriees.map { it.id }
         val hateoas =
             hateoasBuilder.creerHateoas(
@@ -166,11 +169,12 @@ class FormationController(
     )
     fun getFormation(
         @RequestBody request: GetFormationDTO,
-        ): FormationAvecExplicationsDTO {
-        val profilEleve = when{
-            request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-            else -> request.profil.toProfilExistant()
-        }
+    ): FormationAvecExplicationsDTO {
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> request.profil.toProfilExistant()
+            }
         val ficheFormation = recupererFicheFormationService.recupererFormation(profilEleve = profilEleve, idFormation = request.id)
         return FormationAvecExplicationsDTO(ficheFormation)
     }
@@ -181,28 +185,29 @@ class FormationController(
         description =
             "A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, " +
                 "y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination." +
-                    "Ces informations sont personnalisées en fonction du profil transmis"
-                    ,
+                "Ces informations sont personnalisées en fonction du profil transmis",
     )
     fun getFichesFormations(
         @RequestBody request: GetFichesFormationsDTO,
     ): FormationsAvecExplicationsDTO {
-        val profilEleve = when{
-            request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-            else -> AvecProfilExistant("")
-        }
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> AvecProfilExistant("")
+            }
         val hateoas =
             hateoasBuilder.creerHateoas(
                 liste = request.ids,
                 numeroDePageActuelle = request.numeroDePage,
                 tailleLot = TAILLE_LOT_FORMATIONS,
             )
-        val formations = recupererFichesFormationsService.recupererFichesFormationPourProfil(
-                        profilEleve = profilEleve,
-                        suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve),
-                        idsFormations = hateoas.listeCoupee,
-                        obsoletesInclus = true,
-                    )
+        val formations =
+            recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve),
+                idsFormations = hateoas.listeCoupee,
+                obsoletesInclus = true,
+            )
         return creerFormationsAvecExplicationsDTO(formations, hateoas)
     }
 

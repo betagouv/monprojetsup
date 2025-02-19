@@ -8,12 +8,10 @@ data class GetFichesFormationsDTO(
     @Schema(description = "ids des formations", example = "[\"fl1\",\"fl490030\"]", required = true)
     @JsonProperty("ids")
     val ids: List<String>,
-
     @Schema(description = "Profil de l'élève", required = false)
     @JsonProperty("profil")
     val profil: ProfilDTO?,
-
     @Schema(description = "Numéro de page", required = false, defaultValue = "1")
     @JsonProperty("numeroDePage")
-    val numeroDePage: Int
+    val numeroDePage: Int,
 )

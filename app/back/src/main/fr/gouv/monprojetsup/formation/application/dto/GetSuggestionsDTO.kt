@@ -8,8 +8,7 @@ data class GetSuggestionsDTO(
     @Schema(description = "Profil de l'élève", required = false)
     @JsonProperty("profil")
     val profil: ProfilDTO?,
-
     @Schema(description = "Numéro de page", required = false, defaultValue = "1")
     @JsonProperty("numeroDePage")
-    val numeroDePage: Int
+    val numeroDePage: Int,
 )

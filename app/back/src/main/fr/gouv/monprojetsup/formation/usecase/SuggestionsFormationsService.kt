@@ -12,11 +12,10 @@ import org.springframework.stereotype.Service
 class SuggestionsFormationsService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
-    val metierRepository: MetierRepository
+    val metierRepository: MetierRepository,
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     fun recupererLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil {
         return suggestionHttpClient.recupererLesSuggestions(profilEleve)
     }
-
 }

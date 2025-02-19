@@ -103,7 +103,6 @@ data class ProfilDTO(
     @JsonProperty("voeuxFavoris")
     val voeuxFavoris: List<VoeuFavoriDTO>? = null,
 ) {
-
     constructor(profilEleve: ProfilEleve.AvecProfilExistant, voeuxFavoris: List<VoeuFavori>? = null) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
@@ -136,7 +135,7 @@ data class ProfilDTO(
         val longitude: Double,
     ) {
         fun toCommuneFavorite() =
-             CommuneFavorite(
+            CommuneFavorite(
                 codeInsee = codeInsee,
                 nom = nom,
                 latitude = latitude,
@@ -171,12 +170,12 @@ data class ProfilDTO(
             priseDeNote = formationFavorite.priseDeNote,
         )
 
-        fun toFormationFavorite() = FormationFavorite(
+        fun toFormationFavorite() =
+            FormationFavorite(
                 idFormation = idFormation,
                 niveauAmbition = niveauAmbition,
                 priseDeNote = priseDeNote,
             )
-
     }
 
     data class VoeuFavoriDTO(
@@ -193,11 +192,10 @@ data class ProfilDTO(
         )
 
         fun toVoeuFavori() =
-             VoeuFavori(
+            VoeuFavori(
                 idVoeu = idVoeu,
                 estFavoriParcoursup = estFavoriParcoursup,
             )
-
     }
 
     fun toProfilExistant(): ProfilEleve.AvecProfilExistant {
@@ -219,5 +217,4 @@ data class ProfilDTO(
             voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
         )
     }
-
 }
