@@ -408,7 +408,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
         }
 
         @Test
-        fun `si la liste des communes favorites est nulle, doit retourner doit retourner le même ensemble de communes, mélangé aléatoirement`() {
+        fun `si la liste des communes favorites est nulle, doit retourner les mêmes communes mélangées aléatoirement`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(null)
             given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016"), obsoletesInclus = false))
