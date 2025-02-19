@@ -31,19 +31,27 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
 
     fun recupererInformationsSurLesVoeuxEtLeursCommunes(
         idFormation: String,
-        profilEleve: ProfilEleve.AvecProfilExistant,
+        profilEleve: ProfilEleve.AvecProfilExistant?,
         obsoletesInclus: Boolean,
     ): InformationsSurLesVoeuxEtLeursCommunes {
-        val voeux = voeuRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus)
-        if (!profilEleve.communesFavorites.isNullOrEmpty()) {
+        val voeux =
+            voeuRepository.recupererLesVoeuxDeFormations(
+                listOf(idFormation),
+                obsoletesInclus,
+            )
+        if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
             val voeuxAutoursDesCommunesFavorites =
                 communesAvecVoeuxAuxAlentoursRepository.recupererVoeuxAutoursDeCommmune(
                     profilEleve.communesFavorites,
                 )
             val idsVoeuxTriesParDistance = creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites)
-            return informationsSurLesVoeuxEtLeursCommunesPourProfil(voeux, voeuxAutoursDesCommunesFavorites, idsVoeuxTriesParDistance)
+            return informationsSurLesVoeuxEtLeursCommunesPourProfil(
+                voeux.get(idFormation) ?: emptyList(),
+                voeuxAutoursDesCommunesFavorites,
+                idsVoeuxTriesParDistance,
+            )
         } else {
-            return informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux)
+            return informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux.get(idFormation) ?: emptyList())
         }
     }
 

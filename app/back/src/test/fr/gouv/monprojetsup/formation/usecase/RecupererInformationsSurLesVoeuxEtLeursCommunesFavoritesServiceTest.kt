@@ -375,7 +375,12 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
         fun `si la liste des communes favorites est vide, doit retourner la liste telle quelle`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(emptyList())
-            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016", obsoletesInclus = true)).willReturn(voeux)
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016"), obsoletesInclus = true))
+                .willReturn(
+                    mapOf(
+                        "fl2016" to voeux,
+                    ),
+                )
 
             // When
             val result =
@@ -393,14 +398,21 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                     communesTriees = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
                     voeuxParCommunesFavorites = emptyList(),
                 )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result.voeux).isEqualTo(attendu.voeux)
+            assertThat(result.communesTriees).containsExactlyInAnyOrderElementsOf(attendu.communesTriees)
+            assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
         }
 
         @Test
-        fun `si la liste des communes favorites est nulle, doit retourner la liste telle quelle`() {
+        fun `si la liste des communes favorites est nulle, doit retourner doit retourner le même ensemble de communes, mélangé aléatoirement`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(null)
-            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016", obsoletesInclus = false)).willReturn(voeux)
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016"), obsoletesInclus = false))
+                .willReturn(
+                    mapOf(
+                        "fl2016" to voeux,
+                    ),
+                )
 
             // When
             val result =
@@ -418,7 +430,9 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                     communesTriees = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
                     voeuxParCommunesFavorites = emptyList(),
                 )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result.voeux).isEqualTo(attendu.voeux)
+            assertThat(result.communesTriees).containsExactlyInAnyOrderElementsOf(attendu.communesTriees)
+            assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
         }
     }
 
@@ -1008,7 +1022,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
         }
 
         @Test
-        fun `si la liste des communes favorites est vide, doit retourner la liste telle quelle`() {
+        fun `si la liste des communes favorites est vide, doit retourner le même ensemble de communes, retrié aléatoirement`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(emptyList())
 
@@ -1176,11 +1190,12 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result.keys).isEqualTo(attendu.keys)
+            assertThat(result.values.map { it.voeux }).containsExactlyElementsOf(attendu.values.map { it.voeux })
         }
 
         @Test
-        fun `si la liste des communes favorites est nulle, doit retourner la liste telle quelle`() {
+        fun `si la liste des communes favorites est nulle, doit retourner le même ensemble de communes, mélangé aléatoirement`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(null)
 
@@ -1348,7 +1363,8 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result.keys).isEqualTo(attendu.keys)
+            assertThat(result.values.map { it.voeux }).containsExactlyInAnyOrderElementsOf(attendu.values.map { it.voeux })
         }
     }
 }

@@ -759,12 +759,25 @@ class RecupererFichesFormationsServiceTest {
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
             given(
-                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idsFormations = listOf("fl0001", "fl0003"),
                     true,
                 ),
             ).willReturn(
-                voeuxDesFormations,
+                mapOf(
+                    "fl0001" to
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = voeuxPossiblesPourLaFormationFL0001,
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
+                    "fl0003" to
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = voeuxPossiblesPourLaFormationFL0003,
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
+                ),
             )
 
             // When
@@ -784,7 +797,12 @@ class RecupererFichesFormationsServiceTest {
                     criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0001, critere2AnalyseCandidatureFL0001),
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     metiers = listOf(metier123, metier534),
-                    voeux = voeuxPossiblesPourLaFormationFL0001,
+                    informationsSurLesVoeuxEtLeursCommunes =
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeuxPossiblesPourLaFormationFL0001,
+                            emptyList(),
+                            emptyList(),
+                        ),
                     apprentissage = true,
                 )
             val ficheFormationFl0003 =
@@ -800,7 +818,12 @@ class RecupererFichesFormationsServiceTest {
                     criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0003),
                     statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                     metiers = listOf(metier234, metier534),
-                    voeux = voeuxPossiblesPourLaFormationFL0003,
+                    informationsSurLesVoeuxEtLeursCommunes =
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeuxPossiblesPourLaFormationFL0003,
+                            emptyList(),
+                            emptyList(),
+                        ),
                     apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
@@ -897,12 +920,25 @@ class RecupererFichesFormationsServiceTest {
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001)
             given(
-                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idsFormations = listOf("fl0001", "fl0003"),
                     true,
                 ),
             ).willReturn(
-                voeuxDesFormations,
+                mapOf(
+                    "fl0001" to
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = voeuxPossiblesPourLaFormationFL0001,
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
+                    "fl0003" to
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = emptyList(),
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
+                ),
             )
 
             // When
@@ -922,7 +958,12 @@ class RecupererFichesFormationsServiceTest {
                     criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0001, critere2AnalyseCandidatureFL0001),
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     metiers = listOf(metier123, metier534),
-                    voeux = voeuxPossiblesPourLaFormationFL0001,
+                    informationsSurLesVoeuxEtLeursCommunes =
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeuxPossiblesPourLaFormationFL0001,
+                            emptyList(),
+                            emptyList(),
+                        ),
                     apprentissage = true,
                 )
             val ficheFormationFl0003 =
@@ -938,7 +979,12 @@ class RecupererFichesFormationsServiceTest {
                     criteresAnalyseCandidature = emptyList(),
                     statistiquesDesAdmis = null,
                     metiers = emptyList(),
-                    voeux = emptyList(),
+                    informationsSurLesVoeuxEtLeursCommunes =
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = emptyList(),
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
                     apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))

@@ -150,10 +150,11 @@ class FormationController(
                 numeroDePageActuelle = request.numeroDePage,
                 tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE,
             )
+        val suggestionsPourLeProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val formations =
             recupererFichesFormationsService.recupererFichesFormationPourProfil(
                 profilEleve = profilEleve,
-                suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve),
+                suggestionsPourUnProfil = suggestionsPourLeProfil,
                 idsFormations = hateoas.listeCoupee,
                 obsoletesInclus = false,
             )
