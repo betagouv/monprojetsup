@@ -173,15 +173,15 @@ class MetiersControllerTest(
               "liens": [
                 {
                   "rel": "premier",
-                  "href": "http://localhost/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
                 },
                 {
                   "rel": "dernier",
-                  "href": "http://localhost/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
                 },
                 {
                   "rel": "actuel",
-                  "href": "http://localhost/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=1"
                 }
               ]
             }
@@ -206,7 +206,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
+                get("/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(resultatMetiers))
         }
@@ -229,7 +229,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
+                get("/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(resultatMetiers))
         }
@@ -252,22 +252,16 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
+                get("/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(resultatMetiers))
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si appel sans ids, doit retourner 400`() {
             // When & Then
-            mvc.perform(get("/api/v1/metiers")).andExpect(status().isBadRequest)
+            mvc.perform(get("/api/v1/public/metiers")).andExpect(status().isBadRequest)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -285,7 +279,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=10"),
+                get("/api/v1/public/metiers?ids=MET_356&ids=MET_355&ids=MET_358&numeroDePage=10"),
             ).andDo(
                 MockMvcResultHandlers.print(),
             ).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
@@ -297,7 +291,7 @@ class MetiersControllerTest(
                           "title": "PAGE_DEMANDEE_INXISTANTE",
                           "status": 400,
                           "detail": "La page 10 n'existe pas. Veuillez en donner une entre 1 et 5",
-                          "instance": "/api/v1/metiers"
+                          "instance": "/api/v1/public/metiers"
                         }
                         """.trimIndent(),
                     ),
@@ -339,7 +333,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=cheval"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -378,15 +372,15 @@ class MetiersControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             }
                           ]
                         }
@@ -427,7 +421,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=cheval"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -466,15 +460,15 @@ class MetiersControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             }
                           ]
                         }
@@ -515,7 +509,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=cheval"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -554,15 +548,15 @@ class MetiersControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
                             }
                           ]
                         }
@@ -571,18 +565,12 @@ class MetiersControllerTest(
                 )
         }
 
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/metiers/recherche/succincte?recherche=cheval")).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si la recherche est trop courte, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=t"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=t"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -593,7 +581,7 @@ class MetiersControllerTest(
                           "title": "REQUETE_TROP_COURTE",
                           "status": 400,
                           "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
-                          "instance": "/api/v1/metiers/recherche/succincte"
+                          "instance": "/api/v1/public/metiers/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -610,7 +598,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=$rechercheDe101Caracteres"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=$rechercheDe101Caracteres"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -621,7 +609,7 @@ class MetiersControllerTest(
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
                           "detail": "La taille de la requête dépasse la taille maximale de 100 caractères",
-                          "instance": "/api/v1/metiers/recherche/succincte"
+                          "instance": "/api/v1/public/metiers/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -657,7 +645,7 @@ class MetiersControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=32"),
+                get("/api/v1/public/metiers/recherche/succincte?recherche=cheval&numeroDePage=32"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -668,7 +656,7 @@ class MetiersControllerTest(
                           "title": "PAGE_DEMANDEE_INXISTANTE",
                           "status": 400,
                           "detail": "La page 32 n'existe pas. Veuillez en donner une entre 1 et 6",
-                          "instance": "/api/v1/metiers/recherche/succincte"
+                          "instance": "/api/v1/public/metiers/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),

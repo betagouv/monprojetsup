@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.AvecProfilExistant
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
@@ -12,6 +13,10 @@ import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
+import fr.gouv.monprojetsup.formation.application.dto.GetFichesFormationsDTO
+import fr.gouv.monprojetsup.formation.application.dto.GetFormationDTO
+import fr.gouv.monprojetsup.formation.application.dto.GetSuggestionsDTO
+import fr.gouv.monprojetsup.formation.application.dto.RechercheFormationsDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
@@ -59,9 +64,11 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import java.net.ConnectException
 
 @WebMvcTest(controllers = [FormationController::class])
@@ -88,6 +95,10 @@ class FormationControllerTest(
 
     @MockBean
     lateinit var hateoasBuilder: HateoasBuilder
+
+    companion object {
+        const val API_FORMATION = "/api/v1/public/formations"
+    }
 
     private val explications =
         ExplicationsSuggestionDetaillees(
@@ -402,50 +413,83 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            voeux =
-                listOf(
-                    Voeu(
-                        id = "ta10",
-                        nom = "Nom du ta10",
-                        commune = LYON,
-                        latitude = 45.75,
-                        longitude = 4.85,
-                    ),
-                    Voeu(
-                        id = "ta3",
-                        nom = "Nom du ta3",
-                        commune = PARIS5EME,
-                        longitude = 2.344,
-                        latitude = 48.846,
-                    ),
-                    Voeu(
-                        id = "ta11",
-                        nom = "Nom du ta11",
-                        commune = LYON,
-                        latitude = 45.75,
-                        longitude = 4.85,
-                    ),
-                    Voeu(
-                        id = "ta32",
-                        nom = "Nom du ta32",
-                        commune = PARIS15EME,
-                        longitude = 2.2885659,
-                        latitude = 48.851227,
-                    ),
-                    Voeu(
-                        id = "ta17",
-                        nom = "Nom du ta17",
-                        commune = STRASBOURG,
-                        longitude = 1.666667,
-                        latitude = 50.266666,
-                    ),
-                    Voeu(
-                        id = "ta7",
-                        nom = "Nom du ta7",
-                        commune = MARSEILLE,
-                        latitude = 43.300000,
-                        longitude = 5.400000,
-                    ),
+            informationsSurLesVoeuxEtLeursCommunes =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux =
+                        listOf(
+                            Voeu(
+                                id = "ta10",
+                                nom = "Nom du ta10",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta3",
+                                nom = "Nom du ta3",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
+                            Voeu(
+                                id = "ta11",
+                                nom = "Nom du ta11",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta32",
+                                nom = "Nom du ta32",
+                                commune = PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
+                            ),
+                            Voeu(
+                                id = "ta17",
+                                nom = "Nom du ta17",
+                                commune = STRASBOURG,
+                                longitude = 1.666667,
+                                latitude = 50.266666,
+                            ),
+                            Voeu(
+                                id = "ta7",
+                                nom = "Nom du ta7",
+                                commune = MARSEILLE,
+                                latitude = 43.300000,
+                                longitude = 5.400000,
+                            ),
+                        ),
+                    communesTriees = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    voeuxParCommunesFavorites =
+                        listOf(
+                            CommuneAvecVoeuxAuxAlentours(
+                                communeFavorite = CommunesFavorites.PARIS15EME,
+                                distances =
+                                    listOf(
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta3",
+                                                nom = "Nom du ta3",
+                                                commune = PARIS5EME,
+                                                longitude = 2.344,
+                                                latitude = 48.846,
+                                            ),
+                                            km = 3,
+                                        ),
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta32",
+                                                nom = "Nom du ta32",
+                                                commune = PARIS15EME,
+                                                longitude = 2.2885659,
+                                                latitude = 48.851,
+                                            ),
+                                            km = 5,
+                                        ),
+                                    ),
+                            ),
+                        ),
                 ),
             criteresAnalyseCandidature =
                 listOf(
@@ -468,6 +512,25 @@ class FormationControllerTest(
                     moyenneGeneraleDesAdmis = null,
                 ),
             apprentissage = false,
+        )
+
+    private val ficheFormationPourProfil =
+        FicheFormation.FicheFormationPourProfil(
+            ficheFormationSansProfil.id,
+            ficheFormationSansProfil.nom,
+            ficheFormationSansProfil.descriptifGeneral,
+            ficheFormationSansProfil.descriptifDiplome,
+            ficheFormationSansProfil.descriptifAttendus,
+            ficheFormationSansProfil.descriptifConseils,
+            ficheFormationSansProfil.formationsAssociees,
+            ficheFormationSansProfil.liens,
+            ficheFormationSansProfil.criteresAnalyseCandidature,
+            ficheFormationSansProfil.statistiquesDesAdmis,
+            ficheFormationSansProfil.apprentissage,
+            ficheFormationSansProfil.informationsSurLesVoeuxEtLeursCommunes,
+            100,
+            ficheFormationSansProfil.metiers,
+            ExplicationsSuggestionDetaillees(),
         )
 
     private val metiersTriesParAffinites =
@@ -592,7 +655,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -923,15 +994,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             }
                           ]
                         }
@@ -953,7 +1024,14 @@ class FormationControllerTest(
                     FormationAvecSonAffinite(idFormation = "fl2118", tauxAffinite = 0.7103791f),
                     FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
                 )
-            val hateoas = Hateoas(pageActuelle = 2, pageSuivante = 3, premierePage = 1, dernierePage = 4, listeCoupee = listeCoupee)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 2,
+                    pageSuivante = 3,
+                    premierePage = 1,
+                    dernierePage = 4,
+                    listeCoupee = listeCoupee,
+                )
             given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).willReturn(
                 hateoas,
             )
@@ -969,7 +1047,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=2"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 2,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -1249,19 +1335,19 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=4"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=4"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=2"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=2"
                             },
                             {
                               "rel": "suivant",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=3"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=3"
                             }
                           ]
                         }
@@ -1350,7 +1436,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -1681,15 +1775,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             }
                           ]
                         }
@@ -1698,25 +1792,20 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteSansId
-        @Test
-        fun `si connecté sans profil, doit retourner 403`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/suggestions")).andDo(print()).andExpect(status().isForbidden)
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/suggestions")).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le numéro de page envoyé est inférieur ou égale à 0, alors doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=0"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 0,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
                 .andExpect(
@@ -1724,10 +1813,10 @@ class FormationControllerTest(
                         """
                         {
                           "type": "about:blank",
-                          "title": "PAGINATION_COMMENCE_A_1",
+                          "title": "PAGE_INVALIDE",
                           "status": 400,
                           "detail": "La pagination commence à 1",
-                          "instance": "/api/v1/formations/suggestions"
+                          "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
                     ),
@@ -1752,7 +1841,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=100"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 100,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
                 .andExpect(
@@ -1763,7 +1860,7 @@ class FormationControllerTest(
                           "title": "PAGE_DEMANDEE_INXISTANTE",
                           "status": 400,
                           "detail": "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
-                          "instance": "/api/v1/formations/suggestions"
+                          "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
                     ),
@@ -1780,11 +1877,21 @@ class FormationControllerTest(
                     msg = "Erreur lors de la connexion à l'API de suggestions",
                     origine = ConnectException("Connection refused"),
                 )
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(
+                uneException,
+            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
                 .andExpect(
@@ -1795,7 +1902,7 @@ class FormationControllerTest(
                           "title": "ERREUR_API_SUGGESTIONS_CONNEXION",
                           "status": 500,
                           "detail": "Erreur lors de la connexion à l'API de suggestions",
-                          "instance": "/api/v1/formations/suggestions"
+                          "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
                     ),
@@ -1813,7 +1920,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl680002"),
+                post("$API_FORMATION")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2100,7 +2216,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2383,12 +2508,20 @@ class FormationControllerTest(
         @Test
         fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
             given(
-                recupererFicheFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+                recupererFicheFormationService.recupererFormation(profilEleve = AvecProfilExistant(""), idFormation = "fl680002"),
             ).willReturn(ficheFormationSansProfil)
-
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2517,12 +2650,6 @@ class FormationControllerTest(
                 )
         }
 
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/fl68000")).andDo(print()).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
@@ -2536,7 +2663,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl00010"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl00010",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2554,7 +2690,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/inconnu"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "inconnu",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2610,111 +2755,17 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=L1"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "id": "fl1",
-                              "nom": "L1 - Psychologie"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Mathématique"
-                            },
-                            {
-                              "id": "fl3",
-                              "nom": "L1 - Philosophie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
+                post(
+                    "$API_FORMATION/recherche/succincte",
+                ).contentType(MediaType.APPLICATION_JSON).content(
+                    ObjectMapper().writeValueAsString(
+                        RechercheFormationsDTO(
+                            recherche = "L1",
+                            profil = null,
+                            numeroDePage = 1,
+                        ),
                     ),
-                )
-        }
-
-        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
-            // Given
-            val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
-            val rechercheLongueMap =
-                mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 110,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 75,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 150,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 10,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 0,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 150,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
-                )
-            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
-            val formationsOrdonnees =
-                listOf(
-                    FormationAvecSonAffinite("fl1", 0.56f),
-                    FormationAvecSonAffinite("fl7", 0.36f),
-                    FormationAvecSonAffinite("fl3", 1f),
-                    FormationAvecSonAffinite("fl1000", 0f),
-                    FormationAvecSonAffinite("fl17", 0.24f),
-                    FormationAvecSonAffinite("fl20", 0.98f),
-                    FormationAvecSonAffinite("fl10", 0.24f),
-                    FormationAvecSonAffinite("fl18", 0.45f),
-                )
-            given(suggestionsPourUnProfil.formations).willReturn(formationsOrdonnees)
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(suggestionsPourUnProfil)
-            val rechercheTriee =
-                listOf(
-                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                    FormationCourte(id = "fl1000", nom = "BPJEPS"),
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                )
-            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(rechercheLongueMap, formationsOrdonnees))
-                .willReturn(rechercheTriee)
-
-            given(
-                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                    recherche = rechercheDe50Caracteres,
-                    tailleMinimumRecherche = 2,
                 ),
-            ).willReturn(rechercheLongueMap)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheTriee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2722,50 +2773,30 @@ class FormationControllerTest(
                         {
                           "formations": [
                             {
-                              "id": "fl10",
-                              "nom": "DUT Informatique"
-                            },
-                            {
-                              "id": "fl1000",
-                              "nom": "BPJEPS"
-                            },
-                            {
-                              "id": "fl18",
-                              "nom": "L1 - Littérature"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Philosophie"
-                            },
-                            {
                               "id": "fl1",
                               "nom": "L1 - Psychologie"
                             },
                             {
-                              "id": "fl3",
-                              "nom": "CAP Pâtisserie"
-                            },
-                            {
-                              "id": "fl17",
+                              "id": "fl7",
                               "nom": "L1 - Mathématique"
                             },
                             {
-                              "id": "fl20",
-                              "nom": "CAP Boulangerie"
+                              "id": "fl3",
+                              "nom": "L1 - Philosophie"
                             }
                           ],
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
@@ -2779,7 +2810,16 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=L"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2789,7 +2829,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_COURTE",
                           "status": 400,
                           "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
-                          "instance": "/api/v1/formations/recherche/succincte"
+                          "instance": "$API_FORMATION/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -2804,7 +2844,16 @@ class FormationControllerTest(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
                     "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe151Caracteres"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe151Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2814,7 +2863,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
                           "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
-                          "instance": "/api/v1/formations/recherche/succincte"
+                          "instance": "$API_FORMATION/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -2854,7 +2903,29 @@ class FormationControllerTest(
                     FormationCourte(id = "fl10", nom = "DUT Informatique"),
                     FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    rechercheLongue.map {
+                        FormationAvecSonAffinite(it.id, 1.0f)
+                    },
+                )
+            given(
+                suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
+                    profilEleve = AvecProfilExistant(""),
+                ),
+            ).willReturn(
+                suggestions,
+            )
             given(ordonnerRechercheFormationsBuilder.trierParScore(mapRechercheLongue)).willReturn(rechercheLongue)
+
+            given(
+                ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                    resultats = mapRechercheLongue,
+                    formationsAvecLeurAffinite = suggestions.formations,
+                ),
+            ).willReturn(rechercheLongue)
+
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2869,7 +2940,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe50Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2912,29 +2992,21 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=test"),
-            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -3014,7 +3086,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -3399,15 +3480,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             }
                           ]
                         }
@@ -3487,7 +3568,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -3872,15 +3962,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             }
                           ]
                         }
@@ -3894,7 +3984,16 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -3904,7 +4003,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_COURTE",
                           "status": 400,
                           "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
-                          "instance": "/api/v1/formations/recherche/detaillee"
+                          "instance": "$API_FORMATION/recherche/detaillee"
                         }
                         """.trimIndent(),
                     ),
@@ -3919,7 +4018,16 @@ class FormationControllerTest(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
                     "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=$rechercheDe151Caracteres"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe151Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -3929,7 +4037,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
                           "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
-                          "instance": "/api/v1/formations/recherche/detaillee"
+                          "instance": "$API_FORMATION/recherche/detaillee"
                         }
                         """.trimIndent(),
                     ),
@@ -3953,8 +4061,8 @@ class FormationControllerTest(
             ).willReturn(rechercheL1)
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormationPourProfil.copy(id = "fl1"),
+                    ficheFormationPourProfil.copy(
                         id = "fl7",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -3965,11 +4073,31 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
                     ),
                 )
-            given(recupererFichesFormationsService.recupererFichesFormation(listOf("fl1", "fl7"), false)).willReturn(fichesFormations)
-            given(ordonnerRechercheFormationsBuilder.trierParScore(rechercheL1)).willReturn(
+            val formationsAvecLeurAffinite =
+                listOf(
+                    FormationAvecSonAffinite("fl1", 1.0f),
+                    FormationAvecSonAffinite("fl7", 0.5f),
+                )
+            val suggestions = SuggestionsPourUnProfil(emptyList(), formationsAvecLeurAffinite)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(AvecProfilExistant(""))).willReturn(
+                suggestions,
+            )
+            given(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    profilEleve = AvecProfilExistant(""),
+                    suggestions,
+                    listOf("fl1", "fl7"),
+                    false,
+                ),
+            ).willReturn(fichesFormations)
+            given(
+                ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                    rechercheL1,
+                    suggestions.formations,
+                ),
+            ).willReturn(
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
@@ -3990,7 +4118,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4005,9 +4142,9 @@ class FormationControllerTest(
                                   "fl0012"
                                 ],
                                 "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "moyenneGeneraleDesAdmis": null,
                                 "criteresAnalyseCandidature": [
                                   {
@@ -4041,6 +4178,32 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
                                 "voeux": [
                                   {
                                     "id": "ta10",
@@ -4091,7 +4254,40 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [
                                   {
                                     "id": "MET001",
@@ -4111,10 +4307,25 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null,
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
+                                },
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             },
                             {
                               "formation": {
@@ -4131,6 +4342,32 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
                                 "voeux": [
                                   {
                                     "id": "ta10",
@@ -4181,40 +4418,98 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": null,
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
+                                },
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             }
                           ],
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=test"),
-            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -4274,7 +4569,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4605,15 +4909,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -4676,7 +4980,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -5007,15 +5320,15 @@ class FormationControllerTest(
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -5030,8 +5343,8 @@ class FormationControllerTest(
             // Given
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormationPourProfil.copy(id = "fl1"),
+                    ficheFormationPourProfil.copy(
                         id = "fl2",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -5042,11 +5355,32 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                emptyList(),
+                                emptyList(),
+                                emptyList(),
+                            ),
                     ),
                 )
-            given(recupererFichesFormationsService.recupererFichesFormation(listOf("fl1", "fl2"), true)).willReturn(fichesFormations)
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    listOf("fl1", "fl2").map { FormationAvecSonAffinite(it, 1.0f) },
+                )
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(AvecProfilExistant("")))
+                .willReturn(suggestions)
+
+            given(
+                recupererFichesFormationsService
+                    .recupererFichesFormationPourProfil(
+                        AvecProfilExistant(""),
+                        suggestions,
+                        listOf("fl1", "fl2"),
+                        true,
+                    ),
+            )
+                .willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -5061,7 +5395,16 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -5076,9 +5419,9 @@ class FormationControllerTest(
                                   "fl0012"
                                 ],
                                 "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "moyenneGeneraleDesAdmis": null,
                                 "criteresAnalyseCandidature": [
                                   {
@@ -5110,6 +5453,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -5162,6 +5531,96 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 100,
+                                "apprentissage": false
+                              },
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
+                                },
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "communes": [],
+                                "voeux": [],
                                 "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [
                                   {
@@ -5182,59 +5641,45 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null,
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": null,
-                                "apprentissage": false
-                              },
-                              "explications": null
+                              "explications": {
+                                "geographique": [],
+                                "formationsSimilaires": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": {
+                                  "interets": [],
+                                  "domaines": [],
+                                  "metiers": []
+                                },
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             }
                           ],
                           "liens": [
                             {
                               "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             },
                             {
                               "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/fiches?ids=fl1&ids=fl2&numeroDePage=1"
+                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/fiches?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -5244,14 +5689,23 @@ class FormationControllerTest(
             val uneException =
                 MonProjetSupInternalErrorException(
                     "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/formations?ids=fl1&ids=fl2",
+                    "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/public/formations?ids=fl1&ids=fl2",
                     null,
                 )
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fiches?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -5286,15 +5740,15 @@ class FormationControllerTest(
               "liens": [
                 {
                   "rel": "premier",
-                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 },
                 {
                   "rel": "dernier",
-                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 },
                 {
                   "rel": "actuel",
-                  "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
+                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
                 }
               ]
             }
@@ -5319,7 +5773,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
         }
@@ -5343,7 +5797,7 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
         }
@@ -5367,15 +5821,9 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2&ids=fl3"),
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(contenuJson))
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
     }
 }

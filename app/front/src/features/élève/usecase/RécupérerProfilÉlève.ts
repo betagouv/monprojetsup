@@ -8,3 +8,11 @@ export class RécupérerÉlèveUseCase {
     return await this._élèveRepository.récupérerProfil();
   }
 }
+
+export class RécupérerProfilLocalUseCase {
+  public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
+
+  public run(): Élève | null {
+    return this._élèveRepository.récupérerProfilLocal();
+  }
+}

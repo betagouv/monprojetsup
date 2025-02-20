@@ -20,7 +20,7 @@ export type FormationMasquéeÉlève = Id;
 export type CommuneÉlève = Omit<Commune, "codePostal">;
 export type FormationÉlève = Id;
 
-export type ProgressionÉlève = NonNullable<components["schemas"]["ProfilDTO"]["progression"]> | null;
+export type ProgressionÉlève = NonNullable<components["schemas"]["ProgressionDTO"]["progression"]> | null;
 
 export type VoeuÉlève = {
   id: Id;
@@ -47,13 +47,17 @@ export type Élève = {
   métiersFavoris: MétierÉlève[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
-  moyenneGénérale: number | null;
   communesFavorites: CommuneÉlève[] | null;
   formations: FormationÉlève[] | null;
   voeuxFavoris: VoeuÉlève[] | null;
   formationsMasquées: FormationMasquéeÉlève[] | null;
   notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
   ambitions: AmbitionFormationÉlève[] | null;
+};
+
+export type ÉlèveEtProgression = {
+  élève: Élève;
+  progression: ProgressionÉlève;
 };
 
 export const situationÉlève = [

@@ -18,7 +18,7 @@ export default function useÉlèveRedirection() {
   const étapesInscription = étapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
-    if (utilisateur.id === undefined || !élève) return;
+    if (!élève) return;
 
     const critèresRemplissagePourÉtapesInscription = [
       Boolean(élève?.situation),
@@ -37,6 +37,7 @@ export default function useÉlèveRedirection() {
       const urlDeRedirection = étapesInscription[indexÉtapeNonRemplie].url;
 
       if (!routesAutorisées.includes(routerState.location.pathname as Paths)) {
+        // eslint-disable-next-line sonarjs/void-use
         void router.navigate({ to: urlDeRedirection });
       }
     }

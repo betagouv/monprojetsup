@@ -6,7 +6,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import CarteFormation from "@/features/formation/ui/CarteFormation/CarteFormation";
 import BoutonRetourAuxSuggestions from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BoutonRetourAuxSuggestions/BoutonRetourAuxSuggestions";
 
-const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps) => {
+const ListeFormations = ({ formations, affichéSurLaPage, estPersonnalisé }: ListeFormationsProps) => {
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
 
   return (
@@ -14,14 +14,14 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
       className="grid h-full justify-center gap-6 px-2 pb-6 lg:justify-normal lg:overflow-y-auto lg:px-6"
       id={constantes.ACCESSIBILITÉ.LISTE_CARTES_ID}
     >
-      {formations.length === 0 && affichéSurLaPage === "ficheFormation" ? (
+      {formations.length === 0 && estPersonnalisé && affichéSurLaPage === "ficheFormation" ? (
         <>
           <BoutonRetourAuxSuggestions />
           <p className="mb-0 text-center">{i18n.PAGE_FORMATION.AUCUN_RÉSULTAT}</p>
         </>
       ) : (
         <>
-          {affichéSurLaPage === "ficheFormation" && (
+          {affichéSurLaPage === "ficheFormation" && estPersonnalisé && (
             <p className="mb-0 text-center">
               {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_AFFINITÉ}{" "}
               <LienInterne
@@ -30,6 +30,18 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
                 variante="simple"
               >
                 {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE}
+              </LienInterne>
+            </p>
+          )}
+          {affichéSurLaPage === "ficheFormation" && !estPersonnalisé && (
+            <p className="mb-0 text-center">
+              {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_ALEATOIRE}{" "}
+              <LienInterne
+                ariaLabel={i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_ALEATOIRE_SUITE}
+                href="/eleve/inscription/projet"
+                variante="simple"
+              >
+                {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_ALEATOIRE_SUITE}
               </LienInterne>
             </p>
           )}

@@ -40,13 +40,15 @@ const ProfilÉlèvePage = () => {
               {utilisateur.email && (
                 <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
               )}
-              <Bouton
-                auClic={async () => await utilisateur.seDéconnecter()}
-                type="button"
-                variante="quaternaire"
-              >
-                {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
-              </Bouton>
+              {utilisateur.estAuthentifié && (
+                <Bouton
+                  auClic={async () => await utilisateur.seDéconnecter()}
+                  type="button"
+                  variante="quaternaire"
+                >
+                  {i18n.PAGE_PROFIL.SE_DÉCONNECTER}
+                </Bouton>
+              )}
             </div>
             <Tabs
               label={i18n.PAGE_PROFIL.TITRE}

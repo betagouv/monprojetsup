@@ -20,7 +20,7 @@ const FavorisÉlèvePage = () => {
   const { hash } = useLocation();
   const { estUnIdDeFormation } = useFormation();
   const { estUnIdDeMétier } = useMétier();
-  const routeApi = getRouteApi("/_auth/favoris/");
+  const routeApi = getRouteApi("/_main/favoris/");
   const élève = routeApi.useLoaderData();
   const { data: formations } = useQuery(récupérerFichesFormationsQueryOptions(élève?.formations ?? []));
 
@@ -32,30 +32,34 @@ const FavorisÉlèvePage = () => {
         id: formations[0]?.id ?? null,
         type: "formation",
       });
+    } else if (hash === "" && métiers && métiers?.length > 0) {
+      changerÉlémentAffiché({
+        id: métiers[0]?.id ?? null,
+        type: "métier",
+      });
+    } else if (métiers && estUnIdDeMétier(hash)) {
+      changerÉlémentAffiché({
+        id: métiers.some((métier) => métier.id === hash) ? hash : (métiers[0]?.id ?? null),
+        type: "métier",
+      });
+    } else if (formations && estUnIdDeFormation(hash)) {
+      changerÉlémentAffiché({
+        id: formations.some((formation) => formation.id === hash) ? hash : (formations[0]?.id ?? null),
+        type: "formation",
+      });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changerÉlémentAffiché, formations]);
+  }, [changerÉlémentAffiché, formations, hash, métiers]);
 
   if (!formations || !métiers) {
     return <AnimationChargement />;
   }
 
-  if (estUnIdDeMétier(hash)) {
-    changerÉlémentAffiché({
-      id: métiers.some((métier) => métier.id === hash) ? hash : (métiers[0]?.id ?? null),
-      type: "métier",
-    });
-  } else if (estUnIdDeFormation(hash)) {
-    changerÉlémentAffiché({
-      id: formations.some((formation) => formation.id === hash) ? hash : (formations[0]?.id ?? null),
-      type: "formation",
-    });
-  }
-
   return (
     <>
       <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
-      <ListeEtAperçuLayout variante="favoris">
+      <ListeEtAperçuLayout>
         <ListeEtAperçuBarreLatérale nombreRésultats={0}>
           <BarreLatéraleFavoris
             formations={formations}

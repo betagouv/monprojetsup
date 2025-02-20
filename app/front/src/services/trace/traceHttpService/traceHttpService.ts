@@ -12,7 +12,7 @@ export type Trace = {
 };
 
 export class TraceHttpService implements TraceService {
-  private readonly _ENDPOINT = "/api/v1/trace" as const;
+  private readonly _ENDPOINT = "/api/v1/auth/trace";
 
   public constructor(private readonly _mpsApiHttpClient: IMpsApiHttpClient) {}
 
@@ -71,6 +71,7 @@ export class TraceHttpService implements TraceService {
   }
 
   public async ajouterTrace(trace: BodyAjoutTraceHTTP): Promise<void | Error> {
+    if (!this._mpsApiHttpClient.estAuthentifié()) return;
     await this._mpsApiHttpClient.post<AjoutTraceRéponseHTTP>(this._ENDPOINT, trace);
   }
 }

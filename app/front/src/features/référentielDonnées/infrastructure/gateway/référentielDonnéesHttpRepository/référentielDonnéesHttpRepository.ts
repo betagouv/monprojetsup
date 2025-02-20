@@ -5,7 +5,7 @@ import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpCl
 import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 
 export class RéférentielDonnéesHttpRepository implements RéférentielDonnéesRepository {
-  private _ENDPOINT = "/api/v1/referentiel" as const;
+  private readonly _ENDPOINT = "/api/v1/public/referentiel";
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 

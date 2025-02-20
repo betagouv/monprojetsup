@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -185,10 +185,8 @@ public class AlgoSuggestions {
             boolean inclureScores
     ) {
         counter.getAndIncrement();
-        //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if (containsNothingPersonal(pf)) {
-            LOGGER.info(Config.NOTHING_PERSONAL);
-            return List.of();
+            return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
         }
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true);
@@ -223,9 +221,11 @@ public class AlgoSuggestions {
             @NotNull ProfileDTO pf,
             boolean inclureScores) {
 
-        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(
+
+        List<Pair<String, Affinite> > affinities = new ArrayList<>(
                 getFormationsAffinities(pf, data.getConfig(), inclureScores)
         );
+        Collections.shuffle(affinities);
         affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));
 
         Map<Affinite.SuggestionQuota, Double> totals = new EnumMap<>(Affinite.SuggestionQuota.class);
@@ -286,7 +286,7 @@ public class AlgoSuggestions {
 
             if (choice == null) {
                 //can happen when all scoresDiversiteResultats are zero
-                choice = affinities.getFirst();
+                choice = affinities.get(0);
             }
 
             result.add(

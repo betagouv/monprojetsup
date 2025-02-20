@@ -30,7 +30,7 @@ test.describe("Page Formations Élève", () => {
     // THEN
     expect(await testhelper.contenuDeLaPremièreCarteFormation()).toContain(premièreFormationSuggérée?.nom);
     expect(await testhelper.titrePage()).toBe(premièreFormationSuggérée?.nom);
-    expect(page.url()).toContain(`${testhelper.PAGE_FORMATIONS}#${premièreFormationSuggérée?.id}`);
+    expect(page.url()).toContain(`${testhelper.PAGE_FORMATIONS}`);
   });
 
   test("Je peux changer de fiche formation en cliquant sur une carte", async ({ page }) => {

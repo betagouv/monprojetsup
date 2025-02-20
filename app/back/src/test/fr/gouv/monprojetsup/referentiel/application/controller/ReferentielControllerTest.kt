@@ -1148,7 +1148,7 @@ class ReferentielControllerTest(
     fun `si connecté avec un élève, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }
@@ -1158,7 +1158,7 @@ class ReferentielControllerTest(
     fun `si connecté avec un enseignant, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }
@@ -1168,7 +1168,7 @@ class ReferentielControllerTest(
     fun `si connecté avec un token, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }

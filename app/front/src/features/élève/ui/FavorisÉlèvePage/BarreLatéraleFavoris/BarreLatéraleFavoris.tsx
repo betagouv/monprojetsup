@@ -18,15 +18,19 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
             {
               label: i18n.COMMUN.FORMATION,
               nativeInputProps: {
-                defaultChecked: élémentAffiché?.type === "formation",
-                onClick: () => auChangementDeCatégorie("formations"),
+                checked: élémentAffiché?.type === "formation",
+                onChange: (event) => {
+                  if (event.target.checked) auChangementDeCatégorie("formations");
+                },
               },
             },
             {
               label: i18n.COMMUN.MÉTIER,
               nativeInputProps: {
-                defaultChecked: élémentAffiché?.type === "métier",
-                onClick: () => auChangementDeCatégorie("métiers"),
+                checked: élémentAffiché?.type === "métier",
+                onChange: (event) => {
+                  if (event.target.checked) auChangementDeCatégorie("métiers");
+                },
               },
             },
           ]}
@@ -37,6 +41,7 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
       ) : (
         <ListeFormations
           affichéSurLaPage="favoris"
+          estPersonnalisé
           formations={formations ?? []}
         />
       )}

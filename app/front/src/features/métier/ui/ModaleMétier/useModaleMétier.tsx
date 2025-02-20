@@ -24,7 +24,7 @@ export default function useModaleMétier({ métier }: UseModaleMétierArgs) {
           iconId: "fr-icon-heart-line",
           iconPosition: "left",
           size: "large",
-          onClick: () => mettreÀJourMétiersÉlève([métier.id]),
+          onClick: () => mettreÀJourMétiersÉlève([métier?.id]),
           doClosesModal: false,
         },
       ];
@@ -38,18 +38,18 @@ export default function useModaleMétier({ métier }: UseModaleMétierArgs) {
         iconPosition: "left",
         priority: "secondary",
         size: "large",
-        onClick: () => mettreÀJourMétiersÉlève([métier.id]),
+        onClick: () => mettreÀJourMétiersÉlève([métier?.id]),
         doClosesModal: false,
       },
     ];
-  }, [estFavori, mettreÀJourMétiersÉlève, métier.id]);
+  }, [estFavori, mettreÀJourMétiersÉlève, métier?.id]);
 
   const titre = useMemo(() => {
-    if (!estFavori) return métier.nom;
+    if (!estFavori) return métier?.nom;
 
     return (
       <>
-        {métier.nom}
+        {métier?.nom}
         <span
           aria-hidden="true"
           className="fr-icon-heart-fill ml-2 text-[--artwork-minor-red-marianne]"

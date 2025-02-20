@@ -129,7 +129,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk)
                 .andExpect(content().json(creerReponseNouveauProfilJson()))
@@ -144,7 +144,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content("{}")
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content("{}")
                     .accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk)
                 .andExpect(
@@ -226,7 +226,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk)
                 .andExpect(content().json(creerReponseNouveauProfilJson()))
@@ -275,7 +275,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk)
                 .andExpect(content().json(creerReponseNouveauProfilJson()))
@@ -292,7 +292,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -305,7 +305,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -318,7 +318,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -331,7 +331,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -344,7 +344,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -354,7 +354,7 @@ class ProfilEleveControllerTest(
         fun `si token, doit retourner 403`() {
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
+                post("/api/v1/auth/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isForbidden)
         }
@@ -501,7 +501,7 @@ class ProfilEleveControllerTest(
             )
 
             // When & Then
-            mvc.perform(get("/api/v1/profil")).andDo(print())
+            mvc.perform(get("/api/v1/auth/profil")).andDo(print())
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
@@ -580,7 +580,7 @@ class ProfilEleveControllerTest(
             given(recupererEleveService.recupererEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
-            mvc.perform(get("/api/v1/profil")).andDo(print())
+            mvc.perform(get("/api/v1/auth/profil")).andDo(print())
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -591,7 +591,7 @@ class ProfilEleveControllerTest(
                           "title": "ELEVE_SANS_COMPTE",
                           "status": 404,
                           "detail": "L'élève connecté n'a pas encore crée son compte",
-                          "instance": "/api/v1/profil"
+                          "instance": "/api/v1/auth/profil"
                         }
                         """.trimIndent(),
                     ),
@@ -639,7 +639,7 @@ class ProfilEleveControllerTest(
             ).willReturn(voeuxFavoris)
 
             // When & Then
-            mvc.perform(get("/api/v1/profil")).andDo(print())
+            mvc.perform(get("/api/v1/auth/profil")).andDo(print())
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
@@ -712,7 +712,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si token, doit retourner 403`() {
             // When & Then
-            mvc.perform(get("/api/v1/profil")).andExpect(status().isForbidden)
+            mvc.perform(get("/api/v1/auth/profil")).andExpect(status().isForbidden)
         }
     }
 
@@ -730,7 +730,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isNoContent)
         }
 
@@ -746,7 +746,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isNoContent)
         }
 
@@ -778,7 +778,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -789,7 +789,7 @@ class ProfilEleveControllerTest(
                           "title": "ELEVE_NOT_FOUND",
                           "status": 404,
                           "detail": "L'élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c tente de sauvegarder son id parcoursup mais il n'est pas encore sauvegardé en BDD",
-                          "instance": "/api/v1/profil/parcoursup"
+                          "instance": "/api/v1/auth/profil/parcoursup"
                         }
                         """.trimIndent(),
                     ),
@@ -818,7 +818,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -829,7 +829,7 @@ class ProfilEleveControllerTest(
                           "title": "JWT_NON_VALIDE",
                           "status": 400,
                           "detail": "JWT envoyé invalide",
-                          "instance": "/api/v1/profil/parcoursup"
+                          "instance": "/api/v1/auth/profil/parcoursup"
                         }
                         """.trimIndent(),
                     ),
@@ -852,7 +852,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
@@ -863,7 +863,7 @@ class ProfilEleveControllerTest(
                           "title": "ELEVE_SANS_COMPTE",
                           "status": 404,
                           "detail": "L'élève connecté n'a pas encore crée son compte",
-                          "instance": "/api/v1/profil/parcoursup"
+                          "instance": "/api/v1/auth/profil/parcoursup"
                         }
                         """.trimIndent(),
                     ),
@@ -882,7 +882,7 @@ class ProfilEleveControllerTest(
                   "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
-            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+            mvc.perform(post("/api/v1/auth/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
                 .andExpect(status().isForbidden)
         }
     }

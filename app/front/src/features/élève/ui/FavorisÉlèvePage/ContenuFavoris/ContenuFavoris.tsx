@@ -7,7 +7,13 @@ const ContenuFavoris = () => {
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
 
   if (élémentAffiché.type === "métier" && élémentAffiché.id) return <FicheMétier id={élémentAffiché.id} />;
-  if (élémentAffiché.type === "formation" && élémentAffiché.id) return <FicheFormation id={élémentAffiché.id} />;
+  if (élémentAffiché.type === "formation" && élémentAffiché.id)
+    return (
+      <FicheFormation
+        afficherBoutonFavori
+        id={élémentAffiché.id}
+      />
+    );
 
   return <AucunFavoris catégorie={élémentAffiché.type} />;
 };

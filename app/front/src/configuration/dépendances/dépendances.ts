@@ -6,7 +6,6 @@ import { type CommuneRepository } from "@/features/commune/infrastructure/gatewa
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
-import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourAmbitionsÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourAmbitionsÉlève";
 import { MettreÀJourCommunesÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourCommunesÉlève";
@@ -18,7 +17,7 @@ import { MettreÀJourProfilÉlèveUseCase } from "@/features/élève/usecase/Met
 import { MettreÀJourSpécialitésÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourSpécialitésÉlève";
 import { MettreÀJourVoeuxÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourVoeuxÉlève";
 import { RechercherSpécialitésUseCase } from "@/features/élève/usecase/RechercherSpécialités";
-import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
+import { RécupérerÉlèveUseCase, RécupérerProfilLocalUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { RécupérerProgressionÉlèveUseCase } from "@/features/élève/usecase/RécupérerProgressionÉlève";
 import { SupprimerTousLesMétiersÉlèveUseCase } from "@/features/élève/usecase/SupprimerTousLesMétiersÉlève";
 import { SupprimerToutesLesFormationsÉlèveUseCase } from "@/features/élève/usecase/SupprimerToutesLesFormationsÉlève";
@@ -86,6 +85,8 @@ export class Dépendances {
   public readonly mettreÀJourProfilÉlèveUseCase: MettreÀJourProfilÉlèveUseCase;
 
   public readonly récupérerProfilÉlèveUseCase: RécupérerÉlèveUseCase;
+
+  public readonly récupérerProfilLocalUseCase: RécupérerProfilLocalUseCase;
 
   public readonly récupérerProgressionÉlèveUseCase: RécupérerProgressionÉlèveUseCase;
 
@@ -155,9 +156,7 @@ export class Dépendances {
     this._référentielDonnéesRepository = environnement.VITE_TEST_MODE
       ? new RéférentielDonnéesInMemoryRepository()
       : new RéférentielDonnéesHttpRepository(this._mpsApiHttpClient);
-    this._élèveRepository = environnement.VITE_TEST_MODE
-      ? new ÉlèveSessionStorageRepository()
-      : new ÉlèveHttpRepository(this._mpsApiHttpClient);
+    this._élèveRepository = new ÉlèveHttpRepository(this._mpsApiHttpClient);
     this._traceService = environnement.VITE_TEST_MODE
       ? new TraceSessionStorageService()
       : new TraceHttpService(this._mpsApiHttpClient);
@@ -185,6 +184,7 @@ export class Dépendances {
       this.analyticsRepository,
     );
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
+    this.récupérerProfilLocalUseCase = new RécupérerProfilLocalUseCase(this._élèveRepository);
     this.récupérerProgressionÉlèveUseCase = new RécupérerProgressionÉlèveUseCase(this._élèveRepository);
     this.associerCompteParcourSupÉlèveUseCase = new AssocierCompteParcourSupÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourSpécialitésÉlèveUseCase = new MettreÀJourSpécialitésÉlèveUseCase(this._élèveRepository);
