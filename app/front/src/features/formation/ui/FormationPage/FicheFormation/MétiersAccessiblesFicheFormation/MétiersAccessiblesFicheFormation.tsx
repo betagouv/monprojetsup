@@ -14,6 +14,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
     useMétiersAccessiblesFicheFormation({ métiers });
 
   if (métiers.length === 0) return null;
+  if(!métierSélectionné) return null;
 
   return (
     <div>

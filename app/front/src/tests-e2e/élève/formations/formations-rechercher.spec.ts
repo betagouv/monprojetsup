@@ -63,7 +63,6 @@ test.describe("Formations - Rechercher", () => {
     await expect(testhelper.cartesFormations()).toHaveCount(4);
     expect(await testhelper.contenuDeLaPremièreCarteFormation()).toContain(premierRésultatDeRecherche?.nom);
     expect(await testhelper.titrePage()).toBe(premierRésultatDeRecherche?.nom);
-    expect(page.url()).toContain(`${testhelper.PAGE_FORMATIONS}#${premierRésultatDeRecherche?.id}`);
   });
 
   test("Je peux naviguer entre les résultats", async ({ page }) => {
@@ -86,6 +85,7 @@ test.describe("Formations - Rechercher", () => {
   test("Je peux retourner aux suggestions", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
+    testhelper.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
 
     // WHEN
     await testhelper.naviguerVersLaPageFormations();

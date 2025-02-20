@@ -19,6 +19,8 @@ import useMétier from "@/features/métier/ui/useMétier";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
+import Head from "@/components/_layout/Head/Head";
+import { i18n } from "@/configuration/i18n/i18n";
 
 const FormationPage = () => {
   const recherche = rechercheListeEtAperçuStore();
@@ -41,14 +43,14 @@ const FormationPage = () => {
   });
 
   useEffect(() => {
-    if (recherche) {
-      changerÉlémentAffiché({
-        id: résultatsDeRecherche?.[0]?.id ?? null,
-        type: "formation",
-      });
-    } else if (hash !== "" && (estUnIdDeFormation(hash) || estUnIdDeMétier(hash))) {
+    if (hash !== "" && (estUnIdDeFormation(hash) || estUnIdDeMétier(hash))) {
       changerÉlémentAffiché({
         id: hash,
+        type: "formation",
+      });
+    } else if (recherche) {
+      changerÉlémentAffiché({
+        id: résultatsDeRecherche?.[0]?.id ?? null,
         type: "formation",
       });
     } else if (pathname.includes("/formations")) {
@@ -65,6 +67,8 @@ const FormationPage = () => {
   }
 
   return (
+        <>
+      <Head titre={i18n.PAGE_FORMATION.TITRE_PAGE} />
     <ListeEtAperçuLayout>
       <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
         <BarreLatéraleFormation
@@ -83,6 +87,7 @@ const FormationPage = () => {
         )}
       </ListeEtAperçuContenu>
     </ListeEtAperçuLayout>
+        </>
   );
 };
 

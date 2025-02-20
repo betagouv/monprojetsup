@@ -3,7 +3,7 @@ import PiedDePage from "@/components/_layout/PiedDePage/PiedDePage";
 import LienÉvitement from "@/components/LienÉvitement/LienÉvitement";
 import Toast from "@/components/Toast/Toast";
 import { constantes } from "@/configuration/constantes";
-import { Outlet, ScrollRestoration } from "@tanstack/react-router";
+import { Outlet } from "@tanstack/react-router";
 
 const MainLayout = () => {
   return (
@@ -14,7 +14,6 @@ const MainLayout = () => {
         id={constantes.ACCESSIBILITÉ.CONTENU_ID}
         tabIndex={-1}
       >
-        <ScrollRestoration />
         <Toast />
         <Outlet />
       </main>

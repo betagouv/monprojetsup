@@ -37,7 +37,7 @@ export default function useÉlève() {
     [élève?.centresIntérêts],
   );
 
-  const aUnProfilPermettantUneExpériencePersonnalisée = useMemo((): boolean => auMoinsUnDomaineFavori, [élève]);
+  const aUnProfilPermettantUneExpériencePersonnalisée = useMemo((): boolean => auMoinsUnDomaineFavori, [élève?.domaines]);
 
   const estMétierFavori = (idMétier: MétierÉlève): boolean => {
     return élève?.métiersFavoris?.includes(idMétier) ?? false;

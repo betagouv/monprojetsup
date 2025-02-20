@@ -48,7 +48,7 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
       alternance: "indifferent",
       communesFavorites: [],
       duréeÉtudesPrévue: "courte",
-      formations: [],
+      formations: ["fl1","fl2"],
       voeuxFavoris: [],
       formationsMasquées: [],
       ambitions: [],
@@ -57,4 +57,46 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
 
     await this.initialiserProfilÉlèveParDéfaut({ ...profilÉlèveParDéfaut, ...profilÉlève });
   };
+
+
+
+  public simulerSessionDéconnectée() {
+    /*
+    vi.mock("./useAuth", () => ({
+  useAuth: () => ({
+    isAuthenticated: false,
+    user: {
+      profile: {
+        sub: "123",
+        given_name: "Jean",
+        family_name: "Dupont",
+        email: "jean.dupont@example.com",
+        profile: "user",
+      },
+    },
+    signoutRedirect: vi.fn(),
+  }),
+}));*/
+  }
+
+  public simulerSessionConnectée() {
+    /*
+    vi.mock("./useAuth", () => ({
+  useAuth: () => ({
+    isAuthenticated: true,
+    user: {
+      profile: {
+        sub: "123",
+        given_name: "Jean",
+        family_name: "Dupont",
+        email: "jean.dupont@example.com",
+        profile: "user",
+      },
+      id_token: "mock-id-token",
+    },
+    signoutRedirect: vi.fn(),
+  }),
+}));  */ 
+  }
+
 }

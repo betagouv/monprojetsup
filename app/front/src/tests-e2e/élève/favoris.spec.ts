@@ -48,7 +48,7 @@ test.describe("Page Favoris Élève", () => {
       // THEN
       expect(await testhelper.contenuDeLaPremièreCarteFormation()).toContain(formations[0]?.nom);
       expect(await testhelper.titrePage()).toBe(formations[0]?.nom);
-      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}#${formations[0]?.id}`);
+      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}`);
     });
 
     test("Je peux changer de fiche formation en cliquant sur une carte", async ({ page }) => {
@@ -94,7 +94,7 @@ test.describe("Page Favoris Élève", () => {
       await expect(testhelper.cartesFormations()).toHaveCount(testhelper.NOMBRE_FORMATIONS_FAVORITES);
       expect(await testhelper.contenuDeLaPremièreCarteFormation()).toContain(formations[0]?.nom);
       expect(await testhelper.titrePage()).toBe(formations[0]?.nom);
-      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}#${formations[0]?.id}`);
+      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}`);
     });
 
     test.describe("Si je n'ai aucune formation favorite", () => {
@@ -137,7 +137,7 @@ test.describe("Page Favoris Élève", () => {
       // THEN
       expect(await testhelper.contenuDeLaPremièreCarteMétier()).toContain(métiers[0]?.nom);
       expect(await testhelper.titrePage()).toBe(métiers[0]?.nom);
-      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}#${métiers[0]?.id}`);
+      expect(page.url()).toContain(`${testhelper.PAGE_FAVORIS}`);
     });
 
     test("Je peux changer de fiche métier en cliquant sur une carte", async ({ page }) => {

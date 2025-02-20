@@ -3,6 +3,7 @@ const pages = {
   FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
   GESTION_COOKIES: "Gestion des cookies",
+  EXPLORATION: "Les formations"
 } as const;
 
 const app = {
@@ -63,6 +64,7 @@ export const localeFR = {
     AFFICHER_FORMATIONS_SUPPLÉMENTAIRES: "Afficher les autres formations",
   },
   PAGE_FORMATION: {
+    TITRE_PAGE: pages.EXPLORATION,
     AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
     RETOUR_AUX_SUGGESTIONS: "Retour aux suggestions",
     CHAMP_RECHERCHE_LABEL: "Recherche une formation",

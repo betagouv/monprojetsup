@@ -22,6 +22,6 @@ export default defineConfig({
     env: {
       VITE_TEST_MODE: "true",
     },
-    reuseExistingServer: false
+    reuseExistingServer: true
   },
 });
