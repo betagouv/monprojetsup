@@ -50,6 +50,14 @@ describe("useEntête", () => {
       // THEN
       expect(result.current.accèsRapides).toEqual([
         {
+          iconId: "fr-icon-arrow-go-back-fill",
+          linkProps: {
+            href: process.env.VITE_AVENIRS_URL,
+            className: "after:!content-none",
+          },
+          text: i18n.ENTÊTE.PLATEFORME_AVENIRS,
+        },
+        {
           iconId: "fr-icon-user-fill",
           linkProps: { to: "/connexion" },
           text: i18n.ENTÊTE.SE_CONNECTER,
