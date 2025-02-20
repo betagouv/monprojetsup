@@ -36,7 +36,9 @@ const InscriptionÉlèvePage = () => {
   const étapes = étapesInscriptionÉlèveStore();
 
   const àLaSoumissionDuFormulaireAvecSuccès = async () => {
-    await navigate({ to: étapeSuivante?.url });
+    if (étapeSuivante?.url) {
+      await navigate({ to: étapeSuivante.url });
+    }
   };
 
   if (!étapeActuelle) return null;

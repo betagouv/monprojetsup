@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api/v1/trace")
+@RequestMapping("api/v1/auth/trace")
 @RestController
 @Tag(name = "Trace Élève", description = "API de trace de navigation des utilisateurs MonProjetSup")
 class TraceEleveController(

@@ -32,7 +32,8 @@ class IdentificationFilter(
             val idIndividu = getIdIndividu(jwtToken)
             if (idIndividu != null) {
                 val eleve = recupererEleveService.recupererEleve(idIndividu)
-                val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
+                val authenticationEleve =
+                    UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
                 SecurityContextHolder.getContext().authentication = authenticationEleve
             } else {
                 val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnnecte, null, null)

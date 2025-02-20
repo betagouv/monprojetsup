@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("test")
+@RequestMapping("/api/v1/auth/test")
 @RestController
 class IdentificationMockController {
     @GetMapping
@@ -53,10 +53,11 @@ class FilterTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
     @ConnecteAvecUnEleve("adcf627c-36dd-4df5-897b-159443a6d49c")
+    // @WithMockUser(username = "adcf627c-36dd-4df5-897b-159443a6d49c", roles = ["UTILISATEUR_AUTHENTIFIE"])
     @Test
     fun `si connecté avec un élève, doit retourner 200 avec le détail des infos de l'élève et son authorité`() {
         // When & Then
-        mvc.perform(get("/test")).andExpect(status().isOk)
+        mvc.perform(get("/api/v1/auth/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
@@ -136,7 +137,7 @@ class FilterTest(
         given(recupererEleveService.recupererEleve(id)).willReturn(ProfilEleve.SansCompte(id))
 
         // When & Then
-        mvc.perform(get("/test")).andExpect(status().isOk)
+        mvc.perform(get("/api/v1/auth/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
@@ -161,7 +162,7 @@ class FilterTest(
     @Test
     fun `si connecté avec un professeur, doit retourner 200 avec le détail de ses infos`() {
         // When & Then
-        mvc.perform(get("/test")).andExpect(status().isOk)
+        mvc.perform(get("/api/v1/auth/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
@@ -184,7 +185,7 @@ class FilterTest(
     @Test
     fun `si connecté sans id dans le JWT, doit retourner 403 et ne pas appeler le repo eleve`() {
         // When & Then
-        mvc.perform(get("/test")).andExpect(status().isOk)
+        mvc.perform(get("/api/v1/auth/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
@@ -203,7 +204,7 @@ class FilterTest(
     @Test
     fun `si pas connecté, doit retourner 401 avec body vide`() {
         // When & Then
-        mvc.perform(get("/test")).andExpect(status().isUnauthorized)
+        mvc.perform(get("/api/v1/auth/test")).andExpect(status().isUnauthorized)
         then(recupererEleveService).shouldHaveNoInteractions()
     }
 
@@ -214,7 +215,7 @@ class FilterTest(
         given(parametreRepository.estActif(Parametre.ETL_EN_COURS)).willReturn(true)
 
         // When & Then
-        mvc.perform(get("/test")).andDo(MockMvcResultHandlers.print()).andExpect(status().isServiceUnavailable)
+        mvc.perform(get("/api/v1/auth/test")).andDo(MockMvcResultHandlers.print()).andExpect(status().isServiceUnavailable)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(
                 content().json(

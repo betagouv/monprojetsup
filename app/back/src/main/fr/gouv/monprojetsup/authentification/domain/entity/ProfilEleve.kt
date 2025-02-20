@@ -81,7 +81,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         }
 
         fun aDesFavorisParcoursup(): Boolean {
-            return !voeuxFavoris.isNullOrEmpty() &&
+            return voeuxFavoris.isNotEmpty() &&
                 !formationsFavorites.isNullOrEmpty()
         }
     }

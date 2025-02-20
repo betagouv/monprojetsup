@@ -23,6 +23,7 @@ import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.SAINT_MALO
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.STRASBOURG
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -64,6 +65,9 @@ class RecupererFicheFormationServiceTest {
 
     @Mock
     lateinit var calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder
+
+    @Mock
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var recupererFicheFormationService: RecupererFicheFormationService
@@ -158,6 +162,22 @@ class RecupererFicheFormationServiceTest {
             ).willReturn(
                 voeuxPossiblesPourLaFormationFL0001,
             )
+
+            val informationsSurLesVoeuxEtLeursCommunes =
+                FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes(
+                    listOf(),
+                    listOf(),
+                    listOf(),
+                )
+
+            given(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
+                    idFormation = "fl0001",
+                    profilEleve = null,
+                    obsoletesInclus = true,
+                ),
+            ).willReturn(informationsSurLesVoeuxEtLeursCommunes)
+
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
             given(
                 statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
@@ -189,7 +209,7 @@ class RecupererFicheFormationServiceTest {
                             Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                         ),
                     metiers = emptyList(),
-                    voeux = voeuxPossiblesPourLaFormationFL0001,
+                    informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
                     criteresAnalyseCandidature =
                         listOf(
                             CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),

@@ -29,6 +29,7 @@ test.describe("Page Tableau de bord Élève", () => {
   }) => {
     // GIVEN
     const testhelper = new Test(page);
+    await testhelper.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
 
     // WHEN
     await testhelper.naviguerVersLaPage();

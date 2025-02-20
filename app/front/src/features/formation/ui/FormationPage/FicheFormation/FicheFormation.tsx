@@ -14,10 +14,8 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const FicheFormation = ({ id }: FicheFormationProps) => {
+const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
   const { data: formation, isLoading: chargementEnCours } = useQuery(récupérerFicheFormationQueryOptions(id));
-
-  if (formation === null) return null;
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -56,9 +54,11 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
           lienParcoursSup={formation.lienParcoursSup}
         />
       </div>
-      <div className="mt-9">
-        <BoutonsActionsFicheFormation formation={formation} />
-      </div>
+      {afficherBoutonFavori && (
+        <div className="mt-9">
+          <BoutonsActionsFicheFormation formation={formation} />
+        </div>
+      )}
       <hr className="mb-9 mt-5" />
       <div className="grid gap-12">
         <div className="grid gap-4">

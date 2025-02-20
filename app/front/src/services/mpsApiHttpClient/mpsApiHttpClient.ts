@@ -13,27 +13,39 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     endpoint: keyof paths,
     paramètresDeRequête?: URLSearchParams,
   ): Promise<O | Error> => {
+    const jwt = this._récupérerJWT();
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : {};
     return await this._httpClient.récupérer<O>({
       endpoint: paramètresDeRequête
         ? `${this._apiBaseUrl}${endpoint}?${paramètresDeRequête.toString()}`
         : `${this._apiBaseUrl}${endpoint}`,
       méthode: "GET",
-      headers: {
-        authorization: `Bearer ${this._récupérerJWT()}`,
-      },
+      headers,
     });
   };
 
   public post = async <O extends object>(endpoint: keyof paths, body: object): Promise<O | Error> => {
+    const jwt = this._récupérerJWT();
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : {};
     return await this._httpClient.récupérer<O>({
       endpoint: `${this._apiBaseUrl}${endpoint}`,
       méthode: "POST",
       body,
-      headers: {
-        authorization: `Bearer ${this._récupérerJWT()}`,
-      },
+      headers,
     });
   };
+
+  public estAuthentifié(): boolean {
+    return this._récupérerJWT() !== "";
+  }
 
   private readonly _récupérerJWT = (): string => {
     const sessionStorageOIDC = sessionStorage.getItem(

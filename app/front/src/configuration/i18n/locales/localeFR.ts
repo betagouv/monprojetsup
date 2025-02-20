@@ -3,6 +3,7 @@ const pages = {
   FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
   GESTION_COOKIES: "Gestion des cookies",
+  EXPLORATION: "Les formations",
 } as const;
 
 const app = {
@@ -30,6 +31,7 @@ export const localeFR = {
     TABLEAU_DE_BORD: pages.TABLEAU_DE_BORD,
     FORMATIONS: "Explorer les formations",
     FAVORIS: "Consulter ma sélection",
+    PROFIL: "Enrichir mon profil",
   },
   CARTE_MÉTIER: {
     FORMATIONS: "formation(s) pour apprendre le métier",
@@ -62,12 +64,15 @@ export const localeFR = {
     AFFICHER_FORMATIONS_SUPPLÉMENTAIRES: "Afficher les autres formations",
   },
   PAGE_FORMATION: {
+    TITRE_PAGE: pages.EXPLORATION,
     AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
     RETOUR_AUX_SUGGESTIONS: "Retour aux suggestions",
     CHAMP_RECHERCHE_LABEL: "Recherche une formation",
     CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
+    SUGGESTIONS_TRIÉES_ALEATOIRE: "Résultats triés aléatoirement... pour les personnaliser complète",
+    SUGGESTIONS_TRIÉES_ALEATOIRE_SUITE: "ton profil ›",
     ONGLET_FORMATION: "La formation",
     ONGLET_DÉTAILS: "En général",
     ONGLET_CRITÈRES: "Critères d’admission",
@@ -349,7 +354,7 @@ export const localeFR = {
     CONFIRMATION_INSCRIPTION: {
       TITRE_PAGE: "Inscription terminée",
       TITRE: "Félicitations",
-      SOUS_TITRE: "Ton inscription est terminée 👌",
+      SOUS_TITRE: "Ton profil est complété 👌",
       CONTENU: "N’hésite pas à enrichir ton profil pour trouver plus facilement ta voie.",
       BOUTON_ACTION: "Découvre ton espace MPS",
       BANDEAU: {
@@ -358,8 +363,10 @@ export const localeFR = {
       },
     },
     TABLEAU_DE_BORD: {
-      TITRE: "Bienvenue dans ton espace MPS",
-      MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
+      TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
+      TITRE_DECONNECTE: "C'est parti!",
+      MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
+      MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
       MODALE_PARCOURSUP: {
         TITRE: "Synchronisation avec Parcoursup",
         CONTENU:
@@ -378,6 +385,15 @@ export const localeFR = {
         PROFIL: {
           TITRE: "Enrichis ton profil pour améliorer les suggestions",
           SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
+        },
+        PROFIL_VIDE: {
+          TITRE: "Renseigne ton profil pour obtenir des suggestions personalisées",
+          SOUS_TITRE:
+            "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
+        },
+        CONNECTE_TOI: {
+          TITRE: "Connecte-toi à ton compte MPS-Avenir(s)",
+          SOUS_TITRE: "En te connectant, tu conserveras tes préférences et tes favoris.",
         },
         AVIS: {
           TITRE: "Que penses-tu de MPS ?",
@@ -447,7 +463,7 @@ export const localeFR = {
     DÉTAILS: "Détails",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
-      TITRE_GÉNÉRIQUE: "Une erreur est survenue",
+      TITRE_GÉNÉRIQUE: "Oups...",
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
       AU_MOINS_UNE: "Tu dois indiquer au moins une",
@@ -480,7 +496,7 @@ export const localeFR = {
       SOUS_TITRE: "Essaye de nouveau dans quelques minutes.",
     },
     GÉNÉRIQUE: {
-      EMOJI: "😱",
+      EMOJI: "🤓",
       TITRE: "Oups, on dirait bien un bug",
       SOUS_TITRE: "On a pris note de l'erreur et on corrige ça au plus vite.",
     },

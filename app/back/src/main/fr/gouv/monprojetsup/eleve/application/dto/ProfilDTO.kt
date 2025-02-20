@@ -134,6 +134,14 @@ data class ProfilDTO(
         @JsonProperty("longitude")
         val longitude: Double,
     ) {
+        fun toCommuneFavorite() =
+            CommuneFavorite(
+                codeInsee = codeInsee,
+                nom = nom,
+                latitude = latitude,
+                longitude = longitude,
+            )
+
         constructor(communeFavorite: CommuneFavorite) : this(
             codeInsee = communeFavorite.codeInsee,
             nom = communeFavorite.nom,
@@ -161,6 +169,13 @@ data class ProfilDTO(
             niveauAmbition = formationFavorite.niveauAmbition,
             priseDeNote = formationFavorite.priseDeNote,
         )
+
+        fun toFormationFavorite() =
+            FormationFavorite(
+                idFormation = idFormation,
+                niveauAmbition = niveauAmbition,
+                priseDeNote = priseDeNote,
+            )
     }
 
     data class VoeuFavoriDTO(
@@ -171,15 +186,35 @@ data class ProfilDTO(
         @JsonProperty("estFavoriParcoursup")
         val estFavoriParcoursup: Boolean,
     ) {
+        constructor(idVoeu: VoeuFavori) : this(
+            idVoeu = idVoeu.idVoeu,
+            estFavoriParcoursup = idVoeu.estFavoriParcoursup,
+        )
+
         fun toVoeuFavori() =
             VoeuFavori(
                 idVoeu = idVoeu,
                 estFavoriParcoursup = estFavoriParcoursup,
             )
+    }
 
-        constructor(idVoeu: VoeuFavori) : this(
-            idVoeu = idVoeu.idVoeu,
-            estFavoriParcoursup = idVoeu.estFavoriParcoursup,
+    fun toProfilExistant(): ProfilEleve.AvecProfilExistant {
+        return ProfilEleve.AvecProfilExistant(
+            id = "",
+            situation = situation,
+            classe = classe,
+            baccalaureat = baccalaureat,
+            specialites = specialites,
+            domainesInterets = domaines,
+            centresInterets = centresInterets,
+            metiersFavoris = metiersFavoris,
+            dureeEtudesPrevue = dureeEtudesPrevue,
+            alternance = alternance,
+            formationsFavorites = formationsFavorites?.map { it.toFormationFavorite() },
+            communesFavorites = communesFavorites?.map { it.toCommuneFavorite() },
+            corbeilleFormations = corbeilleFormations.orEmpty(),
+            compteParcoursupLie = compteParcoursupAssocie,
+            voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
         )
     }
 }

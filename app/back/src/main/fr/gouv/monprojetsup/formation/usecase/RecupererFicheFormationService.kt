@@ -4,8 +4,11 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,6 +22,7 @@ class RecupererFicheFormationService(
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
+    private val logger: MonProjetSupLogger,
 ) {
     @Transactional(readOnly = true)
     @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
@@ -74,8 +78,8 @@ class RecupererFicheFormationService(
             )
         } else {
             val voeux =
-                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
-                    formation.id,
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
+                    listOf(formation.id),
                     obsoletesInclus = true,
                 )
             FicheFormation.FicheFormationSansProfil(
@@ -87,11 +91,33 @@ class RecupererFicheFormationService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                voeux = voeux,
                 metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,
                 apprentissage = formation.apprentissage,
+                informationsSurLesVoeuxEtLeursCommunes = recupererInformationsSurLesVoeuxEtLeursCommunes(voeux, formation),
+            )
+        }
+    }
+
+    private fun recupererInformationsSurLesVoeuxEtLeursCommunes(
+        voeux: Map<String, InformationsSurLesVoeuxEtLeursCommunes>,
+        formation: Formation,
+    ): InformationsSurLesVoeuxEtLeursCommunes {
+        val voeuxDeLaFormation = voeux[formation.id]
+        return if (voeuxDeLaFormation != null) {
+            return voeuxDeLaFormation
+        } else {
+            logger.error(
+                type = "FORMATION_SANS_VOEUX",
+                message = "La formation ${formation.id} n'est pas présente dans la map des formations",
+                exception = null,
+                parametres = mapOf("idFormation" to formation.id),
+            )
+            InformationsSurLesVoeuxEtLeursCommunes(
+                voeux = emptyList(),
+                communesTriees = emptyList(),
+                voeuxParCommunesFavorites = emptyList(),
             )
         }
     }

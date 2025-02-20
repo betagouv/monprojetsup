@@ -13,56 +13,67 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/_auth'
+import { Route as PublicImport } from './routes/_public'
+import { Route as MainImport } from './routes/_main'
 import { Route as ParcoursupCallbackIndexImport } from './routes/parcoursup-callback/index'
-import { Route as AuthIndexImport } from './routes/_auth/index'
-import { Route as AuthFormationsIndexImport } from './routes/_auth/formations/index'
-import { Route as AuthFavorisIndexImport } from './routes/_auth/favoris/index'
-import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
+import { Route as ConnexionIndexImport } from './routes/connexion/index'
+import { Route as MainIndexImport } from './routes/_main/index'
+import { Route as MainMainImport } from './routes/_main/_main'
+import { Route as PublicFormationIndexImport } from './routes/_public/formation/index'
+import { Route as MainFormationsIndexImport } from './routes/_main/formations/index'
+import { Route as MainFavorisIndexImport } from './routes/_main/favoris/index'
+import { Route as MainEleveInscriptionImport } from './routes/_main/eleve/_inscription'
 
 // Create Virtual Routes
 
-const AuthEleveImport = createFileRoute('/_auth/eleve')()
-const AuthProfilIndexLazyImport = createFileRoute('/_auth/profil/')()
-const AuthPlanDuSiteIndexLazyImport = createFileRoute('/_auth/plan-du-site/')()
-const AuthDeclarationAccessibliteIndexLazyImport = createFileRoute(
-  '/_auth/declaration-accessiblite/',
+const MainEleveImport = createFileRoute('/_main/eleve')()
+const PublicPlanDuSiteIndexLazyImport = createFileRoute(
+  '/_public/plan-du-site/',
 )()
-const AuthCookiesIndexLazyImport = createFileRoute('/_auth/cookies/')()
-const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/scolarite/',
+const PublicDeclarationAccessibliteIndexLazyImport = createFileRoute(
+  '/_public/declaration-accessiblite/',
 )()
-const AuthEleveInscriptionInscriptionProjetIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/projet/',
+const PublicCookiesIndexLazyImport = createFileRoute('/_public/cookies/')()
+const MainProfilIndexLazyImport = createFileRoute('/_main/profil/')()
+const MainEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/scolarite/',
 )()
-const AuthEleveInscriptionInscriptionMetiersIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/metiers/',
+const MainEleveInscriptionInscriptionProjetIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/projet/',
 )()
-const AuthEleveInscriptionInscriptionInteretsIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/interets/',
+const MainEleveInscriptionInscriptionMetiersIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/metiers/',
 )()
-const AuthEleveInscriptionInscriptionFormationsIndexLazyImport =
-  createFileRoute('/_auth/eleve/_inscription/inscription/formations/')()
-const AuthEleveInscriptionInscriptionEtudeIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/etude/',
+const MainEleveInscriptionInscriptionInteretsIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/interets/',
 )()
-const AuthEleveInscriptionInscriptionDomainesIndexLazyImport = createFileRoute(
-  '/_auth/eleve/_inscription/inscription/domaines/',
+const MainEleveInscriptionInscriptionFormationsIndexLazyImport =
+  createFileRoute('/_main/eleve/_inscription/inscription/formations/')()
+const MainEleveInscriptionInscriptionEtudeIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/etude/',
 )()
-const AuthEleveInscriptionInscriptionConfirmationIndexLazyImport =
-  createFileRoute('/_auth/eleve/_inscription/inscription/confirmation/')()
+const MainEleveInscriptionInscriptionDomainesIndexLazyImport = createFileRoute(
+  '/_main/eleve/_inscription/inscription/domaines/',
+)()
+const MainEleveInscriptionInscriptionConfirmationIndexLazyImport =
+  createFileRoute('/_main/eleve/_inscription/inscription/confirmation/')()
 
 // Create/Update Routes
 
-const AuthRoute = AuthImport.update({
-  id: '/_auth',
+const PublicRoute = PublicImport.update({
+  id: '/_public',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthEleveRoute = AuthEleveImport.update({
+const MainRoute = MainImport.update({
+  id: '/_main',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MainEleveRoute = MainEleveImport.update({
   id: '/eleve',
   path: '/eleve',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => MainRoute,
 } as any)
 
 const ParcoursupCallbackIndexRoute = ParcoursupCallbackIndexImport.update({
@@ -71,149 +82,166 @@ const ParcoursupCallbackIndexRoute = ParcoursupCallbackIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthIndexRoute = AuthIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthRoute,
+const ConnexionIndexRoute = ConnexionIndexImport.update({
+  id: '/connexion/',
+  path: '/connexion/',
+  getParentRoute: () => rootRoute,
 } as any)
 
-const AuthProfilIndexLazyRoute = AuthProfilIndexLazyImport.update({
-  id: '/profil/',
-  path: '/profil/',
-  getParentRoute: () => AuthRoute,
-} as any).lazy(() =>
-  import('./routes/_auth/profil/index.lazy').then((d) => d.Route),
-)
+const MainIndexRoute = MainIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainRoute,
+} as any)
 
-const AuthPlanDuSiteIndexLazyRoute = AuthPlanDuSiteIndexLazyImport.update({
+const MainMainRoute = MainMainImport.update({
+  id: '/_main',
+  getParentRoute: () => MainRoute,
+} as any)
+
+const PublicPlanDuSiteIndexLazyRoute = PublicPlanDuSiteIndexLazyImport.update({
   id: '/plan-du-site/',
   path: '/plan-du-site/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => PublicRoute,
 } as any).lazy(() =>
-  import('./routes/_auth/plan-du-site/index.lazy').then((d) => d.Route),
+  import('./routes/_public/plan-du-site/index.lazy').then((d) => d.Route),
 )
 
-const AuthDeclarationAccessibliteIndexLazyRoute =
-  AuthDeclarationAccessibliteIndexLazyImport.update({
+const PublicDeclarationAccessibliteIndexLazyRoute =
+  PublicDeclarationAccessibliteIndexLazyImport.update({
     id: '/declaration-accessiblite/',
     path: '/declaration-accessiblite/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => PublicRoute,
   } as any).lazy(() =>
-    import('./routes/_auth/declaration-accessiblite/index.lazy').then(
+    import('./routes/_public/declaration-accessiblite/index.lazy').then(
       (d) => d.Route,
     ),
   )
 
-const AuthCookiesIndexLazyRoute = AuthCookiesIndexLazyImport.update({
+const PublicCookiesIndexLazyRoute = PublicCookiesIndexLazyImport.update({
   id: '/cookies/',
   path: '/cookies/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => PublicRoute,
 } as any).lazy(() =>
-  import('./routes/_auth/cookies/index.lazy').then((d) => d.Route),
+  import('./routes/_public/cookies/index.lazy').then((d) => d.Route),
 )
 
-const AuthFormationsIndexRoute = AuthFormationsIndexImport.update({
+const MainProfilIndexLazyRoute = MainProfilIndexLazyImport.update({
+  id: '/profil/',
+  path: '/profil/',
+  getParentRoute: () => MainRoute,
+} as any).lazy(() =>
+  import('./routes/_main/profil/index.lazy').then((d) => d.Route),
+)
+
+const PublicFormationIndexRoute = PublicFormationIndexImport.update({
+  id: '/formation/',
+  path: '/formation/',
+  getParentRoute: () => PublicRoute,
+} as any)
+
+const MainFormationsIndexRoute = MainFormationsIndexImport.update({
   id: '/formations/',
   path: '/formations/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => MainRoute,
 } as any)
 
-const AuthFavorisIndexRoute = AuthFavorisIndexImport.update({
+const MainFavorisIndexRoute = MainFavorisIndexImport.update({
   id: '/favoris/',
   path: '/favoris/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => MainRoute,
 } as any)
 
-const AuthEleveInscriptionRoute = AuthEleveInscriptionImport.update({
+const MainEleveInscriptionRoute = MainEleveInscriptionImport.update({
   id: '/_inscription',
-  getParentRoute: () => AuthEleveRoute,
+  getParentRoute: () => MainEleveRoute,
 } as any)
 
-const AuthEleveInscriptionInscriptionScolariteIndexLazyRoute =
-  AuthEleveInscriptionInscriptionScolariteIndexLazyImport.update({
+const MainEleveInscriptionInscriptionScolariteIndexLazyRoute =
+  MainEleveInscriptionInscriptionScolariteIndexLazyImport.update({
     id: '/inscription/scolarite/',
     path: '/inscription/scolarite/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/scolarite/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/scolarite/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionProjetIndexLazyRoute =
-  AuthEleveInscriptionInscriptionProjetIndexLazyImport.update({
+const MainEleveInscriptionInscriptionProjetIndexLazyRoute =
+  MainEleveInscriptionInscriptionProjetIndexLazyImport.update({
     id: '/inscription/projet/',
     path: '/inscription/projet/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/projet/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/projet/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionMetiersIndexLazyRoute =
-  AuthEleveInscriptionInscriptionMetiersIndexLazyImport.update({
+const MainEleveInscriptionInscriptionMetiersIndexLazyRoute =
+  MainEleveInscriptionInscriptionMetiersIndexLazyImport.update({
     id: '/inscription/metiers/',
     path: '/inscription/metiers/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/metiers/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/metiers/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionInteretsIndexLazyRoute =
-  AuthEleveInscriptionInscriptionInteretsIndexLazyImport.update({
+const MainEleveInscriptionInscriptionInteretsIndexLazyRoute =
+  MainEleveInscriptionInscriptionInteretsIndexLazyImport.update({
     id: '/inscription/interets/',
     path: '/inscription/interets/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/interets/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/interets/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionFormationsIndexLazyRoute =
-  AuthEleveInscriptionInscriptionFormationsIndexLazyImport.update({
+const MainEleveInscriptionInscriptionFormationsIndexLazyRoute =
+  MainEleveInscriptionInscriptionFormationsIndexLazyImport.update({
     id: '/inscription/formations/',
     path: '/inscription/formations/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/formations/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/formations/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionEtudeIndexLazyRoute =
-  AuthEleveInscriptionInscriptionEtudeIndexLazyImport.update({
+const MainEleveInscriptionInscriptionEtudeIndexLazyRoute =
+  MainEleveInscriptionInscriptionEtudeIndexLazyImport.update({
     id: '/inscription/etude/',
     path: '/inscription/etude/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/etude/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/etude/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionDomainesIndexLazyRoute =
-  AuthEleveInscriptionInscriptionDomainesIndexLazyImport.update({
+const MainEleveInscriptionInscriptionDomainesIndexLazyRoute =
+  MainEleveInscriptionInscriptionDomainesIndexLazyImport.update({
     id: '/inscription/domaines/',
     path: '/inscription/domaines/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/domaines/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/domaines/index.lazy'
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute =
-  AuthEleveInscriptionInscriptionConfirmationIndexLazyImport.update({
+const MainEleveInscriptionInscriptionConfirmationIndexLazyRoute =
+  MainEleveInscriptionInscriptionConfirmationIndexLazyImport.update({
     id: '/inscription/confirmation/',
     path: '/inscription/confirmation/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
+    getParentRoute: () => MainEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
-      './routes/_auth/eleve/_inscription/inscription/confirmation/index.lazy'
+      './routes/_main/eleve/_inscription/inscription/confirmation/index.lazy'
     ).then((d) => d.Route),
   )
 
@@ -221,19 +249,40 @@ const AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
+    '/_main': {
+      id: '/_main'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthImport
+      preLoaderRoute: typeof MainImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/': {
-      id: '/_auth/'
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicImport
+      parentRoute: typeof rootRoute
+    }
+    '/_main/_main': {
+      id: '/_main/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainMainImport
+      parentRoute: typeof MainImport
+    }
+    '/_main/': {
+      id: '/_main/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof MainIndexImport
+      parentRoute: typeof MainImport
+    }
+    '/connexion/': {
+      id: '/connexion/'
+      path: '/connexion'
+      fullPath: '/connexion'
+      preLoaderRoute: typeof ConnexionIndexImport
+      parentRoute: typeof rootRoute
     }
     '/parcoursup-callback/': {
       id: '/parcoursup-callback/'
@@ -242,255 +291,284 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParcoursupCallbackIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/eleve': {
-      id: '/_auth/eleve'
+    '/_main/eleve': {
+      id: '/_main/eleve'
       path: '/eleve'
       fullPath: '/eleve'
-      preLoaderRoute: typeof AuthEleveImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof MainEleveImport
+      parentRoute: typeof MainImport
     }
-    '/_auth/eleve/_inscription': {
-      id: '/_auth/eleve/_inscription'
+    '/_main/eleve/_inscription': {
+      id: '/_main/eleve/_inscription'
       path: '/eleve'
       fullPath: '/eleve'
-      preLoaderRoute: typeof AuthEleveInscriptionImport
-      parentRoute: typeof AuthEleveRoute
+      preLoaderRoute: typeof MainEleveInscriptionImport
+      parentRoute: typeof MainEleveRoute
     }
-    '/_auth/favoris/': {
-      id: '/_auth/favoris/'
+    '/_main/favoris/': {
+      id: '/_main/favoris/'
       path: '/favoris'
       fullPath: '/favoris'
-      preLoaderRoute: typeof AuthFavorisIndexImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof MainFavorisIndexImport
+      parentRoute: typeof MainImport
     }
-    '/_auth/formations/': {
-      id: '/_auth/formations/'
+    '/_main/formations/': {
+      id: '/_main/formations/'
       path: '/formations'
       fullPath: '/formations'
-      preLoaderRoute: typeof AuthFormationsIndexImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof MainFormationsIndexImport
+      parentRoute: typeof MainImport
     }
-    '/_auth/cookies/': {
-      id: '/_auth/cookies/'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof AuthCookiesIndexLazyImport
-      parentRoute: typeof AuthImport
+    '/_public/formation/': {
+      id: '/_public/formation/'
+      path: '/formation'
+      fullPath: '/formation'
+      preLoaderRoute: typeof PublicFormationIndexImport
+      parentRoute: typeof PublicImport
     }
-    '/_auth/declaration-accessiblite/': {
-      id: '/_auth/declaration-accessiblite/'
-      path: '/declaration-accessiblite'
-      fullPath: '/declaration-accessiblite'
-      preLoaderRoute: typeof AuthDeclarationAccessibliteIndexLazyImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/plan-du-site/': {
-      id: '/_auth/plan-du-site/'
-      path: '/plan-du-site'
-      fullPath: '/plan-du-site'
-      preLoaderRoute: typeof AuthPlanDuSiteIndexLazyImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/profil/': {
-      id: '/_auth/profil/'
+    '/_main/profil/': {
+      id: '/_main/profil/'
       path: '/profil'
       fullPath: '/profil'
-      preLoaderRoute: typeof AuthProfilIndexLazyImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof MainProfilIndexLazyImport
+      parentRoute: typeof MainImport
     }
-    '/_auth/eleve/_inscription/inscription/confirmation/': {
-      id: '/_auth/eleve/_inscription/inscription/confirmation/'
+    '/_public/cookies/': {
+      id: '/_public/cookies/'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof PublicCookiesIndexLazyImport
+      parentRoute: typeof PublicImport
+    }
+    '/_public/declaration-accessiblite/': {
+      id: '/_public/declaration-accessiblite/'
+      path: '/declaration-accessiblite'
+      fullPath: '/declaration-accessiblite'
+      preLoaderRoute: typeof PublicDeclarationAccessibliteIndexLazyImport
+      parentRoute: typeof PublicImport
+    }
+    '/_public/plan-du-site/': {
+      id: '/_public/plan-du-site/'
+      path: '/plan-du-site'
+      fullPath: '/plan-du-site'
+      preLoaderRoute: typeof PublicPlanDuSiteIndexLazyImport
+      parentRoute: typeof PublicImport
+    }
+    '/_main/eleve/_inscription/inscription/confirmation/': {
+      id: '/_main/eleve/_inscription/inscription/confirmation/'
       path: '/inscription/confirmation'
       fullPath: '/eleve/inscription/confirmation'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionConfirmationIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/domaines/': {
-      id: '/_auth/eleve/_inscription/inscription/domaines/'
+    '/_main/eleve/_inscription/inscription/domaines/': {
+      id: '/_main/eleve/_inscription/inscription/domaines/'
       path: '/inscription/domaines'
       fullPath: '/eleve/inscription/domaines'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionDomainesIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionDomainesIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/etude/': {
-      id: '/_auth/eleve/_inscription/inscription/etude/'
+    '/_main/eleve/_inscription/inscription/etude/': {
+      id: '/_main/eleve/_inscription/inscription/etude/'
       path: '/inscription/etude'
       fullPath: '/eleve/inscription/etude'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionEtudeIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionEtudeIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/formations/': {
-      id: '/_auth/eleve/_inscription/inscription/formations/'
+    '/_main/eleve/_inscription/inscription/formations/': {
+      id: '/_main/eleve/_inscription/inscription/formations/'
       path: '/inscription/formations'
       fullPath: '/eleve/inscription/formations'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionFormationsIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionFormationsIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/interets/': {
-      id: '/_auth/eleve/_inscription/inscription/interets/'
+    '/_main/eleve/_inscription/inscription/interets/': {
+      id: '/_main/eleve/_inscription/inscription/interets/'
       path: '/inscription/interets'
       fullPath: '/eleve/inscription/interets'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionInteretsIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionInteretsIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/metiers/': {
-      id: '/_auth/eleve/_inscription/inscription/metiers/'
+    '/_main/eleve/_inscription/inscription/metiers/': {
+      id: '/_main/eleve/_inscription/inscription/metiers/'
       path: '/inscription/metiers'
       fullPath: '/eleve/inscription/metiers'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionMetiersIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionMetiersIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/projet/': {
-      id: '/_auth/eleve/_inscription/inscription/projet/'
+    '/_main/eleve/_inscription/inscription/projet/': {
+      id: '/_main/eleve/_inscription/inscription/projet/'
       path: '/inscription/projet'
       fullPath: '/eleve/inscription/projet'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionProjetIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionProjetIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
-    '/_auth/eleve/_inscription/inscription/scolarite/': {
-      id: '/_auth/eleve/_inscription/inscription/scolarite/'
+    '/_main/eleve/_inscription/inscription/scolarite/': {
+      id: '/_main/eleve/_inscription/inscription/scolarite/'
       path: '/inscription/scolarite'
       fullPath: '/eleve/inscription/scolarite'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionScolariteIndexLazyImport
-      parentRoute: typeof AuthEleveInscriptionImport
+      preLoaderRoute: typeof MainEleveInscriptionInscriptionScolariteIndexLazyImport
+      parentRoute: typeof MainEleveInscriptionImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthEleveInscriptionRouteChildren {
-  AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute: typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
-  AuthEleveInscriptionInscriptionDomainesIndexLazyRoute: typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
-  AuthEleveInscriptionInscriptionEtudeIndexLazyRoute: typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
-  AuthEleveInscriptionInscriptionFormationsIndexLazyRoute: typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
-  AuthEleveInscriptionInscriptionInteretsIndexLazyRoute: typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
-  AuthEleveInscriptionInscriptionMetiersIndexLazyRoute: typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
-  AuthEleveInscriptionInscriptionProjetIndexLazyRoute: typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
-  AuthEleveInscriptionInscriptionScolariteIndexLazyRoute: typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+interface MainEleveInscriptionRouteChildren {
+  MainEleveInscriptionInscriptionConfirmationIndexLazyRoute: typeof MainEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  MainEleveInscriptionInscriptionDomainesIndexLazyRoute: typeof MainEleveInscriptionInscriptionDomainesIndexLazyRoute
+  MainEleveInscriptionInscriptionEtudeIndexLazyRoute: typeof MainEleveInscriptionInscriptionEtudeIndexLazyRoute
+  MainEleveInscriptionInscriptionFormationsIndexLazyRoute: typeof MainEleveInscriptionInscriptionFormationsIndexLazyRoute
+  MainEleveInscriptionInscriptionInteretsIndexLazyRoute: typeof MainEleveInscriptionInscriptionInteretsIndexLazyRoute
+  MainEleveInscriptionInscriptionMetiersIndexLazyRoute: typeof MainEleveInscriptionInscriptionMetiersIndexLazyRoute
+  MainEleveInscriptionInscriptionProjetIndexLazyRoute: typeof MainEleveInscriptionInscriptionProjetIndexLazyRoute
+  MainEleveInscriptionInscriptionScolariteIndexLazyRoute: typeof MainEleveInscriptionInscriptionScolariteIndexLazyRoute
 }
 
-const AuthEleveInscriptionRouteChildren: AuthEleveInscriptionRouteChildren = {
-  AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute:
-    AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute,
-  AuthEleveInscriptionInscriptionDomainesIndexLazyRoute:
-    AuthEleveInscriptionInscriptionDomainesIndexLazyRoute,
-  AuthEleveInscriptionInscriptionEtudeIndexLazyRoute:
-    AuthEleveInscriptionInscriptionEtudeIndexLazyRoute,
-  AuthEleveInscriptionInscriptionFormationsIndexLazyRoute:
-    AuthEleveInscriptionInscriptionFormationsIndexLazyRoute,
-  AuthEleveInscriptionInscriptionInteretsIndexLazyRoute:
-    AuthEleveInscriptionInscriptionInteretsIndexLazyRoute,
-  AuthEleveInscriptionInscriptionMetiersIndexLazyRoute:
-    AuthEleveInscriptionInscriptionMetiersIndexLazyRoute,
-  AuthEleveInscriptionInscriptionProjetIndexLazyRoute:
-    AuthEleveInscriptionInscriptionProjetIndexLazyRoute,
-  AuthEleveInscriptionInscriptionScolariteIndexLazyRoute:
-    AuthEleveInscriptionInscriptionScolariteIndexLazyRoute,
+const MainEleveInscriptionRouteChildren: MainEleveInscriptionRouteChildren = {
+  MainEleveInscriptionInscriptionConfirmationIndexLazyRoute:
+    MainEleveInscriptionInscriptionConfirmationIndexLazyRoute,
+  MainEleveInscriptionInscriptionDomainesIndexLazyRoute:
+    MainEleveInscriptionInscriptionDomainesIndexLazyRoute,
+  MainEleveInscriptionInscriptionEtudeIndexLazyRoute:
+    MainEleveInscriptionInscriptionEtudeIndexLazyRoute,
+  MainEleveInscriptionInscriptionFormationsIndexLazyRoute:
+    MainEleveInscriptionInscriptionFormationsIndexLazyRoute,
+  MainEleveInscriptionInscriptionInteretsIndexLazyRoute:
+    MainEleveInscriptionInscriptionInteretsIndexLazyRoute,
+  MainEleveInscriptionInscriptionMetiersIndexLazyRoute:
+    MainEleveInscriptionInscriptionMetiersIndexLazyRoute,
+  MainEleveInscriptionInscriptionProjetIndexLazyRoute:
+    MainEleveInscriptionInscriptionProjetIndexLazyRoute,
+  MainEleveInscriptionInscriptionScolariteIndexLazyRoute:
+    MainEleveInscriptionInscriptionScolariteIndexLazyRoute,
 }
 
-const AuthEleveInscriptionRouteWithChildren =
-  AuthEleveInscriptionRoute._addFileChildren(AuthEleveInscriptionRouteChildren)
+const MainEleveInscriptionRouteWithChildren =
+  MainEleveInscriptionRoute._addFileChildren(MainEleveInscriptionRouteChildren)
 
-interface AuthEleveRouteChildren {
-  AuthEleveInscriptionRoute: typeof AuthEleveInscriptionRouteWithChildren
+interface MainEleveRouteChildren {
+  MainEleveInscriptionRoute: typeof MainEleveInscriptionRouteWithChildren
 }
 
-const AuthEleveRouteChildren: AuthEleveRouteChildren = {
-  AuthEleveInscriptionRoute: AuthEleveInscriptionRouteWithChildren,
+const MainEleveRouteChildren: MainEleveRouteChildren = {
+  MainEleveInscriptionRoute: MainEleveInscriptionRouteWithChildren,
 }
 
-const AuthEleveRouteWithChildren = AuthEleveRoute._addFileChildren(
-  AuthEleveRouteChildren,
+const MainEleveRouteWithChildren = MainEleveRoute._addFileChildren(
+  MainEleveRouteChildren,
 )
 
-interface AuthRouteChildren {
-  AuthIndexRoute: typeof AuthIndexRoute
-  AuthEleveRoute: typeof AuthEleveRouteWithChildren
-  AuthFavorisIndexRoute: typeof AuthFavorisIndexRoute
-  AuthFormationsIndexRoute: typeof AuthFormationsIndexRoute
-  AuthCookiesIndexLazyRoute: typeof AuthCookiesIndexLazyRoute
-  AuthDeclarationAccessibliteIndexLazyRoute: typeof AuthDeclarationAccessibliteIndexLazyRoute
-  AuthPlanDuSiteIndexLazyRoute: typeof AuthPlanDuSiteIndexLazyRoute
-  AuthProfilIndexLazyRoute: typeof AuthProfilIndexLazyRoute
+interface MainRouteChildren {
+  MainMainRoute: typeof MainMainRoute
+  MainIndexRoute: typeof MainIndexRoute
+  MainEleveRoute: typeof MainEleveRouteWithChildren
+  MainFavorisIndexRoute: typeof MainFavorisIndexRoute
+  MainFormationsIndexRoute: typeof MainFormationsIndexRoute
+  MainProfilIndexLazyRoute: typeof MainProfilIndexLazyRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthIndexRoute: AuthIndexRoute,
-  AuthEleveRoute: AuthEleveRouteWithChildren,
-  AuthFavorisIndexRoute: AuthFavorisIndexRoute,
-  AuthFormationsIndexRoute: AuthFormationsIndexRoute,
-  AuthCookiesIndexLazyRoute: AuthCookiesIndexLazyRoute,
-  AuthDeclarationAccessibliteIndexLazyRoute:
-    AuthDeclarationAccessibliteIndexLazyRoute,
-  AuthPlanDuSiteIndexLazyRoute: AuthPlanDuSiteIndexLazyRoute,
-  AuthProfilIndexLazyRoute: AuthProfilIndexLazyRoute,
+const MainRouteChildren: MainRouteChildren = {
+  MainMainRoute: MainMainRoute,
+  MainIndexRoute: MainIndexRoute,
+  MainEleveRoute: MainEleveRouteWithChildren,
+  MainFavorisIndexRoute: MainFavorisIndexRoute,
+  MainFormationsIndexRoute: MainFormationsIndexRoute,
+  MainProfilIndexLazyRoute: MainProfilIndexLazyRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
+
+interface PublicRouteChildren {
+  PublicFormationIndexRoute: typeof PublicFormationIndexRoute
+  PublicCookiesIndexLazyRoute: typeof PublicCookiesIndexLazyRoute
+  PublicDeclarationAccessibliteIndexLazyRoute: typeof PublicDeclarationAccessibliteIndexLazyRoute
+  PublicPlanDuSiteIndexLazyRoute: typeof PublicPlanDuSiteIndexLazyRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicFormationIndexRoute: PublicFormationIndexRoute,
+  PublicCookiesIndexLazyRoute: PublicCookiesIndexLazyRoute,
+  PublicDeclarationAccessibliteIndexLazyRoute:
+    PublicDeclarationAccessibliteIndexLazyRoute,
+  PublicPlanDuSiteIndexLazyRoute: PublicPlanDuSiteIndexLazyRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '': typeof AuthRouteWithChildren
-  '/': typeof AuthIndexRoute
+  '': typeof MainMainRoute
+  '/': typeof MainIndexRoute
+  '/connexion': typeof ConnexionIndexRoute
   '/parcoursup-callback': typeof ParcoursupCallbackIndexRoute
-  '/eleve': typeof AuthEleveInscriptionRouteWithChildren
-  '/favoris': typeof AuthFavorisIndexRoute
-  '/formations': typeof AuthFormationsIndexRoute
-  '/cookies': typeof AuthCookiesIndexLazyRoute
-  '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
-  '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
-  '/profil': typeof AuthProfilIndexLazyRoute
-  '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
-  '/eleve/inscription/domaines': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
-  '/eleve/inscription/etude': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
-  '/eleve/inscription/formations': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
-  '/eleve/inscription/interets': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
-  '/eleve/inscription/metiers': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
-  '/eleve/inscription/projet': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
-  '/eleve/inscription/scolarite': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+  '/eleve': typeof MainEleveInscriptionRouteWithChildren
+  '/favoris': typeof MainFavorisIndexRoute
+  '/formations': typeof MainFormationsIndexRoute
+  '/formation': typeof PublicFormationIndexRoute
+  '/profil': typeof MainProfilIndexLazyRoute
+  '/cookies': typeof PublicCookiesIndexLazyRoute
+  '/declaration-accessiblite': typeof PublicDeclarationAccessibliteIndexLazyRoute
+  '/plan-du-site': typeof PublicPlanDuSiteIndexLazyRoute
+  '/eleve/inscription/confirmation': typeof MainEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/eleve/inscription/domaines': typeof MainEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/eleve/inscription/etude': typeof MainEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/eleve/inscription/formations': typeof MainEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/eleve/inscription/interets': typeof MainEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/eleve/inscription/metiers': typeof MainEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/eleve/inscription/projet': typeof MainEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/eleve/inscription/scolarite': typeof MainEleveInscriptionInscriptionScolariteIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof AuthIndexRoute
+  '': typeof MainMainRoute
+  '/': typeof MainIndexRoute
+  '/connexion': typeof ConnexionIndexRoute
   '/parcoursup-callback': typeof ParcoursupCallbackIndexRoute
-  '/eleve': typeof AuthEleveInscriptionRouteWithChildren
-  '/favoris': typeof AuthFavorisIndexRoute
-  '/formations': typeof AuthFormationsIndexRoute
-  '/cookies': typeof AuthCookiesIndexLazyRoute
-  '/declaration-accessiblite': typeof AuthDeclarationAccessibliteIndexLazyRoute
-  '/plan-du-site': typeof AuthPlanDuSiteIndexLazyRoute
-  '/profil': typeof AuthProfilIndexLazyRoute
-  '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
-  '/eleve/inscription/domaines': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
-  '/eleve/inscription/etude': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
-  '/eleve/inscription/formations': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
-  '/eleve/inscription/interets': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
-  '/eleve/inscription/metiers': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
-  '/eleve/inscription/projet': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
-  '/eleve/inscription/scolarite': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+  '/eleve': typeof MainEleveInscriptionRouteWithChildren
+  '/favoris': typeof MainFavorisIndexRoute
+  '/formations': typeof MainFormationsIndexRoute
+  '/formation': typeof PublicFormationIndexRoute
+  '/profil': typeof MainProfilIndexLazyRoute
+  '/cookies': typeof PublicCookiesIndexLazyRoute
+  '/declaration-accessiblite': typeof PublicDeclarationAccessibliteIndexLazyRoute
+  '/plan-du-site': typeof PublicPlanDuSiteIndexLazyRoute
+  '/eleve/inscription/confirmation': typeof MainEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/eleve/inscription/domaines': typeof MainEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/eleve/inscription/etude': typeof MainEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/eleve/inscription/formations': typeof MainEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/eleve/inscription/interets': typeof MainEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/eleve/inscription/metiers': typeof MainEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/eleve/inscription/projet': typeof MainEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/eleve/inscription/scolarite': typeof MainEleveInscriptionInscriptionScolariteIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_auth/': typeof AuthIndexRoute
+  '/_main': typeof MainRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_main/_main': typeof MainMainRoute
+  '/_main/': typeof MainIndexRoute
+  '/connexion/': typeof ConnexionIndexRoute
   '/parcoursup-callback/': typeof ParcoursupCallbackIndexRoute
-  '/_auth/eleve': typeof AuthEleveRouteWithChildren
-  '/_auth/eleve/_inscription': typeof AuthEleveInscriptionRouteWithChildren
-  '/_auth/favoris/': typeof AuthFavorisIndexRoute
-  '/_auth/formations/': typeof AuthFormationsIndexRoute
-  '/_auth/cookies/': typeof AuthCookiesIndexLazyRoute
-  '/_auth/declaration-accessiblite/': typeof AuthDeclarationAccessibliteIndexLazyRoute
-  '/_auth/plan-du-site/': typeof AuthPlanDuSiteIndexLazyRoute
-  '/_auth/profil/': typeof AuthProfilIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/confirmation/': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/domaines/': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/etude/': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/formations/': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/interets/': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/metiers/': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/projet/': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
-  '/_auth/eleve/_inscription/inscription/scolarite/': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+  '/_main/eleve': typeof MainEleveRouteWithChildren
+  '/_main/eleve/_inscription': typeof MainEleveInscriptionRouteWithChildren
+  '/_main/favoris/': typeof MainFavorisIndexRoute
+  '/_main/formations/': typeof MainFormationsIndexRoute
+  '/_public/formation/': typeof PublicFormationIndexRoute
+  '/_main/profil/': typeof MainProfilIndexLazyRoute
+  '/_public/cookies/': typeof PublicCookiesIndexLazyRoute
+  '/_public/declaration-accessiblite/': typeof PublicDeclarationAccessibliteIndexLazyRoute
+  '/_public/plan-du-site/': typeof PublicPlanDuSiteIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/confirmation/': typeof MainEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/domaines/': typeof MainEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/etude/': typeof MainEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/formations/': typeof MainEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/interets/': typeof MainEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/metiers/': typeof MainEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/projet/': typeof MainEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/_main/eleve/_inscription/inscription/scolarite/': typeof MainEleveInscriptionInscriptionScolariteIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -498,14 +576,16 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/'
+    | '/connexion'
     | '/parcoursup-callback'
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/formation'
+    | '/profil'
     | '/cookies'
     | '/declaration-accessiblite'
     | '/plan-du-site'
-    | '/profil'
     | '/eleve/inscription/confirmation'
     | '/eleve/inscription/domaines'
     | '/eleve/inscription/etude'
@@ -516,15 +596,18 @@ export interface FileRouteTypes {
     | '/eleve/inscription/scolarite'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | ''
     | '/'
+    | '/connexion'
     | '/parcoursup-callback'
     | '/eleve'
     | '/favoris'
     | '/formations'
+    | '/formation'
+    | '/profil'
     | '/cookies'
     | '/declaration-accessiblite'
     | '/plan-du-site'
-    | '/profil'
     | '/eleve/inscription/confirmation'
     | '/eleve/inscription/domaines'
     | '/eleve/inscription/etude'
@@ -535,35 +618,43 @@ export interface FileRouteTypes {
     | '/eleve/inscription/scolarite'
   id:
     | '__root__'
-    | '/_auth'
-    | '/_auth/'
+    | '/_main'
+    | '/_public'
+    | '/_main/_main'
+    | '/_main/'
+    | '/connexion/'
     | '/parcoursup-callback/'
-    | '/_auth/eleve'
-    | '/_auth/eleve/_inscription'
-    | '/_auth/favoris/'
-    | '/_auth/formations/'
-    | '/_auth/cookies/'
-    | '/_auth/declaration-accessiblite/'
-    | '/_auth/plan-du-site/'
-    | '/_auth/profil/'
-    | '/_auth/eleve/_inscription/inscription/confirmation/'
-    | '/_auth/eleve/_inscription/inscription/domaines/'
-    | '/_auth/eleve/_inscription/inscription/etude/'
-    | '/_auth/eleve/_inscription/inscription/formations/'
-    | '/_auth/eleve/_inscription/inscription/interets/'
-    | '/_auth/eleve/_inscription/inscription/metiers/'
-    | '/_auth/eleve/_inscription/inscription/projet/'
-    | '/_auth/eleve/_inscription/inscription/scolarite/'
+    | '/_main/eleve'
+    | '/_main/eleve/_inscription'
+    | '/_main/favoris/'
+    | '/_main/formations/'
+    | '/_public/formation/'
+    | '/_main/profil/'
+    | '/_public/cookies/'
+    | '/_public/declaration-accessiblite/'
+    | '/_public/plan-du-site/'
+    | '/_main/eleve/_inscription/inscription/confirmation/'
+    | '/_main/eleve/_inscription/inscription/domaines/'
+    | '/_main/eleve/_inscription/inscription/etude/'
+    | '/_main/eleve/_inscription/inscription/formations/'
+    | '/_main/eleve/_inscription/inscription/interets/'
+    | '/_main/eleve/_inscription/inscription/metiers/'
+    | '/_main/eleve/_inscription/inscription/projet/'
+    | '/_main/eleve/_inscription/inscription/scolarite/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
+  MainRoute: typeof MainRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
+  ConnexionIndexRoute: typeof ConnexionIndexRoute
   ParcoursupCallbackIndexRoute: typeof ParcoursupCallbackIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthRoute: AuthRouteWithChildren,
+  MainRoute: MainRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
+  ConnexionIndexRoute: ConnexionIndexRoute,
   ParcoursupCallbackIndexRoute: ParcoursupCallbackIndexRoute,
 }
 
@@ -577,106 +668,126 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_auth",
+        "/_main",
+        "/_public",
+        "/connexion/",
         "/parcoursup-callback/"
       ]
     },
-    "/_auth": {
-      "filePath": "_auth.tsx",
+    "/_main": {
+      "filePath": "_main.tsx",
       "children": [
-        "/_auth/",
-        "/_auth/eleve",
-        "/_auth/favoris/",
-        "/_auth/formations/",
-        "/_auth/cookies/",
-        "/_auth/declaration-accessiblite/",
-        "/_auth/plan-du-site/",
-        "/_auth/profil/"
+        "/_main/_main",
+        "/_main/",
+        "/_main/eleve",
+        "/_main/favoris/",
+        "/_main/formations/",
+        "/_main/profil/"
       ]
     },
-    "/_auth/": {
-      "filePath": "_auth/index.tsx",
-      "parent": "/_auth"
+    "/_public": {
+      "filePath": "_public.tsx",
+      "children": [
+        "/_public/formation/",
+        "/_public/cookies/",
+        "/_public/declaration-accessiblite/",
+        "/_public/plan-du-site/"
+      ]
+    },
+    "/_main/_main": {
+      "filePath": "_main/_main.tsx",
+      "parent": "/_main"
+    },
+    "/_main/": {
+      "filePath": "_main/index.tsx",
+      "parent": "/_main"
+    },
+    "/connexion/": {
+      "filePath": "connexion/index.tsx"
     },
     "/parcoursup-callback/": {
       "filePath": "parcoursup-callback/index.tsx"
     },
-    "/_auth/eleve": {
-      "filePath": "_auth/eleve",
-      "parent": "/_auth",
+    "/_main/eleve": {
+      "filePath": "_main/eleve",
+      "parent": "/_main",
       "children": [
-        "/_auth/eleve/_inscription"
+        "/_main/eleve/_inscription"
       ]
     },
-    "/_auth/eleve/_inscription": {
-      "filePath": "_auth/eleve/_inscription.tsx",
-      "parent": "/_auth/eleve",
+    "/_main/eleve/_inscription": {
+      "filePath": "_main/eleve/_inscription.tsx",
+      "parent": "/_main/eleve",
       "children": [
-        "/_auth/eleve/_inscription/inscription/confirmation/",
-        "/_auth/eleve/_inscription/inscription/domaines/",
-        "/_auth/eleve/_inscription/inscription/etude/",
-        "/_auth/eleve/_inscription/inscription/formations/",
-        "/_auth/eleve/_inscription/inscription/interets/",
-        "/_auth/eleve/_inscription/inscription/metiers/",
-        "/_auth/eleve/_inscription/inscription/projet/",
-        "/_auth/eleve/_inscription/inscription/scolarite/"
+        "/_main/eleve/_inscription/inscription/confirmation/",
+        "/_main/eleve/_inscription/inscription/domaines/",
+        "/_main/eleve/_inscription/inscription/etude/",
+        "/_main/eleve/_inscription/inscription/formations/",
+        "/_main/eleve/_inscription/inscription/interets/",
+        "/_main/eleve/_inscription/inscription/metiers/",
+        "/_main/eleve/_inscription/inscription/projet/",
+        "/_main/eleve/_inscription/inscription/scolarite/"
       ]
     },
-    "/_auth/favoris/": {
-      "filePath": "_auth/favoris/index.tsx",
-      "parent": "/_auth"
+    "/_main/favoris/": {
+      "filePath": "_main/favoris/index.tsx",
+      "parent": "/_main"
     },
-    "/_auth/formations/": {
-      "filePath": "_auth/formations/index.tsx",
-      "parent": "/_auth"
+    "/_main/formations/": {
+      "filePath": "_main/formations/index.tsx",
+      "parent": "/_main"
     },
-    "/_auth/cookies/": {
-      "filePath": "_auth/cookies/index.lazy.tsx",
-      "parent": "/_auth"
+    "/_public/formation/": {
+      "filePath": "_public/formation/index.tsx",
+      "parent": "/_public"
     },
-    "/_auth/declaration-accessiblite/": {
-      "filePath": "_auth/declaration-accessiblite/index.lazy.tsx",
-      "parent": "/_auth"
+    "/_main/profil/": {
+      "filePath": "_main/profil/index.lazy.tsx",
+      "parent": "/_main"
     },
-    "/_auth/plan-du-site/": {
-      "filePath": "_auth/plan-du-site/index.lazy.tsx",
-      "parent": "/_auth"
+    "/_public/cookies/": {
+      "filePath": "_public/cookies/index.lazy.tsx",
+      "parent": "/_public"
     },
-    "/_auth/profil/": {
-      "filePath": "_auth/profil/index.lazy.tsx",
-      "parent": "/_auth"
+    "/_public/declaration-accessiblite/": {
+      "filePath": "_public/declaration-accessiblite/index.lazy.tsx",
+      "parent": "/_public"
     },
-    "/_auth/eleve/_inscription/inscription/confirmation/": {
-      "filePath": "_auth/eleve/_inscription/inscription/confirmation/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_public/plan-du-site/": {
+      "filePath": "_public/plan-du-site/index.lazy.tsx",
+      "parent": "/_public"
     },
-    "/_auth/eleve/_inscription/inscription/domaines/": {
-      "filePath": "_auth/eleve/_inscription/inscription/domaines/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/confirmation/": {
+      "filePath": "_main/eleve/_inscription/inscription/confirmation/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/etude/": {
-      "filePath": "_auth/eleve/_inscription/inscription/etude/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/domaines/": {
+      "filePath": "_main/eleve/_inscription/inscription/domaines/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/formations/": {
-      "filePath": "_auth/eleve/_inscription/inscription/formations/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/etude/": {
+      "filePath": "_main/eleve/_inscription/inscription/etude/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/interets/": {
-      "filePath": "_auth/eleve/_inscription/inscription/interets/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/formations/": {
+      "filePath": "_main/eleve/_inscription/inscription/formations/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/metiers/": {
-      "filePath": "_auth/eleve/_inscription/inscription/metiers/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/interets/": {
+      "filePath": "_main/eleve/_inscription/inscription/interets/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/projet/": {
-      "filePath": "_auth/eleve/_inscription/inscription/projet/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/metiers/": {
+      "filePath": "_main/eleve/_inscription/inscription/metiers/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     },
-    "/_auth/eleve/_inscription/inscription/scolarite/": {
-      "filePath": "_auth/eleve/_inscription/inscription/scolarite/index.lazy.tsx",
-      "parent": "/_auth/eleve/_inscription"
+    "/_main/eleve/_inscription/inscription/projet/": {
+      "filePath": "_main/eleve/_inscription/inscription/projet/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
+    },
+    "/_main/eleve/_inscription/inscription/scolarite/": {
+      "filePath": "_main/eleve/_inscription/inscription/scolarite/index.lazy.tsx",
+      "parent": "/_main/eleve/_inscription"
     }
   }
 }

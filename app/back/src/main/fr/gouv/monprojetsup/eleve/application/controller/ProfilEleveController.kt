@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api/v1/profil")
+@RequestMapping("api/v1/auth/profil")
 @RestController
 @Tag(name = "Profil Élève", description = "API des profils des utilisateurs MonProjetSup")
 class ProfilEleveController(

@@ -25,7 +25,6 @@ export const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
       set({
         élémentAffiché,
       });
-      window.location.hash = élémentAffiché.id ?? "";
     },
     changerAfficherBarreLatéraleEnMobile: (afficher: boolean) => {
       set({

@@ -9,7 +9,7 @@ import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class métierHttpRepository implements MétierRepository {
-  private _ENDPOINT = "/api/v1/metiers" as const;
+  private _ENDPOINT = "/api/v1/public/metiers" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 

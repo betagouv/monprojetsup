@@ -7,7 +7,7 @@ export default function useBoutonsActionsMétier({ métier }: useBoutonsActionsM
   const { estMétierFavoriPourÉlève } = useÉlève();
 
   return {
-    estFavori: estMétierFavoriPourÉlève(métier.id),
+    estFavori: métier && estMétierFavoriPourÉlève(métier.id),
     mettreÀJourMétiersÉlève,
   };
 }

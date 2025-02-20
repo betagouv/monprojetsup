@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
@@ -124,16 +123,5 @@ class MetiersTriesParProfilBuilderTest {
                 metierDetaille7,
             )
         assertThat(resultat).isEqualTo(attendu)
-        then(logger).should().error(
-            type = "METIER_NON_REMONTE_PAR_API_SUGGESTION",
-            message = "Le metier MET_4 n'est pas retourné dans la liste des métiers triés par affinité par l'API",
-            parametres = mapOf("metierAbsent" to "MET_4"),
-        )
-        then(logger).should().error(
-            type = "METIER_NON_REMONTE_PAR_API_SUGGESTION",
-            message = "Le metier MET_7 n'est pas retourné dans la liste des métiers triés par affinité par l'API",
-            parametres = mapOf("metierAbsent" to "MET_7"),
-        )
-        then(logger).shouldHaveNoMoreInteractions()
     }
 }

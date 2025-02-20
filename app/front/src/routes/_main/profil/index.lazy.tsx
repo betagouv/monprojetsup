@@ -1,0 +1,6 @@
+import ProfilÉlèvePage from "@/features/élève/ui/ProfilÉlèvePage/ProfilÉlèvePage";
+import { createLazyFileRoute } from "@tanstack/react-router";
+
+export const Route = createLazyFileRoute("/_main/profil/")({
+  component: ProfilÉlèvePage,
+});

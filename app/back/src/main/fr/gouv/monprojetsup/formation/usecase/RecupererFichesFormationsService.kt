@@ -118,8 +118,12 @@ class RecupererFichesFormationsService(
                 idsFormations = idsDesFormationsRetournees,
                 classe = null,
             )
+
         val voeux =
-            recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(idsDesFormationsRetournees, obsoletesInclus)
+            recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
+                idsDesFormationsRetournees,
+                obsoletesInclus,
+            )
         return formations.map { formation ->
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,
@@ -130,11 +134,11 @@ class RecupererFichesFormationsService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                voeux = voeux[formation.id] ?: emptyList(),
                 metiers = metiers[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
                 apprentissage = formation.apprentissage,
+                informationsSurLesVoeuxEtLeursCommunes = recupererInformationsSurLesVoeuxEtLeursCommunes(voeux, formation),
             )
         }
     }

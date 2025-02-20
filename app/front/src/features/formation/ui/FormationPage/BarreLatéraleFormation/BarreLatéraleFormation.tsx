@@ -8,6 +8,7 @@ const BarreLatéraleFormation = ({
   suggestions,
   résultatsDeRecherche,
   chargementEnCours,
+  estPersonnalisé,
 }: BarreLatéraleFormationProps) => {
   if (!suggestions && !résultatsDeRecherche) return null;
 
@@ -17,7 +18,7 @@ const BarreLatéraleFormation = ({
         <div className="[&_.fr-input]:bg-white">
           <RechercheFormations />
         </div>
-        {résultatsDeRecherche?.[0]?.id && <BoutonRetourAuxSuggestions />}
+        {résultatsDeRecherche?.[0]?.id && estPersonnalisé && <BoutonRetourAuxSuggestions />}
       </div>
 
       {chargementEnCours ? (
@@ -25,6 +26,7 @@ const BarreLatéraleFormation = ({
       ) : (
         <ListeFormations
           affichéSurLaPage="ficheFormation"
+          estPersonnalisé={estPersonnalisé}
           formations={résultatsDeRecherche ?? suggestions ?? []}
         />
       )}
