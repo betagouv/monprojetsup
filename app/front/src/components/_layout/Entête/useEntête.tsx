@@ -13,7 +13,6 @@ export default function useEntête() {
   const aUnProfilPermettantUneExpériencePersonnalisée = élève.aUnProfilPermettantUneExpériencePersonnalisée;
 
   const navigation = useMemo((): HeaderProps["navigation"] => {
-
     return [
       {
         text: i18n.NAVIGATION.TABLEAU_DE_BORD,
@@ -53,10 +52,23 @@ export default function useEntête() {
           },
           text: i18n.PAGE_PROFIL.SE_DÉCONNECTER,
         },
+        {
+          iconId: "fr-icon-arrow-go-back-fill",
+          linkProps: {
+            href: environnement.VITE_AVENIRS_URL,
+            className: "after:!content-none",
+          },
+          text: i18n.ENTÊTE.PLATEFORME_AVENIRS,
+        },
+        {
+          iconId: "fr-icon-user-fill",
+          linkProps: {
+            to: "/profil",
+          },
+          text: `${utilisateur.prénom} ${utilisateur.nom}`,
+        },
       ];
-    }
-
-    if (!utilisateur.estAuthentifié) {
+    } else {
       return [
         {
           iconId: "fr-icon-user-fill",
@@ -67,24 +79,6 @@ export default function useEntête() {
         },
       ];
     }
-
-    return [
-      {
-        iconId: "fr-icon-arrow-go-back-fill",
-        linkProps: {
-          href: environnement.VITE_AVENIRS_URL,
-          className: "after:!content-none",
-        },
-        text: i18n.ENTÊTE.PLATEFORME_AVENIRS,
-      },
-      {
-        iconId: "fr-icon-user-fill",
-        linkProps: {
-          to: "/profil",
-        },
-        text: `${utilisateur.prénom} ${utilisateur.nom}`,
-      },
-    ];
   }, [utilisateur]);
 
   return {
