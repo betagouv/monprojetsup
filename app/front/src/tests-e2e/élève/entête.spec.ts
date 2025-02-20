@@ -53,12 +53,13 @@ test.describe("Entête", () => {
       // THEN
       await expect(testhelper.lien(i18n.NAVIGATION.TABLEAU_DE_BORD)).toBeVisible();
       await expect(testhelper.lien(i18n.NAVIGATION.FORMATIONS)).toBeVisible();
-      await expect(testhelper.lien(i18n.NAVIGATION.FAVORIS)).toBeHidden();
+      await expect(testhelper.lien(i18n.NAVIGATION.FAVORIS)).toBeVisible();
       await expect(testhelper.lien(i18n.NAVIGATION.TABLEAU_DE_BORD)).toHaveAttribute(
         "href",
         testhelper.PAGE_TABLEAU_DE_BORD,
       );
       await expect(testhelper.lien(i18n.NAVIGATION.FORMATIONS)).toHaveAttribute("href", testhelper.PAGE_FORMATIONS);
+      await expect(testhelper.lien(i18n.NAVIGATION.FAVORIS)).toHaveAttribute("href", testhelper.PAGE_FAVORIS);
     });
 
     test("Je peux cliquer sur mon nom pour accéder à mon profil", async ({ page }) => {
