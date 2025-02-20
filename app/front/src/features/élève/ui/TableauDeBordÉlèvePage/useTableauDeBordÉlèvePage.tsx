@@ -8,14 +8,35 @@ import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveProgression from "@/features/élève/ui/hooks/useÉlèveProgression/useÉlèveProgression";
 import { Paths } from "@/types/commons";
 import { useAuth } from "react-oidc-context";
+import { getRouteApi } from "@tanstack/react-router";
+import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore"
 
 export default function useTableauDeBordÉlèvePage() {
+  const route = getRouteApi("/_main");
+  const { associationPS } = route.useSearch();
+  const { déclencherToast } = actionsToastStore();
+
   const élève = useÉlève();
   const progression = useÉlèveProgression().récupérerProgression;
   const auth = useAuth();
   const estAuthentifié = auth.isAuthenticated;
   const aAuMoinsUnDomaineFavori = élève.élèveAuMoinsUnDomaineFavori;
   const afficherLesSuggestions = aAuMoinsUnDomaineFavori;
+
+
+  if (associationPS === "ok") {
+    déclencherToast(
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.TITRE,
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.DESCRIPTION,
+      "success",
+    );
+  } else if (associationPS === "erreur") {
+    déclencherToast(
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.TITRE,
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.DESCRIPTION,
+      "error",
+    );
+  }
 
   const result = [];
 
