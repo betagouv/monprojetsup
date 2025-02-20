@@ -85,7 +85,7 @@ test.describe("Formations - Rechercher", () => {
   test("Je peux retourner aux suggestions", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
-    testhelper.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
+    await testhelper.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
 
     // WHEN
     await testhelper.naviguerVersLaPageFormations();

@@ -4,7 +4,6 @@ import { référentielDonnéesQueryOptions } from "@/features/référentielDonn�
 import { type QueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-
 const chargerDonnées = async (queryClient: QueryClient) => {
   await queryClient.ensureQueryData(référentielDonnéesQueryOptions);
 };

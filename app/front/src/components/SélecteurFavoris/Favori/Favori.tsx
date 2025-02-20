@@ -21,7 +21,7 @@ const Favori = ({
       <div>
         {url ? (
           <LienExterne
-            ariaLabel={nom}
+            ariaLabel={nom || "favori"}
             href={url}
             taille="petit"
             variante="simple"

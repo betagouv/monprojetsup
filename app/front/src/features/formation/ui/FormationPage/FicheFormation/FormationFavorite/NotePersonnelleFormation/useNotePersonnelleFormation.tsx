@@ -17,7 +17,7 @@ export default function useNotePersonnelleFormation() {
     if (!élève) return "";
 
     return élève.notesPersonnelles?.find((note) => note.idFormation === formationAffichée.id)?.note ?? "";
-  }, [formationAffichée, élève]);
+  }, [élève, formationAffichée]);
 
   const enregistrerNotePersonnelle = async (event: React.FormEvent<NotePersonnelleFormElement>) => {
     event.preventDefault();

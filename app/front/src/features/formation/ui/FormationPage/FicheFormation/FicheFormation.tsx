@@ -21,8 +21,6 @@ const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
     window.scrollTo({ top: 0 });
   }, [id]);
 
-  if (formation === null) return null;
-
   if (!formation || chargementEnCours) return <AnimationChargement />;
 
   return (

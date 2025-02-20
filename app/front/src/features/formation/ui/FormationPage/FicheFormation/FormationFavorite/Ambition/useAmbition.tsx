@@ -14,7 +14,7 @@ export default function useAmbition() {
     if (!élève) return "";
 
     return élève.ambitions?.find((ambition) => ambition.idFormation === formationAffichée.id)?.ambition ?? null;
-  }, [formationAffichée, élève]);
+  }, [élève, formationAffichée]);
 
   const ambitions: Array<{ niveau: NonNullable<AmbitionFormationÉlève["ambition"]>; emoji: string; libellé: string }> =
     [

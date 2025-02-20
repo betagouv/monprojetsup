@@ -10,7 +10,6 @@ import {
   NonIdentifiéErreurHttp,
   ServeurTemporairementIndisponibleErreurHttp,
 } from "@/services/erreurs/erreursHttp";
-import { ScrollRestoration } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const Erreur = ({ erreur }: ErreurProps) => {
@@ -37,7 +36,6 @@ const Erreur = ({ erreur }: ErreurProps) => {
       <LienÉvitement />
       <Entête />
       <main id="contenu">
-        <ScrollRestoration />
         <Toast />
         <div className="mx-auto my-60 grid gap-2 place-self-center text-center lg:w-[45%]">
           <div

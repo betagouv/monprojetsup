@@ -1,4 +1,5 @@
 import FicheFormation from "./FicheFormation/FicheFormation";
+import Head from "@/components/_layout/Head/Head";
 import ListeEtAperçuBarreLatérale from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuBarreLatérale/ListeEtAperçuBarreLatérale";
 import ListeEtAperçuContenu from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuContenu/ListeEtAperçuContenu";
 import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuLayout";
@@ -8,6 +9,7 @@ import {
   rechercheListeEtAperçuStore,
 } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import BarreLatéraleFormation from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BarreLatéraleFormation";
 import {
@@ -19,8 +21,6 @@ import useMétier from "@/features/métier/ui/useMétier";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
-import Head from "@/components/_layout/Head/Head";
-import { i18n } from "@/configuration/i18n/i18n";
 
 const FormationPage = () => {
   const recherche = rechercheListeEtAperçuStore();
@@ -67,27 +67,27 @@ const FormationPage = () => {
   }
 
   return (
-        <>
+    <>
       <Head titre={i18n.PAGE_FORMATION.TITRE_PAGE} />
-    <ListeEtAperçuLayout>
-      <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
-        <BarreLatéraleFormation
-          chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
-          estPersonnalisé={estPersonnalisé}
-          résultatsDeRecherche={résultatsDeRecherche}
-          suggestions={suggestions}
-        />
-      </ListeEtAperçuBarreLatérale>
-      <ListeEtAperçuContenu>
-        {élémentAffiché.id && (
-          <FicheFormation
-            afficherBoutonFavori
-            id={élémentAffiché.id}
+      <ListeEtAperçuLayout>
+        <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
+          <BarreLatéraleFormation
+            chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
+            estPersonnalisé={estPersonnalisé}
+            résultatsDeRecherche={résultatsDeRecherche}
+            suggestions={suggestions}
           />
-        )}
-      </ListeEtAperçuContenu>
-    </ListeEtAperçuLayout>
-        </>
+        </ListeEtAperçuBarreLatérale>
+        <ListeEtAperçuContenu>
+          {élémentAffiché.id && (
+            <FicheFormation
+              afficherBoutonFavori
+              id={élémentAffiché.id}
+            />
+          )}
+        </ListeEtAperçuContenu>
+      </ListeEtAperçuLayout>
+    </>
   );
 };
 

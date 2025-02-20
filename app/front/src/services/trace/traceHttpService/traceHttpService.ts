@@ -12,7 +12,7 @@ export type Trace = {
 };
 
 export class TraceHttpService implements TraceService {
-  private readonly _ENDPOINT = "/api/v1/auth/trace" as const;
+  private readonly _ENDPOINT = "/api/v1/auth/trace";
 
   public constructor(private readonly _mpsApiHttpClient: IMpsApiHttpClient) {}
 

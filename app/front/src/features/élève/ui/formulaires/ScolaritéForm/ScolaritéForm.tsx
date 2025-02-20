@@ -15,7 +15,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
   const { mettreÀJourÉlève, erreurs, register, classeOptions, bacOptions, valeurBac, spécialitésBac } =
     useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
-  useEffect(() => {}, [register, élève]);
+  useEffect(() => {}, [élève, register]);
 
   if (!élève) return <AnimationChargement />;
 

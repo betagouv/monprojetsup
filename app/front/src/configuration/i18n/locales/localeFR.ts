@@ -3,7 +3,7 @@ const pages = {
   FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
   GESTION_COOKIES: "Gestion des cookies",
-  EXPLORATION: "Les formations"
+  EXPLORATION: "Les formations",
 } as const;
 
 const app = {
@@ -364,7 +364,7 @@ export const localeFR = {
     },
     TABLEAU_DE_BORD: {
       TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
-      TITRE_DECONNECTE: "",
+      TITRE_DECONNECTE: "C'est parti!",
       MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
       MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
       MODALE_PARCOURSUP: {

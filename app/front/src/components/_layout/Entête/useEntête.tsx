@@ -38,7 +38,7 @@ export default function useEntête() {
         className: aUnProfilPermettantUneExpériencePersonnalisée ? "hidden" : "",
       },
     ];
-  }, [aUnProfilPermettantUneExpériencePersonnalisée, afficherFavoris]);
+  }, [afficherFavoris, aUnProfilPermettantUneExpériencePersonnalisée]);
 
   const accèsRapides = useMemo((): HeaderProps["quickAccessItems"] => {
     if (utilisateur.estAuthentifié) {

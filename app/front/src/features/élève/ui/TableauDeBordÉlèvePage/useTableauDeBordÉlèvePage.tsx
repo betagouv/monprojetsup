@@ -2,14 +2,14 @@ import avenirsSVG from "@/assets/avenirs.svg";
 import explorerSVG from "@/assets/explorer.svg";
 import favorisSVG from "@/assets/favoris.svg";
 import profilSVG from "@/assets/profil.svg";
+import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveProgression from "@/features/élève/ui/hooks/useÉlèveProgression/useÉlèveProgression";
 import { Paths } from "@/types/commons";
-import { useAuth } from "react-oidc-context";
 import { getRouteApi } from "@tanstack/react-router";
-import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore"
+import { useAuth } from "react-oidc-context";
 
 export default function useTableauDeBordÉlèvePage() {
   const route = getRouteApi("/_main");
@@ -22,7 +22,6 @@ export default function useTableauDeBordÉlèvePage() {
   const estAuthentifié = auth.isAuthenticated;
   const aAuMoinsUnDomaineFavori = élève.élèveAuMoinsUnDomaineFavori;
   const afficherLesSuggestions = aAuMoinsUnDomaineFavori;
-
 
   if (associationPS === "ok") {
     déclencherToast(

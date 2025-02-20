@@ -48,7 +48,7 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
       alternance: "indifferent",
       communesFavorites: [],
       duréeÉtudesPrévue: "courte",
-      formations: ["fl1","fl2"],
+      formations: ["fl1", "fl2"],
       voeuxFavoris: [],
       formationsMasquées: [],
       ambitions: [],
@@ -57,8 +57,6 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
 
     await this.initialiserProfilÉlèveParDéfaut({ ...profilÉlèveParDéfaut, ...profilÉlève });
   };
-
-
 
   public simulerSessionDéconnectée() {
     /*
@@ -96,7 +94,6 @@ export class ÉlèveTestHelper extends GlobalTestHelper {
     },
     signoutRedirect: vi.fn(),
   }),
-}));  */ 
+}));  */
   }
-
 }
