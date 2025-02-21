@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
@@ -152,12 +153,18 @@ public class AffinityEvaluator {
 
     /**
      * computes affinity
-     * @param fl key
+     *
+     * @param fl                   key
      * @param inclureDetailsScores include scores details in result
+     * @param affiniteNaiveBayes  naive bayes affinity
      * @return affinity
      */
-    public Affinite getAffinityEvaluation(String fl, boolean inclureDetailsScores) {
-        return getAffinityAndExplanations(fl, null, null, inclureDetailsScores);
+    public Affinite getAffinityEvaluation(
+            String fl,
+            boolean inclureDetailsScores,
+            @Nullable Map<String,Double> subScores
+    ) {
+        return getAffinityAndExplanations(fl, null, null, inclureDetailsScores, subScores);
     }
 
 
@@ -193,7 +200,7 @@ public class AffinityEvaluator {
         var sortedExpl = new Explanations();
 
         //the computation
-        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, includeScores);
+        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, includeScores, null);
 
         if (includeScores) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
@@ -238,14 +245,15 @@ public class AffinityEvaluator {
      *
      * @param fl      la filière considérée
      * @param expl    les explications, à compléter si expl != null
-     * @param subScores used to get debug info about what matched and how
+     * @param detailedsubScoresReceiver used to get debug info about what matched and how
      * @return the score
      */
     private Affinite getAffinityAndExplanations(
             String fl,
             Explanations expl,
-            @Nullable Map<String, Double> subScores,
-            boolean includeScores
+            @Nullable Map<String, Double> detailedsubScoresReceiver,
+            boolean includeScores,
+            @Nullable Map<String,Double> scoresFromSuggestion2
             ) {
 
         if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
@@ -274,6 +282,9 @@ public class AffinityEvaluator {
         if (!process) return Affinite.getNoMatch();
 
         if(isFiliere(fl)) {
+            if(affinityNaiveBayes != null) {
+                scores.put(Config.BONUS_NAIVE_BAYES, affinityNaiveBayes.affinite());
+            }
             scores.putAll(Map.ofEntries(
                     entry(Config.BONUS_GEO, getBonusGeographicAffinity(fl, expl)),
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl)),
@@ -293,8 +304,8 @@ public class AffinityEvaluator {
         double score = aggregateScores(scores);
 
         //put interests in expl, if required
-        if (subScores != null && cfg.isVerbose()) {
-            subScores.putAll(scores.entrySet().stream()
+        if (detailedsubScoresReceiver != null && cfg.isVerbose()) {
+            detailedsubScoresReceiver.putAll(scores.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 

@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import jakarta.annotation.PostConstruct;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -174,16 +176,17 @@ public class AlgoSuggestions {
     /**
      * Get affinities associated to a profile.
      *
-     * @param pf            the profile
-     * @param cfg           the config
-     * @param inclureScores if true, the scores are included in the result
+     * @param pf                  the profile
+     * @param cfg                 the config
+     * @param inclureScores       if true, the scores are included in the result
+     * @param affinitesNaiveBayes
      * @return the affinities
      */
     public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
-            boolean inclureScores
-    ) {
+            boolean inclureScores,
+            List<Affinity> affinitesNaiveBayes) {
         counter.getAndIncrement();
         if (containsNothingPersonal(pf)) {
             return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
@@ -191,11 +194,17 @@ public class AlgoSuggestions {
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true);
 
+        val affinitesNaiveBayesParCle = affinitesNaiveBayes.stream().collect(Collectors.toMap(Affinity::key, a -> a));
+
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
                         .collect(Collectors.toMap(
                                 fl -> fl,
-                                fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
+                                fl -> affinityEvaluator.getAffinityEvaluation(
+                                        fl,
+                                        inclureScores,
+                                        affinitesNaiveBayesParCle.containsKey(fl) ? Map.of(BONUS_NAIVE_BAYES, affinitesNaiveBayesParCle.get(fl)) : null
+                                )
                         ));
 
         //scaling scores with respect to maximal score
@@ -219,11 +228,12 @@ public class AlgoSuggestions {
      */
     public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
-            boolean inclureScores) {
+            boolean inclureScores,
+            List<Affinity> affinitesNaiveBayes) {
 
 
         List<Pair<String, Affinite> > affinities = new ArrayList<>(
-                getFormationsAffinities(pf, data.getConfig(), inclureScores)
+                getFormationsAffinities(pf, data.getConfig(), inclureScores, affinitesNaiveBayes)
         );
         Collections.shuffle(affinities);
         affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));

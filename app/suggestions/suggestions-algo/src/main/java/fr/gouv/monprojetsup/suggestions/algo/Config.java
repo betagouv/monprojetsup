@@ -71,7 +71,8 @@ public final class Config {
             entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
-            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
+            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI),
+            entry(BONUS_NAIVE_BAYES, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES)
     ));
 
     public static final String BONUS_APPRENTISSAGE = "app";
@@ -83,6 +84,8 @@ public final class Config {
     public static final String BONUS_TYPE_BAC = "typebac";
     public static final String BONUS_SPECIALITE = "spec";
     public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
+    public static final String BONUS_NAIVE_BAYES = "naive_bayes";
+
     public static final double NO_MATCH_SCORE = 0.0;
 
     public static final double FULL_MATCH_MULTIPLIER = 1.0;
@@ -96,7 +99,8 @@ public final class Config {
             BONUS_VOEU_FAVORI,"voeu favori",
             BONUS_TYPE_BAC,"type de bac",
             BONUS_APPRENTISSAGE,"preférences apprentissage",
-            BONUS_GEO,"préférences géographiques"
+            BONUS_GEO,"préférences géographiques",
+            BONUS_NAIVE_BAYES, "adéquation aux données de référence"
             );
 
     static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
@@ -109,6 +113,7 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
+    static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-03;
 
 
     @JsonIgnore
