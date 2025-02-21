@@ -2,9 +2,6 @@ name: (Suggestions2) Pytest
 
 on:
   workflow_call:
-    secrets:
-      DATA_REPOSITORY:
-        required: true
 
 env:
   WORKING_DIRECTORY: ./app/suggestions2
