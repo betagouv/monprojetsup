@@ -1,0 +1,13 @@
+name: Pull Request Suggestions
+
+on:
+  pull_request:
+    paths:
+      - 'app/suggestions2/**'
+      - '.github/**'
+
+jobs:
+
+  checkSuggestions2:
+    name: Suggestions2
+    uses: ./.github/workflows/suggestions2.yml
