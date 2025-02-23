@@ -72,7 +72,7 @@ public final class Config {
     public static final double FULL_MATCH_MULTIPLIER = 1.0;
 
     public static final Map<String,String> BONUS_LABELS = Map.of(
-            BONUS_TAGS,"proximité intérêts et favoris",
+            BONUS_TAGS,"proximité intérêts et favoris (graphe)",
             BONUS_SPECIALITE,"EDS",
             BONUS_SPECIALITE_BAC_PRO, "spécialité",
             BONUS_DURATION,"durée",
