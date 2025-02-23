@@ -27,6 +27,10 @@ jobs:
     secrets:
       DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"
       
+  checkSuggestions2: 
+    name: Suggestions2
+    uses: ./.github/workflows/suggestions2.yml
+      
   pushToOnisep: 
     name: ONISEP Repository
     needs: [checkFrontend, checkBackend, checkEtl, checkSuggestions]

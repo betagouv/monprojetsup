@@ -1,0 +1,32 @@
+name: (Suggestions2) Pytest
+
+on:
+  workflow_call:
+
+env:
+  WORKING_DIRECTORY: ./app/suggestions2
+
+jobs:
+  pytest:
+    name: python
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Setup and activate venv
+        run: |
+          uv venv
+          source .venv/bin/activate
+      - name: Set up Python
+        run: uv python install
+      - name: Install the project
+        run: |
+          uv pip install -r requirements.txt
+          uv pip install -r dev-requirements.txt
+      - name: Run tests
+        run: uv run pytest
+
