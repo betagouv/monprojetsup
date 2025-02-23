@@ -81,7 +81,7 @@ public final class Config {
             BONUS_TYPE_BAC,"type de bac",
             BONUS_APPRENTISSAGE,"preférences apprentissage",
             BONUS_GEO,"préférences géographiques",
-            BONUS_NAIVE_BAYES, "profils de référence (NaiveBayes)"
+            BONUS_NAIVE_BAYES, "proximité profils de référence (NaiveBayes)"
     );
 
     static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
