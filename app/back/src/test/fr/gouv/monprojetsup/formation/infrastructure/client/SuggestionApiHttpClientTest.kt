@@ -650,7 +650,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -796,7 +796,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -814,7 +814,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",
@@ -941,7 +941,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -959,7 +959,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",
@@ -1098,7 +1098,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -1116,7 +1116,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",

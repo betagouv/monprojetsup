@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.logging
+package fr.gouv.monprojetsup.suggestions.server.logging
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException

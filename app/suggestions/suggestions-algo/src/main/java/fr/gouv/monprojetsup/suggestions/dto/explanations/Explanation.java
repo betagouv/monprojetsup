@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -51,8 +52,6 @@ record ExplanationSimilarity(String id, double p) {}
 
 record ExplanationTypeBac (int percentage, String bac) {}
 
-record ExplanationNotes(double moy, Middle50 middle50, String bacUtilise) {}
-
 record ExplanationDebug (String expl) {}
 
 record ExplanationSpecialite (String spe, int pct) {}
@@ -72,9 +71,9 @@ public class Explanation {
     @Nullable ExplanationDuration dur;
     @Nullable ExplanationSimilarity simi;
     @Nullable ExplanationTypeBac tbac;
-    @Nullable ExplanationNotes moygen;
     @Nullable ExplanationDebug debug;
     @Nullable ExplanationSpecialites spec;
+    @Nullable NaivesBayesExplanation ref;
 
     public static @NotNull Explanation getGeoExplanation(@Nullable List<ExplanationGeo> result) {
         Explanation e = new Explanation();
@@ -114,12 +113,6 @@ public class Explanation {
     }
 
 
-    public static @NotNull Explanation getNotesExplanation(double moy, Middle50 middle50, String bac) {
-        Explanation e = new Explanation();
-        e.moygen = new ExplanationNotes(moy, middle50, bac);
-        return e;
-    }
-
     public static @NotNull Explanation getDebugExplanation(String debug) {
         Explanation e = new Explanation();
         e.debug = new ExplanationDebug(debug);
@@ -148,7 +141,6 @@ public class Explanation {
         if(dur != null) sb.append("Durée: ").append(dur.option()).append("\n");
         if(simi != null) sb.append("Similarité: ").append(simi.id()).append("\n");
         if(tbac != null) sb.append("Type de bac: ").append(tbac).append("\n");
-        if(moygen != null) sb.append("Moyenne générale: ").append(moygen).append("\n");
         if(spec != null) sb.append("Spécialités: ").append(spec).append("\n");
         if(debug != null) sb.append(debug.expl()).append("\n");
         return sb.toString();
@@ -163,7 +155,6 @@ public class Explanation {
         if(dur != null) sb.append("dur=").append(dur).append("\n");
         if(simi != null) sb.append("simi=").append(simi).append("\n");
         if(tbac != null) sb.append("tbac=").append(tbac).append("\n");
-        if(moygen != null) sb.append("moygen=").append(moygen).append("\n");
         if(debug != null && !debug.expl().startsWith("Pas de")) sb.append(debug.expl()).append("\n");
         if(spec != null) sb.append("spec=").append(spec).append("\n");
         return sb.toString();

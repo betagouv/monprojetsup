@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class AlgoConfigurationService(
+
     @Value("\${mps.suggestions.dynamic_parameter_service.enabled}")
     val enabled: Boolean,
+
     private val algo: AlgoSuggestions,
     ) {
 

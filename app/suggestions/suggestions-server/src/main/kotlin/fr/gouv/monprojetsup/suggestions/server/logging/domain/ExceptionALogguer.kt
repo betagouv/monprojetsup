@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.logging.domain
+package fr.gouv.monprojetsup.suggestions.server.logging.domain
 
 data class ExceptionALogguer(
     val statusCode: Int,

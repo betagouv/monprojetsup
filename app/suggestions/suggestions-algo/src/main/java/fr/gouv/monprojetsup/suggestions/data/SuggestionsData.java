@@ -88,6 +88,7 @@ public class SuggestionsData {
             // Fetch the latest config from a database, external service, or file
             val activeConfig = configPort.retrieveActiveConfig();
             if (activeConfig != null && activeConfig.isViable()) {
+                activeConfig.fix();
                 this.config = activeConfig;
             }
         }
@@ -95,6 +96,7 @@ public class SuggestionsData {
 
     public void setConfig(@NotNull Config config) {
         synchronized (this) {
+            config.fix();
             this.config = config;
             configPort.setActiveConfig(config);
         }
@@ -103,10 +105,6 @@ public class SuggestionsData {
 
     public @NotNull String getLabel(@NotNull String key) {
         return labelsPort.retrieveLabel(key).orElse(key);
-    }
-
-    public @NotNull String getDebugLabel(@NotNull String key) {
-        return labelsPort.retrieveDebugLabel(key).orElse(key);
     }
 
     public @NotNull Map<String, String> getLabels() {

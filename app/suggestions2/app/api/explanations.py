@@ -1,10 +1,12 @@
 from prometheus_client import Histogram
 
 from app.api.types import (
+    ExplanationAndExamples,
     Explanation,
     ExplanationRequestBody,
     ExplanationRequestResponse,
     NaivesBayesExplanation,
+    NaivesBayesExplanationDetail,
 )
 from app.data_types import Basket
 from app.naive_bayes.matrix import NaiveBayesMatrix
@@ -27,21 +29,29 @@ def compute_explanations(
             Basket.from_request_profile(request_body.profile),
             request_body.keys,
         )
-
-        explanations = [
-            Explanation(
+        liste = [
+            ExplanationAndExamples(
                 key=f,
-                popularity=popularity[f],
-                profile=[
-                    NaivesBayesExplanation(item_key=item, score=score, side=side)
-                    for (
-                        (item, side),
-                        score,
-                    ) in scores.items()
+                affinity=popularity[f],
+                metiers=[],
+                explanations=[
+                    Explanation(
+                        ref=NaivesBayesExplanation(
+                            details=[
+                                NaivesBayesExplanationDetail(
+                                    item_key=item, score=score, side=side
+                                )
+                                for (
+                                    (item, side),
+                                    score,
+                                ) in scores.items()
+                            ],
+                        ),
+                    )
                 ],
             )
             for (f, scores) in profile_explanations.items()
         ]
-        response = ExplanationRequestResponse(liste=explanations)
+        response = ExplanationRequestResponse(liste=liste)
 
         return response

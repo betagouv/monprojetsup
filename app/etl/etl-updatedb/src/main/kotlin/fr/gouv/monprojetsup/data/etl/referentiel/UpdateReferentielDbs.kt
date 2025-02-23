@@ -92,7 +92,7 @@ class UpdateReferentielDbs(
     }
 
     private fun updateSpecialiteDb() {
-        val specialites = mpsDataPort.getSpecialites().toSpecialites()
+        val specialites = mpsDataPort.getSpecialites().toSpecialitesList()
         batchUpdate.upsertEntities(
             specialites.map { matiere ->
                 SpecialiteEntity().apply {

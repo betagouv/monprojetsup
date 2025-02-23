@@ -5,8 +5,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
-import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
-import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
@@ -34,6 +33,7 @@ import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.data.Constants.isMetier;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
@@ -44,6 +44,7 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_SCORE_PATH_LENGTH
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MIN_SPEC_PCT_FOR_EXP;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MULTIPLIER_FOR_NOSTATS_BAC;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation.getDebugExplanation;
 import static java.util.Map.entry;
 
 /**
@@ -86,12 +87,13 @@ public class AffinityEvaluator {
     /* precomputed pathes to interests */
     private final Map<String, List<Path>> pathesFromTagsIndexedByTarget;
 
+    private final boolean includeDetailedExplanations;
 
-
-    public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo, boolean excludeRejected) {
+    public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo, boolean excludeRejected, boolean includeDetailedExplanations) {
         this.cfg = cfg;
         this.pf = pf;
         this.algo = algo;
+        this.includeDetailedExplanations = includeDetailedExplanations;
 
         String pfBac = pf.bac();
         if(pfBac == null || pfBac.isBlank()) pfBac = TOUS_BACS_CODE_MPS;
@@ -156,13 +158,13 @@ public class AffinityEvaluator {
      *
      * @param fl                   key
      * @param inclureDetailsScores include scores details in result
-     * @param affiniteNaiveBayes  naive bayes affinity
+     * @param subScores          used to get debug info about what matched and how
      * @return affinity
      */
     public Affinite getAffinityEvaluation(
             String fl,
             boolean inclureDetailsScores,
-            @Nullable Map<String,Double> subScores
+            @NotNull Map<String,DataSuggestions2> subScores
     ) {
         return getAffinityAndExplanations(fl, null, null, inclureDetailsScores, subScores);
     }
@@ -179,6 +181,10 @@ public class AffinityEvaluator {
             explanations.add(expl);
         }
 
+        public void addAll(List<Explanation> expl) {
+            explanations.addAll(expl);
+        }
+
     }
 
 
@@ -189,55 +195,78 @@ public class AffinityEvaluator {
     /**
      * get explanations, including debug explanations if needed
      * @param fl key
-     * @return list of explanations
+     * @param dataSuggestions2 used to get debug info about what matched and how
      */
-    public Pair<List<Explanation>, Double> getExplanations(String fl) {
+    public Pair<List<Explanation>, @NotNull Double> getExplanationsAndAffinity(
+            String fl,
+            @Nullable DataSuggestions2 dataSuggestions2
+    ) {
 
         //en verbose mode, on récupère également les interests
-        boolean includeScores = cfg.isVerbose();
-        TreeMap<String, Double> subScores = includeScores ? new TreeMap<>() : null;
+        TreeMap<String, Double> subScores = includeDetailedExplanations ? new TreeMap<>() : null;
 
         var sortedExpl = new Explanations();
 
         //the computation
-        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, includeScores, null);
+        Affinite affinite = getAffinityAndExplanations(
+                fl,
+                sortedExpl,
+                subScores,
+                includeDetailedExplanations,
+                dataSuggestions2 != null
+                        ? Map.of(BONUS_NAIVE_BAYES, dataSuggestions2)
+                        : Map.of()
+        );
 
-        if (includeScores) {
-            List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
-
-            //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
-
-            StringBuilder calculScoreDetails = new StringBuilder();
-            calculScoreDetails.append("Score Total pour ").append(fl).append(" :");
-            calculScoreDetails.append(df2.format(affinite.affinite()));
-            calculScoreDetails.append(" obtenu comme le produit de [ ");
-
-            List<Map.Entry<String, Double>> entries = new ArrayList<>(subScores.entrySet());
-            entries.sort(Comparator.comparing(e -> -e.getValue()));
-            entries.forEach(e -> {
-                val key = e.getKey();
-                double weight = cfg.getMinMultipliers().get(key);
-                val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
-                expl2.add(Explanation.getDebugExplanation(
-                        label
-                                + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
-                ));
-                calculScoreDetails.append(" ");
-                calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
-                calculScoreDetails.append(" (");
-                calculScoreDetails.append(label);
-                calculScoreDetails.append(") , ");
-            });
-            calculScoreDetails.append(" ]");
-
-            expl2.add(Explanation.getDebugExplanation("Scores de diversité: " + affinite.scoresDiversiteResultats()));
-            expl2.add(Explanation.getDebugExplanation(calculScoreDetails.toString()));
-
-            sortedExpl = new Explanations(expl2);
+        if (includeDetailedExplanations) {
+            sortedExpl = appendScoreDetails(fl, affinite, sortedExpl, subScores, dataSuggestions2);
         }
         return Pair.of(sortedExpl.explanations, affinite.affinite());
     }
 
+    private Explanations appendScoreDetails(
+            String fl,
+            Affinite affinite,
+            Explanations sortedExpl,
+            TreeMap<String, Double> subScores,
+            @Nullable DataSuggestions2 dataSuggestions2) {
+        List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
+
+        StringBuilder calculScoreDetails = new StringBuilder();
+        calculScoreDetails.append("Score Total pour ").append(fl).append(" :");
+        calculScoreDetails.append(df2.format(affinite.affinite()));
+        calculScoreDetails.append(" obtenu comme le produit de [ ");
+
+        List<Map.Entry<String, Double>> entries = new ArrayList<>(subScores.entrySet());
+        entries.sort(Comparator.comparing(e -> -e.getValue()));
+        entries.forEach(e -> {
+            val key = e.getKey();
+            double weight = cfg.getMinMultipliers().get(key);
+            val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
+            expl2.add(getDebugExplanation(
+                    label
+                            + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
+            ));
+            calculScoreDetails.append(" ");
+            calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+            calculScoreDetails.append(" (");
+            calculScoreDetails.append(label);
+            calculScoreDetails.append(") , ");
+        });
+        calculScoreDetails.append(" ]");
+        expl2.add(getDebugExplanation("Scores de diversité: " + affinite.scoresDiversiteResultats()));
+        expl2.add(getDebugExplanation(calculScoreDetails.toString()));
+
+        if(dataSuggestions2 != null && dataSuggestions2.explanations() != null) {
+            expl2.addAll(
+                    dataSuggestions2.explanations().explanations().stream()
+                            .map(Explanation::getRef).filter(Objects::nonNull)
+                            .map(e -> getDebugExplanation(e.toDebugString(algo.getDebugLabels())))
+                            .toList()
+            );
+        }
+        return new Explanations(expl2);
+    }
 
 
     /**
@@ -245,15 +274,15 @@ public class AffinityEvaluator {
      *
      * @param fl      la filière considérée
      * @param expl    les explications, à compléter si expl != null
-     * @param detailedsubScoresReceiver used to get debug info about what matched and how
+     * @param detailedSubScoresReceiver used to get debug info about what matched and how
      * @return the score
      */
     private Affinite getAffinityAndExplanations(
             String fl,
             Explanations expl,
-            @Nullable Map<String, Double> detailedsubScoresReceiver,
+            @Nullable Map<String, Double> detailedSubScoresReceiver,
             boolean includeScores,
-            @Nullable Map<String,Double> scoresFromSuggestion2
+            @NotNull Map<String, DataSuggestions2> subScoresFromSuggestion2
             ) {
 
         if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
@@ -282,9 +311,6 @@ public class AffinityEvaluator {
         if (!process) return Affinite.getNoMatch();
 
         if(isFiliere(fl)) {
-            if(affinityNaiveBayes != null) {
-                scores.put(Config.BONUS_NAIVE_BAYES, affinityNaiveBayes.affinite());
-            }
             scores.putAll(Map.ofEntries(
                     entry(Config.BONUS_GEO, getBonusGeographicAffinity(fl, expl)),
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl)),
@@ -300,12 +326,18 @@ public class AffinityEvaluator {
         } else {
             scores.put(Config.BONUS_SPECIALITE, getBonusSpecialites(fl, expl));
         }
+        subScoresFromSuggestion2.forEach((id, data) -> {
+            scores.put(id, data.affinity());
+            if(expl != null && data.explanations() != null) {
+                expl.addAll(data.explanations().explanations());
+            }
+        });
 
         double score = aggregateScores(scores);
 
         //put interests in expl, if required
-        if (detailedsubScoresReceiver != null && cfg.isVerbose()) {
-            detailedsubScoresReceiver.putAll(scores.entrySet().stream()
+        if (detailedSubScoresReceiver != null && includeDetailedExplanations) {
+            detailedSubScoresReceiver.putAll(scores.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
@@ -334,7 +366,8 @@ public class AffinityEvaluator {
 
     private double getMultiplier(String key, Double value) {
         val minMultiplier = cfg.getMinMultipliers().get(key);
-        if (minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
+        if (minMultiplier == null)
+            throw new RuntimeException("Unknown key:" + key);
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;
     }
@@ -498,13 +531,11 @@ public class AffinityEvaluator {
             /* on regroupe les chemins en gardant juste la première node
             qui est l'élément d'accroche du profil
              */
-            if(cfg.isVerbose()) {
+            if(includeDetailedExplanations) {
                 String msg = getTagSubScoreExplanation(score, subscores);
-                expl.add(Explanation.getDebugExplanation(msg));
-                if(cfg.isVeryVerbose()) {
-                    //on inclut tous les chemins
-                    expl.add(Explanation.getDebugExplanation(pathes.stream().map(Path::toString).collect(Collectors.joining(" , "))));
-                }
+                expl.add(getDebugExplanation(msg));
+                //on inclut tous les chemins
+                expl.add(getDebugExplanation(pathes.stream().map(Path::toString).collect(Collectors.joining(" , "))));
             }
             expl.add(Explanation.getTagExplanationShort(pathes));
             pathes.stream()
@@ -561,8 +592,8 @@ public class AffinityEvaluator {
             }
         });
         if (stats.isEmpty()) {
-            if (expl != null && cfg.isVerbose())
-                expl.add(Explanation.getDebugExplanation("Aucune des spécialités ne correspond"));
+            if (expl != null && includeDetailedExplanations)
+                expl.add(getDebugExplanation("Aucune des spécialités ne correspond"));
             return NO_MATCH_SCORE;
         }
         double score = stats.values().stream().mapToDouble(x -> x).sum();
@@ -611,21 +642,23 @@ public class AffinityEvaluator {
 
     }
 
-    public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
-        final Set<String> candidates = new HashSet<>(algo.getAllCandidatesMetiers(key));
+    public ExplanationAndExamples getExplanationsAndExamples(
+            String key,
+            @Nullable DataSuggestions2 dataSuggestions2
+    ) {
+        val exemplesMetiersTriesParPertinence = getCandidatesOrderedByPertinence(algo.getAllCandidatesMetiers(key));
 
-        List<String> examples = getCandidatesOrderedByPertinence(candidates);
-
-        List<Explanation> explanations;
+        Pair<List<Explanation>, @NotNull Double> explanations;
         if (isFiliere(key)) {
-            explanations = getExplanations(key).getLeft();
+            explanations = getExplanationsAndAffinity(key, dataSuggestions2);
         } else {
-            explanations = List.of();
+            explanations = Pair.of(List.of(), NO_MATCH_SCORE);
         }
-        return new GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples(
+        return new ExplanationAndExamples(
                 key,
-                explanations,
-                examples
+                explanations.getRight(),
+                explanations.getLeft(),
+                exemplesMetiersTriesParPertinence
         );
     }
 

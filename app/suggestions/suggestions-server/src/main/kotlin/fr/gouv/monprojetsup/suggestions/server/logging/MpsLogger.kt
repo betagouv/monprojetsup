@@ -1,8 +1,8 @@
-package fr.gouv.monprojetsup.logging
+package fr.gouv.monprojetsup.suggestions.server.logging
 
-import fr.gouv.monprojetsup.logging.domain.ExceptionALogguer
-import fr.gouv.monprojetsup.logging.domain.ReponseALogguer
 import fr.gouv.monprojetsup.suggestions.server.commun.exceptions.MPSExceptions
+import fr.gouv.monprojetsup.suggestions.server.logging.domain.ExceptionALogguer
+import fr.gouv.monprojetsup.suggestions.server.logging.domain.ReponseALogguer
 import net.logstash.logback.argument.StructuredArguments.kv
 import org.slf4j.Logger
 import org.springframework.stereotype.Component

@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.suggestions.server.commun.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import fr.gouv.monprojetsup.logging.MpsLogger
 import fr.gouv.monprojetsup.suggestions.server.commun.exceptions.MPSInternalErrorException
+import fr.gouv.monprojetsup.suggestions.server.logging.MpsLogger
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request

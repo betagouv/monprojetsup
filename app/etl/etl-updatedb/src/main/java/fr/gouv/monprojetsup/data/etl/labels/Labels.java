@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.labels;
 
 import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.model.psup.PsupData;
@@ -8,6 +9,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -129,25 +131,28 @@ public class Labels {
 
     public static Map<String,@NotNull String> getLabels(
             PsupData psupData,
-            OnisepData oniData) {
+            OnisepData oniData,
+            @NotNull List<Specialite> specialites) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, false));
         result.putAll(getFormationsLabels(oniData, false));
         result.putAll(oniData.getMetiersLabels(false));
         result.putAll(oniData.interets().getLabels(false));
         result.putAll(oniData.getDomainesLabels(false));
+        specialites.forEach(spe -> result.put(spe.idMps(), spe.label()));
         return result;
     }
 
 
     @NotNull
-    public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData) {
+    public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData, @NotNull List<Specialite> specialites) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, true));
         result.putAll(getFormationsLabels(oniData, true));
         result.putAll(oniData.getMetiersLabels(true));
         result.putAll(oniData.interets().getLabels(true));
         result.putAll(oniData.getDomainesLabels(true));
+        specialites.forEach(spe -> result.put(spe.idMps(), spe.label() + "(" + spe.idMps()+ ")"));
         return result;
 
     }

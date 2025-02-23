@@ -37,9 +37,4 @@ open class LabelsRepository(
         return repo.findById(id).map { it.label }
     }
 
-    @Transactional(readOnly = true)
-    override fun retrieveDebugLabel(id: String): Optional<String> {
-        return repo.findById(id).map { (it.labelDebug ?: it.label) }
-    }
-
 }
