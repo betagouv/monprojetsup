@@ -47,6 +47,7 @@ data class SuggestionsScenario(
     val name: String,
     val profil: ProfileDTO
 )
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -144,11 +145,5 @@ class SuggestionsControllersTest(
         // définir un contexte pour chaque type de suggestions dans la quelle l'explanation est attendue
     }
 
-    @Nested
-    inner class `Quand on appelle la route des formations of interest` {
-        // TODO
-        // définir un contexte de préférences géographiques qui génère une foi de référence
-        // exemple préférence Bordeaux et foi est la licence informatique de bordeaux
-    }
 
 }
