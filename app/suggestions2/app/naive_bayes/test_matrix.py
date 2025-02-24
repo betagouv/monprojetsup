@@ -114,7 +114,7 @@ def test_explanations() -> None:
     matrix.fit(dataset)
 
     s = student_from_indices("s5", [], targets, [0, 1], [2], features)
-    expl, _ = matrix.explain(s.basket, ["fa", "ma"])
+    expl, popularity = matrix.explain(s.basket, ["fa", "ma"])
 
     assert "fa" in expl
     assert "ma" in expl
@@ -122,3 +122,8 @@ def test_explanations() -> None:
     assert expl["fa"][("f1", "positive")] < expl["ma"][("f1", "positive")]
     assert expl["fa"][("m1", "positive")] < expl["ma"][("m1", "positive")]
     assert expl["fa"][("d1", "negative")] > expl["ma"][("d1", "negative")]
+
+    assert "fa" in popularity
+    assert "ma" in popularity
+
+    assert popularity["fa"] < popularity["ma"]
