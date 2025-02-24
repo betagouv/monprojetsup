@@ -127,17 +127,17 @@ def compute_explanation_matrix(matrix: pd.DataFrame) -> Tuple[pd.DataFrame, pd.S
     """
     Computes the "explanation scores" matrix of the given naive bayes matrix.
 
-    This matrix contains the log conditional probabilities of the naive bayes matrix,
+    This matrix contains the log2 conditional probabilities of the naive bayes matrix,
     centered relative to the average, for each feature.
     Therefore, for a given target `t`, this number for feature `f` is larger than 0
     when P(f|t) is greater than the geometric mean of the P(f|t') over all t,
     and smaller otherwise.
     """
-    bias_row: pd.Series[float] = matrix.loc["bias"]  # type: ignore
+    bias_row: pd.Series[float] = np.log2(matrix.loc["bias"])  # type: ignore
     bias_row = bias_row - bias_row.mean()
 
     matrix = matrix.drop(["bias"], axis=0, inplace=False)
-    log_probs: pd.DataFrame = np.log(matrix)  # type: ignore
+    log_probs: pd.DataFrame = np.log2(matrix)  # type: ignore
     log_probs = log_probs.apply(lambda row: row - row.mean(), axis=1)  # type: ignore
     return log_probs, bias_row
 
