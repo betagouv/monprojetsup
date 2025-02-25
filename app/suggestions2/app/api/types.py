@@ -125,7 +125,7 @@ class NaivesBayesExplanationDetail(BaseModel):
         examples=[-0.12345, 1.78253],
     )
     side: Literal["positive", "negative"] = Field(
-        description="indique si l'item a influé positivement ou négativement pour ce profil."
+        description='"positive" : l\'item est dans le profil de l\'utilisateur. "negative" : l\'item a été supprimé (corbeille).  Un score élevé avec side="positive" signifie une recommandation basée sur l\'appréciation,  tandis que "negative" indique une recommandation liée à une suppression.'
     )
 
 
