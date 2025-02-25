@@ -13,6 +13,4 @@ public interface LabelsPort {
 
     @NotNull Optional<String> retrieveLabel(@NotNull String key);
 
-    @NotNull Optional<String> retrieveDebugLabel(@NotNull String key);
-
 }

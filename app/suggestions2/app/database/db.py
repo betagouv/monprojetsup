@@ -12,6 +12,7 @@ logger = logging.getLogger("uvicorn.error.app")
 
 load_dotenv()
 
+
 def create_connection_from_env() -> pg.Connection[DictRow]:
     DB_HOSTNAME = os.getenv("DB_SUGGESTIONS2_HOSTNAME", default="localhost")
     DB_PORT = os.getenv("DB_SUGGESTIONS2_PORT")
@@ -32,7 +33,8 @@ def create_connection_from_env() -> pg.Connection[DictRow]:
 
 
 def _fetch_students_data(conn: pg.Connection[DictRow]) -> List[StudentDbRow]:
-    query = "SELECT * FROM profil_eleve"
+    TABLE_NAME = os.getenv("DB_SUGGESTIONS2_PROFIL_TABLE", default="profil_eleve")
+    query = f"SELECT * FROM {TABLE_NAME}"
     with conn.cursor(row_factory=class_row(StudentDbRow)) as cursor:
         cursor.execute(query)
         students_data = cursor.fetchall()

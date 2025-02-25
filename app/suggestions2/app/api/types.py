@@ -34,9 +34,15 @@ class Profile(BaseModel):
             "NC",
         ]
         | None
-    ) = Field(default=None, description="type de Bac choisi ou envisagé", examples=["Générale"])
+    ) = Field(
+        default=None,
+        description="type de Bac choisi ou envisagé",
+        examples=["Générale"],
+    )
     duree: Literal["", "court", "long", "indiff"] = Field(
-        default="", description="durée envisagée des études", examples=["court", "long", "indiff"]
+        default="",
+        description="durée envisagée des études",
+        examples=["court", "long", "indiff"],
     )
     apprentissage: Literal["", "A", "B", "C", "D"] = Field(
         default="",
@@ -58,9 +64,11 @@ class Profile(BaseModel):
         description="domaines et intérêts",
         examples=[["ci1", "ci2", "ci3", "dom1", "dom2", "dom3"]],
     )
-    choix: List[Choix] = Field([], description="sélection de formations, voeux et métiers")
-    situation: Literal["aucune_idee", "quelques_pistes", "projet_precis"] | None = Field(
-        default=None, description="statut de réflexion"
+    choix: List[Choix] = Field(
+        [], description="sélection de formations, voeux et métiers"
+    )
+    situation: Literal["aucune_idee", "quelques_pistes", "projet_precis"] | None = (
+        Field(default=None, description="statut de réflexion")
     )
 
 
@@ -72,7 +80,9 @@ class ServerStatus(Enum):
 
 class ResponseHeader(BaseModel):
     status: ServerStatus = ServerStatus.OK
-    error: Optional[str] = Field(default=None, description="explication de l'erreur si status != 0")
+    error: Optional[str] = Field(
+        default=None, description="explication de l'erreur si status != 0"
+    )
     userMessage: Optional[str] = Field(
         default=None, description="message à afficher à l'utilisateur final."
     )
@@ -108,27 +118,40 @@ class ExplanationRequestBody(BaseModel):
     )
 
 
-class NaivesBayesExplanation(BaseModel):
+class NaivesBayesExplanationDetail(BaseModel):
     item_key: str = Field(description="clé de l'item", examples=["mat5", "ci1"])
     score: float = Field(
-        description="score mesurant l'impact de l'item la sélection de la formation",
+        description="score mesurant l'impact de l'item sur la sélection de la formation",
         examples=[-0.12345, 1.78253],
     )
     side: Literal["positive", "negative"] = Field(
-        description="si l'item était présent positivement ou négativement dans le profil."
+        description='"positive" : l\'item est dans le profil de l\'utilisateur. "negative" : l\'item a été supprimé (corbeille).  Un score élevé avec side="positive" signifie une recommandation basée sur l\'appréciation,  tandis que "negative" indique une recommandation liée à une suppression.'
     )
+
+
+class NaivesBayesExplanation(BaseModel):
+    details: List[NaivesBayesExplanationDetail] = Field(description="explications")
 
 
 class Explanation(BaseModel):
-    key: str = Field(examples=["fl2014"], description="clé de la formation")
-    popularity: float = Field(
-        description="score lié à la popularité de la formation", examples=[1.78253, -0.12345]
+    ref: NaivesBayesExplanation = Field(
+        description="proximité aux données de référence"
     )
-    profile: List[NaivesBayesExplanation] = Field(
-        description="pour chaque item du profil, un score mesurant son impact dans la sélection de la clé"
+
+
+class ExplanationAndExamples(BaseModel):
+    key: str = Field(examples=["fl2014"], description="clé de la formation")
+    affinity: float = Field(
+        description="évaluation de l'affinité de la formation avec le profil",
+        examples=[1.78253, -0.12345],
+    )
+    explanations: List[Explanation] = Field(description="explications")
+    metiers: List[str] = Field(
+        description="exemples de métiers, triés par affinité décroissante",
+        examples=[["MET.129", "MET.84"]],
     )
 
 
 class ExplanationRequestResponse(BaseModel):
     header: ResponseHeader = ResponseHeader()
-    liste: List[Explanation] = Field()
+    liste: List[ExplanationAndExamples] = Field(description="scores et explications")

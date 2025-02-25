@@ -18,9 +18,11 @@ data class ExplicationFormationPourUnProfilReponseDTO(
 data class ExplicationEtExemplesDTO(
     @JsonProperty(value = "key")
     val cle: String,
+    @JsonProperty(value = "affinity")
+    val affinite: Double?,
     @JsonProperty(value = "explanations")
     val explications: List<APISuggestionExplicationDTO>?,
-    @JsonProperty(value = "examples")
+    @JsonProperty(value = "metiers")
     val exemplesDeMetiersTriesParAffinitesDecroissantes: List<String>?,
 ) {
     fun toExplicationsSuggestion(): ExplicationsSuggestionEtExemplesMetiers {
@@ -87,8 +89,6 @@ data class APISuggestionExplicationDTO(
     val autres: APISuggestionExplicationsAutresDTO?,
     @JsonProperty(value = "tbac")
     val typeBaccalaureat: APISuggestionExplicationTypeBacDTO?,
-    @JsonProperty(value = "moygen")
-    val moyenneGenerale: APISuggestionExplicationNotesDTO?,
     @JsonProperty(value = "spec")
     val specialite: APISuggestionExplicationSpecialitesDTO?,
 )
@@ -133,46 +133,6 @@ data class APISuggestionExplicationSpecialitesDTO(
         @JsonProperty(value = "pct")
         val pourcentage: Int,
     )
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class APISuggestionExplicationNotesDTO(
-    @JsonProperty(value = "moy")
-    val moyenneAutoEvalue: Double,
-    @JsonProperty(value = "middle50")
-    val mediane: Mediane,
-    @JsonProperty(value = "bacUtilise")
-    val bacUtilise: String,
-) {
-    fun toAutoEvaluationMoyenne() =
-        ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne(
-            echellonDeLaMoyenneAutoEvalue = moyenneAutoEvalue.toInt(),
-            rangs = mediane.toRangsEchellons(),
-            baccalaureatUtilise = bacUtilise,
-        )
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Mediane(
-    @JsonProperty(value = "rangEch25")
-    val rangEch25: Int,
-    @JsonProperty(value = "rangEch50")
-    val rangEch50: Int,
-    @JsonProperty(value = "rangEch75")
-    val rangEch75: Int,
-    @JsonProperty(value = "rangEch10")
-    val rangEch10: Int,
-    @JsonProperty(value = "rangEch90")
-    val rangEch90: Int,
-) {
-    fun toRangsEchellons() =
-        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-            rangEch25 = rangEch25,
-            rangEch50 = rangEch50,
-            rangEch75 = rangEch75,
-            rangEch10 = rangEch10,
-            rangEch90 = rangEch90,
-        )
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

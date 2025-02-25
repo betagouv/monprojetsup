@@ -56,24 +56,6 @@ public final class Config {
     @Setter
     public double diversityMultiplicativeMalusBacTechno = 0.6;
 
-    @Getter
-    @Setter
-    private int verbosityLevel = 0;
-
-    @Getter
-    @Setter
-    private Map<String, Double> minMultipliers = new HashMap<>(Map.ofEntries(
-            entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
-            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),
-            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),
-            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),
-            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
-            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
-            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
-            entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
-            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI)
-    ));
-
     public static final String BONUS_APPRENTISSAGE = "app";
     public static final String BONUS_TAGS = "tags";
     public static final String BONUS_SIM = "sim";
@@ -83,12 +65,14 @@ public final class Config {
     public static final String BONUS_TYPE_BAC = "typebac";
     public static final String BONUS_SPECIALITE = "spec";
     public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
+    public static final String BONUS_NAIVE_BAYES = "nbayes";
+
     public static final double NO_MATCH_SCORE = 0.0;
 
     public static final double FULL_MATCH_MULTIPLIER = 1.0;
 
     public static final Map<String,String> BONUS_LABELS = Map.of(
-            BONUS_TAGS,"proximité intérêts et favoris",
+            BONUS_TAGS,"proximité intérêts et favoris (graphe)",
             BONUS_SPECIALITE,"EDS",
             BONUS_SPECIALITE_BAC_PRO, "spécialité",
             BONUS_DURATION,"durée",
@@ -96,8 +80,9 @@ public final class Config {
             BONUS_VOEU_FAVORI,"voeu favori",
             BONUS_TYPE_BAC,"type de bac",
             BONUS_APPRENTISSAGE,"preférences apprentissage",
-            BONUS_GEO,"préférences géographiques"
-            );
+            BONUS_GEO,"préférences géographiques",
+            BONUS_NAIVE_BAYES, "proximité profils de référence (NaiveBayes)"
+    );
 
     static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
     static final double MULTIPLIER_FOR_UNFITTED_BAC = 1.0E-08;
@@ -109,6 +94,26 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
+    public static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-03;
+
+    public static Map<String, Double> defaultMultipliers = Map.ofEntries(
+            entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
+            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),
+            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),
+            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),
+            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
+            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
+            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
+            entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
+            entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI),
+            entry(BONUS_NAIVE_BAYES, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES)
+    );
+
+    @Getter
+    @Setter
+    private Map<String, Double> minMultipliers = new HashMap<>(defaultMultipliers);
+
+
 
 
     @JsonIgnore
@@ -121,15 +126,6 @@ public final class Config {
         return personalCriteria;
     }
 
-    @JsonIgnore
-    public boolean isVerbose() {
-        return verbosityLevel >= 1;
-    }
-
-    @JsonIgnore
-    public boolean isVeryVerbose() {
-        return verbosityLevel >= 2;
-    }
 
     public double getDiversityMultiplicativeMalusBac(String bac) {
         if(bac == null || bac.isEmpty() || bac.startsWith("G") || bac.equals(TOUS_BACS_CODE_MPS)) {
@@ -144,5 +140,14 @@ public final class Config {
     @JsonIgnore
     public boolean isViable() {
         return minMultipliers != null && !minMultipliers.isEmpty();
+    }
+
+    public void fix() {
+        Config.defaultMultipliers.forEach((k, v) -> {
+            if(!getMinMultipliers().containsKey(k)) {
+                getMinMultipliers().put(k, v);
+            }
+        });
+
     }
 }

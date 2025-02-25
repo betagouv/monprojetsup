@@ -218,7 +218,8 @@ class MpsDataFromFiles(
     override fun getLabels(): Map<String, String> {
         return Labels.getLabels(
             psupData,
-            onisepData
+            onisepData,
+            getSpecialites().toSpecialitesList()
         )
     }
 
@@ -232,7 +233,8 @@ class MpsDataFromFiles(
     override fun getDebugLabels(): Map<String, String> {
         return Labels.getDebugLabels(
             psupData,
-            onisepData
+            onisepData,
+            getSpecialites().toSpecialitesList()
         )
     }
 

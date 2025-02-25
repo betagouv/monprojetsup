@@ -7,10 +7,12 @@ import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
-import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -49,6 +52,7 @@ public class AlgoSuggestions {
         this.las = data.getLASFormations();
         p50NbFormations = data.p50NbFormations();
         p75Capacity = data.p75Capacity();
+        debugLabels.putAll(data.getDebugLabels());
     }
 
     /** all accesses to data after init are cached for perf reasons */
@@ -61,6 +65,9 @@ public class AlgoSuggestions {
     /* le graphe des relations entre les différentes clés dans les nomenclatures */
     @Getter
     private final Edges edgesKeys = new Edges();
+
+    @Setter
+    private boolean generateDetailedExplanations;
 
     /* map les flcod vers les frcod */
     private @NotNull Map<String, @NotNull String> typesFormations = new HashMap<>();
@@ -174,28 +181,37 @@ public class AlgoSuggestions {
     /**
      * Get affinities associated to a profile.
      *
-     * @param pf            the profile
-     * @param cfg           the config
-     * @param inclureScores if true, the scores are included in the result
+     * @param pf                  the profile
+     * @param cfg                 the config
+     * @param inclureScores       if true, the scores are included in the result
+     * @param affinitesNaiveBayes
      * @return the affinities
      */
     public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
-            boolean inclureScores
-    ) {
+            boolean inclureScores,
+            @NotNull List<Affinity> affinitesNaiveBayes) {
         counter.getAndIncrement();
         if (containsNothingPersonal(pf)) {
             return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
         }
         //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true, generateDetailedExplanations);
+
+        val affinitesNaiveBayesParCle = affinitesNaiveBayes.stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite));
 
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
                         .collect(Collectors.toMap(
                                 fl -> fl,
-                                fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
+                                fl -> affinityEvaluator.getAffinityEvaluation(
+                                        fl,
+                                        inclureScores,
+                                        affinitesNaiveBayesParCle.containsKey(fl)
+                                                ? Map.of(BONUS_NAIVE_BAYES, new DataSuggestions2(affinitesNaiveBayesParCle.get(fl), null) )
+                                                : Map.of()
+                                )
                         ));
 
         //scaling scores with respect to maximal score
@@ -219,11 +235,12 @@ public class AlgoSuggestions {
      */
     public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
-            boolean inclureScores) {
+            boolean inclureScores,
+            @NotNull List<Affinity> affinitesNaiveBayes) {
 
 
         List<Pair<String, Affinite> > affinities = new ArrayList<>(
-                getFormationsAffinities(pf, data.getConfig(), inclureScores)
+                getFormationsAffinities(pf, data.getConfig(), inclureScores, affinitesNaiveBayes)
         );
         Collections.shuffle(affinities);
         affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));
@@ -329,7 +346,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(ChoiceDTO::id).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, data.getConfig(), this, false).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, data.getConfig(), this, false, generateDetailedExplanations).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -343,16 +360,22 @@ public class AlgoSuggestions {
      * @param keys     the keys of the formations
      * @return the explanations and examples associated to the node
      */
-    public List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsAndExamples(
+    public List<ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
-            @NotNull List<String> keys
+            @NotNull List<String> keys,
+            @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
     ) {
         if(profile == null) {
             return List.of();
         }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this, false);
-
-        return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this, false, generateDetailedExplanations);
+        val dataSuggestions2 = DataSuggestions2.build(explanationsNaiveBayes);
+        return keys.stream().map(
+                fl -> affinityEvaluator.getExplanationsAndExamples(
+                        fl,
+                        dataSuggestions2.get(fl)
+                )
+        ).toList();
 
     }
 
@@ -439,9 +462,10 @@ public class AlgoSuggestions {
         return durees.computeIfAbsent(fl, z -> data.getDuree(fl));
     }
 
-    private final ConcurrentHashMap<String, @NotNull String> debugLabels = new ConcurrentHashMap<>();
+    @Getter
+    private final Map<String, @NotNull String> debugLabels = new HashMap<>();
     public String getDebugLabel(String key) {
-        return debugLabels.computeIfAbsent(key, z -> data.getDebugLabel(key));
+        return debugLabels.get(key);
     }
 
     private final ConcurrentHashMap<Pair<String,String>, Double> statsSpecialites = new ConcurrentHashMap<>();

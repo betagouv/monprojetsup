@@ -4,14 +4,18 @@
  */
 
 export interface paths {
-    "/api/v1/public/formations/{idformation}": {
+    "/api/v1/public/formations": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Récupération d'une liste de formations
+         * @description A partir d'une liste d'ids, récupère l'id et le nom des formations, plus un lien de pagination.
+         */
+        get: operations["getFormations"];
         put?: never;
         /**
          * Récupération d'une formation, mode détaillé
@@ -217,26 +221,6 @@ export interface paths {
          * @description Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à 30 résultats par page.
          */
         get: operations["getRechercheMetierSuccincte"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/public/formations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Récupération d'une liste de formations
-         * @description A partir d'une liste d'ids, récupère l'id et le nom des formations, plus un lien de pagination.
-         */
-        get: operations["getFormations"];
         put?: never;
         post?: never;
         delete?: never;
@@ -798,6 +782,30 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getFormations: {
+        parameters: {
+            query: {
+                ids: string[];
+                /** @description Numéro de page */
+                numeroDePage?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsCourtesDTO"];
+                };
+            };
+        };
+    };
     getFormation: {
         parameters: {
             query?: never;
@@ -1074,30 +1082,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["MetiersCourtsDTO"];
-                };
-            };
-        };
-    };
-    getFormations: {
-        parameters: {
-            query: {
-                ids: string[];
-                /** @description Numéro de page */
-                numeroDePage?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationsCourtesDTO"];
                 };
             };
         };

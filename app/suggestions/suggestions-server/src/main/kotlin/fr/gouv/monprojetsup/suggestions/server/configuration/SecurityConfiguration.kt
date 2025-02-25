@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.server.config
+package fr.gouv.monprojetsup.suggestions.server.configuration
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
