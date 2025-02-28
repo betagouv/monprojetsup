@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.formation.infrastructure.entity.ExpandedLabelEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +61,28 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si L1, renvoyer les formations de license`() {
+    fun `L1 Histoire a les labels l1 et histoire`() {
+        // Given
+        val idL1Histoire = "fl0004"
+
+        // When
+        val resultat =
+            entityManager.createNativeQuery(
+                "SELECT id,label, label_sans_accents,label_decoupe FROM expanded_label where id='$idL1Histoire'",
+                ExpandedLabelEntity::class.java,
+            )
+                .resultList
+                .map { (it as ExpandedLabelEntity).label_decoupe_brut }
+                .toSet()
+
+        // Then
+        val attendu = setOf("histoire", "l1")
+        assertThat(resultat).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si L1, renvoyer les formations de licence`() {
         // Given
         val recherche = "L1"
 
