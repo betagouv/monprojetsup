@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.BDDMockito.given
@@ -26,7 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
-import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -39,9 +39,10 @@ data class RechercheScenario(
 )
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@IfProfileValue(name = "spring.profiles.active", value = "withRealData") // Test runs only if profile is NOT "prod"
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+// @Tag("withRealData")
+@EnabledIfSystemProperty(named = "spring.profiles.active", matches = "withRealData")
 class RechercheSimpleFormationsEnd2EndTest(
     @Autowired val mvc: MockMvc,
     @Autowired val objectMapper: ObjectMapper,
@@ -80,7 +81,6 @@ class RechercheSimpleFormationsEnd2EndTest(
             val type = object : TypeToken<List<RechercheScenario>>() {}.type
             testFile.file.bufferedReader().use { reader ->
                 val gsonBuilder = GsonBuilder()
-                // gsonBuilder.registerTypeAdapter(ImmutablePair::class.java, ImmutablePairDeserializer())
                 return gsonBuilder.create().fromJson(reader, type)
             }
         }
@@ -137,12 +137,6 @@ class RechercheSimpleFormationsEnd2EndTest(
     private fun getResultatsRecherche(scenario: RechercheScenario): FormationsCourtesDTO {
         val requete =
             Gson().toJson(
-            /*
-            mapOf(
-                "recherche" to scenario.recherche,
-                "profil" to null,
-                "numeroDePage" to 1,
-            )*/
                 RechercheFormationsDTO(
                     recherche = scenario.recherche,
                     profil = null,
@@ -158,6 +152,7 @@ class RechercheSimpleFormationsEnd2EndTest(
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
-        return objectMapper.readValue(resultat.response.contentAsString, FormationsCourtesDTO::class.java)
+        val body = resultat.response.contentAsString
+        return objectMapper.readValue(body, FormationsCourtesDTO::class.java)
     }
 }

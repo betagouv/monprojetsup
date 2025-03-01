@@ -4,4 +4,7 @@ import fr.gouv.monprojetsup.commun.hateoas.application.dto.PaginationDTO
 
 data class FormationsCourtesDTO(
     val formations: List<FormationCourteDTO>,
-) : PaginationDTO()
+) : PaginationDTO() {
+    @Suppress("unused")
+    private constructor() : this(emptyList())
+}
