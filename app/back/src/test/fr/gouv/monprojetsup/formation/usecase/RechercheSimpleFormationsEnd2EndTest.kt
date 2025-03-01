@@ -42,7 +42,7 @@ data class RechercheScenario(
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 // @Tag("withRealData")
-@EnabledIfSystemProperty(named = "spring.profiles.active", matches = "withRealData")
+@EnabledIfSystemProperty(named = "spring.profiles.active", matches = "test-withRealData")
 class RechercheSimpleFormationsEnd2EndTest(
     @Autowired val mvc: MockMvc,
     @Autowired val objectMapper: ObjectMapper,
@@ -89,7 +89,7 @@ class RechercheSimpleFormationsEnd2EndTest(
     @ParameterizedTest
     @MethodSource("provideScenarios")
     fun `les scores sont conformes aux résultats de référence`(scenario: RechercheScenario) {
-        assumeTrue(environment.matchesProfiles("withRealData"), "Test ignoré car le profile Spring Boot 'withRealData' est inactif")
+        assumeTrue(environment.matchesProfiles("test-withRealData"), "Test ignoré car le profile Spring Boot 'withRealData' est inactif")
 
         // Given
 
@@ -108,7 +108,7 @@ class RechercheSimpleFormationsEnd2EndTest(
     @ParameterizedTest
     @MethodSource("provideScenarios")
     fun `les résultats des recherches sont conformes aux résultats de référence`(scenario: RechercheScenario) {
-        assumeTrue(environment.matchesProfiles("withRealData"), "Test ignoré car le profile Spring Boot 'withRealData' est inactif")
+        assumeTrue(environment.matchesProfiles("test-withRealData"), "Test ignoré car le profile Spring Boot 'withRealData' est inactif")
 
         // Given
         given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(ProfilEleve.AvecProfilExistant(""))).willReturn(
