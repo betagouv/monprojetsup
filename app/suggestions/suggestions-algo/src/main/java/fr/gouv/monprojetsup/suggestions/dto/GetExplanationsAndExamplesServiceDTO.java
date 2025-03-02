@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,11 +33,13 @@ public class GetExplanationsAndExamplesServiceDTO {
     public record ExplanationAndExamples(
             @Schema(description = "clé", example = "fl2014")
             String key,
+            @Schema(description = "affinite", example = "0.25")
+            double affinity,
             @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
             @NotNull List<Explanation> explanations,
-            @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante",
+            @ArraySchema(arraySchema = @Schema(description = "exemples de métiers, triés par affinité décroissante",
                     example = "[\"MET.129\",\"MET.84\",\"MET.5\"]"))
-            @NotNull List<String> examples
+            @Nullable List<String> metiers
     ) {
     }
 }

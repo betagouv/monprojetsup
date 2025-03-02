@@ -766,4 +766,5 @@ public record PsupData(
         stats.clear();
         this.diversPsup.keySet().retainAll(List.of(G_FIL_ATT_CON, A_REC_GRP, C_JUR_ADM,MPS_BACS_SPE));
     }
+
 }

@@ -27,7 +27,7 @@ class SpecialitesLoaderTest {
     @Test
     fun `l'ensemble des specialites est non vide`() {
         assertNotNull(specialites)
-        val s = specialites?.toSpecialites()
+        val s = specialites?.toSpecialitesList()
         Assertions.assertThat(s).isNotEmpty()
 
     }

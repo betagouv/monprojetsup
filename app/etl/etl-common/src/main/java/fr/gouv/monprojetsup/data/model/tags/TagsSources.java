@@ -27,7 +27,7 @@ public record TagsSources(
     }
 
     public void add(@NotNull Collection<String> motsCles, @NotNull String source) {
-        motsCles.forEach(mot -> add(mot, source));
+    motsCles.forEach(mot -> add(mot, source));
     }
 
 
@@ -55,7 +55,7 @@ public record TagsSources(
         return Normalizer.normalize(
                         tag
                                 .toLowerCase()
-                                .replaceAll("[-/]", " ")
+                                .replaceAll("[-/',;`]", " ")
                                 .trim(),
                         Normalizer.Form.NFD)
                 .replaceAll("[^\\p{ASCII}\\s]", "");
@@ -67,7 +67,9 @@ public record TagsSources(
         sources.clear();
         copy.forEach((tag, sources) -> {
             String normalizedTag = normalize(tag);
-            this.sources.computeIfAbsent(normalizedTag, z -> new HashSet<>()).addAll(sources);
+            if(normalizedTag.length() >= 2) {
+                this.sources.computeIfAbsent(normalizedTag, z -> new HashSet<>()).addAll(sources);
+            }
         });
     }
 

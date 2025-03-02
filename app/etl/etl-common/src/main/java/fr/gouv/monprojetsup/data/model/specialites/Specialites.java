@@ -100,7 +100,7 @@ public record Specialites(
     }
 
     @NotNull
-    public List<Specialite> toSpecialites() {
+    public List<Specialite> toSpecialitesList() {
         val result = new ArrayList<Specialite>();
 
         //speBacs en premier, car écrasées par certaines eds

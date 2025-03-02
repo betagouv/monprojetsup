@@ -269,13 +269,13 @@ class UpdateFormationDbs(
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
-                logger.info("Calcul des distances pour les villes commençant par $newLetter")
-                letter = newLetter
                 if(entities.isNotEmpty()) {
-                    logger.info("Enregistrement des correspondances villes-voeux commençant par $letter")
+                    logger.info("Enregistrement des ${entities.count()} correspondances villes-voeux commençant par $letter")
                     batchUpdate.upsertEntities(entities)
                     entities.clear()
                 }
+                logger.info("Calcul des distances pour les villes commençant par $newLetter")
+                letter = newLetter
             }
             val currentEntity = villesVoeuxActuels[city.codeInsee]
 

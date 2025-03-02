@@ -108,3 +108,26 @@ VALUES ('fl0006',
           }
         ]'::jsonb,
         true, false);
+
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
+VALUES ('fl240',
+        'Ecoles de commerce (Bac+5)',
+        'Les écoles de commerce et de management sont des formations souvent privées, que tu peux intégrer directement après le bac ou après une prépa (pour les plus prestigieuses). Elles proposent de te former aux métiers du secteur tertiaire, en offrant des formations qui varient fortement en fonction de l''école. Il faut donc te renseigner en amont pour savoir vers quelle école tu souhaites te tourner, car elles n''ont pas toutes le même niveau de réputation. Et les plus demandées necessitent de passer des concours pour lesquels il faut te préparer très sérieusement. Au programme, une fois entré, tu auras des cours de management, d''économie, de marketing, de communication etc. Ce sont des formations généralistes, mais qui ouvrent aussi beaucoup de voies sur le marché du travail, elles te promettent donc de belles carrières.',
+        'L’ouverture et la curiosité, notamment en s’intéressant aux enjeux contemporains (environnement économique, entreprises, enjeux sociétaux, etc.), la capacité à prendre du recul et des responsabilités, et un intérêt pour la gestion sont des qualités recherchées par les écoles de commerce et de management pour leurs futurs étudiants. Elles recherchent par ailleurs une grande diversité de profils, également attendue par les entreprises, rendant les attendus nationaux assez larges en termes de parcours scolaire antérieur et de centres d''intérêt.  L’étudiant en école de commerce et de management doit disposer de compétences en :  - expression écrite et orale afin de pouvoir défendre un argumentaire précis et présenter un projet  - langues étrangères, a minima en anglais, afin d’être capable de lire, écrire et s’exprimer à l’écrit et à l’oral et de travailler à terme dans un contexte international  - culture générale et humanités, faire preuve d’ouverture d’esprit et de sensibilité aux enjeux de la société et de l’économie  Ces compétences peuvent être attestées par les résultats obtenus aux épreuves de baccalauréat ainsi que dans les évaluations communes durant les années de lycée. Elles peuvent également être appréciées à l’occasion d’épreuves propres au processus de sélection (écrites, orales), voire d’entretiens.',
+        null,
+        '',
+        null,
+        null,
+        ARRAY [22,36,16,14,10],
+        '[
+            {
+                "nom": "Infos Onisep",
+                "url": "https://avenirs.onisep.fr/formation/les-principaux-domaines-de-formation/les-ecoles-de-commerce"
+            },
+            {
+                "nom": "Voir sur la carte Parcoursup - Formation des écoles de commerce et de management Bac + 5",
+                "url": "https://dossier.parcoursup.fr/Candidat/carte?search=formation+des+ecoles+de+commerce+et+de+management+bac+++5"
+                }
+        ]'::jsonb,
+        true, false);
+

@@ -262,3 +262,9 @@ Les annotations `@ConnecteAvecUnEleve`, `@ConnecteAvecUnEnseignant`, `@ConnecteS
 Il s'agit de test d'intégration, permettant de tester avec une BDD. On utilise TestContainer pour lancer un container le temps des tests.
 Les tests héritent de la classe `BDDRepositoryTest` qui comporte le nécessaire pour lancer la BDD ainsi que la fermer une fois les tests exécutés.
 Pour remplir la BDD pour chaque test, on utilise l'annotation `@Sql`. Un fichier situé dans `test/resources` comportant tous les `INSERT` nécessaires aux tests est créee pour chaque Repository. 
+
+### Tests d'intégration sur données réelles
+
+Quelques tests sont activables à la demande via l'activation du profile `test-withRealData`. 
+Ils permettent de tester l'API de recherche avec des données réelles.
+Ces tests ne sont pas exécutés par le pipeline de ci.
