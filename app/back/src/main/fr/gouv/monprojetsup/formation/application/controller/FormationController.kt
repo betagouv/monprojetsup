@@ -276,7 +276,7 @@ class FormationController(
         private const val TAILLE_LOT_RECHERCHE_SUCCINCTE = 30
         private const val TAILLE_LOT_SUGGESTIONS_FORMATIONS = 30
         private const val TAILLE_LOT_FORMATIONS = 30
-        private const val TAILLE_MINIMUM_RECHERCHE = 2
+        internal const val TAILLE_MINIMUM_RECHERCHE = 2
         private const val TAILLE_MAXIMAL_RECHERCHE = 150
     }
 }

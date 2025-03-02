@@ -16,7 +16,7 @@ class SuggestionsPaniersVoeuxEntity {
 
     @Id
     @GeneratedValue
-    val id: Long = 0
+    var id: Long = 0
 
     fun toCandidat() : PanierVoeux {
         return PanierVoeux(bac, ArrayList(voeux))

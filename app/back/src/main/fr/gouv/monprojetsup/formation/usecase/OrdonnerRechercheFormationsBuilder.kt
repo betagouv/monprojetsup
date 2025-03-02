@@ -15,10 +15,10 @@ class OrdonnerRechercheFormationsBuilder {
         formationsAvecLeurAffinite: List<FormationAvecSonAffinite>,
     ): List<FormationCourte> {
         val formationsOrdonnees = formationsAvecLeurAffinite.sortedByDescending { it.tauxAffinite }.map { it.idFormation }
-        return filtrerParScorePuisParIndex(formationsOrdonnees, resultats)
+        return trierParScorePuisParIndex(formationsOrdonnees, resultats)
     }
 
-    private fun filtrerParScorePuisParIndex(
+    private fun trierParScorePuisParIndex(
         formationsOrdonnees: List<String>,
         resultats: Map<FormationCourte, Int>,
     ): List<FormationCourte> {
