@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.formation.infrastructure.entity.RechercheFormationEn
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import java.text.Normalizer
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 
 @Repository
