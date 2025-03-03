@@ -1,7 +1,13 @@
 [
   {
-    "recherche": "ecole Commer",
+    "recherche": "ecole commer",
+    "premierRésultatAttendu": "fl240",
+    "résultatAttendusParmiLesCinqPremiers": ["fl240"]
+  },
+  {
+    "recherche": "école commer",
     "premierRésultatAttendu": "fl240",
     "résultatAttendusParmiLesCinqPremiers": ["fl240"]
   }
+
 ]

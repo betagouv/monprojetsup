@@ -5,12 +5,22 @@ import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.RechercheFormationEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
+import java.text.Normalizer
+import java.util.*
+import java.util.regex.Pattern
 
 @Repository
 class RechercheFormationBDDRepository(
     val entityManager: EntityManager,
 ) : RechercheFormationRepository {
+    fun removeAccents(input: String): String {
+        val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
+        val pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+        return pattern.matcher(normalized).replaceAll("")
+    }
+
     override fun rechercherUneFormation(motRecherche: String): List<ResultatRechercheFormationCourte> {
+        val motRechercheSansAccents = removeAccents(motRecherche.lowercase(Locale.getDefault()))
         val resultat =
             entityManager.createNativeQuery(
                 """
@@ -80,12 +90,12 @@ class RechercheFormationBDDRepository(
                 """.trimIndent(),
                 RechercheFormationEntity::class.java,
             )
-                .setParameter("mot_recherche_strict", motRecherche)
-                .setParameter("mot_recherche_en_debut_de_phrase", "$motRecherche %")
-                .setParameter("mot_recherche_en_fin_de_phrase", "% $motRecherche")
-                .setParameter("mot_recherche_inclus_dans_une_phrase", "% $motRecherche %")
+                .setParameter("mot_recherche_strict", motRechercheSansAccents)
+                .setParameter("mot_recherche_en_debut_de_phrase", "$motRechercheSansAccents %")
+                .setParameter("mot_recherche_en_fin_de_phrase", "% $motRechercheSansAccents")
+                .setParameter("mot_recherche_inclus_dans_une_phrase", "% $motRechercheSansAccents %")
                 .setParameter("mot_recherche_strict_entre_parentheses", "( |\\()")
-                .setParameter("mot_recherche_inclus_prefix", "(^| |[''()\\ -])$motRecherche")
+                .setParameter("mot_recherche_inclus_prefix", "(^| |[''()\\ -])$motRechercheSansAccents")
                 .resultList
         return resultat.map { (it as RechercheFormationEntity).toRechercheFormationCourte() }
     }
