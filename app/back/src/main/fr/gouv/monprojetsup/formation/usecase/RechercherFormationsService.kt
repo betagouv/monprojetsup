@@ -18,26 +18,25 @@ class RechercherFormationsService(
         tailleMinimumRecherche: Int,
     ): Map<FormationCourte, Int> {
         val motsRecherches = filtrerRechercheBuilder.filtrerMotsRecherches(recherche, tailleMinimumRecherche)
-        val resultats = mutableMapOf<FormationCourte, Int>()
-        motsRecherches.forEach { mot ->
-            val recherches = rechercheFormationRepository.rechercherUneFormation(mot)
-            val recherchesAvecScores = recherches.associate { it.formation to calculerScore(it) }
-            additionnerLesScoresDesFormationsDejaRetournees(recherchesAvecScores, resultats)
+        val candidatsParMots = motsRecherches.map { rechercheFormationRepository.rechercherUneFormation(it) }
+        val resultats = candidatsParMots.flatMap { it.map { itt -> itt.formation } }.distinct().associateWith { 1.0f }.toMutableMap()
+        candidatsParMots.forEach { candidats ->
+            val candidatsAvecScores = candidats.associate { it.formation to calculerScore(it) }
+            val scoreMaximum = candidatsAvecScores.values.filter { it >= 1 }.maxOrNull() ?: 1
+            mettreAJourLesResultatsAvecLesNouveausScores(candidatsAvecScores, scoreMaximum, resultats)
         }
-        return resultats
+        return resultats.map { it.key to (100  * it.value).toInt() }.toMap()
     }
 
-    private fun additionnerLesScoresDesFormationsDejaRetournees(
+    private fun mettreAJourLesResultatsAvecLesNouveausScores(
         recherchesAvecScores: Map<FormationCourte, Int>,
-        resultats: MutableMap<FormationCourte, Int>,
+        scoreMaximum: Int,
+        resultats: MutableMap<FormationCourte, Float>,
     ) {
-        recherchesAvecScores.forEach { entry ->
-            val formation = entry.key
-            val score = entry.value
-            resultats[formation]?.let { scoreActuel ->
-                val nouveauScore = scoreActuel + score
-                resultats.put(formation, nouveauScore)
-            } ?: resultats.put(formation, score)
+        resultats.keys.forEach { formation ->
+            val scoreActuel = resultats[formation] ?: 0f
+            val score = Math.max(1e-9f, 1.0f * recherchesAvecScores.getOrDefault(formation, 0) / scoreMaximum.toFloat())
+            resultats[formation] = scoreActuel * score
         }
     }
 
