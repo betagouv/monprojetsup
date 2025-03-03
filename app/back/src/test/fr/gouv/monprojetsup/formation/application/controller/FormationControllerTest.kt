@@ -5,7 +5,6 @@ import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
@@ -61,6 +60,8 @@ import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -71,9 +72,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import java.net.ConnectException
 
-@WebMvcTest(controllers = [FormationController::class])
+@WebMvcTest(
+    controllers = [FormationController::class],
+    includeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [HateoasBuilder::class])],
+)
 class FormationControllerTest(
     @Autowired val mvc: MockMvc,
+    @Autowired val hateoasBuilder: HateoasBuilder,
 ) : ControllerTest() {
     @MockBean
     lateinit var suggestionsFormationsService: SuggestionsFormationsService
@@ -92,9 +97,6 @@ class FormationControllerTest(
 
     @MockBean
     lateinit var ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder
-
-    @MockBean
-    lateinit var hateoasBuilder: HateoasBuilder
 
     companion object {
         const val API_FORMATION = "/api/v1/public/formations"
@@ -582,17 +584,6 @@ class FormationControllerTest(
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = formations,
-                )
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
             val idsFormations =
                 listOf(
                     "fl240",
@@ -989,365 +980,6 @@ class FormationControllerTest(
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
-                    ),
-                )
-        }
-
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour la page 2, doit retourner 200 avec une liste des fiches formations suggérées`() {
-            // Given
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
-                affinitesFormationEtMetier,
-            )
-            val listeCoupee =
-                listOf(
-                    FormationAvecSonAffinite(idFormation = "fl2016", tauxAffinite = 0.7217561f),
-                    FormationAvecSonAffinite(idFormation = "fl2118", tauxAffinite = 0.7103791f),
-                    FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
-                )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 2,
-                    pageSuivante = 3,
-                    premierePage = 1,
-                    dernierePage = 4,
-                    listeCoupee = listeCoupee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-            val idsFormations = listOf("fl2016", "fl2118", "fl680003")
-            given(
-                recupererFichesFormationsService.recupererFichesFormationPourProfil(
-                    unProfilEleve,
-                    affinitesFormationEtMetier,
-                    idsFormations,
-                    false,
-                ),
-            ).willReturn(listOf(ficheFormation.copy(id = "fl2016")))
-
-            // When & Then
-            mvc.perform(
-                post("$API_FORMATION/suggestions")
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                        ObjectMapper().writeValueAsString(
-                            GetSuggestionsDTO(
-                                profil = null,
-                                numeroDePage = 2,
-                            ),
-                        ),
-                    ).accept(MediaType.APPLICATION_JSON),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "formation": {
-                                "id": "fl2016",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
-                                      "baccalaureat": {
-                                        "id": "Générale",
-                                        "nom": "Série Générale"
-                                      },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                    "liens": [
-                                      {
-                                        "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
-                                    },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
-                                    }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
-                                  }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
-                                },
-                                "detailsCalculScore": {
-                                  "details": []
-                                }
-                              }
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=4"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=2"
-                            },
-                            {
-                              "rel": "suivant",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=3"
                             }
                           ]
                         }
@@ -1363,17 +995,6 @@ class FormationControllerTest(
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = formations,
-                )
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
             val idsFormations =
                 listOf(
                     "fl240",
@@ -1770,20 +1391,6 @@ class FormationControllerTest(
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/suggestions?numeroDePage=1"
                             }
                           ]
                         }
@@ -1816,50 +1423,6 @@ class FormationControllerTest(
                           "title": "PAGE_INVALIDE",
                           "status": 400,
                           "detail": "La pagination commence à 1",
-                          "instance": "$API_FORMATION/suggestions"
-                        }
-                        """.trimIndent(),
-                    ),
-                )
-        }
-
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le numéro de page envoyé est dépasse, alors doit retourner 400`() {
-            //
-            val uneException =
-                MonProjetSupBadRequestException(
-                    code = "PAGE_DEMANDEE_INXISTANTE",
-                    msg = "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
-                )
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
-                affinitesFormationEtMetier,
-            )
-            given(
-                hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 100, tailleLot = 30),
-            ).willThrow(uneException)
-
-            // When & Then
-            mvc.perform(
-                post("$API_FORMATION/suggestions")
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                        ObjectMapper().writeValueAsString(
-                            GetSuggestionsDTO(
-                                profil = null,
-                                numeroDePage = 100,
-                            ),
-                        ),
-                    ).accept(MediaType.APPLICATION_JSON),
-            ).andDo(print()).andExpect(status().isBadRequest)
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "type": "about:blank",
-                          "title": "PAGE_DEMANDEE_INXISTANTE",
-                          "status": 400,
-                          "detail": "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
                           "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
@@ -2741,18 +2304,6 @@ class FormationControllerTest(
             given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(mapRechercheL1, formationsOrdonnees))
                 .willReturn(rechercheTriee)
 
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheTriee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
             // When & Then
             mvc.perform(
                 post(
@@ -2783,20 +2334,6 @@ class FormationControllerTest(
                             {
                               "id": "fl3",
                               "nom": "L1 - Philosophie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
@@ -2926,18 +2463,6 @@ class FormationControllerTest(
                 ),
             ).willReturn(rechercheLongue)
 
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheLongue,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
             // When & Then
             mvc.perform(
                 post("$API_FORMATION/recherche/succincte")
@@ -2987,20 +2512,6 @@ class FormationControllerTest(
                             {
                               "id": "fl18",
                               "nom": "L1 - Littérature"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/succincte?numeroDePage=1"
                             }
                           ]
                         }
@@ -3072,16 +2583,12 @@ class FormationControllerTest(
                     false,
                 ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl7"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
+            Hateoas(
+                pageActuelle = 1,
+                pageSuivante = null,
+                premierePage = 1,
+                dernierePage = 1,
+                listeCoupee = listOf("fl1", "fl7"),
             )
 
             // When & Then
@@ -3475,20 +2982,6 @@ class FormationControllerTest(
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             }
                           ]
                         }
@@ -3554,17 +3047,6 @@ class FormationControllerTest(
                     false,
                 ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl7", "fl1"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl7", "fl1"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -3957,20 +3439,6 @@ class FormationControllerTest(
                                   "details": []
                                 }
                               }
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
                             }
                           ]
                         }
@@ -4104,18 +3572,6 @@ class FormationControllerTest(
                 ),
             )
 
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl7"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
             // When & Then
             mvc.perform(
                 post("$API_FORMATION/recherche/detaillee")
@@ -4491,20 +3947,6 @@ class FormationControllerTest(
                                 }
                               }
                             }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/recherche/detaillee?numeroDePage=1"
-                            }
                           ]
                         }
                         """.trimIndent(),
@@ -4555,17 +3997,6 @@ class FormationControllerTest(
                     true,
                 ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -4904,20 +4335,6 @@ class FormationControllerTest(
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -4966,17 +4383,6 @@ class FormationControllerTest(
                     true,
                 ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -5315,20 +4721,6 @@ class FormationControllerTest(
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
                             }
                           ]
                         }
@@ -5381,17 +4773,6 @@ class FormationControllerTest(
                     ),
             )
                 .willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -5661,20 +5042,6 @@ class FormationControllerTest(
                                 }
                               }
                             }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/public/formations/fiches?numeroDePage=1"
-                            }
                           ]
                         }
                         """.trimIndent(),
@@ -5736,20 +5103,6 @@ class FormationControllerTest(
                   "id": "fl3",
                   "nom": "3eme formation"
                 }
-              ],
-              "liens": [
-                {
-                  "rel": "premier",
-                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
-                },
-                {
-                  "rel": "dernier",
-                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
-                },
-                {
-                  "rel": "actuel",
-                  "href": "http://localhost/api/v1/public/formations?ids=fl1&ids=fl2&ids=fl3&numeroDePage=1"
-                }
               ]
             }
             """.trimIndent()
@@ -5759,17 +5112,6 @@ class FormationControllerTest(
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec les formations`() {
             // Given
             given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2", "fl3"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -5783,17 +5125,6 @@ class FormationControllerTest(
         fun `si enseignant, doit retourner 200 avec les formations`() {
             // Given
             given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2", "fl3"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
@@ -5807,17 +5138,6 @@ class FormationControllerTest(
         fun `si connecté sans profil, doit retourner 200 avec les formations`() {
             // Given
             given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2", "fl3"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2", "fl3"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
