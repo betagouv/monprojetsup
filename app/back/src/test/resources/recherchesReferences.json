@@ -1,13 +1,11 @@
 [
   {
     "recherche": "ecole commer",
-    "premierRésultatAttendu": "fl240",
-    "résultatAttendusParmiLesCinqPremiers": ["fl240"]
+    "résultatAttendusParmiLesCinqPremiers": ["fl240","fl241","fl242","fl10427"]
   },
   {
     "recherche": "école commer",
-    "premierRésultatAttendu": "fl240",
-    "résultatAttendusParmiLesCinqPremiers": ["fl240"]
+    "résultatAttendusParmiLesCinqPremiers": ["fl240","fl241","fl242","fl10427"]
   }
 
 ]

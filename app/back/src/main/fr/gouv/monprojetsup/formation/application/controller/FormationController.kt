@@ -175,7 +175,7 @@ class FormationController(
             hateoasBuilder.creerHateoas(
                 liste = formationRechercheesTriees,
                 numeroDePageActuelle = numeroDePage,
-                tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE,
+                tailleLot = TAILLE_LOT_RECHERCHE,
             )
         return hateoas.listeCoupee
     }
@@ -281,8 +281,7 @@ class FormationController(
     }
 
     companion object {
-        private const val TAILLE_LOT_RECHERCHE_DETAILLEE = 30
-        private const val TAILLE_LOT_RECHERCHE_SUCCINCTE = 30
+        private const val TAILLE_LOT_RECHERCHE = 30
         private const val TAILLE_LOT_SUGGESTIONS_FORMATIONS = 30
         private const val TAILLE_LOT_FORMATIONS = 30
         internal const val TAILLE_MINIMUM_RECHERCHE = 2

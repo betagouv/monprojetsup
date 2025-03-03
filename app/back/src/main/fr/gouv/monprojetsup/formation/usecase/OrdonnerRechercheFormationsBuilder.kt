@@ -14,27 +14,27 @@ class OrdonnerRechercheFormationsBuilder {
         resultats: Map<FormationCourte, Int>,
         formationsAvecLeurAffinite: List<FormationAvecSonAffinite>,
     ): List<FormationCourte> {
-        val formationsOrdonnees = formationsAvecLeurAffinite.sortedByDescending { it.tauxAffinite }.map { it.idFormation }
-        return trierParScorePuisParIndex(formationsOrdonnees, resultats)
+        return trierParScoreRecherchePuisParAffinite(formationsAvecLeurAffinite, resultats)
     }
 
-    private fun trierParScorePuisParIndex(
-        formationsOrdonnees: List<String>,
+    private fun trierParScoreRecherchePuisParAffinite(
+        formationsAvecLeurAffinite: List<FormationAvecSonAffinite>,
         resultats: Map<FormationCourte, Int>,
     ): List<FormationCourte> {
-        val comparateur = creerComparateur(formationsOrdonnees)
+        val comparateur = creerComparateur(formationsAvecLeurAffinite)
         return resultats.toList()
             .sortedWith(
                 compareByDescending<Pair<FormationCourte, Int>> { it.second }
-                    .thenComparing { p1, p2 -> comparateur.compare(p1.first.id, p2.first.id) },
+                    .thenComparing { p1, p2 -> comparateur.compare(p1.first.id, p2.first.id) }
+                    .thenComparing { p1, p2 -> p1.first.id.compareTo(p2.first.id) },
             ).map { it.first }
     }
 
-    private fun creerComparateur(formationsOrdonnees: List<String>): java.util.Comparator<String> {
-        val mapAvecLesIndex = formationsOrdonnees.withIndex().associate { it.value to it.index }
+    private fun creerComparateur(formationsOrdonnees: List<FormationAvecSonAffinite>): java.util.Comparator<String> {
+        val mapAvecLesIndex = formationsOrdonnees.associate { it.idFormation to it.tauxAffinite }
         return Comparator { s1, s2 ->
-            val index1 = mapAvecLesIndex[s1] ?: -1
-            val index2 = mapAvecLesIndex[s2] ?: -1
+            val index1 = mapAvecLesIndex[s1] ?: -1.0f
+            val index2 = mapAvecLesIndex[s2] ?: -1.0f
             index1.compareTo(index2)
         }
     }

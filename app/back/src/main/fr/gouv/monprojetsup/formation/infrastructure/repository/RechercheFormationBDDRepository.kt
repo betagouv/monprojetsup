@@ -94,7 +94,7 @@ class RechercheFormationBDDRepository(
                 .setParameter("mot_recherche_en_debut_de_phrase", "$motRechercheSansAccents %")
                 .setParameter("mot_recherche_en_fin_de_phrase", "% $motRechercheSansAccents")
                 .setParameter("mot_recherche_inclus_dans_une_phrase", "% $motRechercheSansAccents %")
-                .setParameter("mot_recherche_strict_entre_parentheses", "( |\\()")
+                .setParameter("mot_recherche_strict_entre_parentheses", "%($motRechercheSansAccents)%")
                 .setParameter("mot_recherche_inclus_prefix", "(^| |[''()\\ -])$motRechercheSansAccents")
                 .resultList
         return resultat.map { (it as RechercheFormationEntity).toRechercheFormationCourte() }
