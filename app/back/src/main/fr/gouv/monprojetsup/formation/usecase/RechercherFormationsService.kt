@@ -25,7 +25,7 @@ class RechercherFormationsService(
             val scoreMaximum = candidatsAvecScores.values.filter { it >= 1 }.maxOrNull() ?: 1
             mettreAJourLesResultatsAvecLesNouveausScores(candidatsAvecScores, scoreMaximum, resultats)
         }
-        return resultats.map { it.key to (100  * it.value).toInt() }.toMap()
+        return resultats.map { it.key to (100 * it.value).toInt() }.toMap()
     }
 
     private fun mettreAJourLesResultatsAvecLesNouveausScores(
