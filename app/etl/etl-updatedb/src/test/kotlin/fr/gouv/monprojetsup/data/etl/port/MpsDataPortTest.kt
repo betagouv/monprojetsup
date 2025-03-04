@@ -18,7 +18,6 @@ class MpsDataPortTest : DataPortTest(){
         mpsDataPort.getMoyennesGeneralesAdmis()
         mpsDataPort.getFormationsMpsIds()
         mpsDataPort.getApprentissage()
-        mpsDataPort.getLasToGenericIdMapping()
         mpsDataPort.getVoeux()
         mpsDataPort.getDebugLabels()
         mpsDataPort.getCapacitesAccueil()

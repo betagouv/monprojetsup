@@ -63,13 +63,6 @@ public record DescriptifsFormationsMetiers(
     }
 
 
-    public void injectLas(Map<String, String> lasCorrespondance) {
-        lasCorrespondance.forEach((lasKey,genKey) -> keyToDescriptifs.computeIfAbsent(
-                lasKey,
-                z-> keyToDescriptifs.get(genKey)
-        ));
-    }
-
     public void inject(MetiersScrapped metiersScrapped) {
         metiersScrapped.metiers().values().forEach(m -> {
             String cs = m.key();

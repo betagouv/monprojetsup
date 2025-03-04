@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifFormation;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
@@ -16,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_FORMATION;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_KEY;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_TYPE_FORMATION;
@@ -24,7 +22,6 @@ import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESU
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
             OnisepData onisepData,
-            Map<String, String> lasToGeneric,
             DataSources sources
     ) throws IOException {
 
@@ -40,16 +37,6 @@ public class DescriptifsLoader {
         injectFichesMetiers(onisepData.metiersIdeo(), descriptifs);
 
         addMpsdescriptifs(descriptifs, sources);
-
-        //descriptifs.injectGroups(psupKeyToMpsKey);
-        descriptifs.injectLas(lasToGeneric);//in this order after groups
-        descriptifs.keyToDescriptifs().entrySet().forEach(e -> {
-            if(lasToGeneric.containsKey(e.getKey())) {
-                val desc = e.getValue();
-                e.setValue(DescriptifFormation.addToDescriptif(Constants.PAS_LAS_TEXT, desc));
-            }
-        });
-
         return descriptifs;
     }
 
@@ -94,9 +81,6 @@ public class DescriptifsLoader {
             String flfrcod = line.getOrDefault(RESUMES_MPS_RESUME_KEY, "");
             if (flfrcod.isBlank()) {
                 throw new RuntimeException("Empty key " + RESUMES_MPS_RESUME_KEY + " in " + line);
-            }
-            if(flfrcod.equals(Constants.gFlCodToMpsId(LAS_CONSTANT))) {
-                continue;
             }
 
             String frcod = line.getOrDefault(keyTypeFor, "");

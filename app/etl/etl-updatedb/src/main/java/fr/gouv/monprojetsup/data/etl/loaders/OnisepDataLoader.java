@@ -405,15 +405,24 @@ public class OnisepDataLoader {
 
         val edgesMetiersFormations = filieresPsupToFormationsMetiersIdeo.stream().flatMap(
                 fil -> fil.ideoMetiersIds().stream().map(metier -> Pair.of(metier, fil.mpsId()))
-        ).toList();
+        ).distinct().toList();
 
         val sousdomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
         val edgesFormationsDomaines = filieresPsupToFormationsMetiersIdeo.stream().flatMap(
                 fil -> getSousdomainesWebMpsIds(fil.libellesOuClesSousdomainesWeb(),sousdomainesWebByIdeoKey)
                         .stream().map(domaineId -> Pair.of(fil.mpsId(), domaineId))
-        ).toList();
+        ).collect(Collectors.toSet());
 
-        return Pair.of(edgesFormationsDomaines, edgesMetiersFormations);
+        val passMpsId = Constants.gFlCodToMpsId(Constants.PASS_FL_COD);
+        val lasMpsId  = Constants.LAS_MPS_ID;
+        edgesFormationsDomaines.addAll(
+        edgesFormationsDomaines.stream()
+                .filter(p -> p.getLeft().equals(passMpsId))
+                .map(p -> Pair.of(lasMpsId, p.getLeft()))
+                .toList()
+        );
+
+        return Pair.of(edgesFormationsDomaines.stream().toList(), edgesMetiersFormations);
 
     }
 

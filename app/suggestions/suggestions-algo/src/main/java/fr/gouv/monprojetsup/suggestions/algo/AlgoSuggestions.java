@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.Constants.LAS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
@@ -47,9 +50,12 @@ public class AlgoSuggestions {
     public static final Logger LOGGER = Logger.getLogger(AlgoSuggestions.class.getName());
 
     @Autowired
-    public AlgoSuggestions(SuggestionsData data) {
+    public AlgoSuggestions(
+            SuggestionsData data,
+            ParametresPort parametresPort
+    ) {
         this.data = data;
-        this.las = data.getLASFormations();
+        this.parametresPort = parametresPort;
         p50NbFormations = data.p50NbFormations();
         p75Capacity = data.p75Capacity();
         debugLabels.putAll(data.getDebugLabels());
@@ -57,6 +63,10 @@ public class AlgoSuggestions {
 
     /** all accesses to data after init are cached for perf reasons */
     private final SuggestionsData data;
+
+    private final ParametresPort parametresPort;
+    private static final long REFRESH_REF_DATA_DELAY_MS = 60000;
+
 
     /**
      * Données en cache utilisées par le service, précalculées au démarrage
@@ -73,8 +83,6 @@ public class AlgoSuggestions {
     private @NotNull Map<String, @NotNull String> typesFormations = new HashMap<>();
     /* les formations en apprentissage */
     private Set<String> apprentissage;
-    /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
-    protected final Set<String> las;
     /* la médiane du nombre d'action de formation dans une formation, permet de définir beaucoup d'offre ou peu d'offre */
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
@@ -93,7 +101,9 @@ public class AlgoSuggestions {
      * Précalcul des données en cache avant démarrage du service
      */
     @PostConstruct
-    void initialize() {
+    synchronized void initialize() {
+
+        clearCaches();
 
         createGraph();
 
@@ -105,13 +115,42 @@ public class AlgoSuggestions {
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
                 .keySet());
         relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.addAll(data.getLASFormations());
+        relatedToHealth.add(gFlCodToFrontId(LAS_FL_COD));
     }
+
+    private void clearCaches() {
+        edgesKeys.clear();
+        pathes.clear();
+        villes.clear();
+        formationsSimilaires.clear();
+        nbVoeux.clear();
+        capacites.clear();
+        nbAdmis.clear();
+        voeuxCoords.clear();
+        durees.clear();
+        debugLabels.clear();
+        statsSpecialites.clear();
+        candidatsMetiers.clear();
+        formationIds.clear();
+    }
+
+    @Scheduled(fixedDelay = REFRESH_REF_DATA_DELAY_MS) // Every second
+    synchronized private void refreshRefData() {
+        synchronized (this) {
+            // Fetch the latest config from a database, external service, or file
+            val isRefDataUpdateNeeded = parametresPort.isRefDataUpdateNeeded();
+            if (isRefDataUpdateNeeded) {
+                initialize();
+                parametresPort.setRefDataUpdateNotNeeded();
+            }
+        }
+    }
+
 
     /**
      * Création du graphe global
      */
-    public void createGraph() {
+    synchronized public void createGraph() {
         LOGGER.info("Creating global graph");
         edgesKeys.clear();
 
@@ -124,15 +163,11 @@ public class AlgoSuggestions {
             edgesKeys.put(domaine, formation, false, Config.EDGES_DOMAINES_FORMATIONS_WEIGHT);
         });
 
-        val metiersPass = data.getMetiersPass();
-        val lasCorr = data.getLASFormations();
         data.edgesMetiersFormationsPsup().forEach(edge -> {
             val metier = edge.src();
             val formation = edge.dst();
-            val isLasSante = lasCorr.contains(formation) && metiersPass.contains(metier);
-            val penalty = isLasSante ? Config.LASS_TO_PASS_INHERITANCE_PENALTY : 1.0;
-            edgesKeys.put(metier, formation, false, penalty * Config.EDGES_METIERS_FORMATIONS_WEIGHT);
-            edgesKeys.put(formation, metier, false, penalty * Config.EDGES_FORMATIONS_METIERS_WEIGHT);
+            edgesKeys.put(metier, formation, false, Config.EDGES_METIERS_FORMATIONS_WEIGHT);
+            edgesKeys.put(formation, metier, false, Config.EDGES_FORMATIONS_METIERS_WEIGHT);
         });
 
         edgesKeys.putAll(data.edgesDomainesMetiers(), true, Config.EDGES_DOMAINES_METIERS_WEIGHT);
@@ -148,10 +183,6 @@ public class AlgoSuggestions {
         val edgesFilieresGroupes = data.edgesFormationPsupFormationMps();
         //edgesKeys.putAll(edgesFilieresGroupes);
         edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
-
-        //LAS inheritance, both from their mother licence and from PASS
-        edgesKeys.inheritEdgesFromRicherItem(data.lasToGeneric(), 1.0);
-        edgesKeys.inheritEdgesFromRicherItem(data.lasToPass(), Config.LASS_TO_PASS_INHERITANCE_PENALTY);
 
         //suppression des formations hors référentiel MPS
         Set<String> mpsFormationsIds = new HashSet<>(getFormationIds());
@@ -184,10 +215,10 @@ public class AlgoSuggestions {
      * @param pf                  the profile
      * @param cfg                 the config
      * @param inclureScores       if true, the scores are included in the result
-     * @param affinitesNaiveBayes
+     * @param affinitesNaiveBayes the naive bayes affinities
      * @return the affinities
      */
-    public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
+    synchronized public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
             boolean inclureScores,
@@ -233,7 +264,7 @@ public class AlgoSuggestions {
      * @param pf  the profile
      * @return the suggestions, each indexed with a score
      */
-    public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
+    synchronized public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
             boolean inclureScores,
             @NotNull List<Affinity> affinitesNaiveBayes) {
@@ -329,7 +360,7 @@ public class AlgoSuggestions {
      * @param cles the keys
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles) {
+    synchronized public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -360,7 +391,7 @@ public class AlgoSuggestions {
      * @param keys     the keys of the formations
      * @return the explanations and examples associated to the node
      */
-    public List<ExplanationAndExamples> getExplanationsAndExamples(
+    synchronized public List<ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
             @NotNull List<String> keys,
             @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
@@ -385,7 +416,7 @@ public class AlgoSuggestions {
                 && (pf.geo_pref() == null || pf.geo_pref().isEmpty());
     }
 
-    public boolean existsInApprentissage(String grp) {
+    synchronized public boolean existsInApprentissage(String grp) {
         return apprentissage.contains(grp);
     }
 
@@ -396,7 +427,7 @@ public class AlgoSuggestions {
      * @param maxDistance the max distance
      * @return a list of pathes from nodes n with a distance less than maxDistance
      */
-    public List<Path> computePathesFrom(String n, int maxDistance) {
+     public List<Path> computePathesFrom(String n, int maxDistance) {
         return pathes.computeIfAbsent(
                 Pair.of(n,maxDistance),
                 z -> edgesKeys
@@ -406,25 +437,6 @@ public class AlgoSuggestions {
                         .toList()
         );
     }
-
-    public boolean isRelatedToHealth(Set<String> nonZeroScores) {
-        return relatedToHealth.stream()
-                .anyMatch(nonZeroScores::contains);
-    }
-
-    public boolean isLas(String fl) {
-        return las.contains(fl);
-    }
-
-    public String getStats() {
-        return
-                "<br>\ndetails served since last boot: " + counter.get()
-                        + "<br>\nnodes in graph: " + edgesKeys.nodes().size()
-                + "<br>\nedges in graph: " + edgesKeys.size()
-                ;
-
-    }
-
 
     private final ConcurrentHashMap<String,Ville> villes = new ConcurrentHashMap<>();
     public Ville getVille(String nomVille) {
@@ -463,7 +475,7 @@ public class AlgoSuggestions {
     }
 
     @Getter
-    private final Map<String, @NotNull String> debugLabels = new HashMap<>();
+    private final Map<String, @NotNull String> debugLabels = new ConcurrentHashMap<>();
     public String getDebugLabel(String key) {
         return debugLabels.get(key);
     }

@@ -136,7 +136,6 @@ class FormationEntity {
             capacite ?: -1,
             apprentissage ?: false,
             duree ?: -1,
-            las,
             stats.toStats(),
             formationsAssociees ?: emptyList(),
         )

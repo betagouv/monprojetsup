@@ -190,18 +190,6 @@ class FormationsMpsTests : DataPortTest() {
 
         }
 
-        @Test
-        fun `LA plupart des des las ont des stats non vides`() {
-            val lasKeys = mpsDataPort.getLasToGenericIdMapping().keys
-            val lasSansStatsAdmissions = mpsDataPort.getStatsFormation()
-                .filter { lasKeys.contains(it.key) }
-                .filter { !it.value.hasStatsAdmissions() }
-                .map { it.key }
-            val nbTotal = lasKeys.size
-            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_LAS_AVEC_STATS_VIDES * nbTotal / 100)
-        }
-
-
     }
 
 }

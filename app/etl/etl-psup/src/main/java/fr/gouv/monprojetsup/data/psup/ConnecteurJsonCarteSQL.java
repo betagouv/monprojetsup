@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.TYPE_FORMATION;
 import static fr.gouv.monprojetsup.data.psup.Scores.cleanAndSplit;
@@ -169,10 +168,10 @@ public class ConnecteurJsonCarteSQL {
                     int gFlCod = result.getInt("g_fl_cod");
                     boolean isLAS = result.getBoolean("g_ta_flg_for_las");
 
-                    FormationCarteAlgoTags f = new FormationCarteAlgoTags(gTaCod, gFlCod, config.specificTreatmentforLAS && isLAS);
+                    FormationCarteAlgoTags f = new FormationCarteAlgoTags(gTaCod, gFlCod);
                     entree.formations.put(f.gTaCod, f);
 
-                    Filiere fil = entree.getFiliere(gFlCod, config.specificTreatmentforLAS && isLAS);
+                    Filiere fil = entree.getFiliere(gFlCod);
 
                     for (Map.Entry<String, String> entry : config.fieldToSourceType.entrySet()) {
                         String fieldName = entry.getKey();
@@ -233,7 +232,7 @@ public class ConnecteurJsonCarteSQL {
         try (Statement stmt = connection.createStatement()) {
 
             /* récupère la liste des candidats depuis la base de données */
-            LOGGER.info("Récupération des filières non las");
+            LOGGER.info("Récupération des filières");
             stmt.setFetchSize(1_000_000);
             String sql = SELECT
                     //id du groupe de classement
@@ -255,33 +254,6 @@ public class ConnecteurJsonCarteSQL {
                     boolean gFlFlgApp = result.getBoolean(5);
                     Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp, false);
                     entree.filieres.put(gFlCod, filiere);
-                }
-            }
-        }
-
-
-        //traitement spécifique LAS
-        try (Statement stmt = connection.createStatement()) {
-            LOGGER.info("Récupération des filières las");
-            stmt.setFetchSize(1_000_000);
-            String sql = SELECT
-                    //id du groupe de classement
-                    + "distinct G_FL_LIB_aff, "
-                    + "G_FL_COD_aff "
-                    + FROM + " mps_aff where NVL(G_TA_FLG_FOR_LAS,0)=1";
-
-            LOGGER.info(sql);
-
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    String gFlLib = result.getString(1);
-                    int gFlCod = result.getInt(2);
-                    Filiere f = entree.filieres.get(gFlCod);
-                    if (f != null) {
-                        int newGFlCod = LAS_CONSTANT + gFlCod;
-                        Filiere filiere = new Filiere(gFlLib, f.sigle(), newGFlCod, gFlCod, false, true);
-                        entree.filieres.put(newGFlCod, filiere);
-                    }
                 }
             }
         }
