@@ -89,17 +89,7 @@ public class Labels {
         psupData.formations().formations.forEach((gTaCod, form) -> {
             String key = gTaCodToMpsId(gTaCod);
             String libelle = getLibelleFront(key, form.toString());
-            //if(includeKeys) libelle = includeKey(key, libelle);
             result.put(key, libelle);
-        });
-
-        Map<String, String> lasToGeneric = psupData.getLasToGeneric();
-        lasToGeneric.forEach((lasKey, genericKey) -> {
-            if(result.containsKey(genericKey)) {
-                String libelle = result.get(genericKey) + " -  Accès Santé (LAS)";
-                if(includeKeys) libelle = includeKey(lasKey, libelle);
-                result.put(lasKey, libelle);
-            }
         });
         return result;
     }

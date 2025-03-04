@@ -179,15 +179,6 @@ public class SuggestionsData {
                 .collect(Collectors.toSet());
     }
 
-
-    public Set<String> getLASFormations() {
-        return formationsPort.retrieveFormations().entrySet()
-                .stream()
-                .filter(e -> e.getValue().las() != null)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-    }
-
     public Map<String, Set<String>> getMetiersVersFormations() {
         return formationsMetierPort.findAll().stream()
                 .collect(Collectors.groupingBy( e -> e.idMetier))
@@ -229,14 +220,6 @@ public class SuggestionsData {
 
     public List<Edge> edgesFormationPsupFormationMps() {
         return edgesPort.getEdgesFormationPsupFormationMps();
-    }
-
-    public List<Edge> lasToGeneric() {
-        return edgesPort.getEdgesLasToGeneric();
-    }
-
-    public List<Edge> lasToPass() {
-        return edgesPort.getEdgesLasToPass();
     }
 
     public @Nullable Ville getVille(String id) {

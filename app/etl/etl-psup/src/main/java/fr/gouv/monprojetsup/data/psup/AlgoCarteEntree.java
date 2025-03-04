@@ -22,10 +22,11 @@ package fr.gouv.monprojetsup.data.psup;
 
 
 import fr.gouv.monprojetsup.data.model.psup.Filiere;
-import fr.gouv.monprojetsup.data.Constants;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 /* données d'entrées pour les algos de la carte */
@@ -46,9 +47,8 @@ public class AlgoCarteEntree implements Serializable {
     /* associe à chaque candidat son type de bac */
     public final Map< Integer, Integer> typesBacCandiats = new HashMap<>();
 
-    public Filiere getFiliere(int gFlCod, boolean isLas) {
-        if(!isLas) return filieres.get(gFlCod);
-        else return filieres.get(Constants.LAS_CONSTANT + gFlCod);
+    public Filiere getFiliere(int gFlCod) {
+        return filieres.get(gFlCod);
     }
 
 

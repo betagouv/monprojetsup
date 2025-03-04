@@ -12,11 +12,8 @@ import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_FORMATIONS_PSUP_DOMAINES;
 import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS;
 import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_INTERET_METIER;
-import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_LAS_TO_GENERIC;
-import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_LAS_TO_PASS;
 import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_METIERS_ASSOCIES;
 import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_METIERS_FORMATIONS_PSUP;
-import static fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.TYPE_EDGE_SECTEURS_METIERS;
 
 public abstract class EdgesPort {
 
@@ -40,20 +37,10 @@ public abstract class EdgesPort {
         return retrieveEdgesOfType(TYPE_EDGE_DOMAINES_METIERS);
     }
 
-    public List<Edge> getEdgesSecteursMetiers() {return retrieveEdgesOfType(TYPE_EDGE_SECTEURS_METIERS); }
-
     public List<Edge> getEdgesMetiersAssocies() { return retrieveEdgesOfType(TYPE_EDGE_METIERS_ASSOCIES); }
 
     public List<Edge> getEdgesFormationPsupFormationMps() {
         return retrieveEdgesOfType(TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS);
-    }
-
-    public List<Edge> getEdgesLasToGeneric() {
-        return retrieveEdgesOfType(TYPE_EDGE_LAS_TO_GENERIC);
-    }
-
-    public List<Edge> getEdgesLasToPass() {
-        return retrieveEdgesOfType(TYPE_EDGE_LAS_TO_PASS);
     }
 
     public List<Edge> getEdgesAtometoElement() {

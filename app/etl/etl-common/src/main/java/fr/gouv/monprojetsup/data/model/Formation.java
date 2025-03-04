@@ -15,7 +15,6 @@ public record Formation(
         int capacite,
         boolean apprentissage,
         int duree,
-        @Nullable String las,
         @NotNull StatsFormation stats,
         @NotNull List<@NotNull String> filieresPsup
 
