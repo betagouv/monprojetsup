@@ -272,15 +272,15 @@ class RechercherFormationsServiceTest {
             // Then
             val attendu =
                 mapOf(
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 0 + (0.83 * 50).toInt(),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 150 + 85,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 130 + (0.84 * 30).toInt(),
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to (0.84 * 77).toInt() + (0.84 * 80).toInt() + 130,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to (76 * 0.84).toInt(),
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 130,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 130,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
-                    FormationCourte(id = "fl21", nom = "L1 - Science de la vie") to 37,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 4.823529411764707E-46,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0000000000000003E-36,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 3.2338308457711453E-37,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 7.529411764705884E-28,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 7.411764705882355E-46,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0000000000000003E-45,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0000000000000003E-45,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 8.461538461538464E-46,
+                    FormationCourte(id = "fl21", nom = "L1 - Science de la vie") to 2.8461538461538468E-46,
                 )
             assertThat(resultat).isEqualTo(attendu)
         }

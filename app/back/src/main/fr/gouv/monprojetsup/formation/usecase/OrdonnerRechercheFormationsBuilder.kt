@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class OrdonnerRechercheFormationsBuilder {
-    fun trierParScore(resultats: Map<FormationCourte, Int>): List<FormationCourte> {
+    fun trierParScore(resultats: Map<FormationCourte, Double>): List<FormationCourte> {
         return resultats.entries.sortedByDescending { it.value }.associate { it.toPair() }.map { it.key }
     }
 
     fun trierParScoreEtSelonSuggestionsProfil(
-        resultats: Map<FormationCourte, Int>,
+        resultats: Map<FormationCourte, Double>,
         formationsAvecLeurAffinite: List<FormationAvecSonAffinite>,
     ): List<FormationCourte> {
         return trierParScoreRecherchePuisParAffinite(formationsAvecLeurAffinite, resultats)
@@ -19,12 +19,12 @@ class OrdonnerRechercheFormationsBuilder {
 
     private fun trierParScoreRecherchePuisParAffinite(
         formationsAvecLeurAffinite: List<FormationAvecSonAffinite>,
-        resultats: Map<FormationCourte, Int>,
+        resultats: Map<FormationCourte, Double>,
     ): List<FormationCourte> {
         val comparateur = creerComparateur(formationsAvecLeurAffinite)
         return resultats.toList()
             .sortedWith(
-                compareByDescending<Pair<FormationCourte, Int>> { it.second }
+                compareByDescending<Pair<FormationCourte, Double>> { it.second }
                     .thenComparing { p1, p2 -> comparateur.compare(p1.first.id, p2.first.id) }
                     .thenComparing { p1, p2 -> p1.first.id.compareTo(p2.first.id) },
             ).map { it.first }
@@ -35,7 +35,7 @@ class OrdonnerRechercheFormationsBuilder {
         return Comparator { s1, s2 ->
             val index1 = mapAvecLesIndex[s1] ?: -1.0f
             val index2 = mapAvecLesIndex[s2] ?: -1.0f
-            index1.compareTo(index2)
+            index2.compareTo(index1)
         }
     }
 }

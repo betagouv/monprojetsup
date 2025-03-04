@@ -259,7 +259,7 @@ class FormationController(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun recupererLesFormationsAssocieesALaRecherche(recherche: String): Map<FormationCourte, Int> {
+    private fun recupererLesFormationsAssocieesALaRecherche(recherche: String): Map<FormationCourte, Double> {
         if (recherche.length > TAILLE_MAXIMAL_RECHERCHE) {
             throw MonProjetSupBadRequestException(
                 code = "REQUETE_TROP_LONGUE",

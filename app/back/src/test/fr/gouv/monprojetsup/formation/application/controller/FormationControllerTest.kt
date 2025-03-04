@@ -2276,9 +2276,9 @@ class FormationControllerTest(
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
-                    FormationCourte(id = "fl3", nom = "L1 - Philosophie") to 100,
-                    FormationCourte(id = "fl7", nom = "L1 - Mathématique") to 100,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100.0,
+                    FormationCourte(id = "fl3", nom = "L1 - Philosophie") to 100.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Mathématique") to 100.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -2414,14 +2414,14 @@ class FormationControllerTest(
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
             val mapRechercheLongue =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -2529,8 +2529,8 @@ class FormationControllerTest(
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             val rechercheL1 =
                 listOf(
@@ -2996,8 +2996,8 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -3518,8 +3518,8 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(

@@ -14,7 +14,7 @@ class OrdonnerRechercheFormationsBuilderTest {
         @Test
         fun `si vide, doit renvoyer vide`() {
             // Given
-            val resultatsRecherche = emptyMap<FormationCourte, Int>()
+            val resultatsRecherche = emptyMap<FormationCourte, Double>()
 
             // When
             val resultat = builder.trierParScore(resultatsRecherche)
@@ -35,13 +35,13 @@ class OrdonnerRechercheFormationsBuilderTest {
             val formation7 = FormationCourte("7", "7")
             val resultatsRecherche =
                 mapOf(
-                    formation1 to 0,
-                    formation2 to 10,
-                    formation3 to 63,
-                    formation4 to 10,
-                    formation5 to 30,
-                    formation6 to 58,
-                    formation7 to 100,
+                    formation1 to 0.0,
+                    formation2 to 10.0,
+                    formation3 to 63.0,
+                    formation4 to 10.0,
+                    formation5 to 30.0,
+                    formation6 to 58.0,
+                    formation7 to 100.0,
                 )
 
             // When
@@ -67,7 +67,7 @@ class OrdonnerRechercheFormationsBuilderTest {
         @Test
         fun `si résultats vide, doit renvoyer vide`() {
             // Given
-            val resultatsRecherche = emptyMap<FormationCourte, Int>()
+            val resultatsRecherche = emptyMap<FormationCourte, Double>()
             val formationsAvecLeurAffinite = emptyList<FormationAvecSonAffinite>()
 
             // When
@@ -89,13 +89,13 @@ class OrdonnerRechercheFormationsBuilderTest {
             val formation7 = FormationCourte("7", "7")
             val resultatsRecherche =
                 mapOf(
-                    formation1 to 0,
-                    formation2 to 10,
-                    formation3 to 63,
-                    formation4 to 10,
-                    formation5 to 30,
-                    formation6 to 58,
-                    formation7 to 100,
+                    formation1 to 0.0,
+                    formation2 to 10.0,
+                    formation3 to 63.0,
+                    formation4 to 10.0,
+                    formation5 to 30.0,
+                    formation6 to 58.0,
+                    formation7 to 100.0,
                 )
             val formationsAvecLeurAffinite = emptyList<FormationAvecSonAffinite>()
 
@@ -128,13 +128,13 @@ class OrdonnerRechercheFormationsBuilderTest {
             val formation7 = FormationCourte("7", "7")
             val resultatsRecherche =
                 mapOf(
-                    formation1 to 100,
-                    formation2 to 10,
-                    formation3 to 63,
-                    formation4 to 10,
-                    formation5 to 10,
-                    formation6 to 63,
-                    formation7 to 100,
+                    formation1 to 100.0,
+                    formation2 to 10.0,
+                    formation3 to 63.0,
+                    formation4 to 10.0,
+                    formation5 to 10.0,
+                    formation6 to 63.0,
+                    formation7 to 100.0,
                 )
             val formationsAvecLeurAffinite =
                 listOf(

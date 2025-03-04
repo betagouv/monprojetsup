@@ -16,26 +16,26 @@ class RechercherFormationsService(
     fun rechercheLesFormationsAvecLeurScoreCorrespondantes(
         recherche: String,
         tailleMinimumRecherche: Int,
-    ): Map<FormationCourte, Int> {
+    ): Map<FormationCourte, Double> {
         val motsRecherches = filtrerRechercheBuilder.filtrerMotsRecherches(recherche, tailleMinimumRecherche)
         val candidatsParMots = motsRecherches.map { rechercheFormationRepository.rechercherUneFormation(it) }
-        val resultats = candidatsParMots.flatMap { it.map { itt -> itt.formation } }.distinct().associateWith { 1.0f }.toMutableMap()
+        val resultats = candidatsParMots.flatMap { it.map { itt -> itt.formation } }.distinct().associateWith { 1.0 }.toMutableMap()
         candidatsParMots.forEach { candidats ->
             val candidatsAvecScores = candidats.associate { it.formation to calculerScore(it) }
             val scoreMaximum = candidatsAvecScores.values.filter { it >= 1 }.maxOrNull() ?: 1
-            mettreAJourLesResultatsAvecLesNouveausScores(candidatsAvecScores, scoreMaximum, resultats)
+            mettreAJourLesResultatsAvecLesNouveauxScores(candidatsAvecScores, scoreMaximum, resultats)
         }
-        return resultats.map { it.key to (100 * it.value).toInt() }.toMap()
+        return resultats
     }
 
-    private fun mettreAJourLesResultatsAvecLesNouveausScores(
+    private fun mettreAJourLesResultatsAvecLesNouveauxScores(
         recherchesAvecScores: Map<FormationCourte, Int>,
         scoreMaximum: Int,
-        resultats: MutableMap<FormationCourte, Float>,
+        resultats: MutableMap<FormationCourte, Double>,
     ) {
         resultats.keys.forEach { formation ->
-            val scoreActuel = resultats[formation] ?: 0f
-            val score = Math.max(1e-9f, 1.0f * recherchesAvecScores.getOrDefault(formation, 0) / scoreMaximum.toFloat())
+            val scoreActuel = resultats[formation] ?: 0.0
+            val score = Math.max(1e-9, 1.0 * recherchesAvecScores.getOrDefault(formation, 0) / scoreMaximum.toFloat())
             resultats[formation] = scoreActuel * score
         }
     }
