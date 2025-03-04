@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.parametre
 
+import fr.gouv.monprojetsup.data.Constants.MAJ_SUGGESTIONS_REF_DATA_NECESSAIRE
 import fr.gouv.monprojetsup.data.parametre.entity.ParametreEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -20,10 +21,15 @@ class UpdateParametreDb(
     }
 
     fun setEtlEnCours(b: Boolean) {
-        val newParam = ParametreEntity()
-        newParam.id = ETL_EN_COURS
-        newParam.statut = b
-        parametreDb.save(newParam)
+        val etlEnCoursParam = ParametreEntity()
+        etlEnCoursParam.id = ETL_EN_COURS
+        etlEnCoursParam.statut = b
+        parametreDb.save(etlEnCoursParam)
+
+        val majSuggestionsParam = ParametreEntity()
+        majSuggestionsParam.id = MAJ_SUGGESTIONS_REF_DATA_NECESSAIRE
+        majSuggestionsParam.statut = true
+        parametreDb.save(majSuggestionsParam)
     }
 
     fun getFormationUpdateForcedFlag() : Boolean {
