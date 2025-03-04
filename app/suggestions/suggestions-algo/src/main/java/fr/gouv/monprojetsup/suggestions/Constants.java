@@ -4,6 +4,7 @@ public class Constants {
     public static final String BR = ".<br/>";
 
     public static final int PASS_FL_COD = 2047;
+    public static final int LAS_FL_COD = 1000000;
 
 
     public static boolean isMpsFormation(String id) {

@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.Constants.LAS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
@@ -49,7 +50,6 @@ public class AlgoSuggestions {
     @Autowired
     public AlgoSuggestions(SuggestionsData data) {
         this.data = data;
-        this.las = data.getLASFormations();
         p50NbFormations = data.p50NbFormations();
         p75Capacity = data.p75Capacity();
         debugLabels.putAll(data.getDebugLabels());
@@ -73,8 +73,6 @@ public class AlgoSuggestions {
     private @NotNull Map<String, @NotNull String> typesFormations = new HashMap<>();
     /* les formations en apprentissage */
     private Set<String> apprentissage;
-    /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
-    protected final Set<String> las;
     /* la médiane du nombre d'action de formation dans une formation, permet de définir beaucoup d'offre ou peu d'offre */
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
@@ -105,7 +103,7 @@ public class AlgoSuggestions {
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
                 .keySet());
         relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.addAll(data.getLASFormations());
+        relatedToHealth.add(gFlCodToFrontId(LAS_FL_COD));
     }
 
     /**
@@ -124,15 +122,11 @@ public class AlgoSuggestions {
             edgesKeys.put(domaine, formation, false, Config.EDGES_DOMAINES_FORMATIONS_WEIGHT);
         });
 
-        val metiersPass = data.getMetiersPass();
-        val lasCorr = data.getLASFormations();
         data.edgesMetiersFormationsPsup().forEach(edge -> {
             val metier = edge.src();
             val formation = edge.dst();
-            val isLasSante = lasCorr.contains(formation) && metiersPass.contains(metier);
-            val penalty = isLasSante ? Config.LASS_TO_PASS_INHERITANCE_PENALTY : 1.0;
-            edgesKeys.put(metier, formation, false, penalty * Config.EDGES_METIERS_FORMATIONS_WEIGHT);
-            edgesKeys.put(formation, metier, false, penalty * Config.EDGES_FORMATIONS_METIERS_WEIGHT);
+            edgesKeys.put(metier, formation, false, Config.EDGES_METIERS_FORMATIONS_WEIGHT);
+            edgesKeys.put(formation, metier, false, Config.EDGES_FORMATIONS_METIERS_WEIGHT);
         });
 
         edgesKeys.putAll(data.edgesDomainesMetiers(), true, Config.EDGES_DOMAINES_METIERS_WEIGHT);
@@ -148,10 +142,6 @@ public class AlgoSuggestions {
         val edgesFilieresGroupes = data.edgesFormationPsupFormationMps();
         //edgesKeys.putAll(edgesFilieresGroupes);
         edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
-
-        //LAS inheritance, both from their mother licence and from PASS
-        edgesKeys.inheritEdgesFromRicherItem(data.lasToGeneric(), 1.0);
-        edgesKeys.inheritEdgesFromRicherItem(data.lasToPass(), Config.LASS_TO_PASS_INHERITANCE_PENALTY);
 
         //suppression des formations hors référentiel MPS
         Set<String> mpsFormationsIds = new HashSet<>(getFormationIds());
@@ -184,7 +174,7 @@ public class AlgoSuggestions {
      * @param pf                  the profile
      * @param cfg                 the config
      * @param inclureScores       if true, the scores are included in the result
-     * @param affinitesNaiveBayes
+     * @param affinitesNaiveBayes the naive bayes affinities
      * @return the affinities
      */
     public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
@@ -411,20 +401,6 @@ public class AlgoSuggestions {
         return relatedToHealth.stream()
                 .anyMatch(nonZeroScores::contains);
     }
-
-    public boolean isLas(String fl) {
-        return las.contains(fl);
-    }
-
-    public String getStats() {
-        return
-                "<br>\ndetails served since last boot: " + counter.get()
-                        + "<br>\nnodes in graph: " + edgesKeys.nodes().size()
-                + "<br>\nedges in graph: " + edgesKeys.size()
-                ;
-
-    }
-
 
     private final ConcurrentHashMap<String,Ville> villes = new ConcurrentHashMap<>();
     public Ville getVille(String nomVille) {

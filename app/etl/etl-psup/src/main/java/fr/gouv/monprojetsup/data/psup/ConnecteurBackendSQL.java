@@ -49,7 +49,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_ADMIS_CODE;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;

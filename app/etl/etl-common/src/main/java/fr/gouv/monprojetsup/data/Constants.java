@@ -41,8 +41,6 @@ public class Constants {
     public static final String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
 
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
-    /* constant added to the las gFlCod indexes */
-    public static final Integer LAS_CONSTANT = 1000000;
     public static final Integer PPPE_CONSTANT = 999999;
     public static final String CENTRE_INTERETS_ROME = "T-ROME.";
 
@@ -57,9 +55,7 @@ public class Constants {
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
     }
-    public static String gFlCodToMpsLasId(int cle) {
-        return   gFlCodToMpsId((cle % LAS_CONSTANT) + LAS_CONSTANT);
-    }
+
     public static String gFrCodToMpsId(int cle) {
         return TYPE_FORMATION_PREFIX + cle;
     }
@@ -72,7 +68,7 @@ public class Constants {
         return id.startsWith(FORMATION_PREFIX);
     }
 
-    public static final String LAS_MPS_ID = gFlCodToMpsId(LAS_CONSTANT);
+    public static final String LAS_MPS_ID = gFlCodToMpsId(1000000);
     public static final String PPPE_MPS_ID = gFlCodToMpsId(PPPE_CONSTANT);
 
     public static final List<String> MPS_SPECIFIC_FORMATION_IDS = List.of(LAS_MPS_ID, PPPE_MPS_ID);

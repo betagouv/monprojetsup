@@ -32,9 +32,7 @@ import static fr.gouv.monprojetsup.data.Constants.BPJEPS_PSUP_FR_COD;
 import static fr.gouv.monprojetsup.data.Constants.CMI_PSUP_FR_COD;
 import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.IEP_PSUP_FR_COD;
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.Constants.MIN_NB_ADMIS_FOR_BAC_ACTIF;
-import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
@@ -209,10 +207,9 @@ public record PsupData(
 
     public @Nullable Integer getDuree(
             @NotNull String mpsKey,
-            @NotNull Map<String, Set<String>> mpsKeyToPsupKeys,
-            @NotNull Set<String> las) {
+            @NotNull Map<String, Set<String>> mpsKeyToPsupKeys
+    ) {
         val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, Set.of(mpsKey));
-        if(las.contains(mpsKey)) return Constants.DUREE_LAS;
         if(mpsKey.equals(Constants.LAS_MPS_ID)) return Constants.DUREE_LAS;
         if(mpsKey.equals(Constants.PPPE_MPS_ID)) return Constants.DUREE_PPPE;
         val result = psupKeys.stream()
@@ -437,18 +434,6 @@ public record PsupData(
                 .toList();
         filieresWhichAreGroupsAsWell.forEach(s -> flToGrp.put(s, s));
 
-
-        //ajout de la correspondance LAS
-        val genericToLas = getGenericToLas();
-        genericToLas.forEach((genericKey, mpsLasKey) -> {
-            val grpKey = flToGrp.get(genericKey);
-            if (grpKey != null) {
-                flToGrp.put(mpsLasKey, genericToLas.getOrDefault(grpKey, grpKey));
-            } else {
-                flToGrp.put(mpsLasKey, mpsLasKey);
-            }
-        });
-
         return flToGrp;
     }
 
@@ -462,54 +447,6 @@ public record PsupData(
 
     public void setMotsCles(TagsSources motsCles) {
         this.motsCles.set(motsCles);
-    }
-
-    @NotNull
-    public  Map<String, String> getGenericToLas() {
-        return formations.formations.values().stream()
-                .filter(f -> las.contains(f.gTaCod))
-                .map(f -> f.gFlCod)
-                .distinct()
-                .collect(Collectors.toMap(
-                        Constants::gFlCodToMpsId,
-                        gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod)
-                        )
-                );
-    }
-
-    @NotNull
-    public  Map<String, @NotNull String> getLasToGeneric() {
-        return formations.formations.values().stream()
-                .filter(f -> las.contains(f.gTaCod) || f.isLAS())
-                .map(f -> f.gFlCod)
-                .distinct()
-                .collect(Collectors.toMap(
-                        gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod),
-                                Constants::gFlCodToMpsId
-                        )
-                );
-    }
-    @NotNull
-    public  Map<String, String> getLasToPass() {
-        return formations.formations.values().stream()
-                .filter(f -> las.contains(f.gTaCod))
-                .map(f -> f.gFlCod)
-                .distinct()
-                .collect(Collectors.toMap(
-                                gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod),
-                                gFlCod -> Constants.gFlCodToMpsId(PASS_FL_COD)
-                        )
-                );
-    }
-
-    @NotNull
-    public Set<@NotNull String> getLasMpsKeys() {
-        val psupKeytoMpsKey = getPsupKeyToMpsKey();
-        return formations.formations.values().stream()
-                .filter(f -> las.contains(f.gTaCod))
-                .map(f -> Constants.gFlCodToMpsLasId( f.gFlCod))
-                .map(mpsKey -> psupKeytoMpsKey.getOrDefault(mpsKey,mpsKey))
-                .collect(Collectors.toSet());
     }
 
     private void addFormationsPrefixFomAnother(Map<Integer, Integer> result) {
@@ -553,11 +490,7 @@ public record PsupData(
                     int gta = Integer.parseInt(m.get(G_TA_COD));
                     val form = formations.formations.get(gta);
                     if (form != null) {
-                        int fl = form.gFlCod;
-                        if (form.isLAS() && fl < LAS_CONSTANT) {
-                            fl += LAS_CONSTANT;
-                        }
-                        juryToFils.computeIfAbsent(cja, z -> new HashSet<>()).add(fl);
+                        juryToFils.computeIfAbsent(cja, z -> new HashSet<>()).add(form.gFlCod);
                     }
                 }
             });
@@ -624,8 +557,7 @@ public record PsupData(
         Map<String, List<Formation>> result = new HashMap<>();
         formations().formations.values()
                 .forEach(f -> {
-                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT : f.gFlCod;
-                    String filKey = Constants.gFlCodToMpsId(gFlCod);
+                    String filKey = Constants.gFlCodToMpsId(f.gFlCod);
                     val grKey = groupes.getOrDefault(filKey, filKey);
                     result
                             .computeIfAbsent(grKey, z -> new ArrayList<>())
@@ -672,10 +604,7 @@ public record PsupData(
         val paires =  formations.formations.values().stream()
                 .flatMap(f -> {
                     val mpsids = new ArrayList<String>();
-                    val candidateMpsKey = f.isLAS()
-                            ? Constants.gFlCodToMpsLasId(f.gFlCod)
-                            : Constants.gFlCodToMpsId(f.gFlCod)
-                            ;
+                    val candidateMpsKey = Constants.gFlCodToMpsId(f.gFlCod);
                     var mpsKey = psupIndextoMpsIndex.get(candidateMpsKey);
                     if(mpsKey == null && formationsMps.contains(candidateMpsKey)) {
                             mpsKey = candidateMpsKey;

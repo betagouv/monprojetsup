@@ -63,10 +63,6 @@ public class AffinityEvaluator {
     /* the profile */
     private final ProfileDTO pf;
 
-    /***** data precomputed from the profile ***********/
-    /* true iff something in the profile is related to health. If not LAS are deprioritized.  */
-    private final boolean isInterestedinHealth;
-
     /* bac of the profile.  */
     private final @NotNull String bac;
 
@@ -134,8 +130,6 @@ public class AffinityEvaluator {
 
         //autres formations
         nonZeroScores.addAll(approved.stream().map(ChoiceDTO::id).toList());
-
-        isInterestedinHealth = algo.isRelatedToHealth(nonZeroScores);
 
         //tag --> node --> distance
         //noinspection DataFlowIssue
@@ -286,11 +280,6 @@ public class AffinityEvaluator {
             ) {
 
         if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
-
-        /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
-        if (algo.isLas(fl) && !isInterestedinHealth) {
-            return Affinite.getNoMatch();
-        }
 
         /*
          * map des critères vers des doubles

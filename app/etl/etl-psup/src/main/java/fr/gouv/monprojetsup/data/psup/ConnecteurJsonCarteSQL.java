@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.TYPE_FORMATION;
 import static fr.gouv.monprojetsup.data.psup.Scores.cleanAndSplit;
@@ -169,10 +168,10 @@ public class ConnecteurJsonCarteSQL {
                     int gFlCod = result.getInt("g_fl_cod");
                     boolean isLAS = result.getBoolean("g_ta_flg_for_las");
 
-                    FormationCarteAlgoTags f = new FormationCarteAlgoTags(gTaCod, gFlCod, config.specificTreatmentforLAS && isLAS);
+                    FormationCarteAlgoTags f = new FormationCarteAlgoTags(gTaCod, gFlCod);
                     entree.formations.put(f.gTaCod, f);
 
-                    Filiere fil = entree.getFiliere(gFlCod, config.specificTreatmentforLAS && isLAS);
+                    Filiere fil = entree.getFiliere(gFlCod);
 
                     for (Map.Entry<String, String> entry : config.fieldToSourceType.entrySet()) {
                         String fieldName = entry.getKey();

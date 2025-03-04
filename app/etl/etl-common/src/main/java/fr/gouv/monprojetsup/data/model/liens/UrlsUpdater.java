@@ -98,7 +98,6 @@ public class UrlsUpdater {
     public static @NotNull Map<String, @NotNull List<DescriptifsFormationsMetiers.Link>> updateUrls(
             @NotNull List<MetierIdeo> metiers,
             @NotNull Map<String, @NotNull List<String>> mpsKeyToIdeo,
-            @NotNull Map<String, @NotNull String> lasToGeneric,
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,
             @NotNull Map<String, @NotNull String> liensCarte,
             @NotNull List<String> mpsIds,
@@ -202,24 +201,6 @@ public class UrlsUpdater {
                 LABEL_ARTICLE_PAS_LAS,
                 urls
         );
-        lasToGeneric.forEach((keyLas, keyGeneric) -> {
-            //ajout article études de santé
-            addUrl(
-                    keyLas,
-                    Constants.URL_ARTICLE_PAS_LAS,
-                    LABEL_ARTICLE_PAS_LAS,
-                    LABEL_ARTICLE_PAS_LAS,
-                    urls
-            );
-            urls.getOrDefault(keyGeneric, List.of()).forEach(s ->
-                    addUrl(
-                            keyLas,
-                            s.uri(),
-                            s.label(),
-                            s.source() + LAS_TO_GENERIC, urls
-                    )
-            );
-        });
 
         return urls;
     }
