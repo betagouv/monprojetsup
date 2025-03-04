@@ -5,8 +5,6 @@ import fr.gouv.monprojetsup.data.model.Edge;
 import fr.gouv.monprojetsup.data.model.Formation;
 import fr.gouv.monprojetsup.data.model.LatLng;
 import fr.gouv.monprojetsup.data.model.Ville;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Config;
 import fr.gouv.monprojetsup.suggestions.port.ConfigPort;
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
@@ -32,8 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
@@ -42,6 +38,7 @@ import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 public class SuggestionsData {
 
     private static final int DUREE_DEFAULT_VALUE = 3;
+    private static final long REFRESH_CONFIG_DELAY_MS = 1000;
     private final EdgesPort edgesPort;
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
@@ -82,7 +79,7 @@ public class SuggestionsData {
     @Getter
     private @NotNull Config config;
 
-    @Scheduled(fixedDelay = 1000) // Every second
+    @Scheduled(fixedDelay = REFRESH_CONFIG_DELAY_MS) // Every second
     private void refreshConfig() {
         synchronized (this) {
             // Fetch the latest config from a database, external service, or file
@@ -93,6 +90,7 @@ public class SuggestionsData {
             }
         }
     }
+
 
     public void setConfig(@NotNull Config config) {
         synchronized (this) {
@@ -139,20 +137,6 @@ public class SuggestionsData {
         return f.map(Formation::duree).orElse(DUREE_DEFAULT_VALUE);
     }
 
-    public @Nullable Pair<String, Middle50> getStatsBac(String formationId, String bac) {
-        val f = formationsPort.retrieveFormation(formationId);
-        if(f.isEmpty()) return null;
-        val stats = f.get().stats().admissions();
-        if(stats.containsKey(bac)) {
-            return Pair.of(bac, stats.get(bac));
-        } else {
-            val d = stats.get(TOUS_BACS_CODE_MPS);
-            if(d == null) return null;
-            return Pair.of(TOUS_BACS_CODE_MPS, d);
-        }
-    }
-
-
     public @Nullable Double getStatsSpecialite(String formationId, String iMtCod) {
         return formationsPort.retrieveFormation(formationId)
                 .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, 0))
@@ -176,25 +160,6 @@ public class SuggestionsData {
         return formationsPort.retrieveFormations().values().stream()
                 .filter(Formation::apprentissage)
                 .map(Formation::id)
-                .collect(Collectors.toSet());
-    }
-
-    public Map<String, Set<String>> getMetiersVersFormations() {
-        return formationsMetierPort.findAll().stream()
-                .collect(Collectors.groupingBy( e -> e.idMetier))
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().stream().map(t -> t.idFormation).collect(Collectors.toSet())
-                ));
-    }
-
-    public Set<String> getMetiersPass() {
-        val metiersVersFormation = getMetiersVersFormations();
-        String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
-        return metiersVersFormation.entrySet().stream()
-                .filter(e -> e.getValue().contains( passKey))
-                .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }
 

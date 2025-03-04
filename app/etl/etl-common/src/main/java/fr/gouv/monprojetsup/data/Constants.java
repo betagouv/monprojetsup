@@ -73,6 +73,8 @@ public class Constants {
 
     public static final List<String> MPS_SPECIFIC_FORMATION_IDS = List.of(LAS_MPS_ID, PPPE_MPS_ID);
 
+    public static final String MAJ_SUGGESTIONS_REF_DATA_NECESSAIRE = "MAJ_SUGGESTIONS_REF_DATA_NECESSAIRE";
+
 
     /**
      * creates a clean string suitable for indexing in js
