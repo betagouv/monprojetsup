@@ -232,7 +232,7 @@ public class ConnecteurJsonCarteSQL {
         try (Statement stmt = connection.createStatement()) {
 
             /* récupère la liste des candidats depuis la base de données */
-            LOGGER.info("Récupération des filières non las");
+            LOGGER.info("Récupération des filières");
             stmt.setFetchSize(1_000_000);
             String sql = SELECT
                     //id du groupe de classement
@@ -254,33 +254,6 @@ public class ConnecteurJsonCarteSQL {
                     boolean gFlFlgApp = result.getBoolean(5);
                     Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp, false);
                     entree.filieres.put(gFlCod, filiere);
-                }
-            }
-        }
-
-
-        //traitement spécifique LAS
-        try (Statement stmt = connection.createStatement()) {
-            LOGGER.info("Récupération des filières las");
-            stmt.setFetchSize(1_000_000);
-            String sql = SELECT
-                    //id du groupe de classement
-                    + "distinct G_FL_LIB_aff, "
-                    + "G_FL_COD_aff "
-                    + FROM + " mps_aff where NVL(G_TA_FLG_FOR_LAS,0)=1";
-
-            LOGGER.info(sql);
-
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    String gFlLib = result.getString(1);
-                    int gFlCod = result.getInt(2);
-                    Filiere f = entree.filieres.get(gFlCod);
-                    if (f != null) {
-                        int newGFlCod = LAS_CONSTANT + gFlCod;
-                        Filiere filiere = new Filiere(gFlLib, f.sigle(), newGFlCod, gFlCod, false, true);
-                        entree.filieres.put(newGFlCod, filiere);
-                    }
                 }
             }
         }

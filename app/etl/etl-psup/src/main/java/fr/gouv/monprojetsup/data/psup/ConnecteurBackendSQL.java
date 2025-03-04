@@ -464,8 +464,7 @@ public class ConnecteurBackendSQL {
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     int gFlCod = rs.getInt("g_fl_cod_aff");
-                    boolean flagLAS = rs.getBoolean("g_ta_flg_for_las");
-                    res.add(gFlCod + (flagLAS ? LAS_CONSTANT : 0));
+                    res.add(gFlCod);
                 }
             }
         }
