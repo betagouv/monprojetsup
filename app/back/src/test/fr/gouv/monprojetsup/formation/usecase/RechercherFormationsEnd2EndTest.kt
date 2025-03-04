@@ -41,9 +41,8 @@ data class RechercheScenario(
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-// @Tag("withRealData")
 @EnabledIfSystemProperty(named = "spring.profiles.active", matches = "test-withRealData")
-class RechercheSimpleFormationsEnd2EndTest(
+class RechercherFormationsEnd2EndTest(
     @Autowired val mvc: MockMvc,
     @Autowired val objectMapper: ObjectMapper,
     @Autowired val environment: Environment,
@@ -72,7 +71,7 @@ class RechercheSimpleFormationsEnd2EndTest(
     }
 
     companion object {
-        private const val ENDPOINT_RECHERCHE = "/api/v1/public/formations/recherche/succincte"
+        private const val ENDPOINT_RECHERCHE_SUCCINCTE = "/api/v1/public/formations/recherche/succincte"
 
         private lateinit var testFile: Resource
 
@@ -107,7 +106,7 @@ class RechercheSimpleFormationsEnd2EndTest(
 
     @ParameterizedTest
     @MethodSource("provideScenarios")
-    fun `les résultats des recherches sont conformes aux résultats de référence`(scenario: RechercheScenario) {
+    fun `les résultats des recherches succinctes sont conformes aux résultats de référence`(scenario: RechercheScenario) {
         assumeTrue(environment.matchesProfiles("test-withRealData"), "Test ignoré car le profile Spring Boot 'withRealData' est inactif")
 
         // Given
@@ -116,25 +115,19 @@ class RechercheSimpleFormationsEnd2EndTest(
         )
 
         // When
-        val resultat = getResultatsRecherche(scenario)
+        val resultat = getResultatsRechercheSuccincte(scenario)
 
         // Then
         if (scenario.premierRésultatAttendu != null) {
-            assert(resultat.formations.any { it.id == scenario.premierRésultatAttendu }) {
-                "Le premier résultat de la recherche n'est pas conforme"
-            }
+            assertThat(resultat.formations.first().id).isEqualTo(scenario.premierRésultatAttendu)
         }
         if (scenario.résultatAttendusParmiLesCinqPremiers != null) {
             val cinqPremiersResultats = resultat.formations.take(5).map { it.id }.toSet()
-            assert(
-                cinqPremiersResultats.containsAll(scenario.résultatAttendusParmiLesCinqPremiers),
-            ) {
-                "Aucun des résultats attendus parmi les cinq premiers n'est présent"
-            }
+            assertThat(cinqPremiersResultats).containsAll(scenario.résultatAttendusParmiLesCinqPremiers)
         }
     }
 
-    private fun getResultatsRecherche(scenario: RechercheScenario): FormationsCourtesDTO {
+    private fun getResultatsRechercheSuccincte(scenario: RechercheScenario): FormationsCourtesDTO {
         val requete =
             Gson().toJson(
                 RechercheFormationsDTO(
@@ -145,7 +138,7 @@ class RechercheSimpleFormationsEnd2EndTest(
             )
         val resultat =
             mvc.perform(
-                post(ENDPOINT_RECHERCHE).accept(MediaType.APPLICATION_JSON)
+                post(ENDPOINT_RECHERCHE_SUCCINCTE).accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requete),
             )
