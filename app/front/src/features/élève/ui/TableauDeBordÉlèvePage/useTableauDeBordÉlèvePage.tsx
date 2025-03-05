@@ -19,7 +19,7 @@ export default function useTableauDeBordÉlèvePage() {
   const élève = useÉlève();
   const progression = useÉlèveProgression().récupérerProgression;
   const auth = useAuth();
-  const estAuthentifié = auth.isAuthenticated;
+  const estAuthentifié = environnement.VITE_TEST_MODE || auth.isAuthenticated;
   const aAuMoinsUnDomaineFavori = élève.élèveAuMoinsUnDomaineFavori;
   const afficherLesSuggestions = aAuMoinsUnDomaineFavori;
 
