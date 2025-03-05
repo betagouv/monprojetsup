@@ -2,27 +2,34 @@
 Ce dossier contient le code nécessaire à toute la partie connectée (app) de l'application MonProjetSup. Elle utilise les technologies Typescript/React/ViteJS.
 
 <!-- TOC -->
-* [MonProjetSup Frontend](#monprojetsup-frontend)
-  * [Comment lancer le projet](#comment-lancer-le-projet)
-    * [Deux façons de lancer l'application](#deux-façons-de-lancer-lapplication)
-    * [Pré-requis](#pré-requis)
-    * [Définir les variables d'env](#définir-les-variables-denv)
-    * [Lancer le serveur](#lancer-le-serveur)
-  * [Variables d'env](#variables-denv)
-  * [Architecture du projet](#architecture-du-projet)
-    * [Principales librairies utilisées](#principales-librairies-utilisées)
-    * [Arborescence](#arborescence)
-    * [Le dossier features](#le-dossier-features)
-  * [Le linter](#le-linter)
-  * [Les tests](#les-tests)
-  * [Notes complémentaires](#notes-complémentaires)
+- [MonProjetSup Frontend](#monprojetsup-frontend)
+  - [Comment lancer le projet](#comment-lancer-le-projet)
+    - [Trois façons de lancer l'application](#trois-façons-de-lancer-lapplication)
+    - [Pré-requis](#pré-requis)
+    - [Définir les variables d'env](#définir-les-variables-denv)
+    - [Lancer le serveur](#lancer-le-serveur)
+  - [Variables d'env](#variables-denv)
+    - [Ajouter une variable](#ajouter-une-variable)
+    - [Remarques spécifiques pour certaines variables](#remarques-spécifiques-pour-certaines-variables)
+  - [Architecture du projet](#architecture-du-projet)
+    - [Principales librairies utilisées](#principales-librairies-utilisées)
+    - [Arborescence](#arborescence)
+    - [Le dossier `features`](#le-dossier-features)
+  - [Le linter](#le-linter)
+  - [Les tests](#les-tests)
+  - [Notes complémentaires](#notes-complémentaires)
+    - [Mettre à jour les types suite à des changements dans l'api back](#mettre-à-jour-les-types-suite-à-des-changements-dans-lapi-back)
+    - [Mise en cache](#mise-en-cache)
 <!-- TOC -->
 
 ## Comment lancer le projet
 
-### Deux façons de lancer l'application 
+### Trois façons de lancer l'application 
 - **Mode normal** : l'application front a besoin que le backend et le keycloak soient lancés. C'est le mode utilisé sur tous les environnements de déploiement et celui recommandé pour développer.
 - **Mode test** : l'application front fonctionnera de manière complètement indépendante et ne fera aucun appel au backend et au keycloak (ils n'ont pas besoin d'être lancés). L'application utilisera des données "InMemory" et le session storage du navigateur pour stocker le profil de l'utilisateur. Pour démarrer dans ce mode, il suffit de mettre la variable d'environnement `VITE_TEST_MODE` à `true`.
+- **Mode test dockerisé**: un docker compose permet de lancer le front en mode test.
+```docker compose -f docker-compose.front.yml up```
+La page est ensuite servie à l'adresse `http://localhost:3000`.
 
 ### Pré-requis
 - Node version 22
