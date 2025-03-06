@@ -78,6 +78,7 @@ open class Runner(
 
 }
 
+
 @Component
 @Profile("test")
 class TestRunner : CommandLineRunner {

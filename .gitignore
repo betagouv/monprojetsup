@@ -28,3 +28,4 @@ metabase/db
 package
 exports
 create_experts_accounts.py
+.env

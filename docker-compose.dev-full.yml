@@ -9,15 +9,16 @@ services:
       POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
       PGPORT: ${APP_DB_PORT}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d ${APP_DB_NAME}" ]
       interval: 5s
       timeout: 5s
       retries: 5
     ports:
       - ${APP_DB_PORT_EXPOSED}:${APP_DB_PORT}
     volumes:
-      - ./app/db:/var/lib/postgresql/data
-      
+      - ./test-db/db:/var/lib/postgresql/data
+      - ./test-db/init-scripts:/docker-entrypoint-initdb.d
+            
   suggestions2:
     depends_on:
       appdb:
@@ -29,7 +30,7 @@ services:
       - ${SUGGESTIONS2_PORT_EXPOSED}:${SUGGESTIONS2_PORT}
     environment:
       DB_SUGGESTIONS2_PORT: ${APP_DB_PORT}
-      DB_SUGGESTIONS2_NAME: mps_ref
+      DB_SUGGESTIONS2_NAME:  ${APP_DB_NAME}
       DB_SUGGESTIONS2_USERNAME: ${APP_DB_USER}
       DB_SUGGESTIONS2_PASSWORD: ${APP_DB_PASSWORD}
       DB_SUGGESTIONS2_HOSTNAME: appdb
@@ -131,7 +132,7 @@ services:
       DB_URL: jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
       DB_USER: ${APP_DB_USER}
       DB_PASSWORD: ${APP_DB_PASSWORD}
-      SUGGESTIONS_API_URL: http://suggestions:${SUGGESTIONS_PORT}
+      SUGGESTIONS_API_URL: http://suggestions:${SUGGESTIONS_PORT}/api/1.2
       CORS_ORIGINPATTERNS: http://localhost:${FRONT_PORT_EXPOSED}
       KEYCLOAK_CLIENT_ID: mps-cli
       KEYCLOAK_CLIENT_SECRET: anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
