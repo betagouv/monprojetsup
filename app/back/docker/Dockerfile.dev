@@ -1,0 +1,50 @@
+# Use an official Maven image as the base image
+FROM maven:3-eclipse-temurin-17 AS build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the pom.xml and the project files to the container
+COPY pom.xml .
+COPY src ./src
+
+# Build the application using Maven
+RUN mvn clean package -DskipTests
+
+# Rename jar file 
+RUN mkdir -p /usr/src
+RUN cp target/*.jar /usr/src/mps-backend.jar
+
+# Use an official OpenJDK image as the base image
+FROM eclipse-temurin:17-jre-noble
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the built JAR file from the previous stage to the container
+COPY --from=build /usr/src/mps-backend.jar .
+
+# Exposed port
+EXPOSE 3000
+
+ENV KEYCLOAK_PORT=5003
+
+# Install socat
+RUN apt update && apt install -y socat
+
+# Create the startup script
+RUN echo '#!/bin/bash \n\
+socat TCP-LISTEN:$KEYCLOAK_PORT,fork TCP:host.docker.internal:$KEYCLOAK_PORT & \n\
+curl -v --fail http://localhost:$KEYCLOAK_PORT \n\
+if [ $? -ne 0 ]; then \n\
+  echo "keycloak service on port is not reachable, stopping container." \n\
+  exit 1 \n\
+fi \n\
+java -jar mps-backend.jar' > /usr/local/bin/start.sh
+
+# Make the startup script executable
+RUN chmod +x /usr/local/bin/start.sh
+
+# Use ENTRYPOINT to run the script
+ENTRYPOINT ["/usr/local/bin/start.sh"]
+

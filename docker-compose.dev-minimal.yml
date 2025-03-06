@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   keycloakdb:
     image: postgres:16
