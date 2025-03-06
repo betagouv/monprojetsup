@@ -47,6 +47,7 @@ Les 4 autres services sont démarrés nativement sur la machine de dev.
 La base de données est alimentée manuellement par l'etl, ce qui nécessite l'accès aux données de référence.
 
 - Démarrer Docker sur sa machine
+- A la racine du projet, exécuter `cp .env.example .env`
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-minimal.yml up`
 - Alimenter les données de référence de la BDD en suivant les instructions de [app/etl/README.md](app/etl/README.md)
 - Lancer l'api Suggestion2 en suivant les instructions d'[app/suggestions2/README.md](app/suggestions2/README.md)
