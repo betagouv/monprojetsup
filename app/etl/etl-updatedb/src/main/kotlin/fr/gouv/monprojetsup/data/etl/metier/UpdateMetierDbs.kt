@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -23,7 +24,13 @@ class UpdateMetierDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateMetierDbs::class.java.simpleName)
 
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
+
     fun update() {
+        if(minimalTestDataSet) {
+            batchUpdate.clearEntities(MetierEntity::class.simpleName!!)
+        }
         updateMetierDb()
     }
 

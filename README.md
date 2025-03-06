@@ -32,11 +32,20 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 
 ## Comment lancer le projet pour développer
 
-### Lancement conteneurisé
+Il y a en tout sept services: db postgre + back + front + suggestions + suggestions2 + keycloak + db postgre du keycloak.
+
+
+### Lancement conteneurisé des 7 services
+Les 7 services sont démarrés dans des Docker, et la base de données est initialisée avec des données de test.
 - Démarrer Docker sur sa machine
+- A la racine du projet, exécuter `cp .env.example .env`
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-full.yml up`
 
-### Lancement natif
+### Lancement conteneurisé de 3 services et lancement natif des 4 autres
+Les 3 services db + keycloak + db keycloak sont démarrés dans des Docker.
+Les 4 autres services sont démarrés nativement sur la machine de dev.
+La base de données est alimentée manuellement par l'etl, ce qui nécessite l'accès aux données de référence.
+
 - Démarrer Docker sur sa machine
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-minimal.yml up`
 - Alimenter les données de référence de la BDD en suivant les instructions de [app/etl/README.md](app/etl/README.md)
@@ -51,7 +60,6 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 - Swagger suggestions: http://localhost:5004/swagger-ui/index.html
 - Swagger suggestions2: http://localhost:5005/swagger-ui/index.html
 - Keycloak: http://localhost:5003
-
 
 ## Comment se connecter 
 Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
