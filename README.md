@@ -30,11 +30,17 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ![Schéma apps en local](/doc/schema-local.png)
 
 
-## Comment lancer le projet
-### Prérequis 
+## Comment lancer le projet pour développer
+
+### Lancement conteneurisé
 - Démarrer Docker sur sa machine
-- À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
+- À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-full.yml up`
+
+### Lancement natif
+- Démarrer Docker sur sa machine
+- À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-minimal.yml up`
 - Alimenter les données de référence de la BDD en suivant les instructions de [app/etl/README.md](app/etl/README.md)
+- Lancer l'api Suggestion2 en suivant les instructions d'[app/suggestions2/README.md](app/suggestions2/README.md)
 - Lancer l'api Suggestion en suivant les instructions d'[app/suggestions/README.md](app/suggestions/README.md)
 - Lancer le backend en suivant les instructions d'[app/back/README.md](app/back/README.md)
 - Lancer le frontend en suivant les instructions d'[app/front/README.md](app/front/README.md)
@@ -42,7 +48,8 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ## Les différentes URLs
 - Frontend: http://localhost:5001
 - Swagger Backend: http://localhost:5002/swagger-ui/index.html/
-- Swagger suggestions: http://localhost:8004/swagger-ui/index.html
+- Swagger suggestions: http://localhost:5004/swagger-ui/index.html
+- Swagger suggestions2: http://localhost:5005/swagger-ui/index.html
 - Keycloak: http://localhost:5003
 
 
