@@ -387,7 +387,7 @@ export const localeFR = {
           SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
         },
         PROFIL_VIDE: {
-          TITRE: "Renseigne ton profil pour obtenir des suggestions personalisées",
+          TITRE: "Renseigne ton profil pour obtenir des suggestions personnalisées",
           SOUS_TITRE:
             "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
         },
