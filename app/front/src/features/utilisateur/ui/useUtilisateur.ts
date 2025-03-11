@@ -30,7 +30,7 @@ export default function useUtilisateur() {
       nom: auth.user?.profile.family_name,
       email: auth.user?.profile.email,
       estExpert: auth.user?.profile.profile === "expert",
-      estAuthentifié: auth.isAuthenticated,
+      estAuthentifié: environnement.VITE_TEST_MODE || auth.isAuthenticated,
     };
   }, [auth.user]);
 

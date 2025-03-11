@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.data.Constants.isMetier
+import fr.gouv.monprojetsup.data.Constants.isVoeu
 import fr.gouv.monprojetsup.data.Constants.mpsIdToGFlCod
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.CsvTools
@@ -61,6 +62,7 @@ import fr.gouv.monprojetsup.data.tools.CsvTools.readCSV
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.file.Path
 import java.util.*
@@ -79,6 +81,9 @@ class MpsDataFromFiles(
     private var descriptifs : DescriptifsFormationsMetiers? = null
     private var specialites : Specialites? = null
     private var formationsMpsIds : List<String>? = null
+
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
 
     private val logger: Logger = Logger.getLogger(MpsDataFromFiles::class.java.simpleName)
     @PostConstruct
@@ -214,11 +219,33 @@ class MpsDataFromFiles(
 
 
     override fun getLabels(): Map<String, String> {
+        val formationsMpsIds = getFormationsMpsIds()
+        val metiersMpsIds = getMetiersMpsIds()
+        val voeuxIds = getVoeux().keys
         return Labels.getLabels(
             psupData,
             onisepData,
             getSpecialites().toSpecialitesList()
         )
+            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
+            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
+            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+    }
+
+
+    override fun getDebugLabels(): Map<String, String> {
+        val formationsMpsIds = getFormationsMpsIds()
+        val metiersMpsIds = getMetiersMpsIds()
+        val voeuxIds = getVoeux().keys
+        return Labels.getDebugLabels(
+            psupData,
+            onisepData,
+            getSpecialites().toSpecialitesList()
+        )
+            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
+            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
+            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+
     }
 
     private fun getLabelsOriginauxPsup(): MutableMap<String, String> {
@@ -227,31 +254,25 @@ class MpsDataFromFiles(
         )
     }
 
-
-    override fun getDebugLabels(): Map<String, String> {
-        return Labels.getDebugLabels(
-            psupData,
-            onisepData,
-            getSpecialites().toSpecialitesList()
-        )
-    }
-
-
     override fun getFormationsLabels(): Map<String, String> {
+        val formationsMpsIds = getFormationsMpsIds()
         return Labels.getFormationsLabels(
             psupData,
             false
-        )
+        ).filter { formationsMpsIds.contains(it.key) }
     }
 
     override fun getMetiersLabels(): Map<String, String> {
+        val metiersMps = getMetiersMpsIds();
         return onisepData.getMetiersLabels(
             false
-        )
+        ).filter { metiersMps.contains(it.key) }
     }
 
     override fun getMetiersAssociesLabels(): Map<String, List<String>> {
+        val metiersMps = getMetiersMpsIds();
         return onisepData.getMetiersAssociesLabels()
+            .filter { metiersMps.contains(it.key) }
     }
 
     override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
@@ -559,7 +580,10 @@ class MpsDataFromFiles(
                     }
                 if (gpsCoords.isNotEmpty()) {
                     coords.forEach { c: Coords ->
-                        if(c.insee_code != null) {
+                        if(
+                            c.insee_code != null
+                            && (!minimalTestDataSet || c.insee_code.endsWith("20"))
+                        ) {
                             cities[c.insee_code] = Ville(
                                 c.insee_code,
                                 nom,
@@ -693,7 +717,9 @@ class MpsDataFromFiles(
     }
 
     override fun getMetiersMpsIds(): List<String> {
-        return onisepData.metiersIdeo.asSequence().map { it.ideo() }.toList().sorted()
+        return onisepData.metiersIdeo.asSequence()
+            .map { it.ideo() }.toList().sorted()
+            .filter { !minimalTestDataSet || it.endsWith("7") }
             .toList()
     }
 
@@ -705,6 +731,7 @@ class MpsDataFromFiles(
                 .map { it[DataSources.MPS_FORMATIONS_EXCLUES_HEADER].toString() }
                 .toSet()
             result.removeAll(toRemove)
+            if(minimalTestDataSet) result.removeIf( { !it.endsWith("11") })
             formationsMpsIds = ArrayList(result)
         }
         return formationsMpsIds!!
@@ -721,6 +748,8 @@ class MpsDataFromFiles(
     override fun getVoeux(): Map<String, Collection<Voeu>> {
         val formationsMps = getFormationsMpsIds()
         return psupData.getVoeuxGroupedByFormation(formationsMps)
+            .entries
+            .associate{ it.key to it.value.filter { itt -> !minimalTestDataSet || itt.id.endsWith("7") } }
     }
 
 
@@ -832,12 +861,14 @@ class MpsDataFromFiles(
     }
 
     override fun getPaniersVoeux(): List<PanierVoeux> {
-        val idVoeuxConnus = getVoeux().keys
-        return psupData.voeuxParCandidat.map { p ->
+        val idVoeuxConnus = getVoeux().values.flatten()
+            .map { it.id }.distinct().toSet()
+        return psupData.voeuxParCandidat
+            .map { p ->
             val id = p.bac
             val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
             PanierVoeux(id, voeux)
-        }
+        }.filter { it.voeux.isNotEmpty() }.take(if (minimalTestDataSet) 500 else Int.MAX_VALUE)
     }
 
     override fun getEdges(): List<Triple<String, String, Int>> {

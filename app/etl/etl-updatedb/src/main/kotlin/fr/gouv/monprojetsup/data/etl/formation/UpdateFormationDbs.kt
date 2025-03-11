@@ -15,6 +15,7 @@ import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.tools.GeodeticDistance
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -53,7 +54,6 @@ class UpdateFormationDbs(
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val mpsDataPort: MpsDataPort,
     private val batchUpdate: BatchUpdate,
-    private val villesVoeuxDb: VillesVoeuxDb,
     private val voeuxDb: VoeuxDb,
     private val formationDb: FormationDb,
     private val formationVoeuxDb: FormationVoeuDb,
@@ -64,12 +64,26 @@ class UpdateFormationDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
+
     internal fun update() {
+
+        if(isMinimalTestDatasetModeActive()) {
+            logger.info("Génération d'un dataset minimal pour les tests")
+            batchUpdate.clearEntities(MoyenneGeneraleAdmisEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationMetierEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationEntity::class.simpleName!!)
+        }
+
         logger.info("Mise à jour de la table des formations")
         updateFormationsDb()
         logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
         val isForcedUpdate = checkForcedUpdate()
-        val nbPairesVoeuxFormationsAChange = updateVoeuxDb()
+        val nbPairesVoeuxFormationsAChange = updateVoeuxDb() || isMinimalTestDatasetModeActive()
         if(isForcedUpdate || nbPairesVoeuxFormationsAChange) {
             logger.info("Mise à jour de la table de correspondance ville voeux")
             if(isForcedUpdate) {
@@ -85,7 +99,7 @@ class UpdateFormationDbs(
     }
 
     fun checkForcedUpdate(): Boolean {
-        return parametreDb.getFormationUpdateForcedFlag()
+        return  parametreDb.getFormationUpdateForcedFlag() || isMinimalTestDatasetModeActive()
     }
 
 
@@ -103,6 +117,10 @@ class UpdateFormationDbs(
     }
 
     fun updateVoeuxDb(): Boolean {
+        if(isMinimalTestDatasetModeActive()) {
+            batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
+        }
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val voeux = mpsDataPort.getVoeux()
         val voeuxEntities = HashMap<String, VoeuEntity>()
@@ -243,7 +261,12 @@ class UpdateFormationDbs(
                 || environment.activeProfiles.contains("test_suggestions")
     }
 
+    fun isMinimalTestDatasetModeActive(): Boolean {
+        return minimalTestDataSet
+    }
+
     fun updateVillesVoeuxDb() {
+
         val onlyParis20 = isTestSuggestionsProfileActive()
 
         val cities = mpsDataPort.getCities()
@@ -331,6 +354,7 @@ class UpdateFormationDbs(
         criteresDb.deleteAll()
         criteresDb.saveAll(criteres)
     }
+
 
 
 }

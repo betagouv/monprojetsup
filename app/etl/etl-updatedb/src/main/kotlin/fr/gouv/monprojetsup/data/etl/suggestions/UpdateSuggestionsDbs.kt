@@ -2,10 +2,11 @@ package fr.gouv.monprojetsup.data.etl.suggestions
 
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsPaniersVoeuxEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsPaniersVoeuxEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -36,9 +37,19 @@ class UpdateSuggestionsDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateSuggestionsDbs::class.java.simpleName)
 
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
+
     internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
 
-        if (voeuxOntChange) {
+        if(minimalTestDataSet) {
+            batchUpdate.clearEntities(SuggestionsVilleEntity::class.simpleName!!)
+            batchUpdate.clearEntities(SuggestionsPaniersVoeuxEntity::class.simpleName!!)
+            batchUpdate.clearEntities(SuggestionsEdgeEntity::class.simpleName!!)
+            batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
+        }
+
+        if (voeuxOntChange || minimalTestDataSet) {
             logger.info("Mise à jour des paniers de voeux")
             updatePaniersVoeuxDb()
         }
