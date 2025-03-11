@@ -146,6 +146,8 @@ services:
       PARCOURSUP_AUTHENT_CLIENT_PASSWORD: client_password
       PARCOURSUP_API_URL: https://favoris.parcoursup.fr
       LOG_LEVEL: DEBUG
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   front:
     depends_on:
