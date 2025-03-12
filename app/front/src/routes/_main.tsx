@@ -1,4 +1,5 @@
 import MainLayout from "@/components/_layout/MainLayout/MainLayout";
+import { environnement } from "@/configuration/environnement";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
@@ -19,14 +20,16 @@ export const Route = createFileRoute("/_main")({
   validateSearch: (searchParamètres) => tableauDeBordSearchSchema.parse(searchParamètres),
   component: MainLayout,
   loader: async ({ context: { queryClient, auth } }) => {
-    try {
-      const user = await auth.signinSilent();
-      if (user === null) {
-        MpsApiHttpClient.setNonAuthentifié();
+    if (!environnement.VITE_TEST_MODE) {
+      try {
+        const user = await auth.signinSilent();
+        if (user === null) {
+          MpsApiHttpClient.setNonAuthentifié();
+          await auth.removeUser();
+        }
+      } catch {
         await auth.removeUser();
       }
-    } catch {
-      await auth.removeUser();
     }
 
     await queryClient.invalidateQueries(élèveQueryOptions);
