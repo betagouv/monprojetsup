@@ -195,10 +195,12 @@ export class Dépendances {
     this.mettreÀJourCommunesÉlèveUseCase = new MettreÀJourCommunesÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourFormationsÉlèveUseCase = new MettreÀJourFormationsÉlèveUseCase(
       this._élèveRepository,
+      this._formationRepository,
       this.analyticsRepository,
     );
     this.mettreÀJourMétiersÉlèveUseCase = new MettreÀJourMétiersÉlèveUseCase(
       this._élèveRepository,
+      this._métierRepository,
       this.analyticsRepository,
     );
     this.mettreÀJourFormationsMasquéesÉlèveUseCase = new MettreÀJourFormationsMasquéesÉlèveUseCase(
