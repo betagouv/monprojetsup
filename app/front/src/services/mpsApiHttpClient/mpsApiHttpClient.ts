@@ -47,10 +47,15 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     return this._récupérerJWT() !== "";
   }
 
+  private static readonly _tokenSessionStorageKey = () =>
+    `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`;
+
+  public static setNonAuthentifié() {
+    sessionStorage.removeItem(MpsApiHttpClient._tokenSessionStorageKey());
+  }
+
   private readonly _récupérerJWT = (): string => {
-    const sessionStorageOIDC = sessionStorage.getItem(
-      `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
-    );
+    const sessionStorageOIDC = sessionStorage.getItem(MpsApiHttpClient._tokenSessionStorageKey());
 
     if (!sessionStorageOIDC) return "";
 

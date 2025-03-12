@@ -1,6 +1,7 @@
 import MainLayout from "@/components/_layout/MainLayout/MainLayout";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
 import { type QueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
@@ -19,9 +20,20 @@ export const Route = createFileRoute("/_main")({
   component: MainLayout,
   loader: async ({ context: { queryClient, auth } }) => {
     await chargerDonnées(queryClient);
+
+    try {
+      const user = await auth.signinSilent();
+      if (user === null) {
+        MpsApiHttpClient.setNonAuthentifié();
+        await auth.removeUser();
+      }
+    } catch {
+      MpsApiHttpClient.setNonAuthentifié();
+      await auth.removeUser();
+    }
+
     auth.events.addUserLoaded(async () => {
       await queryClient.refetchQueries(élèveQueryOptions);
-      window.location.href = "/";
     });
   },
 });
