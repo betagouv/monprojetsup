@@ -19,8 +19,6 @@ export const Route = createFileRoute("/_main")({
   validateSearch: (searchParamètres) => tableauDeBordSearchSchema.parse(searchParamètres),
   component: MainLayout,
   loader: async ({ context: { queryClient, auth } }) => {
-    await chargerDonnées(queryClient);
-
     try {
       const user = await auth.signinSilent();
       if (user === null) {
@@ -28,12 +26,10 @@ export const Route = createFileRoute("/_main")({
         await auth.removeUser();
       }
     } catch {
-      MpsApiHttpClient.setNonAuthentifié();
       await auth.removeUser();
     }
 
-    auth.events.addUserLoaded(async () => {
-      await queryClient.refetchQueries(élèveQueryOptions);
-    });
+    await queryClient.invalidateQueries(élèveQueryOptions);
+    await chargerDonnées(queryClient);
   },
 });
