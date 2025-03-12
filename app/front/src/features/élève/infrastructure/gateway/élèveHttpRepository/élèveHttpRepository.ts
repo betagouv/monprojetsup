@@ -12,9 +12,9 @@ import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class ÉlèveHttpRepository implements ÉlèveRepository {
-  private _ENDPOINT_PROFIL = "/api/v1/auth/profil" as const;
+  private readonly _ENDPOINT_PROFIL = "/api/v1/auth/profil";
 
-  private _ENDPOINT_PROGRESSION = "/api/v1/auth/profil/progression" as const;
+  private readonly _ENDPOINT_PROGRESSION = "/api/v1/auth/profil/progression";
 
   private readonly _storageRepository = new ÉlèveSessionStorageRepository();
 
@@ -37,7 +37,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     ambitions: null,
   };
 
-  public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
+  public constructor(private readonly _mpsApiHttpClient: IMpsApiHttpClient) {}
 
   public async récupérerProfil(): Promise<Élève | Error> {
     if (!this._mpsApiHttpClient.estAuthentifié()) {

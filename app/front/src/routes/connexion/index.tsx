@@ -5,4 +5,9 @@ import { withAuthenticationRequired } from "react-oidc-context";
 
 export const Route = createFileRoute("/connexion/")({
   component: environnement.VITE_TEST_MODE ? MainLayout : withAuthenticationRequired(MainLayout),
+  loader: async ({ context: { auth } }) => {
+    auth.events.addUserLoaded(() => {
+      window.location.href = "/";
+    });
+  },
 });
