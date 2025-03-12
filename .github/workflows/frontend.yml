@@ -73,7 +73,7 @@ jobs:
         uses: ./.github/actions/setupNodeAndPackages
 
       - name: Audit npm packages
-        run: npm audit --production
+        run: npm audit --omit=dev
   
   playwright:
     name: E2E Tests
