@@ -424,9 +424,7 @@ export interface components {
             note: number;
         };
         ChoixElevesDTO: {
-            interets: components["schemas"]["InteretDTO"][];
-            domaines: components["schemas"]["DomaineDTO"][];
-            metiers: components["schemas"]["MetierCourtDTO"][];
+            choix: components["schemas"]["LabelDTO"][];
         };
         CommuneAvecSesVoeuxDTO: {
             commune: components["schemas"]["CommuneDTO"];
@@ -444,12 +442,6 @@ export interface components {
         DetailsCalculScoreDTO: {
             details: string[];
         };
-        DomaineDTO: {
-            id: string;
-            nom: string;
-            description?: string;
-            emoji: string;
-        };
         ExplicationGeographiqueDTO: {
             nomVille: string;
             /** Format: int32 */
@@ -457,7 +449,6 @@ export interface components {
         };
         ExplicationsDTO: {
             geographique: components["schemas"]["ExplicationGeographiqueDTO"][];
-            formationsSimilaires: components["schemas"]["FormationSimilaireDTO"][];
             /** @enum {string} */
             dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
             /** @enum {string} */
@@ -491,21 +482,13 @@ export interface components {
             formation: components["schemas"]["FicheFormationDTO"];
             explications?: components["schemas"]["ExplicationsDTO"];
         };
-        FormationSimilaireDTO: {
-            id: string;
-            nom: string;
-        };
-        InteretDTO: {
+        LabelDTO: {
             id: string;
             nom: string;
         };
         LienDTO: {
             nom: string;
             url: string;
-        };
-        MetierCourtDTO: {
-            id: string;
-            nom: string;
         };
         MetierDTO: {
             id: string;
@@ -553,11 +536,6 @@ export interface components {
         };
         FormationsAvecExplicationsDTO: {
             formations: components["schemas"]["FormationAvecExplicationsDTO"][];
-            liens: components["schemas"]["LienHateoasDTO"][];
-        };
-        LienHateoasDTO: {
-            rel: string;
-            href: string;
         };
         RechercheFormationsDTO: {
             /** @description Termes de recherche */
@@ -576,7 +554,6 @@ export interface components {
         };
         FormationsCourtesDTO: {
             formations: components["schemas"]["FormationCourteDTO"][];
-            liens: components["schemas"]["LienHateoasDTO"][];
         };
         GetFichesFormationsDTO: {
             /**
@@ -714,6 +691,12 @@ export interface components {
             categorieInteret: components["schemas"]["InteretCategorieDTO"];
             sousCategoriesInterets: components["schemas"]["InteretSousCategorieDTO"][];
         };
+        DomaineDTO: {
+            id: string;
+            nom: string;
+            description?: string;
+            emoji: string;
+        };
         InteretCategorieDTO: {
             id: string;
             nom: string;
@@ -749,6 +732,10 @@ export interface components {
             id: string;
             nom: string;
         };
+        LienHateoasDTO: {
+            rel: string;
+            href: string;
+        };
         MetierAvecSesFormationsDTO: {
             id: string;
             nom: string;
@@ -759,6 +746,10 @@ export interface components {
         MetiersAvecSesFormationsDTO: {
             metiers: components["schemas"]["MetierAvecSesFormationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
+        };
+        MetierCourtDTO: {
+            id: string;
+            nom: string;
         };
         MetiersCourtsDTO: {
             metiers: components["schemas"]["MetierCourtDTO"][];

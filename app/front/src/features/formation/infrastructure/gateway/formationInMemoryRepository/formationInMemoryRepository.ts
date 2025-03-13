@@ -171,13 +171,10 @@ export class formationInMemoryRepository implements FormationRepository {
       ],
       explications: {
         communes: [],
-        formationsSimilaires: [],
         duréeÉtudesPrévue: null,
         alternance: null,
         choixÉlève: {
-          intérêts: [],
-          domaines: [],
-          métiers: [],
+          choix: [],
         },
         spécialitésChoisies: [],
         typeBaccalaureat: {

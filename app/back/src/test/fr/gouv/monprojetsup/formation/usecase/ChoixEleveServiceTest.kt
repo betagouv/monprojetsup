@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
@@ -55,15 +54,15 @@ class ChoixEleveServiceTest {
                 mapOf(
                     "fl0001" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsDomainesMetiersChoisis = listOf("ci17", "ci14", "MET.103"),
+                            choix = listOf("ci17", "ci14", "MET.103"),
                         ),
                     "fl0002" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsDomainesMetiersChoisis = listOf("idInconnu", "ci17"),
+                            choix = listOf("idInconnu", "ci17"),
                         ),
                     "fl0004" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsDomainesMetiersChoisis = listOf("dom8", "ci17", "MET.397", "ci8", "MET.103"),
+                            choix = listOf("dom8", "ci17", "MET.397", "ci8", "MET.103"),
                         ),
                     "fl0003" to ExplicationsSuggestionEtExemplesMetiers(),
                     "fl0005" to null,
@@ -85,23 +84,12 @@ class ChoixEleveServiceTest {
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
                 mapOf(
-                    "fl0001" to
-                        ExplicationsSuggestionDetaillees.ChoixEleve(
-                            interetsChoisis = listOf(centreInteret17, centreInteret14),
-                            metiersChoisis = listOf(metier103),
-                        ),
-                    "fl0002" to
-                        ExplicationsSuggestionDetaillees.ChoixEleve(
-                            interetsChoisis = listOf(centreInteret17),
-                        ),
-                    "fl0004" to
-                        ExplicationsSuggestionDetaillees.ChoixEleve(
-                            domainesChoisis = listOf(domaine8),
-                            interetsChoisis = listOf(centreInteret17, centreInteret8),
-                            metiersChoisis = listOf(metier397, metier103),
-                        ),
-                    "fl0003" to ExplicationsSuggestionDetaillees.ChoixEleve(),
-                    "fl0005" to ExplicationsSuggestionDetaillees.ChoixEleve(),
+                    "fl0001" to listOf(centreInteret17.toLabel(), centreInteret14.toLabel()) + metier103.toLabel(),
+                    "fl0002" to listOf(centreInteret17.toLabel()),
+                    "fl0004" to listOf(domaine8.toLabel()) + listOf(centreInteret17.toLabel(), centreInteret8.toLabel())
+                            + listOf(metier397.toLabel(), metier103.toLabel()),
+                    "fl0003" to emptyList(),
+                    "fl0005" to emptyList(),
                 ),
             )
             then(logger).should()
@@ -120,7 +108,7 @@ class ChoixEleveServiceTest {
             val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", null, "\uD83D\uDD25")
             val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", null, "\uD83C\uDF04")
             val interetsDomainesMetiersChoisis = listOf("dom8", "ci17", "idInconnu", "MET.397", "ci8", "MET.103")
-            val explications = ExplicationsSuggestionEtExemplesMetiers(interetsDomainesMetiersChoisis = interetsDomainesMetiersChoisis)
+            val explications = ExplicationsSuggestionEtExemplesMetiers(choix = interetsDomainesMetiersChoisis)
             given(domaineRepository.recupererLesDomaines(interetsDomainesMetiersChoisis)).willReturn(listOf(domaine8))
             given(interetRepository.recupererLesSousCategories(interetsDomainesMetiersChoisis)).willReturn(
                 listOf(
@@ -134,12 +122,9 @@ class ChoixEleveServiceTest {
             val resultat = choixEleveService.recupererChoixEleve(explications = explications)
 
             // Then
-            assertThat(resultat).usingRecursiveComparison().isEqualTo(
-                ExplicationsSuggestionDetaillees.ChoixEleve(
-                    interetsChoisis = listOf(centreInteret17, centreInteret8),
-                    domainesChoisis = listOf(domaine8),
-                    metiersChoisis = listOf(metier103, metier397),
-                ),
+            assertThat(resultat).usingRecursiveComparison().isEqualTo( listOf(centreInteret17.toLabel(), centreInteret8.toLabel())
+                            + listOf(domaine8.toLabel())
+                            + listOf(metier103.toLabel(), metier397.toLabel()),
             )
             then(logger).should()
                 .warn("ID_EXPLICATION_NON_RECONNU", "L'id idInconnu n'est ni un métier, ni un domaine, ni un centre d'intérêt")
