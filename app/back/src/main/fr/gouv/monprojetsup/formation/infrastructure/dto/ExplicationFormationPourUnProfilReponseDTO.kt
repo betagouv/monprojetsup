@@ -184,13 +184,16 @@ data class APISuggestionExplicationChoixReferenceDTO(
 )
 
 enum class APISuggestionExplicationChoixReferenceSideDTO {
-    positive,
-    negative, ;
+    @JsonProperty(value = "positive")
+    POSITIVE,
+
+    @JsonProperty(value = "negative")
+    NEGATIVE, ;
 
     fun toSide(): ExplicationsSuggestionEtExemplesMetiers.Side {
         return when (this) {
-            positive -> ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE
-            negative -> ExplicationsSuggestionEtExemplesMetiers.Side.NEGATIVE
+            POSITIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE
+            NEGATIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.NEGATIVE
         }
     }
 }
