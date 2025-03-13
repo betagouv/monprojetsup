@@ -43,7 +43,7 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     )
 
     data class ListeChoixReference(
-        val details: List<ChoixReference>
+        val details: List<ChoixReference>,
     )
 
     data class ChoixReference(
@@ -54,9 +54,8 @@ data class ExplicationsSuggestionEtExemplesMetiers(
 
     enum class Side {
         POSITIVE,
-        NEGATIVE
+        NEGATIVE,
     }
-
 }
 
 data class ExplicationsSuggestionDetaillees(
@@ -73,7 +72,6 @@ data class ExplicationsSuggestionDetaillees(
         val nomSpecialite: String,
         val pourcentage: Int,
     )
-
 }
 
 data class ExplicationGeographique(

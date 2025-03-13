@@ -9,7 +9,6 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "sugg_labels")
 class LabelEntity {
-
     @Id
     var id: String = ""
 
@@ -21,5 +20,4 @@ class LabelEntity {
             id = id,
             nom = label,
         )
-
 }
