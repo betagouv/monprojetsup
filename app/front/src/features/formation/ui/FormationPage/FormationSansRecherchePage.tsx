@@ -31,7 +31,7 @@ const FormationSansRecherchePage = () => {
     <ListeEtAperçuLayout>
       <ListeEtAperçuContenu>
         <FicheFormation
-          afficherBoutonFavori={false}
+          afficherBoutonFavori={true}
           id={hash}
         />
       </ListeEtAperçuContenu>
