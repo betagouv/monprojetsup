@@ -11,23 +11,17 @@ class ChoixEleveService(
     private val labelsRepository: LabelsRepository,
     private val logger: MonProjetSupLogger,
 ) {
-    fun recupererChoixEleve(
-        explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>,
-    ): Map<String, List<Label>> {
-
-        val choixDistincts = recupererIdsDesdomainesInteretsEtMetierDistincts(explicationsParFormation)
-        val labelsChoix = choixDistincts?.let { labelsRepository.recupererLesLabels(it) } ?: emptyList()
+    fun recupererChoixEleve(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): Map<String, List<Label>> {
+        val choixDistincts = recupererIdsDesChoix(explicationsParFormation)
+        val labelsChoix = (choixDistincts?.let { labelsRepository.recupererLesLabels(it) } ?: emptyList()).associateBy { it.id }
 
         logguerLesIdsInconnus(
             choixDistincts,
-            labelsChoix,
+            labelsChoix.values.toList(),
         )
         return explicationsParFormation.entries
-            .associate {
-                it.key to (it.value?.choix?.let { itt ->
-                    labelsRepository.recupererLesLabels(itt)
-                } ?: emptyList()
-                )
+            .associate { entry ->
+                entry.key to (entry.value?.choix?.mapNotNull { labelsChoix[it] } ?: emptyList())
             }
     }
 
@@ -43,7 +37,7 @@ class ChoixEleveService(
 
     private fun logguerLesIdsInconnus(
         domainesInteretsMetiersDistincts: List<String>?,
-        labelsChoix: List<Label>
+        labelsChoix: List<Label>,
     ) {
         val ids = labelsChoix.map { it.id }
         if (ids.size != domainesInteretsMetiersDistincts?.size) {
@@ -58,22 +52,19 @@ class ChoixEleveService(
         }
     }
 
-    private fun recupererIdsDesdomainesInteretsEtMetierDistincts(
-        explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>,
-    ) : List<String>? {
-        val choix = explicationsParFormation.flatMap { it.value?.choix ?: emptyList() } +
-                explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() } +
+    private fun recupererIdsDesChoix(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): List<String>? {
+        val choix =
+            explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() } +
+                explicationsParFormation.flatMap { it.value?.choix ?: emptyList() } +
                 explicationsParFormation.map {
-                    it.value?.donneesDeReference?.details?.
-                    filter { itt -> itt.side == ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE }?.
-                    sortedByDescending { itt -> itt.score }?.
-                    map { itt -> itt.id }?.
-                    firstOrNull()
+                    it.value?.donneesDeReference?.details
+                        ?.filter { itt -> itt.side == ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE }
+                        ?.sortedByDescending { itt -> itt.score }
+                        ?.map { itt -> itt.id }
+                        ?.firstOrNull()
                 }.filterNotNull()
         return choix.takeUnless {
             it.isEmpty()
         }?.distinct()
     }
-
-
 }

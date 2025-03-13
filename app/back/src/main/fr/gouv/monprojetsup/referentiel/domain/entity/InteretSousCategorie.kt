@@ -11,7 +11,8 @@ data class InteretSousCategorie(
     val description: String?,
     val emoji: String,
 ) {
-    fun toLabel() = Label(id, nom)
+    val label: Label
+        get() = Label(id, nom)
 }
 
 data class InteretCategorie(

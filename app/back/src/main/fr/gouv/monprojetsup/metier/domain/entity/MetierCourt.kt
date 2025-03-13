@@ -6,5 +6,6 @@ data class MetierCourt(
     val id: String,
     val nom: String,
 ) {
-    fun toLabel() = Label(id, nom)
+    val label: Label
+        get() = Label(id, nom)
 }

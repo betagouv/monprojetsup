@@ -67,9 +67,13 @@ data class ExplicationEtExemplesDTO(
                     }?.typeBaccalaureat?.toTypeBaccalaureat(),
                 autoEvaluationMoyenne = null,
                 choix = explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
-                donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference( details = explications.flatMap {
-                    it.ref?.toChoixReference() ?: emptyList()
-                } ),
+                donneesDeReference =
+                    ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(
+                        details =
+                            explications.flatMap {
+                                it.ref?.toChoixReference() ?: emptyList()
+                            },
+                    ),
                 exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )
         } ?: ExplicationsSuggestionEtExemplesMetiers()
