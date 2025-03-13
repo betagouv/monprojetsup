@@ -2,19 +2,20 @@
 Ce repository est un mono-repo qui contient plusieurs applications nécessaires au fonctionnement de Mon Projet Sup
 
 <!-- TOC -->
-* [MonProjetSup](#monprojetsup)
-  * [Applications contenu dans le repo](#applications-contenu-dans-le-repo)
-  * [Schéma simplifié des apps et des types d'échanges en local](#schéma-simplifié-des-apps-et-des-types-déchanges-en-local)
-  * [Comment lancer le projet](#comment-lancer-le-projet)
-    * [Prérequis](#prérequis-)
-  * [Les différentes URLs](#les-différentes-urls)
-  * [Comment se connecter](#comment-se-connecter-)
-    * [Se connecter en local au Keycloak en tant qu'admin (gérer les comptes, les royaumes...)](#se-connecter-en-local-au-keycloak-en-tant-quadmin-gérer-les-comptes-les-royaumes)
-    * [Se connecter en local à l'application en tant qu'élève](#se-connecter-en-local-à-lapplication-en-tant-quélève)
-    * [Se connecter en local à l'application en tant qu'enseignant](#se-connecter-en-local-à-lapplication-en-tant-quenseignant)
-    * [Se connecter en local à l'application en tant qu'expert](#se-connecter-en-local-à-lapplication-en-tant-quexpert)
-  * [Déploiement de l'application](#déploiement-de-lapplication)
-  * [Fonction des environnements](#fonction-des-environnements)
+- [MonProjetSup](#monprojetsup)
+  - [Applications contenu dans le repo](#applications-contenu-dans-le-repo)
+  - [Schéma simplifié des apps et des types d'échanges en local](#schéma-simplifié-des-apps-et-des-types-déchanges-en-local)
+  - [Comment lancer le projet pour développer](#comment-lancer-le-projet-pour-développer)
+    - [Lancement conteneurisé des 7 services](#lancement-conteneurisé-des-7-services)
+    - [Lancement conteneurisé de 3 services et lancement natif des 4 autres](#lancement-conteneurisé-de-3-services-et-lancement-natif-des-4-autres)
+  - [Les différentes URLs](#les-différentes-urls)
+  - [Comment se connecter](#comment-se-connecter)
+    - [Se connecter en local au Keycloak en tant qu'admin (gérer les comptes, les royaumes...)](#se-connecter-en-local-au-keycloak-en-tant-quadmin-gérer-les-comptes-les-royaumes)
+    - [Se connecter en local à l'application en tant qu'élève](#se-connecter-en-local-à-lapplication-en-tant-quélève)
+    - [Se connecter en local à l'application en tant qu'enseignant](#se-connecter-en-local-à-lapplication-en-tant-quenseignant)
+    - [Se connecter en local à l'application en tant qu'expert](#se-connecter-en-local-à-lapplication-en-tant-quexpert)
+  - [Déploiement de l'application](#déploiement-de-lapplication)
+  - [Fonction des environnements](#fonction-des-environnements)
 <!-- TOC -->
 
 ## Applications contenu dans le repo
@@ -39,6 +40,7 @@ Il y a en tout sept services: db postgre + back + front + suggestions + suggesti
 Les 7 services sont démarrés dans des Docker, et la base de données est initialisée avec des données de test.
 - Démarrer Docker sur sa machine
 - A la racine du projet, exécuter `cp .env.example .env`
+- Pour configurer l'origine CORS du front, éditer le fichier `.env` et modifier la variable d'environnement `BACK_CORS_ORIGINPATTERNS` dont la valeur par défaut est `http://localhost:5001` 
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev-full.yml up`
 
 ### Lancement conteneurisé de 3 services et lancement natif des 4 autres
