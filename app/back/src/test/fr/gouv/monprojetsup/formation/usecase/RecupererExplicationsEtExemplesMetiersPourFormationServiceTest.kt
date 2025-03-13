@@ -9,9 +9,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
-import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
@@ -39,12 +37,6 @@ import org.mockito.MockitoAnnotations
 class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
     @Mock
     lateinit var suggestionHttpClient: SuggestionHttpClient
-
-    @Mock
-    lateinit var formationRepository: FormationRepository
-
-    @Mock
-    lateinit var voeuRepository: VoeuRepository
 
     @Mock
     lateinit var baccalaureatRepository: BaccalaureatRepository
@@ -593,27 +585,31 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val centreInteret14 = InteretSousCategorie("ci14", "Aider les autres", null, "\uD83E\uDEC2")
             val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", null, "\uD83D\uDD25")
             val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", null, "\uD83C\uDF04")
+            val fl12 = FormationCourte(id = "fl12", nom = "CS - Sommellerie - en apprentissage")
+            val fl79 = FormationCourte(id = "fl79", nom = "L1 - Gestion - en apprentissage")
+            val fl1 = FormationCourte(id = "fl1", nom = "L1 - Psychologie")
+            val fl7 = FormationCourte(id = "fl7", nom = "L1 - Philosophie")
             given(choixEleveService.recupererChoixEleve(explications)).willReturn(
                 mapOf(
-                    "fl0001" to emptyList<Label>(),
-                    "fl0002" to emptyList<Label>(),
-                    "fl0003" to emptyList<Label>(),
-                    "fl0004" to listOf(centreInteret14.toLabel(), metier397.toLabel(), domaine8.toLabel(), centreInteret8.toLabel(), centreInteret17.toLabel(), metier103.toLabel()),
-                    "fl0005" to listOf(centreInteret17.toLabel(), centreInteret8.toLabel()),
-                    "fl0006" to emptyList<Label>(),
+                    "fl0001" to emptyList(),
+                    "fl0002" to emptyList(),
+                    "fl0003" to emptyList(),
+                    "fl0004" to
+                        listOf(
+                            centreInteret14.label,
+                            metier397.label,
+                            domaine8.label,
+                            centreInteret8.label,
+                            centreInteret17.label,
+                            metier103.label,
+                            fl12.label,
+                            fl79.label,
+                        ),
+                    "fl0005" to listOf(centreInteret17.label, centreInteret8.label, fl1.label, fl7.label, fl12.label),
+                    "fl0006" to emptyList(),
                 ),
             )
             given(metierRepository.recupererLesMetiersCourts(domainesInteretsMetiersDistincts)).willReturn(listOf(metier397, metier103))
-            val formationsDistinctes = listOf("fl12", "fl79", "fl1", "fl7")
-            given(formationRepository.recupererLesNomsDesFormations(formationsDistinctes)).willReturn(
-                listOf(
-                    FormationCourte(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
-                    FormationCourte(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                ),
-            )
-            given(voeuRepository.recupererLesNomsDesVoeux(formationsDistinctes)).willReturn(emptyList())
             val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005", "fl0006")
             val metier12 = mock(Metier::class.java)
             given(metier12.id).willReturn("MET.12")
@@ -730,16 +726,32 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     "fl0004" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
-                                choixEleve = listOf(centreInteret14.toLabel(), metier397.toLabel(), domaine8.toLabel(), centreInteret8.toLabel(), centreInteret17.toLabel(), metier103.toLabel())
-                                                + listOf(Label(id = "fl12", nom = "CS - Sommellerie - en apprentissage"), Label(id = "fl79", nom = "L1 - Gestion - en apprentissage"))
+                                choixEleve =
+                                    listOf(
+                                        centreInteret14.label,
+                                        metier397.label,
+                                        domaine8.label,
+                                        centreInteret8.label,
+                                        centreInteret17.label,
+                                        metier103.label,
+                                    ) +
+                                        listOf(
+                                            Label(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                            Label(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
+                                        ),
                             ),
                             emptyList(),
                         ),
                     "fl0005" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
-                                choixEleve = listOf(centreInteret17.toLabel(), centreInteret8.toLabel())
-                                                + listOf(Label(id = "fl1", nom = "L1 - Psychologie"), Label(id = "fl7", nom = "L1 - Philosophie"), Label(id = "fl12", nom = "CS - Sommellerie - en apprentissage"))
+                                choixEleve =
+                                    listOf(centreInteret17.label, centreInteret8.label) +
+                                        listOf(
+                                            Label(id = "fl1", nom = "L1 - Psychologie"),
+                                            Label(id = "fl7", nom = "L1 - Philosophie"),
+                                            Label(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                        ),
                             ),
                             emptyList(),
                         ),

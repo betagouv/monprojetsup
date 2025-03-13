@@ -266,8 +266,7 @@ export class formationHttpRepository implements FormationRepository {
       explications.geographique.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.choixEleve &&
-        (explications.choixEleve.choix.length > 0),
+      explications.choixEleve && explications.choixEleve.choix.length > 0,
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
     ];

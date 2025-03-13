@@ -3,11 +3,9 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
-import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
-import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import fr.gouv.monprojetsup.referentiel.domain.port.LabelsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -20,13 +18,7 @@ import org.mockito.MockitoAnnotations
 
 class ChoixEleveServiceTest {
     @Mock
-    lateinit var domaineRepository: DomaineRepository
-
-    @Mock
-    lateinit var metierRepository: MetierRepository
-
-    @Mock
-    lateinit var interetRepository: InteretRepository
+    lateinit var labelsRepository: LabelsRepository
 
     @Mock
     lateinit var logger: MonProjetSupLogger
@@ -67,16 +59,20 @@ class ChoixEleveServiceTest {
                     "fl0003" to ExplicationsSuggestionEtExemplesMetiers(),
                     "fl0005" to null,
                 )
-            val interetsDomainesMetiersChoisis = listOf("ci17", "ci14", "MET.103", "idInconnu", "dom8", "MET.397", "ci8")
-            given(domaineRepository.recupererLesDomaines(interetsDomainesMetiersChoisis)).willReturn(listOf(domaine8))
-            given(interetRepository.recupererLesSousCategories(interetsDomainesMetiersChoisis)).willReturn(
+            given(
+                labelsRepository.recupererLesLabels(
+                    listOf("ci17", "ci14", "MET.103", "idInconnu", "dom8", "MET.397", "ci8"),
+                ),
+            ).willReturn(
                 listOf(
-                    centreInteret8,
-                    centreInteret14,
-                    centreInteret17,
+                    centreInteret17.label,
+                    centreInteret14.label,
+                    metier103.label,
+                    domaine8.label,
+                    metier397.label,
+                    centreInteret8.label,
                 ),
             )
-            given(metierRepository.recupererLesMetiersCourts(interetsDomainesMetiersChoisis)).willReturn(listOf(metier103, metier397))
 
             // When
             val resultat = choixEleveService.recupererChoixEleve(explicationsParFormation = explications)
@@ -84,16 +80,15 @@ class ChoixEleveServiceTest {
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
                 mapOf(
-                    "fl0001" to listOf(centreInteret17.toLabel(), centreInteret14.toLabel()) + metier103.toLabel(),
-                    "fl0002" to listOf(centreInteret17.toLabel()),
-                    "fl0004" to listOf(domaine8.toLabel()) + listOf(centreInteret17.toLabel(), centreInteret8.toLabel())
-                            + listOf(metier397.toLabel(), metier103.toLabel()),
+                    "fl0001" to listOf(centreInteret17.label, centreInteret14.label) + metier103.label,
+                    "fl0002" to listOf(centreInteret17.label),
+                    "fl0004" to listOf(domaine8.label, centreInteret17.label, metier397.label, centreInteret8.label, metier103.label),
                     "fl0003" to emptyList(),
                     "fl0005" to emptyList(),
                 ),
             )
             then(logger).should()
-                .warn("ID_EXPLICATION_NON_RECONNU", "L'id idInconnu n'est ni un métier, ni un domaine, ni un centre d'intérêt")
+                .warn("ID_EXPLICATION_NON_RECONNU", "L'id idInconnu n'a pas de label")
         }
     }
 
@@ -109,25 +104,32 @@ class ChoixEleveServiceTest {
             val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", null, "\uD83C\uDF04")
             val interetsDomainesMetiersChoisis = listOf("dom8", "ci17", "idInconnu", "MET.397", "ci8", "MET.103")
             val explications = ExplicationsSuggestionEtExemplesMetiers(choix = interetsDomainesMetiersChoisis)
-            given(domaineRepository.recupererLesDomaines(interetsDomainesMetiersChoisis)).willReturn(listOf(domaine8))
-            given(interetRepository.recupererLesSousCategories(interetsDomainesMetiersChoisis)).willReturn(
+
+            given(
+                labelsRepository.recupererLesLabels(
+                    interetsDomainesMetiersChoisis,
+                ),
+            ).willReturn(
                 listOf(
-                    centreInteret17,
-                    centreInteret8,
+                    domaine8.label,
+                    centreInteret17.label,
+                    centreInteret8.label,
+                    metier397.label,
+                    metier103.label,
                 ),
             )
-            given(metierRepository.recupererLesMetiersCourts(interetsDomainesMetiersChoisis)).willReturn(listOf(metier103, metier397))
 
             // When
             val resultat = choixEleveService.recupererChoixEleve(explications = explications)
 
             // Then
-            assertThat(resultat).usingRecursiveComparison().isEqualTo( listOf(centreInteret17.toLabel(), centreInteret8.toLabel())
-                            + listOf(domaine8.toLabel())
-                            + listOf(metier103.toLabel(), metier397.toLabel()),
+            assertThat(resultat).usingRecursiveComparison().isEqualTo(
+                listOf(domaine8.label) +
+                    listOf(centreInteret17.label, centreInteret8.label) +
+                    listOf(metier397.label, metier103.label),
             )
             then(logger).should()
-                .warn("ID_EXPLICATION_NON_RECONNU", "L'id idInconnu n'est ni un métier, ni un domaine, ni un centre d'intérêt")
+                .warn("ID_EXPLICATION_NON_RECONNU", "L'id idInconnu n'a pas de label")
         }
     }
 }

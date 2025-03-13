@@ -12,4 +12,3 @@ class LabelBDDRepository(
         return labelJPARepository.findAllByIdIn(ids).map { it.toLabel() }
     }
 }
-
