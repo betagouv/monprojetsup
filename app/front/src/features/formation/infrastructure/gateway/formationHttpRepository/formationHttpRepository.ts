@@ -232,13 +232,11 @@ export class formationHttpRepository implements FormationRepository {
         })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      choixÉlève: {
-        choix:
-          explications.choixEleve?.choix.map((choix) => ({
-            id: choix.id,
-            nom: choix.nom,
-          })) ?? [],
-      },
+      choixÉlève:
+        explications.choixEleve?.map((choix) => ({
+          id: choix.id,
+          nom: choix.nom,
+        })) ?? [],
       spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
         nom: spécialité.nomSpecialite,
         pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
@@ -266,7 +264,7 @@ export class formationHttpRepository implements FormationRepository {
       explications.geographique.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.choixEleve && explications.choixEleve.choix.length > 0,
+      explications.choixEleve && explications.choixEleve.length > 0,
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
     ];

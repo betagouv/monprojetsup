@@ -173,9 +173,7 @@ export class formationInMemoryRepository implements FormationRepository {
         communes: [],
         duréeÉtudesPrévue: null,
         alternance: null,
-        choixÉlève: {
-          choix: [],
-        },
+        choixÉlève: [],
         spécialitésChoisies: [],
         typeBaccalaureat: {
           id: "Générale",
