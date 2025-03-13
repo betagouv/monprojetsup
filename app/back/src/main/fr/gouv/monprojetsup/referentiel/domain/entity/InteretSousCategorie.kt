@@ -10,7 +10,9 @@ data class InteretSousCategorie(
     val nom: String,
     val description: String?,
     val emoji: String,
-)
+) {
+    fun toLabel() = Label(id, nom)
+}
 
 data class InteretCategorie(
     val id: String,

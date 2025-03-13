@@ -729,7 +729,7 @@ class SuggestionApiHttpClientTest {
                                         "0 (proximité intérêts et favoris) ,  ]",
                                 ),
                             autoEvaluationMoyenne = null,
-                            interetsDomainesMetiersChoisis =
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
                                     "MET.612",
@@ -859,7 +859,7 @@ class SuggestionApiHttpClientTest {
                                     ),
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            interetsDomainesMetiersChoisis =
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
                                     "T_IDEO2_4812",
