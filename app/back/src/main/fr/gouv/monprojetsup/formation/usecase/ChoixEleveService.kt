@@ -12,8 +12,8 @@ class ChoixEleveService(
     private val logger: MonProjetSupLogger,
 ) {
     fun recupererChoixEleve(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): Map<String, List<Label>> {
-        val choixDistincts = recupererIdsDesChoix(explicationsParFormation)
-        val labelsChoix = (choixDistincts?.let { labelsRepository.recupererLesLabels(it) } ?: emptyList()).associateBy { it.id }
+        val choixDistincts = explicationsParFormation.flatMap { it.value?.choixAggreges ?: emptyList() }.distinct()
+        val labelsChoix = choixDistincts.let { labelsRepository.recupererLesLabels(it) }.associateBy { it.id }
 
         logguerLesIdsInconnus(
             choixDistincts,
@@ -21,7 +21,8 @@ class ChoixEleveService(
         )
         return explicationsParFormation.entries
             .associate { entry ->
-                entry.key to (entry.value?.choix?.mapNotNull { labelsChoix[it] } ?: emptyList())
+                entry.key to
+                    (entry.value?.choixAggreges?.map { labelsChoix.get(it) }?.filterNotNull() ?: emptyList())
             }
     }
 
@@ -50,21 +51,5 @@ class ChoixEleveService(
                 }
             }
         }
-    }
-
-    private fun recupererIdsDesChoix(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): List<String>? {
-        val choix =
-            explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() } +
-                explicationsParFormation.flatMap { it.value?.choix ?: emptyList() } +
-                explicationsParFormation.map {
-                    it.value?.donneesDeReference?.details
-                        ?.filter { itt -> itt.side == ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE }
-                        ?.sortedByDescending { itt -> itt.score }
-                        ?.map { itt -> itt.id }
-                        ?.firstOrNull()
-                }.filterNotNull()
-        return choix.takeUnless {
-            it.isEmpty()
-        }?.distinct()
     }
 }
