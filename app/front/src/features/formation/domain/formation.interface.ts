@@ -78,12 +78,10 @@ export type FicheFormation = {
     }>;
     duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
     alternance: AlternanceÉlève | null;
-    choixÉlève: {
-      choix: Array<{
-        id: string;
-        nom: string;
-      }>;
-    };
+    choixÉlève: Array<{
+      id: string;
+      nom: string;
+    }>;
     spécialitésChoisies: Array<{
       nom: string;
       pourcentageAdmisAnnéePrécédente: number;
