@@ -1,11 +1,9 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 
 data class ExplicationsSuggestionEtExemplesMetiers(
     val geographique: List<ExplicationGeographique> = emptyList(),
@@ -15,8 +13,9 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
     val typeBaccalaureat: TypeBaccalaureat? = null,
     val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
-    val interetsDomainesMetiersChoisis: List<String> = emptyList(),
+    val choix: List<String> = emptyList(),
     val exemplesDeMetiers: List<String> = emptyList(),
+    val donneesDeReference: ListeChoixReference? = null,
     val detailsCalculScore: List<String> = emptyList(),
 ) {
     data class AutoEvaluationMoyenne(
@@ -42,6 +41,22 @@ data class ExplicationsSuggestionEtExemplesMetiers(
         val idSpecialite: String,
         val pourcentage: Int,
     )
+
+    data class ListeChoixReference(
+        val details: List<ChoixReference>
+    )
+
+    data class ChoixReference(
+        val id: String,
+        val score: Float,
+        val side: Side,
+    )
+
+    enum class Side {
+        POSITIVE,
+        NEGATIVE
+    }
+
 }
 
 data class ExplicationsSuggestionDetaillees(
@@ -49,8 +64,7 @@ data class ExplicationsSuggestionDetaillees(
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     val alternance: ChoixAlternance? = null,
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
-    val formationsSimilaires: List<FormationCourte> = emptyList(),
-    val choixEleve: ChoixEleve = ChoixEleve(),
+    val choixEleve: List<Label> = emptyList(),
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
     val detailsCalculScore: List<String> = emptyList(),
 ) {
@@ -60,11 +74,6 @@ data class ExplicationsSuggestionDetaillees(
         val pourcentage: Int,
     )
 
-    data class ChoixEleve(
-        val interetsChoisis: List<InteretSousCategorie> = emptyList(),
-        val domainesChoisis: List<Domaine> = emptyList(),
-        val metiersChoisis: List<MetierCourt> = emptyList(),
-    )
 }
 
 data class ExplicationGeographique(

@@ -47,12 +47,10 @@ import fr.gouv.monprojetsup.formation.usecase.RecupererFichesFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
-import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -124,30 +122,21 @@ class FormationControllerTest(
                     AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
                 ),
             choixEleve =
-                ExplicationsSuggestionDetaillees.ChoixEleve(
-                    domainesChoisis =
                         listOf(
-                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E", description = null),
-                        ),
-                    interetsChoisis =
+                            Label(id = "T_ITM_1356", nom = "soin aux animaux"),
+                        ) +
                         listOf(
-                            InteretSousCategorie(
+                            Label(
                                 id = "aider_autres",
-                                nom = "Aider les autres",
-                                emoji = "\uD83E\uDEC2",
-                                description = null,
-                            ),
-                        ),
-                    metiersChoisis =
+                                nom = "Aider les autres"
+                            ) ) +
                         listOf(
-                            MetierCourt("MET.397", "analyste financier/ère"),
-                            MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales"),
-                        ),
-                ),
-            formationsSimilaires =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                    FormationCourte(id = "fl7", nom = "BUT Informatique"),
+                            Label("MET.397", "analyste financier/ère"),
+                            Label("MET.103", "ingénieur/e en expérimentation et production végétales"),
+                        ) +
+                    listOf(
+                        Label(id = "fl1", nom = "CPGE MPSI"),
+                        Label(id = "fl7", nom = "BUT Informatique"),
                 ),
             explicationTypeBaccalaureat =
                 ExplicationTypeBaccalaureat(
@@ -659,330 +648,320 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formations": [
                             {
-                              "formation": {
-                                "id": "fl680002",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
+                              "formations": [
+                                {
+                                  "formation": {
+                                    "id": "fl680002",
+                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                    "idsFormationsAssociees": [
+                                      "fl0012"
+                                    ],
+                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                    "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                    "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                    "moyenneGeneraleDesAdmis": {
                                       "baccalaureat": {
                                         "id": "Générale",
                                         "nom": "Série Générale"
                                       },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "communes": [
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75115"
-                                  },
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75105"
-                                  },
-                                  {
-                                    "nom": "Montreuil",
-                                    "codeInsee": "93048"
-                                  },
-                                  {
-                                    "nom": "Lyon",
-                                    "codeInsee": "69123"
-                                  },
-                                  {
-                                    "nom": "Strasbourg",
-                                    "codeInsee": "67482"
-                                  },
-                                  {
-                                    "nom": "Marseille",
-                                    "codeInsee": "13055"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
+                                      "centiles": [
+                                        {
+                                          "centile": 5,
+                                          "note": 13
                                         },
-                                        "distanceKm": 3
+                                        {
+                                          "centile": 25,
+                                          "note": 14.5
+                                        },
+                                        {
+                                          "centile": 75,
+                                          "note": 17
+                                        },
+                                        {
+                                          "centile": 95,
+                                          "note": 18
+                                        }
+                                      ]
+                                    },
+                                    "criteresAnalyseCandidature": [
+                                      {
+                                        "nom": "Compétences académiques",
+                                        "pourcentage": 10
                                       },
                                       {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
+                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                        "pourcentage": 0
+                                      },
+                                      {
+                                        "nom": "Résultats académiques",
+                                        "pourcentage": 18
+                                      },
+                                      {
+                                        "nom": "Savoir-être",
+                                        "pourcentage": 42
+                                      },
+                                      {
+                                        "nom": "Motivation, connaissance",
+                                        "pourcentage": 30
                                       }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    ],
+                                    "repartitionAdmisAnneePrecedente": {
+                                      "total": 6915,
+                                      "parBaccalaureat": [
+                                        {
+                                          "baccalaureat": {
+                                            "id": "Générale",
+                                            "nom": "Série Générale"
+                                          },
+                                          "nombreAdmis": 6677
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STMG",
+                                            "nom": "Série STMG"
+                                          },
+                                          "nombreAdmis": 15
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STI2D",
+                                            "nom": "Série STI2D"
+                                          },
+                                          "nombreAdmis": 223
+                                        }
+                                      ]
+                                    },
                                     "liens": [
                                       {
                                         "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                       }
-                                    ]
+                                    ],
+                                    "communes": [
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      },
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      },
+                                      {
+                                        "nom": "Montreuil",
+                                        "codeInsee": "93048"
+                                      },
+                                      {
+                                        "nom": "Lyon",
+                                        "codeInsee": "69123"
+                                      },
+                                      {
+                                        "nom": "Strasbourg",
+                                        "codeInsee": "67482"
+                                      },
+                                      {
+                                        "nom": "Marseille",
+                                        "codeInsee": "13055"
+                                      }
+                                    ],
+                                    "voeux": [
+                                      {
+                                        "id": "ta10",
+                                        "nom": "Nom du ta10",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta3",
+                                        "nom": "Nom du ta3",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75105"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta11",
+                                        "nom": "Nom du ta11",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta32",
+                                        "nom": "Nom du ta32",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75115"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta17",
+                                        "nom": "Nom du ta17",
+                                        "commune": {
+                                          "nom": "Strasbourg",
+                                          "codeInsee": "67482"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta7",
+                                        "nom": "Nom du ta7",
+                                        "commune": {
+                                          "nom": "Marseille",
+                                          "codeInsee": "13055"
+                                        }
+                                      }
+                                    ],
+                                    "communesFavoritesAvecLeursVoeux": [
+                                      {
+                                        "commune": {
+                                          "codeInsee": "75115",
+                                          "nom": "Paris",
+                                          "latitude": 48.851227,
+                                          "longitude": 2.2885659
+                                        },
+                                        "voeuxAvecDistance": [
+                                          {
+                                            "voeu": {
+                                              "id": "ta3",
+                                              "nom": "Nom du ta3",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75105"
+                                              }
+                                            },
+                                            "distanceKm": 3
+                                          },
+                                          {
+                                            "voeu": {
+                                              "id": "ta32",
+                                              "nom": "Nom du ta32",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75115"
+                                              }
+                                            },
+                                            "distanceKm": 1
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "metiers": [
+                                      {
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
+                                      }
+                                    ],
+                                    "tauxAffinite": 90,
+                                    "apprentissage": true
                                   },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "description": null,
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
+                                  "explications": {
+                                    "geographique": [
+                                      {
+                                        "nomVille": "Nantes",
+                                        "distanceKm": 1
+                                      },
+                                      {
+                                        "nomVille": "Paris",
+                                        "distanceKm": 3
+                                      }
+                                    ],
+                                    "dureeEtudesPrevue": "longue",
+                                    "alternance": "tres_interesse",
+                                    "choixEleve": [
+                                      {
+                                        "id": "T_ITM_1356",
+                                        "nom": "soin aux animaux"
+                                      },
+                                      {
+                                        "id": "aider_autres",
+                                        "nom": "Aider les autres"
+                                      },
+                                      {
+                                        "id": "MET.397",
+                                        "nom": "analyste financier/ère"
+                                      },
+                                      {
+                                        "id": "MET.103",
+                                        "nom": "ingénieur/e en expérimentation et production végétales"
+                                      },
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
+                                    ],
+                                    "specialitesChoisies": [
+                                      {
+                                        "nomSpecialite": "specialiteA",
+                                        "pourcentage": 12
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteB",
+                                        "pourcentage": 1
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteC",
+                                        "pourcentage": 89
+                                      }
+                                    ],
+                                    "typeBaccalaureat": {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "pourcentage": 18
                                     },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    "detailsCalculScore": {
+                                      "details": []
                                     }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
                                   }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
                                 },
-                                "detailsCalculScore": {
-                                  "details": []
+                                {
+                                  "formation": {
+                                    "id": "fl2",
+                                    "nom": "2eme formation",
+                                    "idsFormationsAssociees": [
+                                      "fl3"
+                                    ],
+                                    "descriptifFormation": null,
+                                    "descriptifDiplome": null,
+                                    "descriptifConseils": null,
+                                    "descriptifAttendus": null,
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [],
+                                    "repartitionAdmisAnneePrecedente": null,
+                                    "liens": [],
+                                    "communes": [],
+                                    "voeux": [],
+                                    "communesFavoritesAvecLeursVoeux": [],
+                                    "metiers": [],
+                                    "tauxAffinite": 17,
+                                    "apprentissage": false
+                                  },
+                                  "explications": null
                                 }
-                              }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "communes": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": 17,
-                                "apprentissage": false
-                              },
-                              "explications": null
+                              ]
                             }
-                          ]
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -1070,330 +1049,320 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formations": [
                             {
-                              "formation": {
-                                "id": "fl680002",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
+                              "formations": [
+                                {
+                                  "formation": {
+                                    "id": "fl680002",
+                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                    "idsFormationsAssociees": [
+                                      "fl0012"
+                                    ],
+                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                    "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                    "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                    "moyenneGeneraleDesAdmis": {
                                       "baccalaureat": {
                                         "id": "Générale",
                                         "nom": "Série Générale"
                                       },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "communes": [
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75115"
-                                  },
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75105"
-                                  },
-                                  {
-                                    "nom": "Montreuil",
-                                    "codeInsee": "93048"
-                                  },
-                                  {
-                                    "nom": "Lyon",
-                                    "codeInsee": "69123"
-                                  },
-                                  {
-                                    "nom": "Strasbourg",
-                                    "codeInsee": "67482"
-                                  },
-                                  {
-                                    "nom": "Marseille",
-                                    "codeInsee": "13055"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
+                                      "centiles": [
+                                        {
+                                          "centile": 5,
+                                          "note": 13
                                         },
-                                        "distanceKm": 3
+                                        {
+                                          "centile": 25,
+                                          "note": 14.5
+                                        },
+                                        {
+                                          "centile": 75,
+                                          "note": 17
+                                        },
+                                        {
+                                          "centile": 95,
+                                          "note": 18
+                                        }
+                                      ]
+                                    },
+                                    "criteresAnalyseCandidature": [
+                                      {
+                                        "nom": "Compétences académiques",
+                                        "pourcentage": 10
                                       },
                                       {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
+                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                        "pourcentage": 0
+                                      },
+                                      {
+                                        "nom": "Résultats académiques",
+                                        "pourcentage": 18
+                                      },
+                                      {
+                                        "nom": "Savoir-être",
+                                        "pourcentage": 42
+                                      },
+                                      {
+                                        "nom": "Motivation, connaissance",
+                                        "pourcentage": 30
                                       }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    ],
+                                    "repartitionAdmisAnneePrecedente": {
+                                      "total": 6915,
+                                      "parBaccalaureat": [
+                                        {
+                                          "baccalaureat": {
+                                            "id": "Générale",
+                                            "nom": "Série Générale"
+                                          },
+                                          "nombreAdmis": 6677
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STMG",
+                                            "nom": "Série STMG"
+                                          },
+                                          "nombreAdmis": 15
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STI2D",
+                                            "nom": "Série STI2D"
+                                          },
+                                          "nombreAdmis": 223
+                                        }
+                                      ]
+                                    },
                                     "liens": [
                                       {
                                         "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                       }
-                                    ]
+                                    ],
+                                    "communes": [
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      },
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      },
+                                      {
+                                        "nom": "Montreuil",
+                                        "codeInsee": "93048"
+                                      },
+                                      {
+                                        "nom": "Lyon",
+                                        "codeInsee": "69123"
+                                      },
+                                      {
+                                        "nom": "Strasbourg",
+                                        "codeInsee": "67482"
+                                      },
+                                      {
+                                        "nom": "Marseille",
+                                        "codeInsee": "13055"
+                                      }
+                                    ],
+                                    "voeux": [
+                                      {
+                                        "id": "ta10",
+                                        "nom": "Nom du ta10",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta3",
+                                        "nom": "Nom du ta3",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75105"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta11",
+                                        "nom": "Nom du ta11",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta32",
+                                        "nom": "Nom du ta32",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75115"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta17",
+                                        "nom": "Nom du ta17",
+                                        "commune": {
+                                          "nom": "Strasbourg",
+                                          "codeInsee": "67482"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta7",
+                                        "nom": "Nom du ta7",
+                                        "commune": {
+                                          "nom": "Marseille",
+                                          "codeInsee": "13055"
+                                        }
+                                      }
+                                    ],
+                                    "communesFavoritesAvecLeursVoeux": [
+                                      {
+                                        "commune": {
+                                          "codeInsee": "75115",
+                                          "nom": "Paris",
+                                          "latitude": 48.851227,
+                                          "longitude": 2.2885659
+                                        },
+                                        "voeuxAvecDistance": [
+                                          {
+                                            "voeu": {
+                                              "id": "ta3",
+                                              "nom": "Nom du ta3",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75105"
+                                              }
+                                            },
+                                            "distanceKm": 3
+                                          },
+                                          {
+                                            "voeu": {
+                                              "id": "ta32",
+                                              "nom": "Nom du ta32",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75115"
+                                              }
+                                            },
+                                            "distanceKm": 1
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "metiers": [
+                                      {
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
+                                      }
+                                    ],
+                                    "tauxAffinite": 90,
+                                    "apprentissage": true
                                   },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "description": null,
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
+                                  "explications": {
+                                    "geographique": [
+                                      {
+                                        "nomVille": "Nantes",
+                                        "distanceKm": 1
+                                      },
+                                      {
+                                        "nomVille": "Paris",
+                                        "distanceKm": 3
+                                      }
+                                    ],
+                                    "dureeEtudesPrevue": "longue",
+                                    "alternance": "tres_interesse",
+                                    "choixEleve": [
+                                      {
+                                        "id": "T_ITM_1356",
+                                        "nom": "soin aux animaux"
+                                      },
+                                      {
+                                        "id": "aider_autres",
+                                        "nom": "Aider les autres"
+                                      },
+                                      {
+                                        "id": "MET.397",
+                                        "nom": "analyste financier/ère"
+                                      },
+                                      {
+                                        "id": "MET.103",
+                                        "nom": "ingénieur/e en expérimentation et production végétales"
+                                      },
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
+                                    ],
+                                    "specialitesChoisies": [
+                                      {
+                                        "nomSpecialite": "specialiteA",
+                                        "pourcentage": 12
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteB",
+                                        "pourcentage": 1
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteC",
+                                        "pourcentage": 89
+                                      }
+                                    ],
+                                    "typeBaccalaureat": {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "pourcentage": 18
                                     },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    "detailsCalculScore": {
+                                      "details": []
                                     }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
                                   }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
                                 },
-                                "detailsCalculScore": {
-                                  "details": []
+                                {
+                                  "formation": {
+                                    "id": "fl2",
+                                    "nom": "2eme formation",
+                                    "idsFormationsAssociees": [
+                                      "fl3"
+                                    ],
+                                    "descriptifFormation": null,
+                                    "descriptifDiplome": null,
+                                    "descriptifConseils": null,
+                                    "descriptifAttendus": null,
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [],
+                                    "repartitionAdmisAnneePrecedente": null,
+                                    "liens": [],
+                                    "communes": [],
+                                    "voeux": [],
+                                    "communesFavoritesAvecLeursVoeux": [],
+                                    "metiers": [],
+                                    "tauxAffinite": 17,
+                                    "apprentissage": false
+                                  },
+                                  "explications": null
                                 }
-                              }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "communes": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": 17,
-                                "apprentissage": false
-                              },
-                              "explications": null
+                              ]
                             }
-                          ]
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -1482,7 +1451,7 @@ class FormationControllerTest(
             given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
-            mvc.perform(
+            val contentJson = mvc.perform(
                 post("$API_FORMATION")
                     .contentType(MediaType.APPLICATION_JSON).content(
                         ObjectMapper().writeValueAsString(
@@ -1493,279 +1462,298 @@ class FormationControllerTest(
                             ),
                         ),
                     ).accept(MediaType.APPLICATION_JSON),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            )
+                .andDo(print())
+                .andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formation": {
-                            "id": "fl680002",
-                            "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "idsFormationsAssociees": [
-                              "fl0012"
-                            ],
-                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "centiles": [
-                                {
-                                  "centile": 5,
-                                  "note": 13.0
-                                },
-                                {
-                                  "centile": 25,
-                                  "note": 14.5
-                                },
-                                {
-                                  "centile": 75,
-                                  "note": 17.0
-                                },
-                                {
-                                  "centile": 95,
-                                  "note": 18.0
-                                }
-                              ]
-                            },
-                            "criteresAnalyseCandidature": [
-                              {
-                                "nom": "Compétences académiques",
-                                "pourcentage": 10
-                              },
-                              {
-                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                "pourcentage": 0
-                              },
-                              {
-                                "nom": "Résultats académiques",
-                                "pourcentage": 18
-                              },
-                              {
-                                "nom": "Savoir-être",
-                                "pourcentage": 42
-                              },
-                              {
-                                "nom": "Motivation, connaissance",
-                                "pourcentage": 30
-                              }
-                            ],
-                            "repartitionAdmisAnneePrecedente": {
-                              "total": 6915,
-                              "parBaccalaureat": [
-                                {
+                            {
+                              "formation": {
+                                "id": "fl680002",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
                                   "baccalaureat": {
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   },
-                                  "nombreAdmis": 6677
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STMG",
-                                    "nom": "Série STMG"
-                                  },
-                                  "nombreAdmis": 15
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STI2D",
-                                    "nom": "Série STI2D"
-                                  },
-                                  "nombreAdmis": 223
-                                }
-                              ]
-                            },
-                            "liens": [
-                              {
-                                "nom": "Voir sur l'ONISEP",
-                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                              }
-                            ],
-                            "voeux": [
-                              {
-                                "id": "ta10",
-                                "nom": "Nom du ta10",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta3",
-                                "nom": "Nom du ta3",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75105"
-                                }
-                              },
-                              {
-                                "id": "ta11",
-                                "nom": "Nom du ta11",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta32",
-                                "nom": "Nom du ta32",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75115"
-                                }
-                              },
-                              {
-                                "id": "ta17",
-                                "nom": "Nom du ta17",
-                                "commune": {
-                                  "nom": "Strasbourg",
-                                  "codeInsee": "67482"
-                                }
-                              },
-                              {
-                                "id": "ta7",
-                                "nom": "Nom du ta7",
-                                "commune": {
-                                  "nom": "Marseille",
-                                  "codeInsee": "13055"
-                                }
-                              }
-                            ],
-                            "communesFavoritesAvecLeursVoeux": [
-                              {
-                                "commune": {
-                                  "codeInsee": "75115",
-                                  "nom": "Paris",
-                                  "latitude": 48.851227,
-                                  "longitude": 2.2885659
-                                },
-                                "voeuxAvecDistance": [
-                                  {
-                                    "voeu": {
-                                      "id": "ta3",
-                                      "nom": "Nom du ta3",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75105"
-                                      }
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13
                                     },
-                                    "distanceKm": 3
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
                                   },
                                   {
-                                    "voeu": {
-                                      "id": "ta32",
-                                      "nom": "Nom du ta32",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75115"
-                                      }
-                                    },
-                                    "distanceKm": 1
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
                                   }
-                                ]
-                              }
-                            ],
-                            "metiers": [
-                              {
-                                "id": "MET001",
-                                "nom": "géomaticien/ne",
-                                "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
                                 "liens": [
                                   {
                                     "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ]
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
-                              {
-                                "id": "MET002",
-                                "nom": "documentaliste",
-                                "descriptif": null,
-                                "liens": []
-                              }
-                            ],
-                            "tauxAffinite": 90,
-                            "apprentissage": true
-                          },
-                          "explications": {
-                            "geographique": [
-                              {
-                                "nomVille": "Nantes",
-                                "distanceKm": 1
-                              },
-                              {
-                                "nomVille": "Paris",
-                                "distanceKm": 3
-                              }
-                            ],
-                            "formationsSimilaires": [
-                              {
-                                "id": "fl1",
-                                "nom": "CPGE MPSI"
-                              },
-                              {
-                                "id": "fl7",
-                                "nom": "BUT Informatique"
-                              }
-                            ],
-                            "dureeEtudesPrevue": "longue",
-                            "alternance": "tres_interesse",
-                            "choixEleve": {
-                              "interets": [
-                                {
-                                  "id": "aider_autres",
-                                  "nom": "Aider les autres"
-                                }
-                              ],
-                              "domaines": [
-                                {
-                                  "id": "T_ITM_1356",
-                                  "nom": "soin aux animaux",
-                                  "emoji": "\uD83D\uDC2E"
-                                }
-                              ],
-                              "metiers": [
-                                {
-                                  "id": "MET.397",
-                                  "nom": "analyste financier/ère"
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
                                 },
-                                {
-                                  "id": "MET.103",
-                                  "nom": "ingénieur/e en expérimentation et production végétales"
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
-                              ]
-                            },
-                            "specialitesChoisies": [
-                              {
-                                "nomSpecialite": "specialiteA",
-                                "pourcentage": 12
-                              },
-                              {
-                                "nomSpecialite": "specialiteB",
-                                "pourcentage": 1
-                              },
-                              {
-                                "nomSpecialite": "specialiteC",
-                                "pourcentage": 89
                               }
-                            ],
-                            "typeBaccalaureat": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "pourcentage": 18
-                            },
-                            "detailsCalculScore": {
-                              "details": []
                             }
-                          }
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -1793,275 +1781,292 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formation": {
-                            "id": "fl680002",
-                            "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "idsFormationsAssociees": [
-                              "fl0012"
-                            ],
-                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "centiles": [
-                                {
-                                  "centile": 5,
-                                  "note": 13.0
-                                },
-                                {
-                                  "centile": 25,
-                                  "note": 14.5
-                                },
-                                {
-                                  "centile": 75,
-                                  "note": 17.0
-                                },
-                                {
-                                  "centile": 95,
-                                  "note": 18.0
-                                }
-                              ]
-                            },
-                            "criteresAnalyseCandidature": [
-                              {
-                                "nom": "Compétences académiques",
-                                "pourcentage": 10
-                              },
-                              {
-                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                "pourcentage": 0
-                              },
-                              {
-                                "nom": "Résultats académiques",
-                                "pourcentage": 18
-                              },
-                              {
-                                "nom": "Savoir-être",
-                                "pourcentage": 42
-                              },
-                              {
-                                "nom": "Motivation, connaissance",
-                                "pourcentage": 30
-                              }
-                            ],
-                            "repartitionAdmisAnneePrecedente": {
-                              "total": 6915,
-                              "parBaccalaureat": [
-                                {
+                            {
+                              "formation": {
+                                "id": "fl680002",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
                                   "baccalaureat": {
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   },
-                                  "nombreAdmis": 6677
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STMG",
-                                    "nom": "Série STMG"
-                                  },
-                                  "nombreAdmis": 15
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STI2D",
-                                    "nom": "Série STI2D"
-                                  },
-                                  "nombreAdmis": 223
-                                }
-                              ]
-                            },
-                            "liens": [
-                              {
-                                "nom": "Voir sur l'ONISEP",
-                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                              }
-                            ],
-                            "voeux": [
-                              {
-                                "id": "ta10",
-                                "nom": "Nom du ta10",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta3",
-                                "nom": "Nom du ta3",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75105"
-                                }
-                              },
-                              {
-                                "id": "ta11",
-                                "nom": "Nom du ta11",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta32",
-                                "nom": "Nom du ta32",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75115"
-                                }
-                              },
-                              {
-                                "id": "ta17",
-                                "nom": "Nom du ta17",
-                                "commune": {
-                                  "nom": "Strasbourg",
-                                  "codeInsee": "67482"
-                                }
-                              },
-                              {
-                                "id": "ta7",
-                                "nom": "Nom du ta7",
-                                "commune": {
-                                  "nom": "Marseille",
-                                  "codeInsee": "13055"
-                                }
-                              }
-                            ],
-                            "communesFavoritesAvecLeursVoeux": [
-                              {
-                                "commune": {
-                                  "codeInsee": "75115",
-                                  "nom": "Paris",
-                                  "latitude": 48.851227,
-                                  "longitude": 2.2885659
-                                },
-                                "voeuxAvecDistance": [
-                                  {
-                                    "voeu": {
-                                      "id": "ta3",
-                                      "nom": "Nom du ta3",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75105"
-                                      }
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13
                                     },
-                                    "distanceKm": 3
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
                                   },
                                   {
-                                    "voeu": {
-                                      "id": "ta32",
-                                      "nom": "Nom du ta32",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75115"
-                                      }
-                                    },
-                                    "distanceKm": 1
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
                                   }
-                                ]
-                              }
-                            ],
-                            "metiers": [
-                              {
-                                "id": "MET001",
-                                "nom": "géomaticien/ne",
-                                "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
                                 "liens": [
                                   {
                                     "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ]
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
-                              {
-                                "id": "MET002",
-                                "nom": "documentaliste",
-                                "descriptif": null,
-                                "liens": []
-                              }
-                            ],
-                            "tauxAffinite": 90,
-                            "apprentissage": true
-                          },
-                          "explications": {
-                            "geographique": [
-                              {
-                                "nomVille": "Nantes",
-                                "distanceKm": 1
-                              },
-                              {
-                                "nomVille": "Paris",
-                                "distanceKm": 3
-                              }
-                            ],
-                            "formationsSimilaires": [
-                              {
-                                "id": "fl1",
-                                "nom": "CPGE MPSI"
-                              },
-                              {
-                                "id": "fl7",
-                                "nom": "BUT Informatique"
-                              }
-                            ],
-                            "dureeEtudesPrevue": "longue",
-                            "alternance": "tres_interesse",
-                            "choixEleve": {
-                              "interets": [
-                                {
-                                  "id": "aider_autres",
-                                  "nom": "Aider les autres"
-                                }
-                              ],
-                              "domaines": [
-                                {
-                                  "id": "T_ITM_1356",
-                                  "nom": "soin aux animaux",
-                                  "emoji": "\uD83D\uDC2E"
-                                }
-                              ],
-                              "metiers": [
-                                {
-                                  "id": "MET.397",
-                                  "nom": "analyste financier/ère"
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
                                 },
-                                {
-                                  "id": "MET.103",
-                                  "nom": "ingénieur/e en expérimentation et production végétales"
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
-                              ]
-                            },
-                            "specialitesChoisies": [
-                              {
-                                "nomSpecialite": "specialiteA",
-                                "pourcentage": 12
-                              },
-                              {
-                                "nomSpecialite": "specialiteB",
-                                "pourcentage": 1
-                              },
-                              {
-                                "nomSpecialite": "specialiteC",
-                                "pourcentage": 89
                               }
-                            ],
-                            "typeBaccalaureat": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "pourcentage": 18
-                            },
-                            "detailsCalculScore": {
-                              "details": []
                             }
-                          }
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -2089,125 +2094,292 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formation": {
-                            "id": "fl680002",
-                            "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "idsFormationsAssociees": [
-                              "fl0012"
-                            ],
-                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": null,
-                            "criteresAnalyseCandidature": [
-                              {
-                                "nom": "Compétences académiques",
-                                "pourcentage": 10
-                              },
-                              {
-                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                "pourcentage": 0
-                              },
-                              {
-                                "nom": "Résultats académiques",
-                                "pourcentage": 18
-                              },
-                              {
-                                "nom": "Savoir-être",
-                                "pourcentage": 42
-                              },
-                              {
-                                "nom": "Motivation, connaissance",
-                                "pourcentage": 30
-                              }
-                            ],
-                            "repartitionAdmisAnneePrecedente": {
-                              "total": 12,
-                              "parBaccalaureat": []
-                            },
-                            "liens": [
-                              {
-                                "nom": "Voir sur l'ONISEP",
-                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                              }
-                            ],
-                            "voeux": [
-                              {
-                                "id": "ta10",
-                                "nom": "Nom du ta10",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta3",
-                                "nom": "Nom du ta3",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75105"
-                                }
-                              },
-                              {
-                                "id": "ta11",
-                                "nom": "Nom du ta11",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta32",
-                                "nom": "Nom du ta32",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75115"
-                                }
-                              },
-                              {
-                                "id": "ta17",
-                                "nom": "Nom du ta17",
-                                "commune": {
-                                  "nom": "Strasbourg",
-                                  "codeInsee": "67482"
-                                }
-                              },
-                              {
-                                "id": "ta7",
-                                "nom": "Nom du ta7",
-                                "commune": {
-                                  "nom": "Marseille",
-                                  "codeInsee": "13055"
-                                }
-                              }
-                            ],
-                            "communesFavoritesAvecLeursVoeux": [],
-                            "metiers": [
-                              {
-                                "id": "MET001",
-                                "nom": "géomaticien/ne",
-                                "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                            {
+                              "formation": {
+                                "id": "fl680002",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13
+                                    },
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
                                 "liens": [
                                   {
                                     "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ]
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
-                              {
-                                "id": "MET002",
-                                "nom": "documentaliste",
-                                "descriptif": null,
-                                "liens": []
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
                               }
-                            ],
-                            "tauxAffinite": null,
-                            "apprentissage": false
-                          },
-                          "explications": null
-                        }
+                            }
                         """.trimIndent(),
                     ),
                 )
@@ -2815,43 +2987,9 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
-                                    },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
-                                    }
-                                  ]
-                                },
+                                "choixEleve":[{"id":"T_ITM_1356","nom":"soin aux animaux"},{"id":"aider_autres","nom":"Aider les autres"},{"id":"MET.397","nom":"analyste financier/ère"},{"id":"MET.103","nom":"ingénieur/e en expérimentation et production végétales"},{"id":"fl1","nom":"CPGE MPSI"},{"id":"fl7","nom":"BUT Informatique"}],
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -3377,43 +3515,9 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
+                                "choixEleve":[{"id":"T_ITM_1356","nom":"soin aux animaux"},{"id":"aider_autres","nom":"Aider les autres"},{"id":"MET.397","nom":"analyste financier/ère"},{"id":"MET.103","nom":"ingénieur/e en expérimentation et production végétales"},{"id":"fl1","nom":"CPGE MPSI"},{"id":"fl7","nom":"BUT Informatique"}],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
-                                    },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -3768,14 +3872,9 @@ class FormationControllerTest(
                               },
                               "explications": {
                                 "geographique": [],
-                                "formationsSimilaires": [],
                                 "dureeEtudesPrevue": null,
                                 "alternance": null,
-                                "choixEleve": {
-                                  "interets": [],
-                                  "domaines": [],
-                                  "metiers": []
-                                },
+                                "choixEleve": [],
                                 "specialitesChoisies": [],
                                 "typeBaccalaureat": null,
                                 "detailsCalculScore": {
@@ -3932,14 +4031,9 @@ class FormationControllerTest(
                               },
                               "explications": {
                                 "geographique": [],
-                                "formationsSimilaires": [],
                                 "dureeEtudesPrevue": null,
                                 "alternance": null,
-                                "choixEleve": {
-                                  "interets": [],
-                                  "domaines": [],
-                                  "metiers": []
-                                },
+                                "choixEleve": [],
                                 "specialitesChoisies": [],
                                 "typeBaccalaureat": null,
                                 "detailsCalculScore": {
@@ -4014,330 +4108,320 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formations": [
                             {
-                              "formation": {
-                                "id": "fl1",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
+                              "formations": [
+                                {
+                                  "formation": {
+                                    "id": "fl1",
+                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                    "idsFormationsAssociees": [
+                                      "fl0012"
+                                    ],
+                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                    "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                    "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                    "moyenneGeneraleDesAdmis": {
                                       "baccalaureat": {
                                         "id": "Générale",
                                         "nom": "Série Générale"
                                       },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "communes": [
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75115"
-                                  },
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75105"
-                                  },
-                                  {
-                                    "nom": "Montreuil",
-                                    "codeInsee": "93048"
-                                  },
-                                  {
-                                    "nom": "Lyon",
-                                    "codeInsee": "69123"
-                                  },
-                                  {
-                                    "nom": "Strasbourg",
-                                    "codeInsee": "67482"
-                                  },
-                                  {
-                                    "nom": "Marseille",
-                                    "codeInsee": "13055"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
+                                      "centiles": [
+                                        {
+                                          "centile": 5,
+                                          "note": 13
                                         },
-                                        "distanceKm": 3
+                                        {
+                                          "centile": 25,
+                                          "note": 14.5
+                                        },
+                                        {
+                                          "centile": 75,
+                                          "note": 17
+                                        },
+                                        {
+                                          "centile": 95,
+                                          "note": 18
+                                        }
+                                      ]
+                                    },
+                                    "criteresAnalyseCandidature": [
+                                      {
+                                        "nom": "Compétences académiques",
+                                        "pourcentage": 10
                                       },
                                       {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
+                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                        "pourcentage": 0
+                                      },
+                                      {
+                                        "nom": "Résultats académiques",
+                                        "pourcentage": 18
+                                      },
+                                      {
+                                        "nom": "Savoir-être",
+                                        "pourcentage": 42
+                                      },
+                                      {
+                                        "nom": "Motivation, connaissance",
+                                        "pourcentage": 30
                                       }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    ],
+                                    "repartitionAdmisAnneePrecedente": {
+                                      "total": 6915,
+                                      "parBaccalaureat": [
+                                        {
+                                          "baccalaureat": {
+                                            "id": "Générale",
+                                            "nom": "Série Générale"
+                                          },
+                                          "nombreAdmis": 6677
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STMG",
+                                            "nom": "Série STMG"
+                                          },
+                                          "nombreAdmis": 15
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STI2D",
+                                            "nom": "Série STI2D"
+                                          },
+                                          "nombreAdmis": 223
+                                        }
+                                      ]
+                                    },
                                     "liens": [
                                       {
                                         "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                       }
-                                    ]
+                                    ],
+                                    "communes": [
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      },
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      },
+                                      {
+                                        "nom": "Montreuil",
+                                        "codeInsee": "93048"
+                                      },
+                                      {
+                                        "nom": "Lyon",
+                                        "codeInsee": "69123"
+                                      },
+                                      {
+                                        "nom": "Strasbourg",
+                                        "codeInsee": "67482"
+                                      },
+                                      {
+                                        "nom": "Marseille",
+                                        "codeInsee": "13055"
+                                      }
+                                    ],
+                                    "voeux": [
+                                      {
+                                        "id": "ta10",
+                                        "nom": "Nom du ta10",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta3",
+                                        "nom": "Nom du ta3",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75105"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta11",
+                                        "nom": "Nom du ta11",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta32",
+                                        "nom": "Nom du ta32",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75115"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta17",
+                                        "nom": "Nom du ta17",
+                                        "commune": {
+                                          "nom": "Strasbourg",
+                                          "codeInsee": "67482"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta7",
+                                        "nom": "Nom du ta7",
+                                        "commune": {
+                                          "nom": "Marseille",
+                                          "codeInsee": "13055"
+                                        }
+                                      }
+                                    ],
+                                    "communesFavoritesAvecLeursVoeux": [
+                                      {
+                                        "commune": {
+                                          "codeInsee": "75115",
+                                          "nom": "Paris",
+                                          "latitude": 48.851227,
+                                          "longitude": 2.2885659
+                                        },
+                                        "voeuxAvecDistance": [
+                                          {
+                                            "voeu": {
+                                              "id": "ta3",
+                                              "nom": "Nom du ta3",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75105"
+                                              }
+                                            },
+                                            "distanceKm": 3
+                                          },
+                                          {
+                                            "voeu": {
+                                              "id": "ta32",
+                                              "nom": "Nom du ta32",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75115"
+                                              }
+                                            },
+                                            "distanceKm": 1
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "metiers": [
+                                      {
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
+                                      }
+                                    ],
+                                    "tauxAffinite": 90,
+                                    "apprentissage": true
                                   },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "description": null,
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
+                                  "explications": {
+                                    "geographique": [
+                                      {
+                                        "nomVille": "Nantes",
+                                        "distanceKm": 1
+                                      },
+                                      {
+                                        "nomVille": "Paris",
+                                        "distanceKm": 3
+                                      }
+                                    ],
+                                    "dureeEtudesPrevue": "longue",
+                                    "alternance": "tres_interesse",
+                                    "choixEleve": [
+                                      {
+                                        "id": "T_ITM_1356",
+                                        "nom": "soin aux animaux"
+                                      },
+                                      {
+                                        "id": "aider_autres",
+                                        "nom": "Aider les autres"
+                                      },
+                                      {
+                                        "id": "MET.397",
+                                        "nom": "analyste financier/ère"
+                                      },
+                                      {
+                                        "id": "MET.103",
+                                        "nom": "ingénieur/e en expérimentation et production végétales"
+                                      },
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
+                                    ],
+                                    "specialitesChoisies": [
+                                      {
+                                        "nomSpecialite": "specialiteA",
+                                        "pourcentage": 12
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteB",
+                                        "pourcentage": 1
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteC",
+                                        "pourcentage": 89
+                                      }
+                                    ],
+                                    "typeBaccalaureat": {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "pourcentage": 18
                                     },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    "detailsCalculScore": {
+                                      "details": []
                                     }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
                                   }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
                                 },
-                                "detailsCalculScore": {
-                                  "details": []
+                                {
+                                  "formation": {
+                                    "id": "fl2",
+                                    "nom": "2eme formation",
+                                    "idsFormationsAssociees": [
+                                      "fl3"
+                                    ],
+                                    "descriptifFormation": null,
+                                    "descriptifDiplome": null,
+                                    "descriptifConseils": null,
+                                    "descriptifAttendus": null,
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [],
+                                    "repartitionAdmisAnneePrecedente": null,
+                                    "liens": [],
+                                    "communes": [],
+                                    "voeux": [],
+                                    "communesFavoritesAvecLeursVoeux": [],
+                                    "metiers": [],
+                                    "tauxAffinite": 17,
+                                    "apprentissage": false
+                                  },
+                                  "explications": null
                                 }
-                              }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "communes": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": 17,
-                                "apprentissage": false
-                              },
-                              "explications": null
+                              ]
                             }
-                          ]
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -4400,330 +4484,320 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formations": [
                             {
-                              "formation": {
-                                "id": "fl1",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
+                              "formations": [
+                                {
+                                  "formation": {
+                                    "id": "fl1",
+                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                    "idsFormationsAssociees": [
+                                      "fl0012"
+                                    ],
+                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                    "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                    "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                    "moyenneGeneraleDesAdmis": {
                                       "baccalaureat": {
                                         "id": "Générale",
                                         "nom": "Série Générale"
                                       },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "communes": [
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75115"
-                                  },
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75105"
-                                  },
-                                  {
-                                    "nom": "Montreuil",
-                                    "codeInsee": "93048"
-                                  },
-                                  {
-                                    "nom": "Lyon",
-                                    "codeInsee": "69123"
-                                  },
-                                  {
-                                    "nom": "Strasbourg",
-                                    "codeInsee": "67482"
-                                  },
-                                  {
-                                    "nom": "Marseille",
-                                    "codeInsee": "13055"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
+                                      "centiles": [
+                                        {
+                                          "centile": 5,
+                                          "note": 13
                                         },
-                                        "distanceKm": 3
+                                        {
+                                          "centile": 25,
+                                          "note": 14.5
+                                        },
+                                        {
+                                          "centile": 75,
+                                          "note": 17
+                                        },
+                                        {
+                                          "centile": 95,
+                                          "note": 18
+                                        }
+                                      ]
+                                    },
+                                    "criteresAnalyseCandidature": [
+                                      {
+                                        "nom": "Compétences académiques",
+                                        "pourcentage": 10
                                       },
                                       {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
+                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                        "pourcentage": 0
+                                      },
+                                      {
+                                        "nom": "Résultats académiques",
+                                        "pourcentage": 18
+                                      },
+                                      {
+                                        "nom": "Savoir-être",
+                                        "pourcentage": 42
+                                      },
+                                      {
+                                        "nom": "Motivation, connaissance",
+                                        "pourcentage": 30
                                       }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    ],
+                                    "repartitionAdmisAnneePrecedente": {
+                                      "total": 6915,
+                                      "parBaccalaureat": [
+                                        {
+                                          "baccalaureat": {
+                                            "id": "Générale",
+                                            "nom": "Série Générale"
+                                          },
+                                          "nombreAdmis": 6677
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STMG",
+                                            "nom": "Série STMG"
+                                          },
+                                          "nombreAdmis": 15
+                                        },
+                                        {
+                                          "baccalaureat": {
+                                            "id": "STI2D",
+                                            "nom": "Série STI2D"
+                                          },
+                                          "nombreAdmis": 223
+                                        }
+                                      ]
+                                    },
                                     "liens": [
                                       {
                                         "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                       }
-                                    ]
+                                    ],
+                                    "communes": [
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      },
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      },
+                                      {
+                                        "nom": "Montreuil",
+                                        "codeInsee": "93048"
+                                      },
+                                      {
+                                        "nom": "Lyon",
+                                        "codeInsee": "69123"
+                                      },
+                                      {
+                                        "nom": "Strasbourg",
+                                        "codeInsee": "67482"
+                                      },
+                                      {
+                                        "nom": "Marseille",
+                                        "codeInsee": "13055"
+                                      }
+                                    ],
+                                    "voeux": [
+                                      {
+                                        "id": "ta10",
+                                        "nom": "Nom du ta10",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta3",
+                                        "nom": "Nom du ta3",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75105"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta11",
+                                        "nom": "Nom du ta11",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta32",
+                                        "nom": "Nom du ta32",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75115"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta17",
+                                        "nom": "Nom du ta17",
+                                        "commune": {
+                                          "nom": "Strasbourg",
+                                          "codeInsee": "67482"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta7",
+                                        "nom": "Nom du ta7",
+                                        "commune": {
+                                          "nom": "Marseille",
+                                          "codeInsee": "13055"
+                                        }
+                                      }
+                                    ],
+                                    "communesFavoritesAvecLeursVoeux": [
+                                      {
+                                        "commune": {
+                                          "codeInsee": "75115",
+                                          "nom": "Paris",
+                                          "latitude": 48.851227,
+                                          "longitude": 2.2885659
+                                        },
+                                        "voeuxAvecDistance": [
+                                          {
+                                            "voeu": {
+                                              "id": "ta3",
+                                              "nom": "Nom du ta3",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75105"
+                                              }
+                                            },
+                                            "distanceKm": 3
+                                          },
+                                          {
+                                            "voeu": {
+                                              "id": "ta32",
+                                              "nom": "Nom du ta32",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75115"
+                                              }
+                                            },
+                                            "distanceKm": 1
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "metiers": [
+                                      {
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
+                                      }
+                                    ],
+                                    "tauxAffinite": 90,
+                                    "apprentissage": true
                                   },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "choixEleve": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "description": null,
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ],
-                                  "metiers": [
-                                    {
-                                      "id": "MET.397",
-                                      "nom": "analyste financier/ère"
+                                  "explications": {
+                                    "geographique": [
+                                      {
+                                        "nomVille": "Nantes",
+                                        "distanceKm": 1
+                                      },
+                                      {
+                                        "nomVille": "Paris",
+                                        "distanceKm": 3
+                                      }
+                                    ],
+                                    "dureeEtudesPrevue": "longue",
+                                    "alternance": "tres_interesse",
+                                    "choixEleve": [
+                                      {
+                                        "id": "T_ITM_1356",
+                                        "nom": "soin aux animaux"
+                                      },
+                                      {
+                                        "id": "aider_autres",
+                                        "nom": "Aider les autres"
+                                      },
+                                      {
+                                        "id": "MET.397",
+                                        "nom": "analyste financier/ère"
+                                      },
+                                      {
+                                        "id": "MET.103",
+                                        "nom": "ingénieur/e en expérimentation et production végétales"
+                                      },
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
+                                    ],
+                                    "specialitesChoisies": [
+                                      {
+                                        "nomSpecialite": "specialiteA",
+                                        "pourcentage": 12
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteB",
+                                        "pourcentage": 1
+                                      },
+                                      {
+                                        "nomSpecialite": "specialiteC",
+                                        "pourcentage": 89
+                                      }
+                                    ],
+                                    "typeBaccalaureat": {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "pourcentage": 18
                                     },
-                                    {
-                                      "id": "MET.103",
-                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    "detailsCalculScore": {
+                                      "details": []
                                     }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
                                   }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
                                 },
-                                "detailsCalculScore": {
-                                  "details": []
+                                {
+                                  "formation": {
+                                    "id": "fl2",
+                                    "nom": "2eme formation",
+                                    "idsFormationsAssociees": [
+                                      "fl3"
+                                    ],
+                                    "descriptifFormation": null,
+                                    "descriptifDiplome": null,
+                                    "descriptifConseils": null,
+                                    "descriptifAttendus": null,
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [],
+                                    "repartitionAdmisAnneePrecedente": null,
+                                    "liens": [],
+                                    "communes": [],
+                                    "voeux": [],
+                                    "communesFavoritesAvecLeursVoeux": [],
+                                    "metiers": [],
+                                    "tauxAffinite": 17,
+                                    "apprentissage": false
+                                  },
+                                  "explications": null
                                 }
-                              }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "communes": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": 17,
-                                "apprentissage": false
-                              },
-                              "explications": null
+                              ]
                             }
-                          ]
-                        }
                         """.trimIndent(),
                     ),
                 )
@@ -4790,260 +4864,250 @@ class FormationControllerTest(
                 .andExpect(
                     content().json(
                         """
-                        {
-                          "formations": [
                             {
-                              "formation": {
-                                "id": "fl1",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 12,
-                                  "parBaccalaureat": []
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "communes": [
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75115"
-                                  },
-                                  {
-                                    "nom": "Paris",
-                                    "codeInsee": "75105"
-                                  },
-                                  {
-                                    "nom": "Montreuil",
-                                    "codeInsee": "93048"
-                                  },
-                                  {
-                                    "nom": "Lyon",
-                                    "codeInsee": "69123"
-                                  },
-                                  {
-                                    "nom": "Strasbourg",
-                                    "codeInsee": "67482"
-                                  },
-                                  {
-                                    "nom": "Marseille",
-                                    "codeInsee": "13055"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
+                              "formations": [
+                                {
+                                  "formation": {
+                                    "id": "fl1",
+                                    "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                    "idsFormationsAssociees": [
+                                      "fl0012"
+                                    ],
+                                    "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                    "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                    "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                    "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [
                                       {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
+                                        "nom": "Compétences académiques",
+                                        "pourcentage": 10
                                       },
                                       {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
+                                        "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                        "pourcentage": 0
+                                      },
+                                      {
+                                        "nom": "Résultats académiques",
+                                        "pourcentage": 18
+                                      },
+                                      {
+                                        "nom": "Savoir-être",
+                                        "pourcentage": 42
+                                      },
+                                      {
+                                        "nom": "Motivation, connaissance",
+                                        "pourcentage": 30
+                                      }
+                                    ],
+                                    "repartitionAdmisAnneePrecedente": {
+                                      "total": 12,
+                                      "parBaccalaureat": []
+                                    },
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                      }
+                                    ],
+                                    "communes": [
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      },
+                                      {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      },
+                                      {
+                                        "nom": "Montreuil",
+                                        "codeInsee": "93048"
+                                      },
+                                      {
+                                        "nom": "Lyon",
+                                        "codeInsee": "69123"
+                                      },
+                                      {
+                                        "nom": "Strasbourg",
+                                        "codeInsee": "67482"
+                                      },
+                                      {
+                                        "nom": "Marseille",
+                                        "codeInsee": "13055"
+                                      }
+                                    ],
+                                    "voeux": [
+                                      {
+                                        "id": "ta10",
+                                        "nom": "Nom du ta10",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta3",
+                                        "nom": "Nom du ta3",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75105"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta11",
+                                        "nom": "Nom du ta11",
+                                        "commune": {
+                                          "nom": "Lyon",
+                                          "codeInsee": "69123"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta32",
+                                        "nom": "Nom du ta32",
+                                        "commune": {
+                                          "nom": "Paris",
+                                          "codeInsee": "75115"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta17",
+                                        "nom": "Nom du ta17",
+                                        "commune": {
+                                          "nom": "Strasbourg",
+                                          "codeInsee": "67482"
+                                        }
+                                      },
+                                      {
+                                        "id": "ta7",
+                                        "nom": "Nom du ta7",
+                                        "commune": {
+                                          "nom": "Marseille",
+                                          "codeInsee": "13055"
+                                        }
+                                      }
+                                    ],
+                                    "communesFavoritesAvecLeursVoeux": [
+                                      {
+                                        "commune": {
+                                          "codeInsee": "75115",
+                                          "nom": "Paris",
+                                          "latitude": 48.851227,
+                                          "longitude": 2.2885659
                                         },
-                                        "distanceKm": 5
+                                        "voeuxAvecDistance": [
+                                          {
+                                            "voeu": {
+                                              "id": "ta3",
+                                              "nom": "Nom du ta3",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75105"
+                                              }
+                                            },
+                                            "distanceKm": 3
+                                          },
+                                          {
+                                            "voeu": {
+                                              "id": "ta32",
+                                              "nom": "Nom du ta32",
+                                              "commune": {
+                                                "nom": "Paris",
+                                                "codeInsee": "75115"
+                                              }
+                                            },
+                                            "distanceKm": 5
+                                          }
+                                        ]
                                       }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                    "liens": [
+                                    ],
+                                    "metiers": [
                                       {
-                                        "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 100,
-                                "apprentissage": false
-                              },
-                              "explications": {
-                                "geographique": [],
-                                "formationsSimilaires": [],
-                                "dureeEtudesPrevue": null,
-                                "alternance": null,
-                                "choixEleve": {
-                                  "interets": [],
-                                  "domaines": [],
-                                  "metiers": []
-                                },
-                                "specialitesChoisies": [],
-                                "typeBaccalaureat": null,
-                                "detailsCalculScore": {
-                                  "details": []
-                                }
-                              }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "communes": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                    "liens": [
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
                                       {
-                                        "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
                                       }
-                                    ]
+                                    ],
+                                    "tauxAffinite": 100,
+                                    "apprentissage": false
                                   },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
+                                  "explications": {
+                                    "geographique": [],
+                                    "dureeEtudesPrevue": null,
+                                    "alternance": null,
+                                    "choixEleve": [],
+                                    "specialitesChoisies": [],
+                                    "typeBaccalaureat": null,
+                                    "detailsCalculScore": {
+                                      "details": []
+                                    }
                                   }
-                                ],
-                                "tauxAffinite": 100,
-                                "apprentissage": false
-                              },
-                              "explications": {
-                                "geographique": [],
-                                "formationsSimilaires": [],
-                                "dureeEtudesPrevue": null,
-                                "alternance": null,
-                                "choixEleve": {
-                                  "interets": [],
-                                  "domaines": [],
-                                  "metiers": []
                                 },
-                                "specialitesChoisies": [],
-                                "typeBaccalaureat": null,
-                                "detailsCalculScore": {
-                                  "details": []
+                                {
+                                  "formation": {
+                                    "id": "fl2",
+                                    "nom": "2eme formation",
+                                    "idsFormationsAssociees": [
+                                      "fl3"
+                                    ],
+                                    "descriptifFormation": null,
+                                    "descriptifDiplome": null,
+                                    "descriptifConseils": null,
+                                    "descriptifAttendus": null,
+                                    "moyenneGeneraleDesAdmis": null,
+                                    "criteresAnalyseCandidature": [],
+                                    "repartitionAdmisAnneePrecedente": null,
+                                    "liens": [],
+                                    "communes": [],
+                                    "voeux": [],
+                                    "communesFavoritesAvecLeursVoeux": [],
+                                    "metiers": [
+                                      {
+                                        "id": "MET001",
+                                        "nom": "géomaticien/ne",
+                                        "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                        "liens": [
+                                          {
+                                            "nom": "Voir sur l'ONISEP",
+                                            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "MET002",
+                                        "nom": "documentaliste",
+                                        "descriptif": null,
+                                        "liens": []
+                                      }
+                                    ],
+                                    "tauxAffinite": 100,
+                                    "apprentissage": false
+                                  },
+                                  "explications": {
+                                    "geographique": [],
+                                    "dureeEtudesPrevue": null,
+                                    "alternance": null,
+                                    "choixEleve": [],
+                                    "specialitesChoisies": [],
+                                    "typeBaccalaureat": null,
+                                    "detailsCalculScore": {
+                                      "details": []
+                                    }
+                                  }
                                 }
-                              }
+                              ]
                             }
-                          ]
-                        }
                         """.trimIndent(),
                     ),
                 )

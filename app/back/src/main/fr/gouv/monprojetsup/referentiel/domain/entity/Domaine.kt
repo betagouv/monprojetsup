@@ -5,7 +5,9 @@ data class Domaine(
     val nom: String,
     val description: String?,
     val emoji: String,
-)
+) {
+    fun toLabel() = Label(id = id, nom = nom)
+}
 
 data class CategorieDomaine(
     val id: String,
