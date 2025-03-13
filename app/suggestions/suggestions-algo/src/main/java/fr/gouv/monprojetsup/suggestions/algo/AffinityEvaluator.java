@@ -473,7 +473,7 @@ public class AffinityEvaluator {
                 double simi = 1.0 * simScore / PsupStatistiques.SIM_FIL_MAX_WEIGHT;
                 bonus += simi;
                 if (expl != null && !fl.equals(approved)) {
-                    int percentage = Math.max(1, (int) simi * 100);
+                    int percentage = Math.max(1, (int) (simi * 100));
                     expl.add(Explanation.getSimilarityExplanation(approved, percentage));
                 }
             }
@@ -527,12 +527,6 @@ public class AffinityEvaluator {
                 expl.add(getDebugExplanation(pathes.stream().map(Path::toString).collect(Collectors.joining(" , "))));
             }
             expl.add(Explanation.getTagExplanationShort(pathes));
-            pathes.stream()
-                    .filter(p -> p.size() <= 2)
-                    .map(Path::first)
-                    .filter(Objects::nonNull)
-                    .filter(fr.gouv.monprojetsup.data.Constants::isFiliere)
-                    .distinct().forEach(fl -> expl.add(Explanation.getSimilarityExplanation(fl, 50)));
         }
         return score;
     }

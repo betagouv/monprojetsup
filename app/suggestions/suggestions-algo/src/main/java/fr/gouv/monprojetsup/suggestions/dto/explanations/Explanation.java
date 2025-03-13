@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.isCentreInteretMps;
+
 
 record ExplanationApprentissage (String option) {}
 
@@ -31,6 +33,10 @@ record ExplanationTagShort(List<String> ns) {
                     pathes.stream()
                             .filter(p -> !p.isEmpty() && p.size() <= 2)
                             .map(Path::first)
+                            .filter(id -> {
+                                assert id != null;
+                                return !isCentreInteretMps(id);
+                            })
                             .distinct()
                             .toList()
             );

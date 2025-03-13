@@ -18,6 +18,17 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     val donneesDeReference: ListeChoixReference? = null,
     val detailsCalculScore: List<String> = emptyList(),
 ) {
+    val choixAggreges: List<String>
+        get() = (
+            formationsSimilaires + choix +
+                (
+                    donneesDeReference?.details?.filter { itt -> itt.side == Side.POSITIVE }
+                        ?.sortedByDescending { itt -> itt.score }
+                        ?.map { itt -> itt.id }
+                        ?.take(1) ?: emptyList()
+                )
+        )
+
     data class AutoEvaluationMoyenne(
         val echellonDeLaMoyenneAutoEvalue: Int,
         val rangs: RangsEchellons,
