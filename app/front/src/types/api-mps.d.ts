@@ -423,9 +423,6 @@ export interface components {
             /** Format: float */
             note: number;
         };
-        ChoixElevesDTO: {
-            choix: components["schemas"]["LabelDTO"][];
-        };
         CommuneAvecSesVoeuxDTO: {
             commune: components["schemas"]["CommuneDTO"];
             voeuxAvecDistance: components["schemas"]["VoeuAvecDistanceDTO"][];
@@ -453,7 +450,7 @@ export interface components {
             dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
             /** @enum {string} */
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
-            choixEleve?: components["schemas"]["ChoixElevesDTO"];
+            choixEleve?: components["schemas"]["LabelDTO"][];
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
             detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
