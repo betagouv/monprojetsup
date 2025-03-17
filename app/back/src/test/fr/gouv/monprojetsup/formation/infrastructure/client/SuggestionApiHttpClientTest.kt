@@ -729,7 +729,7 @@ class SuggestionApiHttpClientTest {
                                         "0 (proximité intérêts et favoris) ,  ]",
                                 ),
                             autoEvaluationMoyenne = null,
-                            interetsDomainesMetiersChoisis =
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
                                     "MET.612",
@@ -747,6 +747,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_884",
                                     "MET_634",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                 )
             assertThat(result).isEqualTo(attendu)
@@ -859,7 +860,7 @@ class SuggestionApiHttpClientTest {
                                     ),
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            interetsDomainesMetiersChoisis =
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
                                     "T_IDEO2_4812",
@@ -874,6 +875,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_884",
                                     "MET_634",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                     "fl2015" to
                         ExplicationsSuggestionEtExemplesMetiers(
@@ -892,6 +894,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_431",
                                     "MET_557",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)

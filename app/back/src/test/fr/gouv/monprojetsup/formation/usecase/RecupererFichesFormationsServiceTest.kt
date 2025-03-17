@@ -757,7 +757,7 @@ class RecupererFichesFormationsServiceTest {
                         longitude = 5.400000,
                     ),
                 )
-            val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
+            // val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
             given(
                 recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idsFormations = listOf("fl0001", "fl0003"),
@@ -918,7 +918,7 @@ class RecupererFichesFormationsServiceTest {
                         longitude = 5.400000,
                     ),
                 )
-            val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001)
+            // val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001)
             given(
                 recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idsFormations = listOf("fl0001", "fl0003"),

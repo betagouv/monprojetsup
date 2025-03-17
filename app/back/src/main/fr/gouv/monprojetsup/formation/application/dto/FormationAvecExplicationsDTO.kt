@@ -9,18 +9,15 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
-import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
-import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 
 data class FormationAvecExplicationsDTO(
     val formation: FicheFormationDTO,
@@ -167,20 +164,18 @@ data class FormationAvecExplicationsDTO(
 
     data class ExplicationsDTO(
         val geographique: List<ExplicationGeographiqueDTO>,
-        val formationsSimilaires: List<FormationSimilaireDTO>,
         val dureeEtudesPrevue: ChoixDureeEtudesPrevue?,
         val alternance: ChoixAlternance?,
-        val choixEleve: ChoixElevesDTO?,
+        val choixEleve: List<LabelDTO>?,
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
         val detailsCalculScore: DetailsCalculScoreDTO?,
     ) {
         constructor(explications: ExplicationsSuggestionDetaillees) : this(
             geographique = explications.geographique.map { ExplicationGeographiqueDTO(it) },
-            formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
-            choixEleve = ChoixElevesDTO(explications.choixEleve),
+            choixEleve = explications.choixEleve.map { LabelDTO(it) },
             specialitesChoisies =
                 explications.specialitesChoisies.map {
                     AffiniteSpecialiteDTO(
@@ -198,30 +193,11 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class ChoixElevesDTO(
-        val interets: List<InteretDTO>,
-        val domaines: List<DomaineDTO>,
-        val metiers: List<MetierCourtDTO>,
-    ) {
-        constructor(choixEleve: ExplicationsSuggestionDetaillees.ChoixEleve) : this(
-            interets = choixEleve.interetsChoisis.map { InteretDTO(it) },
-            domaines = choixEleve.domainesChoisis.map { DomaineDTO(it) },
-            metiers = choixEleve.metiersChoisis.map { MetierCourtDTO(it) },
-        )
-
-        data class InteretDTO(
-            val id: String,
-            val nom: String,
-        ) {
-            constructor(interet: InteretSousCategorie) : this(id = interet.id, nom = interet.nom)
-        }
-    }
-
-    data class FormationSimilaireDTO(
+    data class LabelDTO(
         val id: String,
         val nom: String,
     ) {
-        constructor(formationCourte: FormationCourte) : this(id = formationCourte.id, nom = formationCourte.nom)
+        constructor(label: Label) : this(id = label.id, nom = label.nom)
     }
 
     data class AffiniteSpecialiteDTO(

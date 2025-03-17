@@ -6,9 +6,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetail
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
@@ -19,8 +17,6 @@ import org.springframework.stereotype.Service
 @Service
 class RecupererExplicationsEtExemplesMetiersPourFormationService(
     private val suggestionHttpClient: SuggestionHttpClient,
-    private val formationRepository: FormationRepository,
-    private val voeuxRepository: VoeuRepository,
     private val baccalaureatRepository: BaccalaureatRepository,
     private val specialitesRepository: SpecialitesRepository,
     private val metierRepository: MetierRepository,
@@ -31,7 +27,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         idsFormations: List<String>,
     ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
         val explicationsParFormation = suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
-        val formationsSimilaires = recupererFormationsSimilaires(explicationsParFormation)
         val baccalaureats = recupererBaccalaureats(explicationsParFormation)
         val metiers = recupererMetiers(explicationsParFormation)
         val specialites =
@@ -58,10 +53,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                             )
                         }
                     }?.distinct() ?: emptyList(),
-                formationsSimilaires =
-                    explications?.formationsSimilaires?.mapNotNull {
-                        formationsSimilaires.firstOrNull { formation -> formation.id == it }
-                    }?.distinct() ?: emptyList(),
                 choixEleve = choixEleve[idFormation]!!,
                 explicationTypeBaccalaureat =
                     explications?.typeBaccalaureat?.let { typeBaccalaureat ->
@@ -87,13 +78,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         idFormation: String,
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
-        val formationsSimilaires =
-            if (explications.formationsSimilaires.isNotEmpty()) {
-                formationRepository.recupererLesNomsDesFormations(explications.formationsSimilaires) +
-                    voeuxRepository.recupererLesNomsDesVoeux(explications.formationsSimilaires)
-            } else {
-                emptyList()
-            }
         val specialites =
             explications.specialitesChoisies.takeUnless { it.isEmpty() }
                 ?.map { it.idSpecialite }?.let { idsSpecialites ->
@@ -114,7 +98,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                         )
                     }
                 },
-            formationsSimilaires = formationsSimilaires,
             choixEleve = choixEleveService.recupererChoixEleve(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
             detailsCalculScore = autres,
@@ -129,14 +112,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         val metiers = metierRepository.recupererLesMetiers(idsDesMetiers)
         return metiers
     }
-
-    private fun recupererFormationsSimilaires(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>) =
-        explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() }.takeUnless {
-            it.isEmpty()
-        }?.let {
-            formationRepository.recupererLesNomsDesFormations(it.distinct()) +
-                voeuxRepository.recupererLesNomsDesVoeux(it.distinct())
-        } ?: emptyList()
 
     private fun recupererBaccalaureats(
         explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>,

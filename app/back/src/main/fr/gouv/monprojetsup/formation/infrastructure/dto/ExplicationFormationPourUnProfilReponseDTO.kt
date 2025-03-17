@@ -66,7 +66,15 @@ data class ExplicationEtExemplesDTO(
                         it.typeBaccalaureat != null
                     }?.typeBaccalaureat?.toTypeBaccalaureat(),
                 autoEvaluationMoyenne = null,
-                interetsDomainesMetiersChoisis = explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
+                choix =
+                    explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
+                donneesDeReference =
+                    ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(
+                        details =
+                            explications.flatMap {
+                                it.ref?.toChoixReference() ?: emptyList()
+                            },
+                    ),
                 exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )
         } ?: ExplicationsSuggestionEtExemplesMetiers()
@@ -81,6 +89,8 @@ data class APISuggestionExplicationDTO(
     val apprentissage: APISuggestionExplicationApprentissageDTO?,
     @JsonProperty(value = "tags")
     val tags: APISuggestionExplicationTagShortDTO?,
+    @JsonProperty(value = "ref")
+    val ref: APISuggestionExplicationDonneesReferenceDTO?,
     @JsonProperty(value = "dur")
     val dureeEtude: APISuggestionExplicationDurationDTO?,
     @JsonProperty(value = "simi")
@@ -146,6 +156,47 @@ data class APISuggestionExplicationTagShortDTO(
     @JsonProperty(value = "ns")
     val codesInteretsDomainesMetiers: List<String>?,
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class APISuggestionExplicationDonneesReferenceDTO(
+    @JsonProperty(value = "details")
+    val choixReference: List<APISuggestionExplicationChoixReferenceDTO>?,
+) {
+    fun toChoixReference(): List<ExplicationsSuggestionEtExemplesMetiers.ChoixReference>? {
+        return choixReference?.map {
+            ExplicationsSuggestionEtExemplesMetiers.ChoixReference(
+                id = it.id,
+                score = it.score,
+                side = it.side.toSide(),
+            )
+        }
+    }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class APISuggestionExplicationChoixReferenceDTO(
+    @JsonProperty(value = "item_key")
+    val id: String,
+    @JsonProperty(value = "score")
+    val score: Float,
+    @JsonProperty(value = "side")
+    val side: APISuggestionExplicationChoixReferenceSideDTO,
+)
+
+enum class APISuggestionExplicationChoixReferenceSideDTO {
+    @JsonProperty(value = "positive")
+    POSITIVE,
+
+    @JsonProperty(value = "negative")
+    NEGATIVE, ;
+
+    fun toSide(): ExplicationsSuggestionEtExemplesMetiers.Side {
+        return when (this) {
+            POSITIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE
+            NEGATIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.NEGATIVE
+        }
+    }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationApprentissageDTO(

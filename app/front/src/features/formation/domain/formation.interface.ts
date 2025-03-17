@@ -76,26 +76,12 @@ export type FicheFormation = {
       nom: string;
       distanceKm: number;
     }>;
-    formationsSimilaires: Array<{
+    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+    alternance: AlternanceÉlève | null;
+    choixÉlève: Array<{
       id: string;
       nom: string;
     }>;
-    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
-    alternance: AlternanceÉlève | null;
-    choixÉlève: {
-      intérêts: Array<{
-        id: string;
-        nom: string;
-      }>;
-      domaines: Array<{
-        id: string;
-        nom: string;
-      }>;
-      métiers: Array<{
-        id: string;
-        nom: string;
-      }>;
-    };
     spécialitésChoisies: Array<{
       nom: string;
       pourcentageAdmisAnnéePrécédente: number;

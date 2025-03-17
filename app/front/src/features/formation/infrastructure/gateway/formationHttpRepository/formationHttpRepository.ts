@@ -230,30 +230,13 @@ export class formationHttpRepository implements FormationRepository {
           nom: commune.nomVille,
           distanceKm: commune.distanceKm,
         })) ?? [],
-      formationsSimilaires:
-        explications.formationsSimilaires.map((formation) => ({
-          id: formation.id,
-          nom: formation.nom,
-        })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      choixÉlève: {
-        intérêts:
-          explications.choixEleve?.interets.map((intérêt) => ({
-            id: intérêt.id,
-            nom: intérêt.nom,
-          })) ?? [],
-        domaines:
-          explications.choixEleve?.domaines.map((domaine) => ({
-            id: domaine.id,
-            nom: domaine.nom,
-          })) ?? [],
-        métiers:
-          explications.choixEleve?.metiers.map((métier) => ({
-            id: métier.id,
-            nom: métier.nom,
-          })) ?? [],
-      },
+      choixÉlève:
+        explications.choixEleve?.map((choix) => ({
+          id: choix.id,
+          nom: choix.nom,
+        })) ?? [],
       spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
         nom: spécialité.nomSpecialite,
         pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
@@ -279,13 +262,9 @@ export class formationHttpRepository implements FormationRepository {
 
     const conditionsDeValidationExplication = [
       explications.geographique.length > 0,
-      explications.formationsSimilaires.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.choixEleve &&
-        (explications.choixEleve.domaines.length > 0 ||
-          explications.choixEleve.interets.length > 0 ||
-          explications.choixEleve.metiers.length > 0),
+      explications.choixEleve && explications.choixEleve.length > 0,
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
     ];
