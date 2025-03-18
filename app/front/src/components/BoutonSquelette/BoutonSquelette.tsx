@@ -1,6 +1,6 @@
 import { type BoutonSqueletteProps } from "./BoutonSquelette.interface";
 
-const BoutonSquelette = ({ children, taille, variante, icône }: BoutonSqueletteProps) => {
+const BoutonSquelette = ({children, taille, variante, icône, ariaHidden = false}: BoutonSqueletteProps) => {
   const classEnFonctionDeLaTaille = () => {
     if (taille === "grand") return "fr-btn--lg";
     if (taille === "petit") return "fr-btn--sm";
@@ -27,7 +27,8 @@ const BoutonSquelette = ({ children, taille, variante, icône }: BoutonSquelette
 
   return (
     <div
-      className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
+        aria-hidden={ariaHidden ? true : undefined}
+        className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
     >
       {children}
     </div>
