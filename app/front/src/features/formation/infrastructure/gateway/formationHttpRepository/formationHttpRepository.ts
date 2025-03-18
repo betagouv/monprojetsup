@@ -232,11 +232,11 @@ export class formationHttpRepository implements FormationRepository {
         })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      choixÉlève:
-        explications.choixEleve?.map((choix) => ({
+      choixÉlève: Array.isArray(explications?.choixEleve)
+        ? explications.choixEleve.map((choix) => ({
           id: choix.id,
           nom: choix.nom,
-        })) ?? [],
+        })) : [],
       spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
         nom: spécialité.nomSpecialite,
         pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
