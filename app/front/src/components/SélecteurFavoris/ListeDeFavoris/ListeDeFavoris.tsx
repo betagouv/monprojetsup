@@ -42,6 +42,7 @@ const ListeDeFavoris = ({ favoris, nombreFavorisAffichésParDéfaut = Number.POS
                             nom={favori.nom}
                             title={favori.title}
                             url={favori.url}
+                            idDeLonglet={id}
                         />
                     </li>
                 ))}

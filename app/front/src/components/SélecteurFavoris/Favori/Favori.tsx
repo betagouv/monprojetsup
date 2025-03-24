@@ -5,7 +5,7 @@ import {i18n} from "@/configuration/i18n/i18n";
 import {Toggle} from "@radix-ui/react-toggle";
 import Bouton from "@/components/Bouton/Bouton.tsx";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ModaleParcourSup from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/ModaleParcourSup/ModaleParcourSup.tsx";
 import IconeMPS from "@/assets/icone-mps.svg";
 
@@ -20,12 +20,13 @@ const Favori = ({
                     icôneEstFavori = "fr-icon-heart-fill",
                     icôneEstPasFavori = "fr-icon-heart-line",
                     callbackMettreÀJour,
+                    idDeLonglet = '',
                 }: FavoriProps) => {
 
-    const modaleParcourSup = useMemo(() => createModal({
-        id: `modale-parcoursup`,
+    const [modaleParcourSup] = useState(() => createModal({
+        id: `modale-parcoursup-${id}-${idDeLonglet}`,
         isOpenedByDefault: false,
-    }), []);
+    }));
 
     return (
         <>
