@@ -10,6 +10,7 @@ export type Favori = {
   icôneEstFavori?: string;
   icôneEstPasFavori?: string;
   callbackMettreÀJour?: (idFavori: string) => Promise<unknown>;
+  idDeLonglet?: string;
 };
 
 export type FavoriProps = Favori;
