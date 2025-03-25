@@ -21,6 +21,7 @@ const Favori = ({
                     icôneEstPasFavori = "fr-icon-heart-line",
                     callbackMettreÀJour,
                     idDeLonglet = '',
+                    boutonMPSVisible = false
                 }: FavoriProps) => {
 
     const [modaleParcourSup] = useState(() => createModal({
@@ -75,13 +76,14 @@ const Favori = ({
                 )}
             </Toggle>
 
-            <Bouton
+            {boutonMPSVisible ? <Bouton
                 auClic={modaleParcourSup.open}
                 taille="petit"
                 variante="tertiaire"
             >
                 <img src={IconeMPS} alt="Icon" width={14} height={14}/>
-            </Bouton>
+            </Bouton> : ''}
+
 
             <ModaleParcourSup modale={modaleParcourSup} />
         </>
