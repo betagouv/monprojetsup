@@ -9,6 +9,7 @@ const MaSélectionCommunes = () => {
     <MaSélectionFavoris
       favoris={favoris}
       messageAucun={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.MA_SÉLECTION.AUCUNE}
+      boutonMPSVisible={false}
     />
   );
 };
