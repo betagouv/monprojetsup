@@ -4,7 +4,7 @@ import Bouton from "@/components/Bouton/Bouton.tsx";
 import Favori from "@/components/SélecteurFavoris/Favori/Favori";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ListeDeFavoris = ({ favoris, nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY, listeDeSuggestions }: ListeDeFavorisProps) => {
+const ListeDeFavoris = ({ favoris, nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY, listeDeSuggestions, boutonMPSVisible }: ListeDeFavorisProps) => {
     const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
         favoris,
         nombreFavorisAffichésParDéfaut,
@@ -43,6 +43,7 @@ const ListeDeFavoris = ({ favoris, nombreFavorisAffichésParDéfaut = Number.POS
                             title={favori.title}
                             url={favori.url}
                             idDeLonglet={id}
+                            boutonMPSVisible={boutonMPSVisible}
                         />
                     </li>
                 ))}
