@@ -1,6 +1,6 @@
 import { type BoutonSqueletteProps } from "./BoutonSquelette.interface";
 
-const BoutonSquelette = ({children, taille, variante, icône, ariaHidden = false}: BoutonSqueletteProps) => {
+const BoutonSquelette = ({ children, taille, variante, icône, ariaHidden = false }: BoutonSqueletteProps) => {
   const classEnFonctionDeLaTaille = () => {
     if (taille === "grand") return "fr-btn--lg";
     if (taille === "petit") return "fr-btn--sm";
