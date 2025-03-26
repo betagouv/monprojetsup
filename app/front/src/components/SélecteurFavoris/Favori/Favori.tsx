@@ -7,7 +7,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import ModaleParcourSup from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/ModaleParcourSup/ModaleParcourSup.tsx";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Toggle } from "@radix-ui/react-toggle";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 const Favori = ({
   id,
@@ -23,11 +23,13 @@ const Favori = ({
   idDeLonglet = "",
   boutonMPSVisible = false,
 }: FavoriProps) => {
-  const [modaleParcourSup] = useState(() =>
-    createModal({
-      id: `modale-parcoursup-${id}-${idDeLonglet}`,
-      isOpenedByDefault: false,
-    }),
+  const modaleParcourSup = useMemo(
+    () =>
+      createModal({
+        id: `modale-parcoursup-${id}-${idDeLonglet}`,
+        isOpenedByDefault: false,
+      }),
+    [id, idDeLonglet],
   );
 
   return (
