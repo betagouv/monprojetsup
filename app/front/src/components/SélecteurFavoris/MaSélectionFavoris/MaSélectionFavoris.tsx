@@ -10,7 +10,10 @@ const MaSélectionFavoris = ({ favoris, messageAucun, boutonMPSVisible = true }:
     <div>
       <p className="mb-0 font-bold text-[--text-label-grey]">{i18n.COMMUN.FAVORIS.MA_SÉLÉCTION}</p>
       {favorisSélectionnés.length > 0 ? (
-        <ListeDeFavoris favoris={favorisSélectionnés} boutonMPSVisible={boutonMPSVisible} />
+        <ListeDeFavoris
+          boutonMPSVisible={boutonMPSVisible}
+          favoris={favorisSélectionnés}
+        />
       ) : (
         <p className="fr-text--sm mb-0">{messageAucun}</p>
       )}

@@ -27,8 +27,8 @@ const BoutonSquelette = ({ children, taille, variante, icône, ariaHidden = fals
 
   return (
     <div
-        aria-hidden={ariaHidden ? true : undefined}
-        className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
+      aria-hidden={ariaHidden ? true : undefined}
+      className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
     >
       {children}
     </div>
