@@ -71,7 +71,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           <h2 className="fr-accordion__title">
             <button
               aria-controls="accordeon-formation-favorite"
-              aria-expanded="false"
+              aria-expanded="true"
               className="fr-accordion__btn"
               type="button"
             >
@@ -79,7 +79,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             </button>
           </h2>
           <div
-            className="fr-collapse"
+            className="fr-collapse fr-collapse--expanded"
             id="accordeon-formation-favorite"
           >
             <FormationFavorite key={formation.id} />
