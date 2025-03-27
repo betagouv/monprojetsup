@@ -16,6 +16,7 @@ const ListeLiensExternesSousFormeBouton = ({ id, liens }: ListeLiensExternesSous
             variante="neutre"
           >
             <BoutonSquelette
+              ariaHidden={false}
               icône={{ position: "droite", classe: "fr-icon-external-link-line" }}
               taille="petit"
               variante="tertiaire"

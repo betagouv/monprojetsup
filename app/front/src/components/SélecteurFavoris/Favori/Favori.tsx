@@ -83,6 +83,7 @@ const Favori = ({
         <Bouton
           auClic={modaleParcourSup.open}
           taille="petit"
+          type="button"
           variante="tertiaire"
         >
           <img
