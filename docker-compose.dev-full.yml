@@ -136,8 +136,8 @@ services:
       CORS_ORIGINPATTERNS: ${BACK_CORS_ORIGINPATTERNS}
       KEYCLOAK_CLIENT_ID: mps-cli
       KEYCLOAK_CLIENT_SECRET: anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
-      KEYCLOAK_ROYAUME_URL: http://localhost:${KEYCLOAK_PORT_EXPOSED}/realms/avenirs
-      KEYCLOAK_ROYAUME_URL_JWT_VERIF: http://localhost:${KEYCLOAK_PORT_EXPOSED}/realms/avenirs
+      KEYCLOAK_ROYAUME_URL: ${LOCALHOST_ACCESS}:${KEYCLOAK_PORT_EXPOSED}/realms/avenirs
+      KEYCLOAK_ROYAUME_URL_JWT_VERIF: ${LOCALHOST_ACCESS}:${KEYCLOAK_PORT_EXPOSED}/realms/avenirs
       KEYCLOAK_PORT: ${KEYCLOAK_PORT_EXPOSED}
       PARCOURSUP_API_CLIENT_ID: local
       PARCOURSUP_API_CLIENT_PASSWORD: password
@@ -160,8 +160,8 @@ services:
       - ${FRONT_PORT_EXPOSED}:5001
     environment:
       VITE_ENV: local
-      VITE_APP_URL: http://localhost:${FRONT_PORT_EXPOSED}
-      VITE_API_URL: http://localhost:${BACK_PORT_EXPOSED}
+      VITE_APP_URL: ${LOCALHOST_ACCESS}:${FRONT_PORT_EXPOSED}
+      VITE_API_URL: ${LOCALHOST_ACCESS}:${BACK_PORT_EXPOSED}
       VITE_PUBLIC_WEBSITE_URL: https://www.monprojetsup.fr
       VITE_AVENIRS_URL: https://avenirs.onisep.fr
       VITE_MATOMO_URL: http://urldetrackingmatomo.org
