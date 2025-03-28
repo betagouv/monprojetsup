@@ -14,14 +14,6 @@ const FormationFavorite = () => {
 
   return (
     <div className="grid gap-6 border border-solid border-[--border-default-grey] px-4 py-8 shadow-md sm:px-10">
-      <div className="*:mb-0 *:text-[--text-label-grey]">
-        <Titre
-          niveauDeTitre="h2"
-          styleDeTitre="h4"
-        >
-          {i18n.PAGE_FORMATION.CHOIX.TITRE}
-        </Titre>
-      </div>
       <Ambition />
       <hr className="pb-[1px]" />
       <Voeux />
