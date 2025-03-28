@@ -1,8 +1,6 @@
 import Ambition from "./Ambition/Ambition";
 import NotePersonnelleFormation from "./NotePersonnelleFormation/NotePersonnelleFormation";
 import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
-import Titre from "@/components/Titre/Titre";
-import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import Voeux from "@/features/formation/ui/Voeux/Voeux";
 
