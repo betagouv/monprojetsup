@@ -41,6 +41,11 @@ Et bien sûr il faut lancer le service `suggestions2` pour cela consulter le Rea
 ```properties
 mps.generateDetailedExplanations=true
 ```
+ou bien positionner la variable d'environnement
+```environnement
+GENERATE_DETAILED_EXPLANATIONS=true
+```
+
 
 ### Lancer le serveur
 - Assurez-vous de disposer de java en version 19
