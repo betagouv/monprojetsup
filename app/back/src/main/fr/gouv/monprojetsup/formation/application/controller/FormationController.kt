@@ -210,17 +210,17 @@ class FormationController(
     fun getFichesFormations(
         @RequestBody request: GetFichesFormationsDTO,
     ): FormationsAvecExplicationsDTO {
-        val profilEleve =
-            when {
-                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
-                else -> AvecProfilExistant("")
-            }
         val hateoas =
             hateoasBuilder.creerHateoas(
                 liste = request.ids,
                 numeroDePageActuelle = request.numeroDePage,
                 tailleLot = TAILLE_LOT_FORMATIONS,
             )
+        val profilEleve =
+            when {
+                request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
+                else -> request.profil.toProfilExistant()
+            }
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val formations =
             recupererFichesFormationsService.recupererFichesFormationPourProfil(
