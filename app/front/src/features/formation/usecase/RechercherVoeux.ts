@@ -9,6 +9,7 @@ export class RechercherVoeuxUseCase {
       keys: ["nom"],
     });
 
-    return fuse.search(recherche).map((correspondance) => correspondance.item);
+    const result = fuse.search(recherche).map((correspondance) => correspondance.item);
+    return result;
   }
 }

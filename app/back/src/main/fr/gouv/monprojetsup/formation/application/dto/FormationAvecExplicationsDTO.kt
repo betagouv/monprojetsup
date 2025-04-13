@@ -80,7 +80,7 @@ data class FormationAvecExplicationsDTO(
                     is FicheFormation.FicheFormationSansProfil -> emptyList()
                 },
             communes =
-                ficheFormation.informationsSurLesVoeuxEtLeursCommunes.communesTriees.map {
+                ficheFormation.informationsSurLesVoeuxEtLeursCommunes.communes.map {
                     CommuneCourteDTO(it)
                 },
             metiers =
