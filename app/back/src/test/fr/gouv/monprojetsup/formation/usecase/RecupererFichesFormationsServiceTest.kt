@@ -287,13 +287,13 @@ class RecupererFichesFormationsServiceTest {
             val informationsSurLesVoeuxEtLeursCommunesFL0001 =
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeuxPossiblesPourLaFormationFL0001,
-                    communesTriees = listOf(SAINT_MALO, PARIS15EME, MARSEILLE),
+                    communes = listOf(SAINT_MALO, PARIS15EME, MARSEILLE),
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                 )
             val informationsSurLesVoeuxEtLeursCommunesFL0003 =
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeuxPossiblesPourLaFormationFL0003,
-                    communesTriees = listOf(SAINT_MALO, LYON, PARIS5EME, CAEN, MARSEILLE),
+                    communes = listOf(SAINT_MALO, LYON, PARIS5EME, CAEN, MARSEILLE),
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0003,
                 )
             val voeuxDesFormations =
@@ -518,7 +518,7 @@ class RecupererFichesFormationsServiceTest {
             val informationsSurLesVoeuxEtLeursCommunesFL001 =
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeuxFL0001,
-                    communesTriees = listOf(PARIS15EME, SAINT_MALO, MARSEILLE),
+                    communes = listOf(PARIS15EME, SAINT_MALO, MARSEILLE),
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                 )
             given(
@@ -599,7 +599,7 @@ class RecupererFichesFormationsServiceTest {
                     informationsSurLesVoeuxEtLeursCommunes =
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = emptyList(),
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     explications = null,
@@ -768,13 +768,13 @@ class RecupererFichesFormationsServiceTest {
                     "fl0001" to
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = voeuxPossiblesPourLaFormationFL0001,
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl0003" to
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = voeuxPossiblesPourLaFormationFL0003,
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 ),
@@ -929,13 +929,13 @@ class RecupererFichesFormationsServiceTest {
                     "fl0001" to
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = voeuxPossiblesPourLaFormationFL0001,
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl0003" to
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = emptyList(),
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 ),
@@ -982,7 +982,7 @@ class RecupererFichesFormationsServiceTest {
                     informationsSurLesVoeuxEtLeursCommunes =
                         InformationsSurLesVoeuxEtLeursCommunes(
                             voeux = emptyList(),
-                            communesTriees = emptyList(),
+                            communes = emptyList(),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     apprentissage = false,

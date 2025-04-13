@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
 const rayons = constantes.VOEUX.RAYONS_RECHERCHE;
+
+
 export default function useVoeuxOngletUneCommune({ codeCommune }: UseVoeuxOngletUneCommuneArgs) {
   const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
 
@@ -34,7 +36,6 @@ export default function useVoeuxOngletUneCommune({ codeCommune }: UseVoeuxOnglet
     () =>
       [...voeuxÀProximitéDeLaCommune]
         .filter(({ distanceEnKm }) => distanceEnKm <= rayonSélectionné)
-        .sort((a, b) => a.distanceEnKm - b.distanceEnKm)
         .map((voeu) => formation?.voeux.find(({ id }) => voeu.id === id))
         .filter((voeu) => voeu !== undefined),
     [rayonSélectionné, voeuxÀProximitéDeLaCommune],

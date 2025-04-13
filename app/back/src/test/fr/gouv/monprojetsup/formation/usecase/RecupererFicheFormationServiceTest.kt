@@ -432,7 +432,7 @@ class RecupererFicheFormationServiceTest {
             val informationsSurLesVoeuxEtLeursCommunes =
                 FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeuxTries,
-                    communesTriees = communesTriees,
+                    communes = communesTriees,
                     voeuxParCommunesFavorites = voeuxParCommunesFavorites,
                 )
             given(

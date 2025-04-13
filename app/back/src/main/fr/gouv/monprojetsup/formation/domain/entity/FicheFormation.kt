@@ -91,7 +91,7 @@ sealed class FicheFormation(
 
         data class InformationsSurLesVoeuxEtLeursCommunes(
             val voeux: List<Voeu>,
-            val communesTriees: List<CommuneCourte>,
+            val communes: List<CommuneCourte>,
             val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         )
     }
