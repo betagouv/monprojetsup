@@ -17,10 +17,10 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     private val voeuRepository: VoeuRepository,
     private val communesAvecVoeuxAuxAlentoursRepository: CommunesAvecVoeuxAuxAlentoursRepository,
 ) {
-
     companion object {
         const val DISTANCE_VOEUX_SIMILAIRES_KM = 10
     }
+
     fun recupererVoeux(
         idFormation: String,
         obsoletesInclus: Boolean,
@@ -95,7 +95,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         }
     }
 
-    private fun creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites: List<CommuneAvecIdsVoeuxAuxAlentours>) : List<String> {
+    private fun creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites: List<CommuneAvecIdsVoeuxAuxAlentours>): List<String> {
         val voeuxAvecDistances = voeuxAutoursDesCommunesFavorites.flatMap { it.distances }
         val idsVoeuxTries = voeuxAvecDistances.shuffled().sortedBy { it.km / DISTANCE_VOEUX_SIMILAIRES_KM }.map { it.idVoeu }
         return idsVoeuxTries
@@ -156,7 +156,6 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         voeuxAuxAlentoursDeCommunes: List<CommuneAvecIdsVoeuxAuxAlentours>,
         voeuxDeLaFormation: List<Voeu>,
     ): List<CommuneAvecVoeuxAuxAlentours> {
-
         val today = LocalDate.now()
         val seed = today.year * 10000 + today.monthValue * 100 + today.dayOfMonth
         val random = Random(seed.toLong())

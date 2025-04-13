@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from "react";
 
 const rayons = constantes.VOEUX.RAYONS_RECHERCHE;
 
-
 export default function useVoeuxOngletUneCommune({ codeCommune }: UseVoeuxOngletUneCommuneArgs) {
   const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
 
