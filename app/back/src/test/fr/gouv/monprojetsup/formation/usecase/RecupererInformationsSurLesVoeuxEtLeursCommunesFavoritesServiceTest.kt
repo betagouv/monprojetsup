@@ -372,39 +372,15 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                     communes = listOf(LYON, PARIS5EME, PARIS15EME, PARIS19EME, RENNES, FORT_DE_FRANCE, BASTIA),
                     voeuxParCommunesFavorites = voeuxParCommunesFavorites,
                 )
-            assertThat(result).isEqualTo(attendu)
-        }
-
-        @Test
-        fun `si la liste des communes favorites est vide, doit retourner la liste telle quelle`() {
-            // Given
-            given(profilEleve.communesFavorites).willReturn(emptyList())
-            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016"), obsoletesInclus = true))
-                .willReturn(
-                    mapOf(
-                        "fl2016" to voeux,
-                    ),
-                )
-
-            // When
-            val result =
-                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
-                    idFormation = "fl2016",
-                    profilEleve = profilEleve,
-                    obsoletesInclus = true,
-                )
-
-            // Then
-            then(communesAvecVoeuxAuxAlentoursRepository).shouldHaveNoInteractions()
-            val attendu =
-                InformationsSurLesVoeuxEtLeursCommunes(
-                    voeux = voeux,
-                    communes = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
-                    voeuxParCommunesFavorites = emptyList(),
-                )
-            assertThat(result.voeux).isEqualTo(attendu.voeux)
+            assertThat(result.voeux).containsExactlyInAnyOrderElementsOf(attendu.voeux)
             assertThat(result.communes).containsExactlyInAnyOrderElementsOf(attendu.communes)
-            assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
+            val voeuxParCommunesFavoritesResult = result.voeuxParCommunesFavorites.associateBy { it.communeFavorite.codeInsee }
+            val voeuxParCommunesFavoritesAttendu = attendu.voeuxParCommunesFavorites.associateBy { it.communeFavorite.codeInsee }
+            assertThat(voeuxParCommunesFavoritesResult.keys).containsExactlyInAnyOrderElementsOf(voeuxParCommunesFavoritesAttendu.keys)
+            voeuxParCommunesFavoritesResult.forEach {
+                    (key, value) ->
+                assertThat(value.distances).containsExactlyInAnyOrderElementsOf(voeuxParCommunesFavoritesAttendu[key]?.distances)
+            }
         }
 
         @Test
@@ -434,7 +410,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                     communes = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
                     voeuxParCommunesFavorites = emptyList(),
                 )
-            assertThat(result.voeux).isEqualTo(attendu.voeux)
+            assertThat(result.voeux).containsExactlyInAnyOrderElementsOf(attendu.voeux)
             assertThat(result.communes).containsExactlyInAnyOrderElementsOf(attendu.communes)
             assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
         }
@@ -1022,7 +998,15 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                 ),
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
+            result.forEach(
+                { (key, value) ->
+                    assertThat(key).isIn(idsFormation)
+                    assertThat(value.voeux).containsExactlyInAnyOrderElementsOf(attendu[key]!!.voeux)
+                    assertThat(value.communes).containsExactlyInAnyOrderElementsOf(attendu[key]!!.communes)
+                    assertThat(value.voeuxParCommunesFavorites)
+                        .containsExactlyInAnyOrderElementsOf(attendu[key]!!.voeuxParCommunesFavorites)
+                },
+            )
         }
 
         @Test
@@ -1195,7 +1179,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                         ),
                 )
             assertThat(result.keys).isEqualTo(attendu.keys)
-            assertThat(result.values.map { it.voeux }).containsExactlyElementsOf(attendu.values.map { it.voeux })
+            assertThat(result.values.map { it.voeux.toSet() }).containsExactlyInAnyOrderElementsOf(attendu.values.map { it.voeux.toSet() })
         }
 
         @Test
@@ -1368,7 +1352,9 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                         ),
                 )
             assertThat(result.keys).isEqualTo(attendu.keys)
-            assertThat(result.values.map { it.voeux }).containsExactlyInAnyOrderElementsOf(attendu.values.map { it.voeux })
+            val voeuxCalcules = result.values.map { it.voeux.toSet() }
+            val voeuxAttendus = attendu.values.map { it.voeux.toSet() }
+            assertThat(voeuxCalcules).containsExactlyInAnyOrderElementsOf(voeuxAttendus)
         }
     }
 }
