@@ -344,6 +344,10 @@ class MpsDataFromFiles(
         }
     }
 
+    override fun getProfilsReference(): List<Map<String,String>> {
+        return CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.PROFILS_REFERENCE_MPS_PATH), ',')
+    }
+
     private fun exportResumesManquants() {
         val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
 
