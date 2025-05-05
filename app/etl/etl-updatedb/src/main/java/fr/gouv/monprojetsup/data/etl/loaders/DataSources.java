@@ -47,11 +47,10 @@ public class DataSources {
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
 
     /* MPS data */
+    public static final String PROFILS_REFERENCE_MPS_PATH = "ml/profils_experts.csv";
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
     public static final String RESUMES_MPS_RESUME_TYPE_FORMATION = "resume type formation";
-    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION_MOS = "Retours MOSS type formation";
     public static final String RESUMES_MPS_RESUME_FORMATION = "resume filiere";
-    public static final String RESUMES_MPS_RESUME_FORMATION_MOS = "Retours MOSS filiere";
     public static final String RESUMES_MPS_RESUME_KEY = "code filiere";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
     public static final String LIENS_MPS_PATH_HEADER_ID = "id";
