@@ -72,9 +72,10 @@ class UpdateSuggestionsDbs(
     private fun updateExpertsProfiles() {
         //clear table
         batchUpdate.clearEntities(SuggestionsProfilEntity::class.simpleName!!)
+        val bacs = mpsDataPort.getBacs().map { it.key }.toSet()
         //load data from csv
         val entities = mpsDataPort.getProfilsReference()
-            .mapIndexed { i, x -> SuggestionsProfilEntity(i,x) }
+            .mapIndexed { i, x -> SuggestionsProfilEntity(i,x, bacs) }
         //write to table
         batchUpdate.setEntities(
             SuggestionsProfilEntity::class.simpleName!!,
