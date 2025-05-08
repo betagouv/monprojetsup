@@ -263,14 +263,14 @@ class MpsDataFromFiles(
     }
 
     override fun getMetiersLabels(): Map<String, String> {
-        val metiersMps = getMetiersMpsIds();
+        val metiersMps = getMetiersMpsIds()
         return onisepData.getMetiersLabels(
             false
         ).filter { metiersMps.contains(it.key) }
     }
 
     override fun getMetiersAssociesLabels(): Map<String, List<String>> {
-        val metiersMps = getMetiersMpsIds();
+        val metiersMps = getMetiersMpsIds()
         return onisepData.getMetiersAssociesLabels()
             .filter { metiersMps.contains(it.key) }
     }
@@ -735,7 +735,7 @@ class MpsDataFromFiles(
                 .map { it[DataSources.MPS_FORMATIONS_EXCLUES_HEADER].toString() }
                 .toSet()
             result.removeAll(toRemove)
-            if(minimalTestDataSet) result.removeIf( { !it.endsWith("11") })
+            if(minimalTestDataSet) result.removeIf { !it.endsWith("11") }
             formationsMpsIds = ArrayList(result)
         }
         return formationsMpsIds!!
