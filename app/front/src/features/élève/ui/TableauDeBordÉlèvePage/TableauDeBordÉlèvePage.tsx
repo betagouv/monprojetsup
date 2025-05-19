@@ -15,10 +15,10 @@ const TableauDeBordÉlèvePage = () => {
   const { cartes, associationParcoursupPossible, progression, estAuthentifié } = useTableauDeBordÉlèvePage();
 
   const messageProgression =
-    progression &&
+    progression ?
     i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_NIVEAU +
       JSON.stringify(progression) +
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_FELICITATIONS;
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_FELICITATIONS : "";
 
   const messageTitre = estAuthentifié
     ? i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_CONNECTE
@@ -51,7 +51,7 @@ const TableauDeBordÉlèvePage = () => {
                     titre={carte.titre}
                   />
                 </li>
-                {index === 1 && estAuthentifié && (
+                {index === 1 && (
                   <li>
                     <CarteTémoignageÉlève
                       auteur={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR}
