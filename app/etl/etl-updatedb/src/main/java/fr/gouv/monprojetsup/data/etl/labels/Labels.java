@@ -70,7 +70,10 @@ public class Labels {
                     if (formationSansApprentissage != null) {
                         libelle = formationSansApprentissage.libelle;
                     } else {
-                        libelle = filiere.libelle().replace((" en apprentissage"), "");
+                        libelle = filiere.libelle().replace((" en apprentissage"), "").trim();
+                        if(libelle.endsWith("-")) {
+                            libelle = libelle.substring(0, libelle.length() - 1).trim();
+                        }
                     }
                     libelle = getLibelleFront(keyFi, libelle);
                     if (includeKeys) libelle = includeKey(keyFi, libelle);
