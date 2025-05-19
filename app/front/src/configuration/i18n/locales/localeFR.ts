@@ -427,7 +427,7 @@ export const localeFR = {
         PHRASE:
           "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup, en atteignant progressivement les",
         PHRASE_SUITE: "6 niveaux MPS.",
-      },
+      }
     },
   },
   PAGE_TABLEAU_DE_BORD: {
