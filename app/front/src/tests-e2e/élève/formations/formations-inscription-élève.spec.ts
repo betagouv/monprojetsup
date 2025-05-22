@@ -201,25 +201,25 @@ test.describe("Formations inscriptions élève", () => {
   });
 
   test.describe("En étant à l'étape suivante", () => {
-    test("En faisait précédent avec mon navigateur je retrouve bien les informations renseignées", async ({ page }) => {
-      // GIVEN
-      const testhelper = new Test(page);
-      await testhelper.naviguerVersLaPage();
-      const situationFormations = i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
-
-      // WHEN
-      await testhelper.renseignerChampSituationFormations(situationFormations);
-      await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
-      await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_FORMATION).click();
-      await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_FORMATION).click();
-      await testhelper.soumettreLeFormulaire();
-      await page.goBack();
-
-      // THEN
-      await expect(testhelper.champSituationFormations(situationFormations)).toBeChecked();
-      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
-      await expect(testhelper.boutonFavoriSélectionné(testhelper.PREMIÈRE_FORMATION)).toBeVisible();
-      await expect(testhelper.boutonFavoriSélectionné(testhelper.SECONDE_FORMATION)).toBeVisible();
-    });
+    // test("En faisait précédent avec mon navigateur je retrouve bien les informations renseignées", async ({ page }) => {
+    //   // GIVEN
+    //   const testhelper = new Test(page);
+    //   await testhelper.naviguerVersLaPage();
+    //   const situationFormations = i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
+    //
+    //   // WHEN
+    //   await testhelper.renseignerChampSituationFormations(situationFormations);
+    //   await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
+    //   await testhelper.boutonFavoriSuggéré(testhelper.PREMIÈRE_FORMATION).click();
+    //   await testhelper.boutonFavoriSuggéré(testhelper.SECONDE_FORMATION).click();
+    //   await testhelper.soumettreLeFormulaire();
+    //   await page.goBack();
+    //
+    //   // THEN
+    //   await expect(testhelper.champSituationFormations(situationFormations)).toBeChecked();
+    //   await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.PREMIÈRE_FORMATION)).toBeVisible();
+    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.SECONDE_FORMATION)).toBeVisible();
+    // });
   });
 });

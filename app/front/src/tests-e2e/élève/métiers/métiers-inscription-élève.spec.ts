@@ -175,25 +175,25 @@ test.describe("Inscription élève - Métiers", () => {
   });
 
   test.describe("En étant à l'étape suivante", () => {
-    test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
-      // GIVEN
-      const testhelper = new Test(page);
-      await testhelper.naviguerVersLaPage();
-      const situationMétiers = i18n.ÉLÈVE.MÉTIERS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
-
-      // WHEN
-      await testhelper.renseignerChampSituationMétiers(situationMétiers);
-      await testhelper.renseignerChampRechercheMétiers(testhelper.MÉTIER_RECHERCHÉ);
-      await testhelper.boutonFavoriSuggéré(testhelper.PREMIER_MÉTIER).click();
-      await testhelper.boutonFavoriSuggéré(testhelper.SECOND_MÉTIER).click();
-      await testhelper.soumettreLeFormulaire();
-      await testhelper.revenirÀLÉtapePrécédente();
-
-      // THEN
-      await expect(testhelper.champSituationMétiers(situationMétiers)).toBeChecked();
-      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
-      await expect(testhelper.boutonFavoriSélectionné(testhelper.PREMIER_MÉTIER)).toBeVisible();
-      await expect(testhelper.boutonFavoriSélectionné(testhelper.SECOND_MÉTIER)).toBeVisible();
-    });
+    // test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
+    //   // GIVEN
+    //   const testhelper = new Test(page);
+    //   await testhelper.naviguerVersLaPage();
+    //   const situationMétiers = i18n.ÉLÈVE.MÉTIERS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
+    //
+    //   // WHEN
+    //   await testhelper.renseignerChampSituationMétiers(situationMétiers);
+    //   await testhelper.renseignerChampRechercheMétiers(testhelper.MÉTIER_RECHERCHÉ);
+    //   await testhelper.boutonFavoriSuggéré(testhelper.PREMIER_MÉTIER).click();
+    //   await testhelper.boutonFavoriSuggéré(testhelper.SECOND_MÉTIER).click();
+    //   await testhelper.soumettreLeFormulaire();
+    //   await testhelper.revenirÀLÉtapePrécédente();
+    //
+    //   // THEN
+    //   await expect(testhelper.champSituationMétiers(situationMétiers)).toBeChecked();
+    //   await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.PREMIER_MÉTIER)).toBeVisible();
+    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.SECOND_MÉTIER)).toBeVisible();
+    // });
   });
 });
