@@ -17,8 +17,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run build && npm run preview" ,
-    port: 4_173 ,
+    command: "npm run build && npm run preview",
+    port: 4_173,
     env: {
       VITE_TEST_MODE: "true",
     },
