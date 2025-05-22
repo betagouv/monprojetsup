@@ -9,12 +9,18 @@ import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.CommunesAvecVoeuxAuxAlentoursRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import kotlin.random.Random
 
 @Service
 class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     private val voeuRepository: VoeuRepository,
     private val communesAvecVoeuxAuxAlentoursRepository: CommunesAvecVoeuxAuxAlentoursRepository,
 ) {
+    companion object {
+        const val DISTANCE_VOEUX_SIMILAIRES_KM = 10
+    }
+
     fun recupererVoeux(
         idFormation: String,
         obsoletesInclus: Boolean,
@@ -39,19 +45,19 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
                 listOf(idFormation),
                 obsoletesInclus,
             )
-        if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
+        return if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
             val voeuxAutoursDesCommunesFavorites =
                 communesAvecVoeuxAuxAlentoursRepository.recupererVoeuxAutoursDeCommmune(
                     profilEleve.communesFavorites,
                 )
             val idsVoeuxTriesParDistance = creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites)
-            return informationsSurLesVoeuxEtLeursCommunesPourProfil(
-                voeux.get(idFormation) ?: emptyList(),
+            informationsSurLesVoeuxEtLeursCommunesPourProfil(
+                voeux[idFormation] ?: emptyList(),
                 voeuxAutoursDesCommunesFavorites,
                 idsVoeuxTriesParDistance,
             )
         } else {
-            return informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux.get(idFormation) ?: emptyList())
+            informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux[idFormation] ?: emptyList())
         }
     }
 
@@ -68,13 +74,13 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         obsoletesInclus: Boolean,
     ): Map<String, InformationsSurLesVoeuxEtLeursCommunes> {
         val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus)
-        if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
+        return if (profilEleve != null && !profilEleve.communesFavorites.isNullOrEmpty()) {
             val voeuxAutoursDesCommunesFavorites =
                 communesAvecVoeuxAuxAlentoursRepository.recupererVoeuxAutoursDeCommmune(
                     profilEleve.communesFavorites,
                 )
             val idsVoeuxTriesParDistance = creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites)
-            return voeux.map {
+            voeux.map {
                 it.key to
                     informationsSurLesVoeuxEtLeursCommunesPourProfil(
                         it.value,
@@ -83,19 +89,22 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
                     )
             }.toMap()
         } else {
-            return voeux.map {
+            voeux.map {
                 it.key to informationsSurLesVoeuxEtLeursCommunesSansProfil(it.value)
             }.toMap()
         }
     }
 
-    private fun creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites: List<CommuneAvecIdsVoeuxAuxAlentours>) =
-        voeuxAutoursDesCommunesFavorites.flatMap { it.distances }.sortedBy { it.km }.map { it.idVoeu }
+    private fun creerLesIdsDesVoeuxTriesParDistance(voeuxAutoursDesCommunesFavorites: List<CommuneAvecIdsVoeuxAuxAlentours>): List<String> {
+        val voeuxAvecDistances = voeuxAutoursDesCommunesFavorites.flatMap { it.distances }
+        val idsVoeuxTries = voeuxAvecDistances.shuffled().sortedBy { it.km / DISTANCE_VOEUX_SIMILAIRES_KM }.map { it.idVoeu }
+        return idsVoeuxTries
+    }
 
     private fun informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux: List<Voeu>) =
         InformationsSurLesVoeuxEtLeursCommunes(
-            voeux = voeux,
-            communesTriees = extraireCommunes(voeux).shuffled(),
+            voeux = voeux.shuffled(),
+            communes = extraireCommunes(voeux).shuffled(),
             voeuxParCommunesFavorites = emptyList(),
         )
 
@@ -107,7 +116,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         val voeuxTries = trierLesVoeux(voeux, idsVoeuxTriesParDistance)
         return InformationsSurLesVoeuxEtLeursCommunes(
             voeux = voeuxTries,
-            communesTriees = extraireCommunes(voeuxTries),
+            communes = extraireCommunes(voeuxTries),
             voeuxParCommunesFavorites =
                 creerVoeuxParCommunes(
                     voeuxAuxAlentoursDeCommunes = voeuxAutoursDesCommunesFavorites,
@@ -146,8 +155,12 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     private fun creerVoeuxParCommunes(
         voeuxAuxAlentoursDeCommunes: List<CommuneAvecIdsVoeuxAuxAlentours>,
         voeuxDeLaFormation: List<Voeu>,
-    ): List<CommuneAvecVoeuxAuxAlentours> =
-        voeuxAuxAlentoursDeCommunes.map { voeuxAuxAlentoursDUneCommune ->
+    ): List<CommuneAvecVoeuxAuxAlentours> {
+        val today = LocalDate.now()
+        val seed = today.year * 10000 + today.monthValue * 100 + today.dayOfMonth
+        val random = Random(seed.toLong())
+
+        return voeuxAuxAlentoursDeCommunes.map { voeuxAuxAlentoursDUneCommune ->
             CommuneAvecVoeuxAuxAlentours(
                 communeFavorite = voeuxAuxAlentoursDUneCommune.communeFavorite,
                 distances =
@@ -158,7 +171,8 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
                                 distance.km,
                             )
                         }
-                    }.sortedBy { it.km },
+                    }.shuffled(random).sortedBy { it.km / DISTANCE_VOEUX_SIMILAIRES_KM },
             )
         }
+    }
 }

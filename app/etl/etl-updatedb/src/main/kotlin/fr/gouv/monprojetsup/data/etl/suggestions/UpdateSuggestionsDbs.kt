@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsPaniersVoeuxEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsProfilEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.repository.JpaRepository
@@ -42,6 +43,9 @@ class UpdateSuggestionsDbs(
 
     internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
 
+        logger.info("Copie des profils experts")
+        updateExpertsProfiles()
+
         if(minimalTestDataSet) {
             batchUpdate.clearEntities(SuggestionsVilleEntity::class.simpleName!!)
             batchUpdate.clearEntities(SuggestionsPaniersVoeuxEntity::class.simpleName!!)
@@ -63,6 +67,20 @@ class UpdateSuggestionsDbs(
         logger.info("Mise à jour des villes")
         updateVillesDb()
 
+    }
+
+    private fun updateExpertsProfiles() {
+        //clear table
+        batchUpdate.clearEntities(SuggestionsProfilEntity::class.simpleName!!)
+        val bacs = mpsDataPort.getBacs().map { it.key }.toSet()
+        //load data from csv
+        val entities = mpsDataPort.getProfilsReference()
+            .mapIndexed { i, x -> SuggestionsProfilEntity(i,x, bacs) }
+        //write to table
+        batchUpdate.setEntities(
+            SuggestionsProfilEntity::class.simpleName!!,
+            entities
+        )
     }
 
 

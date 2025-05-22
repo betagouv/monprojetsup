@@ -369,42 +369,18 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
             val attendu =
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeuxTries,
-                    communesTriees = listOf(LYON, PARIS5EME, PARIS15EME, PARIS19EME, RENNES, FORT_DE_FRANCE, BASTIA),
+                    communes = listOf(LYON, PARIS5EME, PARIS15EME, PARIS19EME, RENNES, FORT_DE_FRANCE, BASTIA),
                     voeuxParCommunesFavorites = voeuxParCommunesFavorites,
                 )
-            assertThat(result).isEqualTo(attendu)
-        }
-
-        @Test
-        fun `si la liste des communes favorites est vide, doit retourner la liste telle quelle`() {
-            // Given
-            given(profilEleve.communesFavorites).willReturn(emptyList())
-            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016"), obsoletesInclus = true))
-                .willReturn(
-                    mapOf(
-                        "fl2016" to voeux,
-                    ),
-                )
-
-            // When
-            val result =
-                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
-                    idFormation = "fl2016",
-                    profilEleve = profilEleve,
-                    obsoletesInclus = true,
-                )
-
-            // Then
-            then(communesAvecVoeuxAuxAlentoursRepository).shouldHaveNoInteractions()
-            val attendu =
-                InformationsSurLesVoeuxEtLeursCommunes(
-                    voeux = voeux,
-                    communesTriees = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
-                    voeuxParCommunesFavorites = emptyList(),
-                )
-            assertThat(result.voeux).isEqualTo(attendu.voeux)
-            assertThat(result.communesTriees).containsExactlyInAnyOrderElementsOf(attendu.communesTriees)
-            assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
+            assertThat(result.voeux).containsExactlyInAnyOrderElementsOf(attendu.voeux)
+            assertThat(result.communes).containsExactlyInAnyOrderElementsOf(attendu.communes)
+            val voeuxParCommunesFavoritesResult = result.voeuxParCommunesFavorites.associateBy { it.communeFavorite.codeInsee }
+            val voeuxParCommunesFavoritesAttendu = attendu.voeuxParCommunesFavorites.associateBy { it.communeFavorite.codeInsee }
+            assertThat(voeuxParCommunesFavoritesResult.keys).containsExactlyInAnyOrderElementsOf(voeuxParCommunesFavoritesAttendu.keys)
+            voeuxParCommunesFavoritesResult.forEach {
+                    (key, value) ->
+                assertThat(value.distances).containsExactlyInAnyOrderElementsOf(voeuxParCommunesFavoritesAttendu[key]?.distances)
+            }
         }
 
         @Test
@@ -431,11 +407,11 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
             val attendu =
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux = voeux,
-                    communesTriees = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
+                    communes = listOf(FORT_DE_FRANCE, RENNES, LYON, PARIS5EME, PARIS15EME, PARIS19EME, BASTIA),
                     voeuxParCommunesFavorites = emptyList(),
                 )
-            assertThat(result.voeux).isEqualTo(attendu.voeux)
-            assertThat(result.communesTriees).containsExactlyInAnyOrderElementsOf(attendu.communesTriees)
+            assertThat(result.voeux).containsExactlyInAnyOrderElementsOf(attendu.voeux)
+            assertThat(result.communes).containsExactlyInAnyOrderElementsOf(attendu.communes)
             assertThat(result.voeuxParCommunesFavorites).isEqualTo(attendu.voeuxParCommunesFavorites)
         }
     }
@@ -681,7 +657,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 5.400000,
                                     ),
                                 ),
-                            communesTriees = listOf(PARIS15EME, SAINT_MALO, MARSEILLE),
+                            communes = listOf(PARIS15EME, SAINT_MALO, MARSEILLE),
                             voeuxParCommunesFavorites =
                                 listOf(
                                     CommuneAvecVoeuxAuxAlentours(
@@ -744,7 +720,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(LYON),
+                            communes = listOf(LYON),
                             voeuxParCommunesFavorites =
                                 listOf(
                                     CommuneAvecVoeuxAuxAlentours(
@@ -809,7 +785,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(AJACCIO, PARIS5EME, LYON, STRASBOURG),
+                            communes = listOf(AJACCIO, PARIS5EME, LYON, STRASBOURG),
                             voeuxParCommunesFavorites =
                                 listOf(
                                     CommuneAvecVoeuxAuxAlentours(
@@ -886,7 +862,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 55.46069,
                                     ),
                                 ),
-                            communesTriees = listOf(FORT_DE_FRANCE, MARSEILLE, SAINT_PIERRE),
+                            communes = listOf(FORT_DE_FRANCE, MARSEILLE, SAINT_PIERRE),
                             voeuxParCommunesFavorites =
                                 listOf(
                                     CommuneAvecVoeuxAuxAlentours(
@@ -957,7 +933,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 2.443,
                                     ),
                                 ),
-                            communesTriees = listOf(RENNES, PARIS19EME, BASTIA, MONTREUIL),
+                            communes = listOf(RENNES, PARIS19EME, BASTIA, MONTREUIL),
                             voeuxParCommunesFavorites =
                                 listOf(
                                     CommuneAvecVoeuxAuxAlentours(
@@ -1022,7 +998,15 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                 ),
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
+            result.forEach(
+                { (key, value) ->
+                    assertThat(key).isIn(idsFormation)
+                    assertThat(value.voeux).containsExactlyInAnyOrderElementsOf(attendu[key]!!.voeux)
+                    assertThat(value.communes).containsExactlyInAnyOrderElementsOf(attendu[key]!!.communes)
+                    assertThat(value.voeuxParCommunesFavorites)
+                        .containsExactlyInAnyOrderElementsOf(attendu[key]!!.voeuxParCommunesFavorites)
+                },
+            )
         }
 
         @Test
@@ -1067,7 +1051,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = -1.96914,
                                     ),
                                 ),
-                            communesTriees = listOf(MARSEILLE, PARIS15EME, SAINT_MALO),
+                            communes = listOf(MARSEILLE, PARIS15EME, SAINT_MALO),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fr22" to
@@ -1082,7 +1066,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(LYON),
+                            communes = listOf(LYON),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl2009" to
@@ -1125,7 +1109,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(LYON, PARIS5EME, AJACCIO, STRASBOURG),
+                            communes = listOf(LYON, PARIS5EME, AJACCIO, STRASBOURG),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl2016" to
@@ -1154,7 +1138,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 55.46069,
                                     ),
                                 ),
-                            communesTriees = listOf(MARSEILLE, FORT_DE_FRANCE, SAINT_PIERRE),
+                            communes = listOf(MARSEILLE, FORT_DE_FRANCE, SAINT_PIERRE),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl252" to
@@ -1190,12 +1174,12 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 2.443,
                                     ),
                                 ),
-                            communesTriees = listOf(PARIS19EME, RENNES, BASTIA, MONTREUIL),
+                            communes = listOf(PARIS19EME, RENNES, BASTIA, MONTREUIL),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 )
             assertThat(result.keys).isEqualTo(attendu.keys)
-            assertThat(result.values.map { it.voeux }).containsExactlyElementsOf(attendu.values.map { it.voeux })
+            assertThat(result.values.map { it.voeux.toSet() }).containsExactlyInAnyOrderElementsOf(attendu.values.map { it.voeux.toSet() })
         }
 
         @Test
@@ -1240,7 +1224,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = -1.96914,
                                     ),
                                 ),
-                            communesTriees = listOf(MARSEILLE, PARIS15EME, SAINT_MALO),
+                            communes = listOf(MARSEILLE, PARIS15EME, SAINT_MALO),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fr22" to
@@ -1255,7 +1239,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(LYON),
+                            communes = listOf(LYON),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl2009" to
@@ -1298,7 +1282,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 4.85,
                                     ),
                                 ),
-                            communesTriees = listOf(LYON, PARIS5EME, AJACCIO, STRASBOURG),
+                            communes = listOf(LYON, PARIS5EME, AJACCIO, STRASBOURG),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl2016" to
@@ -1327,7 +1311,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 55.46069,
                                     ),
                                 ),
-                            communesTriees = listOf(MARSEILLE, FORT_DE_FRANCE, SAINT_PIERRE),
+                            communes = listOf(MARSEILLE, FORT_DE_FRANCE, SAINT_PIERRE),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                     "fl252" to
@@ -1363,12 +1347,14 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesFavoritesServiceTest {
                                         longitude = 2.443,
                                     ),
                                 ),
-                            communesTriees = listOf(PARIS19EME, RENNES, BASTIA, MONTREUIL),
+                            communes = listOf(PARIS19EME, RENNES, BASTIA, MONTREUIL),
                             voeuxParCommunesFavorites = emptyList(),
                         ),
                 )
             assertThat(result.keys).isEqualTo(attendu.keys)
-            assertThat(result.values.map { it.voeux }).containsExactlyInAnyOrderElementsOf(attendu.values.map { it.voeux })
+            val voeuxCalcules = result.values.map { it.voeux.toSet() }
+            val voeuxAttendus = attendu.values.map { it.voeux.toSet() }
+            assertThat(voeuxCalcules).containsExactlyInAnyOrderElementsOf(voeuxAttendus)
         }
     }
 }

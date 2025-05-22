@@ -10,6 +10,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
   if (!explications) return null;
 
   if (
+    !utilisateur.estExpert &&
     explications.communes.length === 0 &&
     explications.spécialitésChoisies.length === 0 &&
     explications.choixÉlève.length === 0 &&

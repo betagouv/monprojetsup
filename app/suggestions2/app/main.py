@@ -12,6 +12,7 @@ from app.api.types import (
     SuggestionRequestResponse,
 )
 from app.config import VERSION
+from app.types import HealthCheck
 
 from .naive_bayes.matrix import NaiveBayesMatrix, load_data_and_create_matrix
 
@@ -53,3 +54,8 @@ async def get_suggestions(request_body: SuggestionRequestBody) -> SuggestionRequ
 @app.post("/explanations", response_model_exclude_none=True)
 async def get_explanations(request_body: ExplanationRequestBody) -> ExplanationRequestResponse:
     return compute_explanations(request_body, student_profile_suggestions_matrix)
+
+
+@app.get("/health")
+def health_check() -> HealthCheck:
+    return HealthCheck(status="OK")

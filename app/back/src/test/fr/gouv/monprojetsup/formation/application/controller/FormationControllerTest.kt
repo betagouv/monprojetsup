@@ -224,7 +224,7 @@ class FormationControllerTest(
                                 longitude = 5.400000,
                             ),
                         ),
-                    communesTriees = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    communes = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
                     voeuxParCommunesFavorites =
                         listOf(
                             CommuneAvecVoeuxAuxAlentours(
@@ -452,7 +452,7 @@ class FormationControllerTest(
                                 longitude = 5.400000,
                             ),
                         ),
-                    communesTriees = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    communes = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
                     voeuxParCommunesFavorites =
                         listOf(
                             CommuneAvecVoeuxAuxAlentours(
@@ -625,7 +625,7 @@ class FormationControllerTest(
                         informationsSurLesVoeuxEtLeursCommunes =
                             InformationsSurLesVoeuxEtLeursCommunes(
                                 voeux = emptyList(),
-                                communesTriees = emptyList(),
+                                communes = emptyList(),
                                 voeuxParCommunesFavorites = emptyList(),
                             ),
                         apprentissage = false,
@@ -1026,7 +1026,7 @@ class FormationControllerTest(
                         informationsSurLesVoeuxEtLeursCommunes =
                             InformationsSurLesVoeuxEtLeursCommunes(
                                 voeux = emptyList(),
-                                communesTriees = emptyList(),
+                                communes = emptyList(),
                                 voeuxParCommunesFavorites = emptyList(),
                             ),
                         apprentissage = false,
@@ -3884,7 +3884,7 @@ class FormationControllerTest(
                         informationsSurLesVoeuxEtLeursCommunes =
                             InformationsSurLesVoeuxEtLeursCommunes(
                                 voeux = emptyList(),
-                                communesTriees = emptyList(),
+                                communes = emptyList(),
                                 voeuxParCommunesFavorites = emptyList(),
                             ),
                         apprentissage = false,
@@ -4260,7 +4260,7 @@ class FormationControllerTest(
                         informationsSurLesVoeuxEtLeursCommunes =
                             InformationsSurLesVoeuxEtLeursCommunes(
                                 voeux = emptyList(),
-                                communesTriees = emptyList(),
+                                communes = emptyList(),
                                 voeuxParCommunesFavorites = emptyList(),
                             ),
                         apprentissage = false,

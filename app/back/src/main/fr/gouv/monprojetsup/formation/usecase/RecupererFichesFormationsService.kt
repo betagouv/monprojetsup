@@ -97,7 +97,7 @@ class RecupererFichesFormationsService(
             )
             InformationsSurLesVoeuxEtLeursCommunes(
                 voeux = emptyList(),
-                communesTriees = emptyList(),
+                communes = emptyList(),
                 voeuxParCommunesFavorites = emptyList(),
             )
         }
