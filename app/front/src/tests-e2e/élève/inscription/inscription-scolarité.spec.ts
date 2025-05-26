@@ -166,29 +166,29 @@ test.describe("Inscription élève - Ma scolarité", () => {
   });
 
   test.describe("En étant à l'étape suivante", () => {
-    // test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
-    //   // GIVEN
-    //   const classeActuelleÀSélectionner = i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.premiere.LABEL;
-    //   const testhelper = new Test(page);
-    //   await testhelper.naviguerVersLaPage();
-    //
-    //   // WHEN
-    //   await testhelper.renseignerCorrectementLeFormulaire({
-    //     classeActuelle: classeActuelleÀSélectionner,
-    //   });
-    //   await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
-    //   await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
-    //   await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
-    //   await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
-    //   await testhelper.soumettreLeFormulaire();
-    //   await testhelper.revenirÀLÉtapePrécédente();
-    //
-    //   // THEN
-    //   await expect(testhelper.champClasseActuelle()).toHaveValue("premiere");
-    //   await expect(testhelper.champBac()).toHaveValue("Générale");
-    //   await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
-    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.ARTS_PLASTIQUES)).toBeVisible();
-    //   await expect(testhelper.boutonFavoriSélectionné(testhelper.HISTOIRE_DES_ARTS)).toBeVisible();
-    // });
+    test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
+      // GIVEN
+      const classeActuelleÀSélectionner = i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.premiere.LABEL;
+      const testhelper = new Test(page);
+      await testhelper.naviguerVersLaPage();
+
+      // WHEN
+      await testhelper.renseignerCorrectementLeFormulaire({
+        classeActuelle: classeActuelleÀSélectionner,
+      });
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
+      await testhelper.renseignerChampRechercheSpécialités(testhelper.SPÉCIALITÉ_RECHERCHÉE);
+      await testhelper.boutonFavoriSuggéré(testhelper.ARTS_PLASTIQUES).click();
+      await testhelper.boutonFavoriSuggéré(testhelper.HISTOIRE_DES_ARTS).click();
+      await testhelper.soumettreLeFormulaire();
+      await testhelper.revenirÀLÉtapePrécédente();
+
+      // THEN
+      await expect(testhelper.champClasseActuelle()).toHaveValue("premiere");
+      await expect(testhelper.champBac()).toHaveValue("Générale");
+      await expect(testhelper.listeDesFavorisSélectionnés().getByRole("listitem")).toHaveCount(2);
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.ARTS_PLASTIQUES)).toBeVisible();
+      await expect(testhelper.boutonFavoriSélectionné(testhelper.HISTOIRE_DES_ARTS)).toBeVisible();
+    });
   });
 });
