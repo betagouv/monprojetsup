@@ -66,7 +66,7 @@ export class InscriptionTestHelper extends ÉlèveTestHelper {
   };
 
   public boutonFavoriSélectionné = (nom: string) => {
-    return this.listeDesFavorisSélectionnés().getByRole("listitem").filter({ hasText: nom }).getByRole("button");
+    return this.listeDesFavorisSélectionnés().getByRole("listitem").filter({ hasText: nom }).getByRole("button").filter({ hasText: "favori" });
   };
 
   public listeDesOptionsSuggérées = () => {
