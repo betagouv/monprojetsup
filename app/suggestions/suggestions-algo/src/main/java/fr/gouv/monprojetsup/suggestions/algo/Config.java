@@ -94,7 +94,7 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
-    public static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-03;
+    public static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-08;
 
     public static Map<String, Double> defaultMultipliers = Map.ofEntries(
             entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
