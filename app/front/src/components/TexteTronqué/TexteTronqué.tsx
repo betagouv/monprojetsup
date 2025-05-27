@@ -31,20 +31,11 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   return (
     <div className="justify-start">
       <p
-        className={`${classEnFonctionDeAfficherEnEntier()} mb-2 whitespace-pre-line`}
+        className={`mb-2 whitespace-pre-line`}
         ref={ref}
       >
         {texte}
       </p>
-      {afficherBoutonLireLaSuite && (
-        <button
-          className="fr-link inline border-0 border-b border-solid border-[--underline-img] text-sm hover:border-b-[1.5px] hover:!bg-inherit"
-          onClick={() => setAfficherEnEntier((valeurActuelle) => !valeurActuelle)}
-          type="button"
-        >
-          {afficherEnEntier ? i18n.COMMUN.MASQUER_SUITE : i18n.COMMUN.LIRE_SUITE}
-        </button>
-      )}
     </div>
   );
 };
