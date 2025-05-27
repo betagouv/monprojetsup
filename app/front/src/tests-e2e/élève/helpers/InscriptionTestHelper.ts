@@ -66,7 +66,11 @@ export class InscriptionTestHelper extends ÉlèveTestHelper {
   };
 
   public boutonFavoriSélectionné = (nom: string) => {
-    return this.listeDesFavorisSélectionnés().getByRole("listitem").filter({ hasText: nom }).getByRole("button").filter({ hasText: "favori" });
+    return this.listeDesFavorisSélectionnés()
+      .getByRole("listitem")
+      .filter({ hasText: nom })
+      .getByRole("button")
+      .filter({ hasText: i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI });
   };
 
   public listeDesOptionsSuggérées = () => {
