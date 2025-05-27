@@ -8,12 +8,6 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
 
   const ref = useRef<HTMLParagraphElement | null>(null);
 
-  const classEnFonctionDeAfficherEnEntier = () => {
-    if (afficherEnEntier) return "";
-
-    return "line-clamp-4";
-  };
-
   useEffect(() => {
     const doitAfficherBoutonLireLaSuite =
       ref?.current?.offsetHeight &&
