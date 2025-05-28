@@ -364,7 +364,6 @@ public class AlgoSuggestions {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
-            LOGGER.info(Config.NOTHING_PERSONAL);
             return List.of();
         }
 
