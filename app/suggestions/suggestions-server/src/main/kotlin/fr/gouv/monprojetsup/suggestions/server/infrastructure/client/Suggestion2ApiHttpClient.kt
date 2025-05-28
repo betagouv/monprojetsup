@@ -25,25 +25,31 @@ class Suggestion2ApiHttpClient(
 
     override fun recupererLesSuggestions(profil: ProfileDTO): List<GetAffinitiesServiceDTO.Affinity> {
         if(!enabled) {
+            logger.info("SUGGESTIONS2", "recupererLesSuggestions: désactivé")
             return emptyList()
         }
+        logger.info("SUGGESTIONS2", "recupererLesSuggestions: appel à l'API Suggestions2")
         val reponseDTO =
             post<GetAffinitiesServiceDTO.Response>(
                 url = "$baseUrl/suggestions",
                 requeteDTO = GetAffinitiesServiceDTO.Request(profil, true),
             )
+        logger.info("SUGGESTIONS2", "recupererLesSuggestions: réponse de l'API Suggestions2")
         return reponseDTO.affinites
     }
 
     override fun recupererLesExplications(profil: ProfileDTO, keys: List<String>): List<ExplanationAndExamples> {
         if(!enabled) {
+            logger.info("SUGGESTIONS2", "recupererLesExplications: désactivé")
             return emptyList()
         }
+        logger.info("SUGGESTIONS2", "recupererLesExplications: appel à l'API Suggestions2")
         val reponseDTO =
             post<GetExplanationsAndExamplesServiceDTO.Response>(
                 url = "$baseUrl/explanations",
                 requeteDTO = GetExplanationsAndExamplesServiceDTO.Request(profil, keys),
             )
+        logger.info("SUGGESTIONS2", "recupererLesExplications: réponse de l'API Suggestions2")
         return reponseDTO.liste
     }
 

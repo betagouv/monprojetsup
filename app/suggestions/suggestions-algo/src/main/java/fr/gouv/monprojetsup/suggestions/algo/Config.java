@@ -28,7 +28,6 @@ public final class Config {
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
     public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
     public static final double METIER_BONUS_TAG_MULTIPLIER = 2.0;
-    static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
     static final double EDGES_FORMATIONS_DOMAINES_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse un peu au domaine
     static final double EDGES_DOMAINES_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au domaine, je m'intéresse à la formation
     static final double EDGES_METIERS_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au métier, je m'intéresse à la formation
@@ -36,7 +35,6 @@ public final class Config {
     static final double EDGES_DOMAINES_METIERS_WEIGHT = 0.01;
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
-    static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
     static final double MAX_SCORE_PATH_LENGTH_3 = 0.25;
 
