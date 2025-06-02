@@ -82,8 +82,9 @@ const FormationPage = () => {
           {élémentAffiché.id && (
             <FicheFormation
               afficherBoutonFavori
+              baseOuverte={false}
               id={élémentAffiché.id}
-              baseOuverte={false} />
+            />
           )}
         </ListeEtAperçuContenu>
       </ListeEtAperçuLayout>

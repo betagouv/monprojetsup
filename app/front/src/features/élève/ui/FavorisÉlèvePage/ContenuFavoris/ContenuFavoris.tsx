@@ -11,8 +11,8 @@ const ContenuFavoris = () => {
     return (
       <FicheFormation
         afficherBoutonFavori
+        baseOuverte
         id={élémentAffiché.id}
-        baseOuverte={true}
       />
     );
 
