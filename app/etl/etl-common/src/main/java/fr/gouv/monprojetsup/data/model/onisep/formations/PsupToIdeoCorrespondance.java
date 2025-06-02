@@ -92,19 +92,16 @@ public record PsupToIdeoCorrespondance(
             return gFlCod == ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD;
         }
 
-        public boolean isDMA() {
-            return gFrCod == DMA_PSUP_FR_COD;
-        }
     }
 
     public static PsupToIdeoCorrespondance fromCsv(List<Map<String, String>> csv) {
         val result = csv.stream().map(line ->
             new PsupToOnisepLine(
                     Integer.parseInt(line.get("CODEFORMATION").trim()),
-                    line.get("LIBELLEFORMATION"),
-                    Integer.parseInt(line.get("CODESPECIALITE").trim()),
-                    line.get("LIBELLESPECIALITE"),
-                    line.get("LIS_ID_ONI2"),
+                    line.get("LIBELLÉFORMATION"),
+                    Integer.parseInt(line.get("CODESPÉCIALITÉ").trim()),
+                    line.get("LIBELLÉSPÉCIALITÉ"),
+                    "",
                     line.get("LIENONISEP")
             )).toList();
         return new PsupToIdeoCorrespondance(result);

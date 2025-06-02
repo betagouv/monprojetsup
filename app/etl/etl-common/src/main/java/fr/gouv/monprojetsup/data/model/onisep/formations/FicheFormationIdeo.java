@@ -336,11 +336,6 @@ public record FicheFormationIdeo(
         return Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_code, -1) == Constants.CODE_NSF_CONSERVATION_RESTAURATION;
     }
 
-    public boolean estDMA() {
-        return type_Formation.type_formation_libelle_court.equals("DMA")
-                || type_Formation.type_formation_libelle.contains("DMA");
-    }
-
     public Collection<Pair<String, String>> getSousdomainesWeb() {
         return sousDomainesWeb.stream().map(sousDomaineWeb -> Pair.of(sousDomaineWeb.id, sousDomaineWeb.libelle)).toList();
     }
