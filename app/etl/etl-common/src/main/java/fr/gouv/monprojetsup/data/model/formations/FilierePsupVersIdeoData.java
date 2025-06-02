@@ -36,7 +36,9 @@ public record FilierePsupVersIdeoData(
     public static List<FilierePsupVersIdeoData> compute(
             PsupToIdeoCorrespondance lines,
             Map<String, FormationIdeoDuSup> formationsIdeo,
-            Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
+            Map<String, @NotNull Set<String>> oldIdeoToNewIdeo,
+            Map<Integer, String> psupToIdeo
+    ) {
 
         try {
             val allIdeos = new HashSet<String>();
@@ -102,21 +104,12 @@ public record FilierePsupVersIdeoData(
         if(ideoKeysConservationRestauration.isEmpty()) {
             throw new IllegalStateException("Pas de formations de conservation ou restauration dans les formations Ideo du Sup");
         }
-
-        val ideoKeysDMA = formationsIdeo.values().stream()
-                .filter(FormationIdeoDuSup::estDMA)
-                .map(FormationIdeoDuSup::ideo)
-                .distinct()
-                .toList();
-        if(ideoKeysDMA.isEmpty()) {
-            throw new IllegalStateException("Pas de DMA dans les formations Ideo du Sup");
-        }
         
         return new ArrayList<>( lines.psupToIdeo2().stream().map(line ->
                 {
                     ArrayList<String> ideoFormationsIds1 =
                             new ArrayList<>(
-                                    Arrays.stream(line.idsideos()
+                                    Arrays.stream(psupToIdeo.getOrDefault(line.gFlCod(),"")
                                                     .split(";"))
                                             .map(String::trim)
                                             .filter(s -> !s.isBlank())
@@ -130,7 +123,6 @@ public record FilierePsupVersIdeoData(
                     if(line.isEcoleArchitecture()) ideoFormationsIds1.addAll(ideoKeysEcoleArchi);
                     if(line.isEcoleArt()) ideoFormationsIds1.addAll(ideoKeysEcoleArt);
                     if(line.isEcoleconservationRestauration()) ideoFormationsIds1.addAll(ideoKeysConservationRestauration);
-                    if(line.isDMA()) ideoFormationsIds1.addAll(ideoKeysDMA);
 
                     //on augmente avec les nouveaux codes ideo
                     ideoFormationsIds1.addAll(
