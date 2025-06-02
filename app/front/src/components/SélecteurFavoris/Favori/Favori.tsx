@@ -64,8 +64,7 @@ const Favori = ({
               classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
             }}
             taille="petit"
-            variante="tertiaire"
-          >
+            variante="tertiaire">
             {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
           </BoutonSquelette>
         ) : (
@@ -78,24 +77,6 @@ const Favori = ({
           </div>
         )}
       </Toggle>
-
-      {boutonMPSVisible ? (
-        <Bouton
-          auClic={modaleParcourSup.open}
-          taille="petit"
-          type="button"
-          variante="tertiaire"
-        >
-          <img
-            alt="Icon"
-            height={14}
-            src={IconeMPS}
-            width={14}
-          />
-        </Bouton>
-      ) : (
-        ""
-      )}
 
       <ModaleParcourSup modale={modaleParcourSup} />
     </>
