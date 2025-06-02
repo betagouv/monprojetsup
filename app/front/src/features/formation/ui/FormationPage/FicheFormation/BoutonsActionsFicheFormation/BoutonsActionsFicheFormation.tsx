@@ -5,10 +5,10 @@ import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import FormationFavorite from "@/features/formation/ui/FormationPage/FicheFormation/FormationFavorite/FormationFavorite";
 
-const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormationProps) => {
+const BoutonsActionsFicheFormation = ({ formation, baseOuverte = false }: BoutonsActionsFicheFormationProps) => {
   const { estFavorite, estMasquée, mettreÀJourFormationsÉlève, mettreÀJourFormationsMasquéesÉlève } =
     useBoutonsActionsFicheFormation({
-      formation,
+      formation, baseOuverte
     });
 
   return (
@@ -71,7 +71,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           <h2 className="fr-accordion__title">
             <button
               aria-controls="accordeon-formation-favorite"
-              aria-expanded="true"
+              aria-expanded={baseOuverte}
               className="fr-accordion__btn"
               type="button"
             >
@@ -79,7 +79,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             </button>
           </h2>
           <div
-            className="fr-collapse fr-collapse--expanded"
+            className={`fr-collapse ${baseOuverte ? 'fr-collapse--expanded' : ''}`}
             id="accordeon-formation-favorite"
           >
             <FormationFavorite key={formation.id} />

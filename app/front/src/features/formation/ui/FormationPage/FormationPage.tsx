@@ -83,7 +83,7 @@ const FormationPage = () => {
             <FicheFormation
               afficherBoutonFavori
               id={élémentAffiché.id}
-            />
+              baseOuverte={false} />
           )}
         </ListeEtAperçuContenu>
       </ListeEtAperçuLayout>

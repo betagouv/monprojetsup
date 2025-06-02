@@ -14,7 +14,7 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
+const FicheFormation = ({ id, afficherBoutonFavori, baseOuverte }: FicheFormationProps) => {
   const { data: formation, isLoading: chargementEnCours } = useQuery(récupérerFicheFormationQueryOptions(id));
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const FicheFormation = ({ id, afficherBoutonFavori }: FicheFormationProps) => {
       </div>
       {afficherBoutonFavori && (
         <div className="mt-9">
-          <BoutonsActionsFicheFormation formation={formation} />
+          <BoutonsActionsFicheFormation formation={formation}  baseOuverte={baseOuverte}/>
         </div>
       )}
       <hr className="mb-9 mt-5" />
