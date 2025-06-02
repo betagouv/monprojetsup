@@ -1,6 +1,4 @@
 import { FavoriProps } from "./Favori.interface";
-import IconeMPS from "@/assets/icone-mps.svg";
-import Bouton from "@/components/Bouton/Bouton.tsx";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -21,7 +19,6 @@ const Favori = ({
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
   idDeLonglet = "",
-  boutonMPSVisible = false,
 }: FavoriProps) => {
   const modaleParcourSup = useMemo(
     () =>
@@ -64,7 +61,8 @@ const Favori = ({
               classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
             }}
             taille="petit"
-            variante="tertiaire">
+            variante="tertiaire"
+          >
             {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
           </BoutonSquelette>
         ) : (
