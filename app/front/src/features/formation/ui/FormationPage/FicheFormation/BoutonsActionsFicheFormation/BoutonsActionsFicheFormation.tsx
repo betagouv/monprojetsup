@@ -8,7 +8,8 @@ import FormationFavorite from "@/features/formation/ui/FormationPage/FicheFormat
 const BoutonsActionsFicheFormation = ({ formation, baseOuverte = false }: BoutonsActionsFicheFormationProps) => {
   const { estFavorite, estMasquée, mettreÀJourFormationsÉlève, mettreÀJourFormationsMasquéesÉlève } =
     useBoutonsActionsFicheFormation({
-      formation, baseOuverte
+      formation,
+      baseOuverte,
     });
 
   return (
@@ -79,7 +80,7 @@ const BoutonsActionsFicheFormation = ({ formation, baseOuverte = false }: Bouton
             </button>
           </h2>
           <div
-            className={`fr-collapse ${baseOuverte ? 'fr-collapse--expanded' : ''}`}
+            className={`fr-collapse ${baseOuverte ? "fr-collapse--expanded" : ""}`}
             id="accordeon-formation-favorite"
           >
             <FormationFavorite key={formation.id} />

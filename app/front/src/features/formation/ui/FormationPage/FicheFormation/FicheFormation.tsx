@@ -56,7 +56,9 @@ const FicheFormation = ({ id, afficherBoutonFavori, baseOuverte }: FicheFormatio
       </div>
       {afficherBoutonFavori && (
         <div className="mt-9">
-          <BoutonsActionsFicheFormation formation={formation}  baseOuverte={baseOuverte}/>
+          <BoutonsActionsFicheFormation
+              formation={formation}
+              baseOuverte={baseOuverte} />
         </div>
       )}
       <hr className="mb-9 mt-5" />
