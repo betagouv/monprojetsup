@@ -63,7 +63,8 @@ import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.OLD_TO_NEW_IDEO_
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_HERITIER_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_LEGATAIRES_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_INDEXATION_PATH;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_FORMATIONS_TO_IDEO_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER;
@@ -504,14 +505,31 @@ public class OnisepDataLoader {
     ) {
         val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
 
-        val psupToIdeoFilename = PSUP_TO_IDEO_CORRESPONDANCE_PATH;
+        val psupToIdeoFilename = PSUP_INDEXATION_PATH;
+        //CODESPÉCIALITÉ	CODEFORMATION	LIBELLÉFORMATION	LIBELLÉSPÉCIALITÉ	LIENONISEP	MOTSCLESDISCIPLINE	MOTSCLESSOUSDOMAINE	MOTSCLESMETIER
         LOGGER.info("Chargement de " + psupToIdeoFilename);
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(psupToIdeoFilename), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
+
+        val psupToIdeoFilename2 = PSUP_FORMATIONS_TO_IDEO_PATH;
+        //CODESPÉCIALITÉ	LIBELLÉSPÉCIALITÉ	LIENONISEP	IDFORMATIONIDEO	LIBELLÉFORMATION
+        LOGGER.info("Chargement de " + psupToIdeoFilename2);
+        val csv2 = CsvTools.readCSV(sources.getSourceDataFilePath(psupToIdeoFilename2), ',');
+        val psupToIdeo = new HashMap<Integer,String>();
+        for(val line : csv2) {
+            if(line.values().stream().allMatch(String::isBlank)) continue;
+            val codeSpecialite = Integer.parseInt(line.get("CODESPÉCIALITÉ"));
+            val idFormationIdeo = line.get("IDFORMATIONIDEO");
+            val current = psupToIdeo.getOrDefault(codeSpecialite, "");
+            psupToIdeo.put(codeSpecialite, current + ";" + idFormationIdeo);
+        }
+
+
         val filieresPsupToFormationsMetiersIdeo = FilierePsupVersIdeoData.compute(
                 lines,
                 formationsIdeoDuSup,
-                oldIdeoToNewIdeo
+                oldIdeoToNewIdeo,
+                psupToIdeo
         );
         updateCreationLien(filieresPsupToFormationsMetiersIdeo, psupToIdeoFilename);
 
