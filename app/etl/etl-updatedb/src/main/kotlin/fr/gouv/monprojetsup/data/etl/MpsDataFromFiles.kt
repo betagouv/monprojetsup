@@ -342,6 +342,29 @@ class MpsDataFromFiles(
                 csv.append(nextLine)
             }
         }
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
+            val headers = listOf(
+                "id",
+                "formation",
+                "label",
+                "url"
+            )
+            csv.appendHeaders(headers)
+            val liens = getLiens()
+            for(id in getFormationsMpsIds().sortedBy { labels.getOrDefault(it,it) }) {
+                val label = labels[id].orEmpty()
+                for(lien in liens[id].orEmpty().filter { !it.source.contains(CARTE_PSUP) }) {
+                    val nextLine = listOf(
+                        id,
+                        label,
+                        lien.label,
+                        lien.uri
+                    )
+                    csv.append(nextLine)
+                }
+            }
+        }
+
     }
 
     override fun getProfilsReference(): List<Map<String,String>> {
