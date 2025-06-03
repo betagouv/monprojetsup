@@ -65,7 +65,7 @@ const Favori = ({
       </Toggle>
 
       <button
-        className="fr-btn--tertiary p-2 fr-mx-1-5v"
+        className="fr-btn--tertiary fr-mx-1-5v p-2"
         type="button"
       >
         <img
