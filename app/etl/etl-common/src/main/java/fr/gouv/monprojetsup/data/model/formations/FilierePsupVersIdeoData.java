@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.AVENIRS_URL;
+import static fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL;
 import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL1;
 import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL2;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
@@ -159,8 +159,8 @@ public record FilierePsupVersIdeoData(
                     ideoFormationsIds1.removeAll(oldIdeoToNewIdeo.keySet());
 
                     var lien = line.onisepLink()
-                            .replace(ONISEP_URL1, AVENIRS_URL)
-                            .replace(ONISEP_URL2, AVENIRS_URL)
+                            .replace(ONISEP_URL1, EXPLORER_AVENIRS_URL)
+                            .replace(ONISEP_URL2, EXPLORER_AVENIRS_URL)
                             ;
                     if(lien.isBlank() || lien.contains("slug") || lien.contains("recherche")) {
                         lien = null;
