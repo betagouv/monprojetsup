@@ -1,4 +1,5 @@
 import { FavoriProps } from "./Favori.interface";
+import logoMPS from "@/assets/icone-mps.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -62,6 +63,19 @@ const Favori = ({
           </div>
         )}
       </Toggle>
+
+      <button
+        className="fr-btn--tertiary p-2"
+        type="button"
+      >
+        <img
+          alt="Icone MPS"
+          className="block"
+          height={18}
+          src={logoMPS}
+          width="auto"
+        />
+      </button>
     </>
   );
 };
