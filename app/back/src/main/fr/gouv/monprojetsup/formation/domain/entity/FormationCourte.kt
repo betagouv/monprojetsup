@@ -1,8 +1,11 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-import fr.gouv.monprojetsup.commun.recherche.entity.EntiteRecherchee
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 
 data class FormationCourte(
-    override val id: String,
+    val id: String,
     val nom: String,
-) : EntiteRecherchee(id)
+) {
+    val label: Label
+        get() = Label(id, nom)
+}

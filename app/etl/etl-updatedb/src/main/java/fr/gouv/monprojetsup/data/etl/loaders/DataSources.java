@@ -13,7 +13,8 @@ public class DataSources {
     private String dataRootDirectory = "./";
 
     /* Psup data */
-    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";
+    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBackNoStats.zip";
+    public static final String STATS_PSUP_DATA_FILENAME = "parcoursup/psupStats.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
 
     /* Ideo data */
@@ -30,7 +31,7 @@ public class DataSources {
     /* Onisep data */
     public static final String IDEO_HERITAGES_LICENCES_CPGE_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
     public static final String IDEO_HERITAGES_LICENCES_MASTERS_PATH = "onisep_ideo_hotline/MPS_LiensLicencesMasters_valideOnisep.csv";
-    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees_V4.csv";
+    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees.csv";
 
     public static final String OLD_TO_NEW_IDEO_OLD_IDEO_HEADER = "OLD_ID_IDEO";
     public static final String OLD_TO_NEW_IDEO_NEW_IDEO_HEADER = "NEW_ID_IDEO";
@@ -46,11 +47,10 @@ public class DataSources {
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
 
     /* MPS data */
+    public static final String PROFILS_REFERENCE_MPS_PATH = "ml/profils_experts.csv";
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
     public static final String RESUMES_MPS_RESUME_TYPE_FORMATION = "resume type formation";
-    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION_MOS = "Retours MOSS type formation";
     public static final String RESUMES_MPS_RESUME_FORMATION = "resume filiere";
-    public static final String RESUMES_MPS_RESUME_FORMATION_MOS = "Retours MOSS filiere";
     public static final String RESUMES_MPS_RESUME_KEY = "code filiere";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
     public static final String LIENS_MPS_PATH_HEADER_ID = "id";
@@ -58,7 +58,8 @@ public class DataSources {
     public static final String LIENS_MPS_PATH_HEADER_EXTRAS = "ajouts";
     public static final String DOMAINES_MPS_PATH = "mps/Domaines MPS Onisep.csv";
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.csv";
-    public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/liensPSUP_ONISEP_2024_09_06_V1.csv";
+    public static final String PSUP_INDEXATION_PATH = "onisep_ideo_hotline/psup_indexation.csv";
+    public static final String PSUP_FORMATIONS_TO_IDEO_PATH = "onisep_ideo_hotline/formations_parcoursup.csv";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER = "MPS_ID";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER = "FOR_ID";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER = "MET_ID";
@@ -71,7 +72,9 @@ public class DataSources {
     public static final String PSUP_HERITAGES_HERITIER_HEADER = "mps_heritier";
     public static final String PSUP_HERITAGES_LEGATAIRES_HEADER = "mps_legataire";
 
-
+    public static final String MOTS_CLES_MPS_PATH = "mps/motsCles.json";
+    public static final String MPS_FORMATIONS_EXCLUES_PATH = "mps/formationsExclues.csv";
+    public static final String MPS_FORMATIONS_EXCLUES_HEADER = "cle";
     /* ROME data */
     public static final String ROME_CENTRES_INTERETS_PATH = "ROME/unix_arborescence_centre_interet_v451.json";
     public static final String ROME_THEMES_PATH = "ROME/unix_arborescence_thematique_v451.json";//unused

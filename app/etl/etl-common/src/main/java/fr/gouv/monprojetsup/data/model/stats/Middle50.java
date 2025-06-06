@@ -24,7 +24,7 @@ public record Middle50(
 
     /**
      *
-     * @param frequencesCumulees
+     * @param frequencesCumulees the cumulative frequencies
      *
      */
     public  Middle50(int[] frequencesCumulees) {

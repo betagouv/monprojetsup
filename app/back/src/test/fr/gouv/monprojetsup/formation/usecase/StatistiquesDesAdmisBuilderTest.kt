@@ -19,7 +19,7 @@ class StatistiquesDesAdmisBuilderTest {
 
     private val frequencesCumulees =
         mapOf(
-            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale") to
+            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -62,7 +62,7 @@ class StatistiquesDesAdmisBuilderTest {
                     6670, // 19 - 19,5
                     6677, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG") to
+            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -105,7 +105,7 @@ class StatistiquesDesAdmisBuilderTest {
                     15, // 19 - 19,5
                     15, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D") to
+            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -164,15 +164,21 @@ class StatistiquesDesAdmisBuilderTest {
             parBaccalaureat =
                 listOf(
                     TotalAdmisPourUnBaccalaureat(
-                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                        baccalaureat =
+                            Baccalaureat(
+                                id = "Générale",
+                                idExterne = "Général",
+                                nom = "Série Générale",
+                                idCarteParcoursup = "1",
+                            ),
                         nombreAdmis = 6677,
                     ),
                     TotalAdmisPourUnBaccalaureat(
-                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2"),
                         nombreAdmis = 15,
                     ),
                     TotalAdmisPourUnBaccalaureat(
-                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D", idCarteParcoursup = "2"),
                         nombreAdmis = 223,
                     ),
                 ),
@@ -198,7 +204,13 @@ class StatistiquesDesAdmisBuilderTest {
             StatistiquesDesAdmis(
                 moyenneGeneraleDesAdmis =
                     MoyenneGeneraleDesAdmis(
-                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                        baccalaureat =
+                            Baccalaureat(
+                                id = "Générale",
+                                idExterne = "Général",
+                                nom = "Série Générale",
+                                idCarteParcoursup = "1",
+                            ),
                         centiles =
                             listOf(
                                 Centile(centile = 5, note = 13f),
@@ -229,7 +241,13 @@ class StatistiquesDesAdmisBuilderTest {
             StatistiquesDesAdmis(
                 moyenneGeneraleDesAdmis =
                     MoyenneGeneraleDesAdmis(
-                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                        baccalaureat =
+                            Baccalaureat(
+                                id = "Générale",
+                                idExterne = "Général",
+                                nom = "Série Générale",
+                                idCarteParcoursup = "1",
+                            ),
                         centiles =
                             listOf(
                                 Centile(centile = 5, note = 13f),
@@ -341,7 +359,7 @@ class StatistiquesDesAdmisBuilderTest {
     @Test
     fun `si moins de 30 admis pour tous bac confondus, doit quand même retourner tous bac confondus`() {
         // Given
-        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
+        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2")
         val frequencesAvecMoinsDe30AdmisAuTotal =
             mapOf(
                 baccalaureat to
@@ -429,7 +447,7 @@ class StatistiquesDesAdmisBuilderTest {
     @Test
     fun `si la liste de fréquence cumulées est vide, alors doit retourner null`() {
         // Given
-        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
+        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2")
         val frequencesAvecMoinsDe30AdmisAuTotal = mapOf(baccalaureat to emptyList<Int>())
 
         // When
@@ -456,7 +474,7 @@ class StatistiquesDesAdmisBuilderTest {
     @Test
     fun `si le retour du repository est vide, alors doit retourner null`() {
         // Given
-        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
+        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2")
         val frequencesAvecMoinsDe30AdmisAuTotal = emptyMap<Baccalaureat, List<Int>>()
 
         // When

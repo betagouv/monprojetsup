@@ -144,10 +144,16 @@ class FormationsMpsTests : DataPortTest() {
     @Nested
     inner class AdmissionStatsTests {
 
+
+        @Test
+        fun `le bac NC apparait dans la liste des bacs`() {
+            val keys = HashSet(mpsDataPort.getBacs().map { b -> b.key })
+            assertThat(keys).contains(PsupStatistiques.TOUS_BACS_CODE_MPS)
+        }
+
         @Test
         fun `tous les bacs de toutes les stats sont connus`() {
             val keys = HashSet(mpsDataPort.getBacs().map { b -> b.key })
-            keys.add(PsupStatistiques.TOUS_BACS_CODE_MPS)
             val statsKeys = mpsDataPort.getStatsFormation().flatMap { it.value.nbAdmisParBac.keys }
             assertThat(keys).containsAll(statsKeys)
         }
@@ -183,18 +189,6 @@ class FormationsMpsTests : DataPortTest() {
             assertThat(formationsSansStats).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_SANS_STATS_COMPLETES * nbTotal / 100)
 
         }
-
-        @Test
-        fun `LA plupart des des las ont des stats non vides`() {
-            val lasKeys = mpsDataPort.getLasToGenericIdMapping().keys
-            val lasSansStatsAdmissions = mpsDataPort.getStatsFormation()
-                .filter { lasKeys.contains(it.key) }
-                .filter { !it.value.hasStatsAdmissions() }
-                .map { it.key }
-            val nbTotal = lasKeys.size
-            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_LAS_AVEC_STATS_VIDES * nbTotal / 100)
-        }
-
 
     }
 

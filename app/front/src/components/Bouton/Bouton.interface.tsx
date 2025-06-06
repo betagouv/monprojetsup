@@ -1,9 +1,10 @@
 import { type BoutonSqueletteProps } from "@/components/BoutonSquelette/BoutonSquelette.interface";
+import { AriaRole } from "react";
 
 export type BoutonProps = {
-  label: BoutonSqueletteProps["label"];
+  children: BoutonSqueletteProps["children"];
   type: HTMLButtonElement["type"];
-  auClic?: () => Promise<void> | void;
+  auClic?: () => Promise<unknown> | void;
   taille?: BoutonSqueletteProps["taille"];
   variante?: BoutonSqueletteProps["variante"];
   désactivé?: boolean;
@@ -11,4 +12,5 @@ export type BoutonProps = {
   formId?: string;
   ariaControls?: string;
   dataFrOpened?: string;
+  rôle?: AriaRole;
 };

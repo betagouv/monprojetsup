@@ -1,8 +1,9 @@
+/* eslint-disable react/button-has-type */
 import { type BoutonProps } from "./Bouton.interface";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 
 const Bouton = ({
-  label,
+  children,
   type,
   auClic,
   taille,
@@ -12,6 +13,7 @@ const Bouton = ({
   formId,
   ariaControls,
   dataFrOpened,
+  rôle = "button",
 }: BoutonProps) => {
   return (
     <button
@@ -20,14 +22,16 @@ const Bouton = ({
       disabled={désactivé}
       form={formId}
       onClick={auClic}
+      role={rôle}
       type={type}
     >
       <BoutonSquelette
         icône={icône}
-        label={label}
         taille={taille}
         variante={variante}
-      />
+      >
+        {children}
+      </BoutonSquelette>
     </button>
   );
 };

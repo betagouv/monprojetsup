@@ -15,7 +15,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
-@Entity
+@Entity(name = "ProfilEleve")
 @Table(name = "profil_eleve")
 class ProfilEleveEntity() {
     @Id
@@ -63,16 +63,17 @@ class ProfilEleveEntity() {
 
     @Type(JsonType::class)
     @Column(name = "formations_favorites", nullable = true)
-    var formationsFavorites: List<VoeuEntity>? = null
+    var formationsFavorites: List<FormationFavoriteEntity>? = null
 
-    @Column(name = "moyenne_generale", nullable = true)
-    var moyenneGenerale: Float? = null
+    @Type(JsonType::class)
+    @Column(name = "voeux_favoris", nullable = true)
+    var voeuxFavoris: List<VoeuFavoriEntity>? = null
 
     @Type(ListArrayType::class)
     @Column(name = "corbeille_formations", nullable = false)
     var corbeilleFormations: List<String> = emptyList()
 
-    constructor(profilEleve: ProfilEleve.Identifie) : this() {
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this() {
         id = profilEleve.id
         situation = profilEleve.situation
         classe = profilEleve.classe
@@ -84,26 +85,27 @@ class ProfilEleveEntity() {
         centresInterets = profilEleve.centresInterets
         metiersFavoris = profilEleve.metiersFavoris
         communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
-        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuEntity(it) }
-        moyenneGenerale = profilEleve.moyenneGenerale
+        formationsFavorites = profilEleve.formationsFavorites?.map { FormationFavoriteEntity(it) }
+        voeuxFavoris = profilEleve.voeuxFavoris.map { VoeuFavoriEntity(it) }
         corbeilleFormations = profilEleve.corbeilleFormations
     }
 
-    fun toProfilEleve() =
-        ProfilEleve.Identifie(
-            id,
-            situation,
-            classe,
-            idBaccalaureat,
-            specialites,
-            domaines,
-            centresInterets,
-            metiersFavoris,
-            dureeEtudesPrevue,
-            alternance,
-            communesFavorites?.map { it.toCommune() },
-            formationsFavorites?.map { it.toVoeuFormation() },
-            moyenneGenerale,
-            corbeilleFormations,
+    fun toProfilEleve(compteParcoursupLie: Boolean = false) =
+        ProfilEleve.AvecProfilExistant(
+            id = id,
+            situation = situation,
+            classe = classe,
+            baccalaureat = idBaccalaureat,
+            specialites = specialites,
+            domainesInterets = domaines,
+            centresInterets = centresInterets,
+            metiersFavoris = metiersFavoris,
+            dureeEtudesPrevue = dureeEtudesPrevue,
+            alternance = alternance,
+            communesFavorites = communesFavorites?.map { it.toCommune() },
+            formationsFavorites = formationsFavorites?.map { it.toFormationFavorite() },
+            corbeilleFormations = corbeilleFormations,
+            compteParcoursupLie = compteParcoursupLie,
+            voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
         )
 }

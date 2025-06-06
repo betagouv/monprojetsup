@@ -1,0 +1,1 @@
+ALTER TABLE ref_baccalaureat ADD COLUMN id_carte_parcoursup VARCHAR(32) NOT NULL DEFAULT '0';

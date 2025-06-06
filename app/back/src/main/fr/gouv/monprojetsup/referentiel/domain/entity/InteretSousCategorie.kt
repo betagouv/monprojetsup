@@ -8,8 +8,12 @@ data class Interet(
 data class InteretSousCategorie(
     val id: String,
     val nom: String,
+    val description: String?,
     val emoji: String,
-)
+) {
+    val label: Label
+        get() = Label(id, nom)
+}
 
 data class InteretCategorie(
     val id: String,

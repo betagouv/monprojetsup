@@ -1,37 +1,63 @@
+/* eslint-disable sonarjs/redundant-type-aliases */
+
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import {
   type AlternanceÉlève,
+  BacÉlève,
   type ClasseÉlève,
   type DuréeÉtudesPrévueÉlève,
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type components } from "@/types/api-mps";
 
-type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
+type Id = string;
 
-export type CommuneFavorite = Omit<Commune, "codePostal">;
+export type MétierÉlève = Id;
+export type SpécialitéÉlève = Id;
+export type DomaineÉlève = Id;
+export type CentreIntêretÉlève = Id;
+export type FormationMasquéeÉlève = Id;
+export type CommuneÉlève = Omit<Commune, "codePostal">;
+export type FormationÉlève = Id;
 
-export type FormationFavorite = {
-  id: string;
-  niveauAmbition: 1 | 2 | 3 | null;
-  voeux: string[];
-  commentaire: string | null;
+export type ProgressionÉlève = NonNullable<components["schemas"]["ProgressionDTO"]["progression"]> | null;
+
+export type VoeuÉlève = {
+  id: Id;
+  estParcoursup: boolean;
+};
+export type NotePersonnelleFormationÉlève = {
+  idFormation: Id;
+  note: string | null;
+};
+
+export type AmbitionFormationÉlève = {
+  idFormation: Id;
+  ambition: 1 | 2 | 3 | null;
 };
 
 export type Élève = {
+  compteParcoursupAssocié: boolean;
   situation: SituationÉlève | null;
   classe: ClasseÉlève | null;
   bac: BacÉlève | null;
-  spécialités: string[] | null;
-  domaines: string[] | null;
-  centresIntérêts: string[] | null;
-  métiersFavoris: string[] | null;
+  spécialités: SpécialitéÉlève[] | null;
+  domaines: DomaineÉlève[] | null;
+  centresIntérêts: CentreIntêretÉlève[] | null;
+  métiersFavoris: MétierÉlève[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
-  moyenneGénérale: number | null;
-  communesFavorites: CommuneFavorite[] | null;
-  formationsFavorites: FormationFavorite[] | null;
-  formationsMasquées: string[] | null;
+  communesFavorites: CommuneÉlève[] | null;
+  formations: FormationÉlève[] | null;
+  voeuxFavoris: VoeuÉlève[] | null;
+  formationsMasquées: FormationMasquéeÉlève[] | null;
+  notesPersonnelles: NotePersonnelleFormationÉlève[] | null;
+  ambitions: AmbitionFormationÉlève[] | null;
+};
+
+export type ÉlèveEtProgression = {
+  élève: Élève;
+  progression: ProgressionÉlève;
 };
 
 export const situationÉlève = [

@@ -12,33 +12,50 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
   public get = async <O extends object>(
     endpoint: keyof paths,
     paramètresDeRequête?: URLSearchParams,
-  ): Promise<O | undefined> => {
+  ): Promise<O | Error> => {
+    const jwt = this._récupérerJWT();
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : {};
     return await this._httpClient.récupérer<O>({
       endpoint: paramètresDeRequête
         ? `${this._apiBaseUrl}${endpoint}?${paramètresDeRequête.toString()}`
         : `${this._apiBaseUrl}${endpoint}`,
       méthode: "GET",
-      headers: {
-        authorization: `Bearer ${this._récupérerJWT()}`,
-      },
+      headers,
     });
   };
 
-  public post = async <O extends object>(endpoint: keyof paths, body: object): Promise<O | undefined> => {
+  public post = async <O extends object>(endpoint: keyof paths, body: object): Promise<O | Error> => {
+    const jwt = this._récupérerJWT();
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : {};
     return await this._httpClient.récupérer<O>({
       endpoint: `${this._apiBaseUrl}${endpoint}`,
       méthode: "POST",
       body,
-      headers: {
-        authorization: `Bearer ${this._récupérerJWT()}`,
-      },
+      headers,
     });
   };
 
-  private _récupérerJWT = (): string => {
-    const sessionStorageOIDC = sessionStorage.getItem(
-      `oidc.user:${environnement.VITE_KEYCLOAK_ROYAUME_URL}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
-    );
+  public estAuthentifié(): boolean {
+    return this._récupérerJWT() !== "";
+  }
+
+  private static readonly _tokenSessionStorageKey = () =>
+    `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`;
+
+  public static setNonAuthentifié() {
+    sessionStorage.removeItem(MpsApiHttpClient._tokenSessionStorageKey());
+  }
+
+  private readonly _récupérerJWT = (): string => {
+    const sessionStorageOIDC = sessionStorage.getItem(MpsApiHttpClient._tokenSessionStorageKey());
 
     if (!sessionStorageOIDC) return "";
 

@@ -25,6 +25,7 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
             id = "Professionnel",
             nom = "Série Pro",
             idExterne = "P",
+            idCarteParcoursup = "3",
         )
 
     private val bacGeneral =
@@ -32,6 +33,7 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
             id = "Général",
             nom = "Série Générale",
             idExterne = "Générale",
+            idCarteParcoursup = "1",
         )
 
     @Nested

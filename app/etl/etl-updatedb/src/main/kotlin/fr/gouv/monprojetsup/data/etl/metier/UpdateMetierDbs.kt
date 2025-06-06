@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -23,7 +24,13 @@ class UpdateMetierDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateMetierDbs::class.java.simpleName)
 
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
+
     fun update() {
+        if(minimalTestDataSet) {
+            batchUpdate.clearEntities(MetierEntity::class.simpleName!!)
+        }
         updateMetierDb()
     }
 
@@ -41,14 +48,12 @@ class UpdateMetierDbs(
                     if (label != null) {
                         entity.id = metierId
                         entity.label = label
-                        val descriptifSansMetiersAssocies = descriptifs.getDescriptifGeneralFront(metierId)
-                        val autresMetiers = metiersAssocies[metierId].orEmpty()
-                        if (autresMetiers.isNotEmpty()) {
-                            entity.descriptifGeneral =
-                                descriptifSansMetiersAssocies + "\n\nMétiers associés :" + autresMetiers.joinToString(", ")
-                        } else {
-                            entity.descriptifGeneral = descriptifSansMetiersAssocies
-                        }
+                        entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(metierId)
+
+                        val motsCles = arrayListOf(label)
+                        motsCles.addAll(metiersAssocies[metierId].orEmpty())
+                        entity.motsCles = motsCles
+
                         val liensMetier = liens[metierId]
                         if (liensMetier != null) {
                             entity.liens.addAll(liensMetier.map { LienEntity(it.label, it.uri) })

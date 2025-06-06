@@ -1,0 +1,7 @@
+**secret**
+**.env.local**
+*.log
+.git**
+.idea**
+**target**
+**iml**

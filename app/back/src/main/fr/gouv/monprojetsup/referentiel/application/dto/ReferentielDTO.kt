@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.referentiel.application.dto
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat.PourcentagesMoyenne
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -27,7 +28,7 @@ data class ReferentielDTO(
         baccalaureatsAvecLeurSpecialites =
             referentiel.baccalaureatsAvecLeursSpecialites.map {
                 BaccalaureatAvecSesSpecialitesDTO(
-                    baccalaureat = BaccalaureatDTO(it.key),
+                    baccalaureat = BaccalaureatRefDTO(it.key),
                     specialites = it.value.map { specialite -> SpecialitesDTO(specialite) },
                 )
             },
@@ -48,8 +49,20 @@ data class ReferentielDTO(
         admissionsParcoursup = AdmissionsParcoursupDTO(referentiel.admissionsParcoursup),
     )
 
+    data class BaccalaureatRefDTO(
+        val id: String,
+        val nom: String,
+        val idCarteParcoursup: String,
+    ) {
+        constructor(baccalaureat: Baccalaureat) : this(
+            id = baccalaureat.id,
+            nom = baccalaureat.nom,
+            idCarteParcoursup = baccalaureat.idCarteParcoursup,
+        )
+    }
+
     data class BaccalaureatAvecSesSpecialitesDTO(
-        val baccalaureat: BaccalaureatDTO,
+        val baccalaureat: BaccalaureatRefDTO,
         val specialites: List<SpecialitesDTO>,
     )
 
@@ -73,11 +86,11 @@ data class ReferentielDTO(
         )
 
         data class PourcentagesPourChaqueMoyenneParBaccalaureatDTO(
-            val baccalaureat: BaccalaureatDTO,
+            val baccalaureat: BaccalaureatRefDTO,
             val pourcentages: List<PourcentagesMoyenneDTO>,
         ) {
             constructor(pourcentagesPourChaqueMoyenneParBaccalaureat: PourcentagesPourChaqueMoyenneParBaccalaureat) : this(
-                baccalaureat = BaccalaureatDTO(pourcentagesPourChaqueMoyenneParBaccalaureat.baccalaureat),
+                baccalaureat = BaccalaureatRefDTO(pourcentagesPourChaqueMoyenneParBaccalaureat.baccalaureat),
                 pourcentages = pourcentagesPourChaqueMoyenneParBaccalaureat.pourcentages.map { PourcentagesMoyenneDTO(it) },
             )
 

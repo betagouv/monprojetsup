@@ -1,20 +1,12 @@
-import { type MétiersFormProps, type SituationMétiersÉlève } from "./MétiersForm.interface";
+import { type MétiersFormProps } from "./MétiersForm.interface";
 import useMétiersForm from "./useMétiersForm";
-import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
-import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
-import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import MaSélectionMétiers from "@/features/métier/ui/SélectionMétiersFavoris/MaSélectionMétiers/MaSélectionMétiers";
+import RechercheMétiers from "@/features/métier/ui/SélectionMétiersFavoris/RechercheMétiers/RechercheMétiers";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 
 const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: MétiersFormProps) => {
-  const {
-    mettreÀJourÉlève,
-    situationMétiers,
-    auChangementDesMétiersSélectionnés,
-    métiersSuggérés,
-    métiersSélectionnésParDéfaut,
-    àLaRechercheDUnMétier,
-    rechercheMétiersEnCours,
-  } = useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès });
+  const { mettreÀJourÉlève, situationMétiers } = useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
   return (
     <form
@@ -22,27 +14,19 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
       noValidate
       onSubmit={mettreÀJourÉlève}
     >
-      <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) => situationMétiers.auChangement(valeur as SituationMétiersÉlève)}
-        description={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
-        légende={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
+      <RadioButtons
+        hintText={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
+        legend={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
         options={situationMétiers.options}
-        status={situationMétiers.status}
+        orientation="horizontal"
+        state={situationMétiers.status.type}
+        stateRelatedMessage={situationMétiers.status.message}
       />
-      {situationMétiers.valeur === "quelques_pistes" && métiersSélectionnésParDéfaut && (
-        <div className="mt-12">
-          <SélecteurMultiple
-            auChangementOptionsSélectionnées={auChangementDesMétiersSélectionnés}
-            description={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.DESCRIPTION}
-            label={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL}
-            nombreDeCaractèreMinimumRecherche={constantes.MÉTIERS.NB_CARACTÈRES_MIN_RECHERCHE}
-            optionsSuggérées={métiersSuggérés}
-            optionsSélectionnéesParDéfaut={métiersSélectionnésParDéfaut}
-            rechercheSuggestionsEnCours={rechercheMétiersEnCours}
-            texteOptionsSélectionnées={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.SÉLECTIONNÉS}
-            àLaRechercheDUneOption={àLaRechercheDUnMétier}
-          />
-        </div>
+      {situationMétiers.optionSélectionnée === "quelques_pistes" && (
+        <fieldset className="mt-12 grid gap-6 border-0 p-0">
+          <RechercheMétiers />
+          <MaSélectionMétiers />
+        </fieldset>
       )}
     </form>
   );

@@ -6,7 +6,7 @@ public record Metiers(
         /*
          * indexed by metiers fl e.g. MET_7776
          */
-        Map<String, MetierIdeoDuSup> metiers
+        Map<String, MetierIdeo> metiers
 ) {
 
 

@@ -4,16 +4,18 @@ export type SituationÉlève = NonNullable<components["schemas"]["ModificationPr
 export type ClasseÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["classe"]>;
 export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["dureeEtudesPrevue"]>;
 export type AlternanceÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["alternance"]>;
+export type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
-export type SpécialitéBac = {
+export type Spécialité = {
   id: string;
   nom: string;
 };
 
 export type Bac = {
-  id: string;
+  id: BacÉlève;
   nom: string;
-  spécialités: SpécialitéBac[];
+  idCarteParcoursup: string;
+  spécialités: Spécialité[];
   statistiquesAdmission: {
     parMoyenneGénérale: Array<{
       moyenne: number;
@@ -25,6 +27,7 @@ export type Bac = {
 export type SousCatégorieCentreIntérêt = {
   id: string;
   nom: string;
+  description: string | null;
   emoji: string;
 };
 
@@ -38,6 +41,7 @@ export type CatégorieCentreIntérêt = {
 export type SousCatégorieDomaineProfessionnel = {
   id: string;
   nom: string;
+  description: string | null;
   emoji: string;
 };
 

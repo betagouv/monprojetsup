@@ -6,5 +6,8 @@ data class FormationCourteDTO(
     val id: String,
     val nom: String,
 ) {
+    @Suppress("unused")
+    private constructor() : this(id = "", nom = "")
+
     constructor(formationCourte: FormationCourte) : this(id = formationCourte.id, nom = formationCourte.nom)
 }

@@ -18,9 +18,11 @@ data class ExplicationFormationPourUnProfilReponseDTO(
 data class ExplicationEtExemplesDTO(
     @JsonProperty(value = "key")
     val cle: String,
+    @JsonProperty(value = "affinity")
+    val affinite: Double?,
     @JsonProperty(value = "explanations")
     val explications: List<APISuggestionExplicationDTO>?,
-    @JsonProperty(value = "examples")
+    @JsonProperty(value = "metiers")
     val exemplesDeMetiersTriesParAffinitesDecroissantes: List<String>?,
 ) {
     fun toExplicationsSuggestion(): ExplicationsSuggestionEtExemplesMetiers {
@@ -63,13 +65,16 @@ data class ExplicationEtExemplesDTO(
                     explications.recupererUniqueValeur {
                         it.typeBaccalaureat != null
                     }?.typeBaccalaureat?.toTypeBaccalaureat(),
-                autoEvaluationMoyenne =
-                    explications.recupererUniqueValeur {
-                        it.moyenneGenerale != null
-                    }?.moyenneGenerale?.toAutoEvaluationMoyenne(),
-                interetsEtDomainesChoisis =
-                    explications.recupererUniqueValeur { it.tags != null }?.tags?.codesInteretsEtDomaines
-                        ?: emptyList(),
+                autoEvaluationMoyenne = null,
+                choix =
+                    explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
+                donneesDeReference =
+                    ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(
+                        details =
+                            explications.flatMap {
+                                it.ref?.toChoixReference() ?: emptyList()
+                            },
+                    ),
                 exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )
         } ?: ExplicationsSuggestionEtExemplesMetiers()
@@ -84,6 +89,8 @@ data class APISuggestionExplicationDTO(
     val apprentissage: APISuggestionExplicationApprentissageDTO?,
     @JsonProperty(value = "tags")
     val tags: APISuggestionExplicationTagShortDTO?,
+    @JsonProperty(value = "ref")
+    val ref: APISuggestionExplicationDonneesReferenceDTO?,
     @JsonProperty(value = "dur")
     val dureeEtude: APISuggestionExplicationDurationDTO?,
     @JsonProperty(value = "simi")
@@ -92,8 +99,6 @@ data class APISuggestionExplicationDTO(
     val autres: APISuggestionExplicationsAutresDTO?,
     @JsonProperty(value = "tbac")
     val typeBaccalaureat: APISuggestionExplicationTypeBacDTO?,
-    @JsonProperty(value = "moygen")
-    val moyenneGenerale: APISuggestionExplicationNotesDTO?,
     @JsonProperty(value = "spec")
     val specialite: APISuggestionExplicationSpecialitesDTO?,
 )
@@ -114,7 +119,7 @@ data class APISuggestionExplicationTypeBacDTO(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationSimilariteDTO(
-    @JsonProperty(value = "fl")
+    @JsonProperty(value = "id")
     val formation: String?,
     @JsonProperty(value = "p")
     val pourcentageSimilitude: Double?,
@@ -141,46 +146,6 @@ data class APISuggestionExplicationSpecialitesDTO(
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class APISuggestionExplicationNotesDTO(
-    @JsonProperty(value = "moy")
-    val moyenneAutoEvalue: Double,
-    @JsonProperty(value = "middle50")
-    val mediane: Mediane,
-    @JsonProperty(value = "bacUtilise")
-    val bacUtilise: String,
-) {
-    fun toAutoEvaluationMoyenne() =
-        ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne(
-            echellonDeLaMoyenneAutoEvalue = moyenneAutoEvalue.toInt(),
-            rangs = mediane.toRangsEchellons(),
-            baccalaureatUtilise = bacUtilise,
-        )
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Mediane(
-    @JsonProperty(value = "rangEch25")
-    val rangEch25: Int,
-    @JsonProperty(value = "rangEch50")
-    val rangEch50: Int,
-    @JsonProperty(value = "rangEch75")
-    val rangEch75: Int,
-    @JsonProperty(value = "rangEch10")
-    val rangEch10: Int,
-    @JsonProperty(value = "rangEch90")
-    val rangEch90: Int,
-) {
-    fun toRangsEchellons() =
-        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-            rangEch25 = rangEch25,
-            rangEch50 = rangEch50,
-            rangEch75 = rangEch75,
-            rangEch10 = rangEch10,
-            rangEch90 = rangEch90,
-        )
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationDurationDTO(
     @JsonProperty(value = "option")
     val choix: String?,
@@ -189,8 +154,49 @@ data class APISuggestionExplicationDurationDTO(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationTagShortDTO(
     @JsonProperty(value = "ns")
-    val codesInteretsEtDomaines: List<String>?,
+    val codesInteretsDomainesMetiers: List<String>?,
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class APISuggestionExplicationDonneesReferenceDTO(
+    @JsonProperty(value = "details")
+    val choixReference: List<APISuggestionExplicationChoixReferenceDTO>?,
+) {
+    fun toChoixReference(): List<ExplicationsSuggestionEtExemplesMetiers.ChoixReference>? {
+        return choixReference?.map {
+            ExplicationsSuggestionEtExemplesMetiers.ChoixReference(
+                id = it.id,
+                score = it.score,
+                side = it.side.toSide(),
+            )
+        }
+    }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class APISuggestionExplicationChoixReferenceDTO(
+    @JsonProperty(value = "item_key")
+    val id: String,
+    @JsonProperty(value = "score")
+    val score: Float,
+    @JsonProperty(value = "side")
+    val side: APISuggestionExplicationChoixReferenceSideDTO,
+)
+
+enum class APISuggestionExplicationChoixReferenceSideDTO {
+    @JsonProperty(value = "positive")
+    POSITIVE,
+
+    @JsonProperty(value = "negative")
+    NEGATIVE, ;
+
+    fun toSide(): ExplicationsSuggestionEtExemplesMetiers.Side {
+        return when (this) {
+            POSITIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.POSITIVE
+            NEGATIVE -> ExplicationsSuggestionEtExemplesMetiers.Side.NEGATIVE
+        }
+    }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationApprentissageDTO(

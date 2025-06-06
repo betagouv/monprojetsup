@@ -36,7 +36,7 @@ public class SuggestionsGenerator {
     private static final boolean ONLY_FORMATIONS = true;
 
     @Value("${profils.experts.mps.path}")
-    private String profilsExpertPath = "profilsExperts.json";
+    private final String profilsExpertPath = "profilsExperts.json";
 
 
 
@@ -62,7 +62,7 @@ public class SuggestionsGenerator {
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(
-                    suggestion -> !Constants.isFiliere(suggestion.fl())
+                    suggestion -> !Constants.isFiliere(suggestion.id())
             ));
         }
 

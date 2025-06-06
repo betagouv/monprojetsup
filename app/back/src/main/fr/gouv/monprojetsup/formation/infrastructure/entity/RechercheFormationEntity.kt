@@ -23,8 +23,8 @@ data class RechercheFormationEntity(
     val labelExactFin: Boolean?,
     @Column(name = "label_exact_milieu", nullable = true)
     val labelExactMilieu: Boolean?,
-    @Column(name = "sequence_presente_label", nullable = true)
-    val sequencePresenteLabel: Boolean?,
+    @Column(name = "label_en_prefix", nullable = true)
+    val labelEnPrefix: Boolean?,
     @Column(name = "pourcentage_label_decoupe", nullable = true)
     val pourcentageLabelDecoupe: Double?,
     @Column(name = "mot_clef", nullable = true)
@@ -37,8 +37,8 @@ data class RechercheFormationEntity(
     val motCleExactFin: Boolean?,
     @Column(name = "mot_cle_exact_milieu", nullable = true)
     val motCleExactMilieu: Boolean?,
-    @Column(name = "sequence_presente_mot_cle", nullable = true)
-    val sequencePresenteMotCle: Boolean?,
+    @Column(name = "mot_cle_en_prefix", nullable = true)
+    val motCleEnPrefix: Boolean?,
     @Column(name = "pourcentage_mot_cle", nullable = true)
     val pourcentageMotCle: Double?,
 ) {
@@ -56,7 +56,7 @@ data class RechercheFormationEntity(
                         motExactPresentDebutPhrase = labelExactDebut!!,
                         motExactPresentFin = labelExactFin!!,
                         motExactMilieu = labelExactMilieu!!,
-                        sequencePresenteMot = sequencePresenteLabel!!,
+                        motEnPrefix = labelEnPrefix!!,
                         pourcentageMot = pourcentageLabelDecoupe!!.toInt(),
                     )
                 },
@@ -68,7 +68,7 @@ data class RechercheFormationEntity(
                         motExactPresentDebutPhrase = motCleExactDebut!!,
                         motExactPresentFin = motCleExactFin!!,
                         motExactMilieu = motCleExactMilieu!!,
-                        sequencePresenteMot = sequencePresenteMotCle!!,
+                        motEnPrefix = motCleEnPrefix!!,
                         pourcentageMot = pourcentageMotCle!!.toInt(),
                     )
                 },

@@ -2,7 +2,7 @@ import { type TitreProps } from "./Titre.interface";
 
 const Titre = ({ children, niveauDeTitre, styleDeTitre }: TitreProps) => {
   const Balise = niveauDeTitre as keyof JSX.IntrinsicElements;
-
+  if (!children || children === "") return null;
   return <Balise className={styleDeTitre ? `fr-${styleDeTitre}` : ""}>{children}</Balise>;
 };
 

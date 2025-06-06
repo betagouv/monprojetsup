@@ -29,7 +29,3 @@ src/tests-e2e/results/
 src/tests-e2e/reports/
 src/blob-report/
 src/playwright/.cache/
-
-/src/scripts/transformation-données/jsonÀTransformer/*.json
-/src/scripts/transformation-données/sqlDeSortie/*.sql
-

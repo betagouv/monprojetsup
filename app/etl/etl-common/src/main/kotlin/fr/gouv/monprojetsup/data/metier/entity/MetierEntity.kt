@@ -26,6 +26,11 @@ class MetierEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "mots_cles", nullable = true)
+    var motsCles: List<String>? = null
+
+
     @Column(nullable = false)
     var obsolete: Boolean = false
 

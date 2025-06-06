@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public record FormationIdeoSimple(
         /*
@@ -52,6 +53,26 @@ public record FormationIdeoSimple(
 
         List<String> enseignements
 ) {
+    public static FormationIdeoSimple setId(FormationIdeoSimple f, String newId) {
+        if(Objects.equals(f.identifiant(), newId)) return f;
+        return new FormationIdeoSimple(
+                f.codeNsf,
+                f.sigleTypeFormation,
+                f.libelleTypeFormation,
+                f.libelleFormationPrincipal,
+                f.sigleFormation,
+                f.duree,
+                f.niveauDeSortieIndicatif,
+                f.codeRncp,
+                f.niveauDeCertification,
+                f.libelleNiveauDeCertification,
+                f.tutelle,
+                f.urlEtIdOnisep.replace(Objects.requireNonNull(f.identifiant()), newId),
+                f.domainesousDomaine,
+                f.enseignements
+        );
+    }
+
     public @Nullable String identifiant() {
         if (urlEtIdOnisep == null) return null;
         int pos = urlEtIdOnisep.lastIndexOf('/');
@@ -64,9 +85,11 @@ public record FormationIdeoSimple(
         return (libelleNiveauDeCertification != null && libelleNiveauDeCertification.toLowerCase().contains("bac +")
                 //|| niveauDeCertification != null && niveauxCertif.contains(niveauDeCertification)
                 || niveauDeSortieIndicatif != null && niveauDeSortieIndicatif.toLowerCase().contains("bac +")
+                || this.libelleFormationPrincipal.contains("BPJEPS")
         );
     }
 
+    @SuppressWarnings("ExtractMethodRecommender")
     public List<String> getMotsCles() {
         List<String> result = new ArrayList<>();
         if (codeNsf != null) result.add("codeNsf" + codeNsf);
@@ -75,11 +98,11 @@ public record FormationIdeoSimple(
         if (libelleTypeFormation != null) result.add(libelleTypeFormation);
         if (libelleFormationPrincipal != null) result.add(libelleFormationPrincipal);
         if (sigleFormation != null) result.add(sigleFormation);
-        if (duree != null) result.add("duree" + duree.replaceAll(" ", "_"));
+        if (duree != null) result.add("duree" + duree.replace(" ", "_"));
         if (domainesousDomaine != null) {
             result.addAll(
                     Arrays.stream(domainesousDomaine
-                            .split("|"))
+                            .split("\\|"))
                             .map(String::trim)
                             .filter(s -> !s.isBlank())
                             .toList()

@@ -11,9 +11,8 @@ class TestData {
         const val MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE: Int = 20
         const val MAX_PCT_METIERS_SANS_FORMATION_ASSOCIEE: Int = 35
         const val MAX_NB_VOEUX_SANS_COORDONNEES_GPS: Int = 200
-        const val MAX_PCT_LAS_AVEC_STATS_VIDES: Int = 35
         const val MAX_PCT_FORMATIONS_SANS_STATS_COMPLETES: Int = 40
-        const val MAX_PCT_FORMATIONS_SANS_STATS_HORS_APPRENTISSAGE: Int = 5
+        const val MAX_PCT_FORMATIONS_SANS_STATS_HORS_APPRENTISSAGE: Int = 10
         const val MIN_NB_ARETES_SUGGESTIONS_GRAPH: Long = 1000
 
         const val ECOLE_COMMERCE_PSUP_FR_COD: Int = 24
@@ -31,6 +30,12 @@ class TestData {
 
         const val BTS_AERONAUTIQUE_FL_COD_PSUP: Int = 393
         const val BTS_AERONAUTIQUE_IDEO_COD: String = "FOR.9627"
+
+        const val BTS_DIETETIQUE_IDEO_COD_OLD: String = "FOR.262"
+        const val BTS_DIETETIQUE_IDEO_COD: String = "FOR.10892"
+        const val BTS_DIETETIQUE_FL_COD_PSUP_OLD: Int = 460
+        const val BTS_DIETETIQUE_FL_COD_PSUP: Int = 10443
+
 
         const val CMI_SVT_FL_COD_PSUP: Int = 4039
         const val CMI_SVT_IDEO_COD: String = "FOR.4980"

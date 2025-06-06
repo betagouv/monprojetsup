@@ -21,13 +21,14 @@ public record Attendus(
 
         val filActives = new HashSet<>(backPsupData.filActives());
         filActives.addAll(backPsupData.las());
+        val tousAttendus = backPsupData.getAttendus();
 
         filActives.forEach(gFlCod -> {
             String key = Constants.gFlCodToMpsId(gFlCod);
 
             val recoPremGeneriques = backPsupData.getRecoPremGeneriques(gFlCod);
             val recoTermGeneriques = backPsupData.getRecoTermGeneriques(gFlCod);
-            val attendus = backPsupData.getAttendus(gFlCod);
+            val attendus = tousAttendus.get(gFlCod);
             boolean takeRecoPrem = (recoPremGeneriques != null
                     && (!recoPremGeneriques.equals(recoTermGeneriques))
                     && !recoPremGeneriques.contains("Pas de données pour cette fili")

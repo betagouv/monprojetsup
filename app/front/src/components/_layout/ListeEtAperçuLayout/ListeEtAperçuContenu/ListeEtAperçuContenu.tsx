@@ -2,15 +2,24 @@ import { type ListeEtAperçuContenuProps } from "./ListeEtAperçuContenu.interfa
 import {
   actionsListeEtAperçuStore,
   afficherBarreLatéraleEnMobileListeEtAperçuStore,
-} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+} from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
 import Bouton from "@/components/Bouton/Bouton";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import { useLocation } from "@tanstack/react-router";
 
 const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
+  const location = useLocation();
+  const forcerMasquageBarreLatérale = location.pathname === "/formation";
+
   const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 
   const afficherContenuPrincipal = () => {
+    if (forcerMasquageBarreLatérale) {
+      return "";
+    }
+
     return afficherBarreLatéraleEnMobile ? "hidden lg:block" : "";
   };
 
@@ -19,15 +28,31 @@ const ListeEtAperçuContenu = ({ children }: ListeEtAperçuContenuProps) => {
       <div
         aria-live="assertive"
         className="pb-12 pt-6 lg:pl-14"
+        id={constantes.ACCESSIBILITÉ.FICHE_ID}
+        tabIndex={-1}
       >
-        <div className="ml-[-1rem] pb-6 lg:hidden">
+        <div className="fr-skiplinks bg-transparent">
+          <Bouton
+            auClic={() =>
+              document
+                .querySelector<HTMLElement>(`#${constantes.ACCESSIBILITÉ.LISTE_CARTES_ID} div[data-selected="true"] a`)
+                ?.focus()
+            }
+            type="button"
+            variante="quinaire"
+          >
+            {i18n.ACCESSIBILITÉ.FOCUS_RÉSULTATS}
+          </Bouton>
+        </div>
+        <div className={forcerMasquageBarreLatérale ? "hidden" : "ml-[-1rem] pb-6 lg:hidden"}>
           <Bouton
             auClic={() => changerAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
             icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
-            label={i18n.COMMUN.BOUTON_AFFICHER_BARRE_LATÉRALE}
             type="button"
             variante="quaternaire"
-          />
+          >
+            {i18n.COMMUN.BOUTON_AFFICHER_BARRE_LATÉRALE}
+          </Bouton>
         </div>
         {children}
       </div>

@@ -6,8 +6,8 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretCategorieJPARepository
-import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretJPARepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretSousCategorieJPARepository
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql
 
 class InteretBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
-    lateinit var interetJPARepository: InteretJPARepository
+    lateinit var entityManager: EntityManager
 
     @Autowired
     lateinit var interetSousCategorieJPARepository: InteretSousCategorieJPARepository
@@ -29,11 +29,11 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        interetBDDRepository = InteretBDDRepository(interetJPARepository, interetSousCategorieJPARepository, interetCategorieJPARepository)
+        interetBDDRepository = InteretBDDRepository(entityManager, interetSousCategorieJPARepository, interetCategorieJPARepository)
     }
 
     @Nested
-    inner class RecupererLesSousCategoriesDInterets {
+    inner class RecupererLesSousCategories {
         @Test
         @Sql("classpath:interet.sql")
         fun `Doit retourner les sous catégories des intérêts reconnus et ignorer ceux inconnus`() {
@@ -50,19 +50,25 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
+            val result = interetBDDRepository.recupererLesSousCategories(ids)
 
             // Then
             val attendu =
-                mapOf(
-                    "T_ROME_326548351" to InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
-                    "T_ROME_934089965" to InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
-                    "T_ROME_1825212206" to
-                        InteretSousCategorie(
-                            id = "linguistique",
-                            nom = "Apprendre de nouvelles langues",
-                            emoji = "\uD83C\uDDEC\uD83C\uDDE7",
-                        ),
+                listOf(
+                    InteretSousCategorie(
+                        id = "voyage",
+                        nom = "Voyager",
+                        emoji = "\uD83D\uDE85",
+                        description =
+                            "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                "organiser des voyages et des séjours.",
+                    ),
+                    InteretSousCategorie(
+                        id = "linguistique",
+                        nom = "Apprendre de nouvelles langues",
+                        emoji = "\uD83C\uDDEC\uD83C\uDDE7",
+                        description = null,
+                    ),
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -74,10 +80,10 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
             val ids = emptyList<String>()
 
             // When
-            val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
+            val result = interetBDDRepository.recupererLesSousCategories(ids)
 
             // Then
-            val attendu = emptyMap<String, InteretSousCategorie>()
+            val attendu = emptyList<InteretSousCategorie>()
             assertThat(result).isEqualTo(attendu)
         }
     }
@@ -138,35 +144,55 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 mapOf(
-                    InteretCategorie(id = "decouvrir_monde", nom = "Découvrir le monde", emoji = "🌎") to
+                    InteretCategorie(
+                        id = "decouvrir_monde",
+                        nom = "Découvrir le monde",
+                        emoji = "🌎",
+                    ) to
                         listOf(
-                            InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "🚅"),
-                            InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues", emoji = "🇬🇧"),
+                            InteretSousCategorie(
+                                id = "voyage",
+                                nom = "Voyager",
+                                emoji = "🚅",
+                                description =
+                                    "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                        "organiser des voyages et des séjours.",
+                            ),
+                            InteretSousCategorie(
+                                id = "linguistique",
+                                nom = "Apprendre de nouvelles langues",
+                                emoji = "🇬🇧",
+                                description = null,
+                            ),
                         ),
-                    InteretCategorie(id = "rechercher", nom = "Découvrir, enquêter et rechercher", emoji = "\uD83E\uDDD0") to emptyList(),
+                    InteretCategorie(
+                        id = "rechercher",
+                        nom = "Découvrir, enquêter et rechercher",
+                        emoji = "\uD83E\uDDD0",
+                    ) to emptyList(),
                 )
             assertThat(result).isEqualTo(attendu)
         }
     }
 
     @Nested
-    inner class VerifierCentresInteretsExistent {
+    inner class RecupererIdsCentresInteretsInexistants {
         @Test
         @Sql("classpath:interet.sql")
-        fun `si toutes les centres d'intérêt existent, renvoyer true`() {
+        fun `si toutes les centres d'intérêt existent, renvoyer la liste vide`() {
             // Given
             val ids = listOf("linguistique", "voyage")
 
             // When
-            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+            val result = interetBDDRepository.recupererIdsCentresInteretsInexistants(ids)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:interet.sql")
-        fun `si un des centres d'intérêt n'existe pas, renvoyer false`() {
+        fun `si un des centres d'intérêt n'existe pas, renvoyer la liste des centres n'existant pas`() {
             // Given
             val ids =
                 listOf(
@@ -177,10 +203,10 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+            val result = interetBDDRepository.recupererIdsCentresInteretsInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("decouvrir_monde", "T_ROME_1825212206"))
         }
     }
 }

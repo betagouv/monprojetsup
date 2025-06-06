@@ -2,8 +2,9 @@ package fr.gouv.monprojetsup.data.model.liens;
 
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,8 +12,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.AVENIRS_FORMATION_SLUG_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS;
 
 public class UrlsUpdater {
@@ -41,7 +44,6 @@ public class UrlsUpdater {
             String finalUri = uri;
             val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(finalUri)).findFirst();
 
-            label = capitalizeFirstLetter(label).replace(".", " ").trim();
             if(firstWithSameUri.isEmpty()) {
                 if (uri.contains("francetravail") && !label.startsWith("France Travail")) {
                     label = PREFIX_FT + label;
@@ -52,7 +54,10 @@ public class UrlsUpdater {
                 }
             }
 
-            label = label.replace(" - en apprentissage", "");
+            label = capitalizeFirstLetter(label).replace(".", " ")
+            .trim();
+            val labelSansApprentissage = label.replace(" - en apprentissage", "");
+
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label, source);
 
             if(firstWithSameUri.isEmpty()) {
@@ -91,13 +96,13 @@ public class UrlsUpdater {
     }
 
     public static @NotNull Map<String, @NotNull List<DescriptifsFormationsMetiers.Link>> updateUrls(
-            @NotNull List<MetierIdeoDuSup> metiers,
-            @NotNull Map<String, @NotNull String> liensIdeoHotline,
-            @NotNull Map<String, @NotNull String> lasToGeneric,
+            @NotNull List<MetierIdeo> metiers,
+            @NotNull Map<String, @NotNull List<String>> mpsKeyToIdeo,
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,
+            @NotNull Map<String, @NotNull String> liensCarte,
             @NotNull List<String> mpsIds,
             @NotNull Map<String, @NotNull String> labels,
-            @NotNull Map<String, @NotNull Collection<String>> liensAIgnorer,
+            @NotNull Map<String, @NotNull String> labelsOriginauxPsup,
             @NotNull Map<String, @NotNull Collection<String>> extraUrls
     ) {
         //metiers
@@ -116,16 +121,17 @@ public class UrlsUpdater {
             metier.urls().forEach(url -> addUrl(metier.ideo(), url.valeur(), url.commentaire(), METIERS_IDEO_DU_SUP, urls));
         });
 
-        val aIgnorer = liensAIgnorer.entrySet().stream()
-                .filter(e -> e.getValue().stream().anyMatch(s -> !s.isBlank()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-
-        for (val entry : liensIdeoHotline.entrySet()) {
-            if(!aIgnorer.contains(entry.getKey())) {
-                addUrl(entry.getKey(), entry.getValue(), labels.getOrDefault(entry.getKey(), entry.getValue()), IDEO_HOTLINE, urls);
-            }
-        }
+        mpsKeyToIdeo.forEach((mpsKey, ideos) -> {
+                    if (ideos.size() < Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
+                        ideos.forEach(ideo -> {
+                            if (labels.containsKey(ideo)) {
+                                val label = labels.get(ideo);
+                                addUrl(mpsKey, AVENIRS_FORMATION_SLUG_PREFIX + ideo, label, "mpsKeyToIdeo", urls);
+                            }
+                        });
+                    }
+                }
+        );
 
         extraUrls.forEach((key, extraLinks) -> {
             val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
@@ -135,12 +141,57 @@ public class UrlsUpdater {
             }
         });
 
-        psupKeytoMpsKey.forEach(
-                (psupKey, mpsKey) -> {
-                    val l = new ArrayList<>(urls.getOrDefault(psupKey, List.of()));
-                    l.forEach(s -> addUrl(mpsKey, s.uri(), s.label(), s.source(), urls));
+        val mpsIdToPsupIds = new HashMap<>(psupKeytoMpsKey.entrySet().stream().collect(
+                Collectors.groupingBy(Map.Entry::getValue,
+                        Collectors.mapping(Map.Entry::getKey,
+                                Collectors.toList()))
+        ));
+        mpsIds.forEach(mpsId -> {
+            val l = new ArrayList<>(mpsIdToPsupIds.computeIfAbsent(mpsId, z -> new ArrayList<>()));
+            l.add(mpsId);
+            mpsIdToPsupIds.put(mpsId, l);
+        });
+
+        mpsIdToPsupIds.forEach(
+                (mpsKey, listpsupKey) -> {
+                    if (labelsOriginauxPsup.containsKey(mpsKey)) {
+                        val label = labelsOriginauxPsup.get(mpsKey);
+                        val l = new ArrayList<>(List.of(label));
+                        if (listpsupKey.size() == 1 && psupKeytoMpsKey.containsKey(mpsKey)) {
+                            l.add(mpsKey + "x");
+                        }
+                        addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(l),
+                                "Voir sur la carte Parcoursup - " + label,
+                                CARTE_PSUP, urls
+                        );
+                    }
+
+                    val psupKeySpecifiques = listpsupKey.stream()
+                            .filter(psupKey -> !psupKey.equals(mpsKey))
+                            .map(psupKey -> Pair.of(psupKey, labels.get(psupKey)))
+                            .filter(p -> p.getRight() != null)
+                            .toList();
+
+                    if (psupKeySpecifiques.size() <= Constants.MAX_NB_LIENS_PSUP_SUR_FICHE_FORMATION) {
+                        psupKeySpecifiques.forEach(p -> {
+                            val psupKey = p.getLeft();
+                            val label = p.getRight();
+                            val searchWords = psupKeytoMpsKey.containsKey(psupKey) ? List.of(label, psupKey + "x") : List.of(label);
+                            addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(searchWords),
+                                    "Où suivre la formation:  " + label,
+                                    CARTE_PSUP, urls
+
+                            );
+                        });
+                    }
+
+                    val urlsCarte = listpsupKey.stream().map(liensCarte::get).filter(Objects::nonNull).distinct().sorted().toList();
+                    if(urlsCarte.size() <= Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
+                        urlsCarte.forEach(uri -> addUrl(mpsKey, uri, "Infos Onisep", "liensCarte", urls));
+                    }
                 }
                 );
+
 
         /* traitement spécifique études de santé */
         addUrl(
@@ -150,41 +201,12 @@ public class UrlsUpdater {
                 LABEL_ARTICLE_PAS_LAS,
                 urls
         );
-        lasToGeneric.forEach((keyLas, keyGeneric) -> {
-            //ajout article études de santé
-            addUrl(
-                    keyLas,
-                    Constants.URL_ARTICLE_PAS_LAS,
-                    LABEL_ARTICLE_PAS_LAS,
-                    LABEL_ARTICLE_PAS_LAS,
-                    urls
-            );
-            urls.getOrDefault(keyGeneric, List.of()).forEach(s ->
-                    addUrl(
-                            keyLas,
-                            s.uri(),
-                            s.label(),
-                            s.source() + LAS_TO_GENERIC, urls
-                    )
-            );
-        });
-
-        val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(
-                Collectors.groupingBy(Map.Entry::getValue,
-                        Collectors.mapping(Map.Entry::getKey,
-                                Collectors.toList()))
-        );
-        mpsIds.forEach(mpsId -> {
-            val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
-            addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "L'offre de formation", CARTE_PSUP, urls);
-        });
 
         return urls;
     }
 
     private static String getLabel(@NotNull Map<String, String> labels, String cleanedupKey, String url) {
-        String label = labels.getOrDefault(cleanedupKey, url);
-        return label;
+        return labels.getOrDefault(cleanedupKey, url);
     }
 
     private UrlsUpdater() {}

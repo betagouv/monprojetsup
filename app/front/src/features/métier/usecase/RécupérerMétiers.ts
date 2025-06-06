@@ -4,7 +4,7 @@ import { type MétierRepository } from "@/features/métier/infrastructure/métie
 export class RécupérerMétiersUseCase {
   public constructor(private readonly _métierRepository: MétierRepository) {}
 
-  public async run(métierIds: Array<Métier["id"]>): Promise<Métier[] | undefined> {
+  public async run(métierIds: Array<Métier["id"]>): Promise<Métier[] | Error> {
     return await this._métierRepository.récupérerPlusieurs(métierIds);
   }
 }

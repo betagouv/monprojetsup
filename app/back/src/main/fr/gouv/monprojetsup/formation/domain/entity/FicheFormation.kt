@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 
@@ -18,6 +19,7 @@ sealed class FicheFormation(
     open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
     open val statistiquesDesAdmis: StatistiquesDesAdmis?,
     open val apprentissage: Boolean,
+    open val informationsSurLesVoeuxEtLeursCommunes: InformationsSurLesVoeuxEtLeursCommunes,
 ) {
     data class FicheFormationSansProfil(
         override val id: String,
@@ -29,10 +31,10 @@ sealed class FicheFormation(
         override val formationsAssociees: List<String>,
         override val liens: List<Lien>,
         override val metiers: List<Metier>,
-        override val voeux: List<Voeu>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         override val apprentissage: Boolean,
+        override val informationsSurLesVoeuxEtLeursCommunes: InformationsSurLesVoeuxEtLeursCommunes,
     ) : FicheFormation(
             id = id,
             nom = nom,
@@ -43,10 +45,11 @@ sealed class FicheFormation(
             formationsAssociees = formationsAssociees,
             liens = liens,
             metiers = metiers,
-            voeux = voeux,
+            voeux = informationsSurLesVoeuxEtLeursCommunes.voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
             apprentissage = apprentissage,
+            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
         )
 
     data class FicheFormationPourProfil(
@@ -60,9 +63,8 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
-        override val voeux: List<Voeu>,
         override val apprentissage: Boolean,
-        val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
+        override val informationsSurLesVoeuxEtLeursCommunes: InformationsSurLesVoeuxEtLeursCommunes,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
         val explications: ExplicationsSuggestionDetaillees?,
@@ -76,21 +78,21 @@ sealed class FicheFormation(
             formationsAssociees = formationsAssociees,
             liens = liens,
             metiers = metiersTriesParAffinites,
-            voeux = voeux,
+            voeux = informationsSurLesVoeuxEtLeursCommunes.voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
             apprentissage = apprentissage,
+            informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
         ) {
-        data class ExplicationAutoEvaluationMoyenne(
-            val baccalaureatUtilise: Baccalaureat,
-            val moyenneAutoEvalue: Float,
-            val basIntervalleNotes: Float,
-            val hautIntervalleNotes: Float,
-        )
-
         data class ExplicationTypeBaccalaureat(
             val baccalaureat: Baccalaureat,
             val pourcentage: Int,
+        )
+
+        data class InformationsSurLesVoeuxEtLeursCommunes(
+            val voeux: List<Voeu>,
+            val communes: List<CommuneCourte>,
+            val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         )
     }
 }

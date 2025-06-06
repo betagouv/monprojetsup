@@ -1,11 +1,13 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
+import Bouton from "@/components/Bouton/Bouton";
 import Carte from "@/components/Carte/Carte";
-import Tag from "@/components/Tag/Tag";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
+import useVoirFormation from "@/features/formation/ui/hooks/CarteFormation/useVoirFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { useQuery } from "@tanstack/react-query";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const CarteFormation = ({
   id,
@@ -14,54 +16,54 @@ const CarteFormation = ({
   affinité,
   communes,
   sélectionnée = false,
-  auClic,
 }: CarteFormationProps) => {
-  const { data: élève } = useQuery(élèveQueryOptions);
-
-  const NOMBRE_MÉTIERS_À_AFFICHER = 3;
-
-  const estUneFormationFavorite = () => {
-    return élève?.formationsFavorites?.some((formationFavorite) => formationFavorite.id === id) ?? false;
-  };
-
-  const estUneFormationMasquée = () => {
-    return élève?.formationsMasquées?.includes(id) ?? false;
-  };
+  const { estFormationFavoritePourÉlève, estFormationMasquéePourÉlève } = useÉlève();
+  const auClicHandler = () => useVoirFormation(id);
 
   return (
-    <Carte
-      auClic={auClic}
-      estFavori={estUneFormationFavorite()}
-      estMasqué={estUneFormationMasquée()}
-      sélectionnée={sélectionnée}
-      titre={titre}
-    >
-      <NombreAffinité affinité={affinité} />
-      <CommunesProposantLaFormation communes={communes} />
-      {métiersAccessibles.length > 0 && (
-        <div className="grid gap-3">
-          <p className="fr-text--sm mb-0 text-[--text-label-grey]">{i18n.CARTE_FORMATION.MÉTIERS_ACCESSIBLES}</p>
-          <ul className="m-0 flex list-none flex-wrap justify-start gap-2 p-0">
-            {métiersAccessibles.slice(0, NOMBRE_MÉTIERS_À_AFFICHER).map((métier) => (
-              <li key={métier.id}>
-                <Tag
-                  libellé={métier.nom}
-                  taille="petit"
-                />
-              </li>
-            ))}
-            {métiersAccessibles.length > NOMBRE_MÉTIERS_À_AFFICHER && (
-              <li>
-                <Tag
-                  libellé={`+${(métiersAccessibles.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}
-                  taille="petit"
-                />
-              </li>
-            )}
-          </ul>
+    <>
+      <Carte
+        auClicHandler={auClicHandler}
+        estFavori={estFormationFavoritePourÉlève(id)}
+        estMasqué={estFormationMasquéePourÉlève(id)}
+        id={id}
+        sélectionnée={sélectionnée}
+        titre={titre}
+      >
+        <NombreAffinité affinité={affinité} />
+        <CommunesProposantLaFormation communes={communes} />
+        {métiersAccessibles.length > 0 && (
+          <div className="grid gap-3">
+            <p className="fr-text--sm mb-0 text-[--text-label-grey]">{i18n.CARTE_FORMATION.MÉTIERS_ACCESSIBLES}</p>
+            <ul className="m-0 flex list-none flex-wrap justify-start gap-2 p-0">
+              {métiersAccessibles.slice(0, constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER).map((métier) => (
+                <li key={métier.id}>
+                  <Tag small>{métier.nom}</Tag>
+                </li>
+              ))}
+              {métiersAccessibles.length > constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER && (
+                <li>
+                  <Tag
+                    small
+                  >{`+${(métiersAccessibles.length - constantes.FORMATIONS.CARTES.NB_MÉTIERS_À_AFFICHER).toString()}`}</Tag>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
+      </Carte>
+      {sélectionnée && (
+        <div className="fr-skiplinks bg-transparent">
+          <Bouton
+            auClic={() => document.querySelector<HTMLElement>(`#${constantes.ACCESSIBILITÉ.FICHE_ID}`)?.focus()}
+            type="button"
+            variante="quinaire"
+          >
+            {i18n.ACCESSIBILITÉ.FOCUS_FICHE}
+          </Bouton>
         </div>
       )}
-    </Carte>
+    </>
   );
 };
 

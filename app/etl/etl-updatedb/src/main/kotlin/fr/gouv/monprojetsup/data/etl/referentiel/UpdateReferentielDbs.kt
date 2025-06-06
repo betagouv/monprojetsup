@@ -86,12 +86,13 @@ class UpdateReferentielDbs(
                     id = baccalaureat.key
                     nom = baccalaureat.label
                     idExterne = baccalaureat.key
+                    idCarteParcoursup = baccalaureat.idCarteParcoursup()
                 }
             })
     }
 
     private fun updateSpecialiteDb() {
-        val specialites = mpsDataPort.getSpecialites().toSpecialites()
+        val specialites = mpsDataPort.getSpecialites().toSpecialitesList()
         batchUpdate.upsertEntities(
             specialites.map { matiere ->
                 SpecialiteEntity().apply {

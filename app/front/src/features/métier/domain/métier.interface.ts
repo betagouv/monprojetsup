@@ -1,4 +1,4 @@
-export type Métier = {
+export type MétierSansFormationsAssociées = {
   id: string;
   nom: string;
   descriptif: string | null;
@@ -6,6 +6,9 @@ export type Métier = {
     intitulé: string;
     url: string;
   }>;
+};
+
+export type Métier = MétierSansFormationsAssociées & {
   formations: Array<{
     id: string;
     nom: string;

@@ -1,11 +1,11 @@
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('Générale', 'Bac Général', 'Générale');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STAV', 'Bac STAV', 'STAV');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('ST2S', 'Bac ST2S', 'ST2S');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STMG', 'Bac STMG', 'STMG');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STI2D', 'Bac STI2D', 'STI2D');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STL', 'Bac STL', 'STL');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('P', 'Bac Professionnel', 'P');
-INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('NC', 'Non-communiqué', 'NC');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('Générale', 'Bac Général', 'Générale', '1');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('STAV', 'Bac STAV', 'STAV', '2');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('ST2S', 'Bac ST2S', 'ST2S', '2');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('STMG', 'Bac STMG', 'STMG','2');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('STI2D', 'Bac STI2D', 'STI2D','2');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('STL', 'Bac STL', 'STL','2');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('P', 'Bac Professionnel', 'P', '3');
+INSERT INTO ref_baccalaureat (id, nom, id_externe, id_carte_parcoursup) VALUES ('NC', 'Non-communiqué', 'NC', '0');
 
 INSERT INTO ref_formation
 VALUES ('fl0001',

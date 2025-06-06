@@ -16,7 +16,7 @@ public record StatsFormation(
         @NotNull Map<@NotNull String, @NotNull Integer> pctAdmisParSpecialite,
 
         //coarseTypeBac --> formationId --> score
-        @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull String, @NotNull Integer>> formationsSimilaires
+        @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull String, @NotNull Long>> formationsSimilaires
 
 ) {
 

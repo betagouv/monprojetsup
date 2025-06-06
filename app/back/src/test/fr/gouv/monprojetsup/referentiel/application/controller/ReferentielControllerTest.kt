@@ -67,8 +67,9 @@ class ReferentielControllerTest(
           "baccalaureatsAvecLeurSpecialites": [
             {
               "baccalaureat": {
-                "id": "Professionnel",
-                "nom": "Série Pro"
+                "id": "P",
+                "nom": "Bac Professionnel",
+                "idCarteParcoursup": "3"
               },
               "specialites": [
                 {
@@ -83,8 +84,9 @@ class ReferentielControllerTest(
             },
             {
               "baccalaureat": {
-                "id": "Général",
-                "nom": "Série Générale"
+                "id": "Générale",
+                "nom": "Bac Général",
+                "idCarteParcoursup": "1"
               },
               "specialites": [
                 {
@@ -109,11 +111,13 @@ class ReferentielControllerTest(
                 {
                   "id": "voyage",
                   "nom": "Voyager",
+                  "description": "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour organiser des voyages et des séjours.",
                   "emoji": "\uD83D\uDE85"
                 },
                 {
                   "id": "linguistique",
                   "nom": "Apprendre de nouvelles langues",
+                  "description": null,
                   "emoji": "\uD83C\uDDEC\uD83C\uDDE7"
                 }
               ]
@@ -138,11 +142,13 @@ class ReferentielControllerTest(
                 {
                   "id": "animaux",
                   "nom": "Soins aux animaux",
+                  "description": "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les animaux, les nourrir et assurer leur bien-être.",
                   "emoji": "\uD83D\uDC2E"
                 },
                 {
                   "id": "agroequipement",
                   "nom": "Agroéquipement",
+                  "description": null,
                   "emoji": "\uD83D\uDE9C"
                 }
               ]
@@ -162,7 +168,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "Générale",
-                  "nom": "Bac Général"
+                  "nom": "Bac Général",
+                  "idCarteParcoursup": "1"
                 },
                 "pourcentages": [
                   {
@@ -330,7 +337,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "NC",
-                  "nom": "Non-communiqué"
+                  "nom": "Non-communiqué",
+                  "idCarteParcoursup": "0"
                 },
                 "pourcentages": [
                   {
@@ -498,7 +506,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "P",
-                  "nom": "Bac Professionnel"
+                  "nom": "Bac Professionnel",
+                  "idCarteParcoursup": "3"
                 },
                 "pourcentages": [
                   {
@@ -666,7 +675,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "STL",
-                  "nom": "Bac STL"
+                  "nom": "Bac STL",
+                  "idCarteParcoursup": "2"
                 },
                 "pourcentages": [
                   {
@@ -841,20 +851,12 @@ class ReferentielControllerTest(
         // Given
         val baccalaureatsAvecSpecialites =
             mapOf(
-                Baccalaureat(
-                    id = "Professionnel",
-                    nom = "Série Pro",
-                    idExterne = "P",
-                ) to
+                baccalaureatPro to
                     listOf(
                         Specialite(id = "4", label = "Sciences de l'ingénieur"),
                         Specialite(id = "1006", label = "Economie et gestion hôtelière"),
                     ),
-                Baccalaureat(
-                    id = "Général",
-                    nom = "Série Générale",
-                    idExterne = "Générale",
-                ) to
+                baccalaureatGeneral to
                     listOf(
                         Specialite(id = "4", label = "Sciences de l'ingénieur"),
                         Specialite(id = "1040", label = "Physique-Chimie et Mathématiques"),
@@ -862,12 +864,32 @@ class ReferentielControllerTest(
             )
         val toutesLesCategoriesEtSousCategoriesDInteret =
             mapOf(
-                InteretCategorie(id = "decouvrir_monde", nom = "Découvrir le monde", emoji = "🌎") to
+                InteretCategorie(
+                    id = "decouvrir_monde",
+                    nom = "Découvrir le monde",
+                    emoji = "🌎",
+                ) to
                     listOf(
-                        InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "🚅"),
-                        InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues", emoji = "🇬🇧"),
+                        InteretSousCategorie(
+                            id = "voyage",
+                            nom = "Voyager",
+                            emoji = "🚅",
+                            description =
+                                "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                    "organiser des voyages et des séjours.",
+                        ),
+                        InteretSousCategorie(
+                            id = "linguistique",
+                            nom = "Apprendre de nouvelles langues",
+                            emoji = "🇬🇧",
+                            description = null,
+                        ),
                     ),
-                InteretCategorie(id = "rechercher", nom = "Découvrir, enquêter et rechercher", emoji = "\uD83E\uDDD0") to emptyList(),
+                InteretCategorie(
+                    id = "rechercher",
+                    nom = "Découvrir, enquêter et rechercher",
+                    emoji = "\uD83E\uDDD0",
+                ) to emptyList(),
             )
         val categorieDomaineAvecLeursDomaines =
             mapOf(
@@ -877,8 +899,15 @@ class ReferentielControllerTest(
                     emoji = "🥕",
                 ) to
                     listOf(
-                        Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                        Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                        Domaine(
+                            id = "animaux",
+                            nom = "Soins aux animaux",
+                            emoji = "\uD83D\uDC2E",
+                            description =
+                                "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les " +
+                                    "animaux, les nourrir et assurer leur bien-être.",
+                        ),
+                        Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                     ),
                 CategorieDomaine(
                     id = "commerce",
@@ -1119,7 +1148,7 @@ class ReferentielControllerTest(
     fun `si connecté avec un élève, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }
@@ -1129,7 +1158,7 @@ class ReferentielControllerTest(
     fun `si connecté avec un enseignant, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }
@@ -1139,15 +1168,16 @@ class ReferentielControllerTest(
     fun `si connecté avec un token, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // When & Then
         mvc.perform(
-            get("/api/v1/referentiel").contentType(MediaType.APPLICATION_JSON),
+            get("/api/v1/public/referentiel").contentType(MediaType.APPLICATION_JSON),
         ).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(contenuReferentiel))
     }
 
     companion object {
-        private val baccalaureatGeneral = Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale")
-        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC")
-        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P")
-        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL")
+        private val baccalaureatGeneral =
+            Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale", idCarteParcoursup = "1")
+        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC", idCarteParcoursup = "0")
+        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P", idCarteParcoursup = "3")
+        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL", idCarteParcoursup = "2")
     }
 }

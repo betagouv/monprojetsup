@@ -30,7 +30,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `doit appeler le client et renvoyer sa réponse`() {
             // Given
-            val profilEleve = mock(ProfilEleve.Identifie::class.java)
+            val profilEleve = mock(ProfilEleve.AvecProfilExistant::class.java)
             val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(suggestionsPourUnProfil)
 

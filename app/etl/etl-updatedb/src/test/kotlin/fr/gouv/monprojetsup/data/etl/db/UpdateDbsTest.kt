@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.db
 
+import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
@@ -16,6 +17,7 @@ import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsEdgesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsVillesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.VilleVoeuxEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import org.assertj.core.api.Assertions.assertThat
@@ -65,12 +67,16 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Tag("resource-intensive-test")
         fun `La table ville voeux est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
-            val villesVoeux = villesVoeuxDb.findAll()
+            val villesVoeux = batchUpdate.getEntities(
+                VilleVoeuxEntity::class.simpleName!!,
+                VilleVoeuxEntity::class.java )
             assertThat(villesVoeux).isNotEmpty
+            assertThat(villesVoeux.filter { it.idVille == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }).isNotEmpty()
         }
 
         @Test
-        fun `Les tables des formations est correctement remplie`() {
+        @Tag("resource-intensive-test")
+        fun `La tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsDb() }
             assertDoesNotThrow { updateFormationDbs.updateVoeuxDb() }
             val formations = formationsdb.findAll()
@@ -81,6 +87,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Une formation ou un voeu qui disparait est marqué obsolete`() {
             //When
             val formation =  FormationEntity().apply {
@@ -96,7 +103,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
                 nom = "label"
                 commune = ""
                 codeCommune = ""
-                idFormation = "obsolete"
                 lat = 0.0
                 lng = 0.0
                 obsolete = false
@@ -111,11 +117,11 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
             val formation2 = formationsdb.findById("obsolete").orElse(null)
             assertNotNull(formation2)
-            assertThat(formation2?.obsolete)
+            assertThat(formation2.obsolete)
 
             val voeu2 = voeuxDb.findById("obsolete").orElse(null)
             assertNotNull(voeu2)
-            assertThat(voeu2?.obsolete)
+            assertThat(voeu2.obsolete)
         }
 
     }
@@ -141,6 +147,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Les table bacs et specialites doivent être non vide`() {
             val bacs = baccalaureatDb.findAll()
             val specialites = specialiteDb.findAll()
@@ -159,12 +166,14 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateMetierDbs: UpdateMetierDbs
 
         @Test
-        fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
+        @Tag("resource-intensive-test")
+        fun `Doit réussir à mettre à jour le référentiel des métiers`() {
             assertDoesNotThrow { updateMetierDbs.update() }
         }
 
     }
 
+    @Tag("resource-intensive-test")
     @Nested
     inner class UpdateFormationsMetiersTest {
 
@@ -182,6 +191,8 @@ class UpdateDbsTest : BDDRepositoryTest() {
             updateMetierDbs.update()
             updateFormationsMetiersDbs.update()
         }
+
+        @Tag("resource-intensive-test")
         @Test
         fun `Doit réussir à mettre à jour les liens formations métiers`() {
             assertDoesNotThrow { update() }
@@ -199,7 +210,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var villesDb: SuggestionsVillesDb
 
         @Autowired
-        lateinit var candidatsDb: SuggestionsCandidatsDb
+        lateinit var paniersVoeuxdb: SuggestionsCandidatsDb
 
         @Autowired
         lateinit var edgesDb: SuggestionsEdgesDb
@@ -211,6 +222,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `La table des villes doit inclure Soulac-sur-Mer`() {
             updateSuggestionsDbs.updateVillesDb()
             val ville1 = villesDb.findById(TestData.VILLE_SOULAC_SUR_MER_INSEE_CODE)
@@ -219,9 +231,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         @Tag("resource-intensive-test")
-        fun `La table des candidats doit être non vide`() {
-            updateSuggestionsDbs.updateCandidatsDb()
-            assertThat(candidatsDb.findAll()).isNotEmpty
+        fun `La table des paniers de voeux doit être non vide`() {
+            updateSuggestionsDbs.updatePaniersVoeuxDb()
+            assertThat(paniersVoeuxdb.findAll()).isNotEmpty
         }
 
         @Test
@@ -229,6 +241,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
             updateSuggestionsDbs.updateEdgesDb()
             assertThat(edgesDb.count()).isGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_SUGGESTIONS_GRAPH)
         }
+
 
     }
 

@@ -3,9 +3,23 @@ import {
   type DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
+export type Voeu = {
+  id: string;
+  nom: string;
+  commune: {
+    nom: string;
+    code: string;
+  };
+};
+
 export type Formation = {
   id: string;
   nom: string;
+};
+
+export type FicheFormation = {
+  id: Formation["id"];
+  nom: Formation["nom"];
   descriptifs: {
     formation: string | null;
     détails: string | null;
@@ -34,20 +48,13 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  établissements: Array<{
-    id: string;
-    nom: string;
+  voeux: Array<Voeu>;
+  voeuxParCommuneFavorites: Array<{
     commune: {
       nom: string;
       code: string;
     };
-  }>;
-  établissementsParCommuneFavorites: Array<{
-    commune: {
-      nom: string;
-      code: string;
-    };
-    établissements: Array<{
+    voeux: Array<{
       id: string;
       nom: string;
       distanceEnKm: number;
@@ -69,22 +76,12 @@ export type Formation = {
       nom: string;
       distanceKm: number;
     }>;
-    formationsSimilaires: Array<{
+    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+    alternance: AlternanceÉlève | null;
+    choixÉlève: Array<{
       id: string;
       nom: string;
     }>;
-    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
-    alternance: AlternanceÉlève | null;
-    intérêtsEtDomainesChoisis: {
-      intérêts: Array<{
-        id: string;
-        nom: string;
-      }>;
-      domaines: Array<{
-        id: string;
-        nom: string;
-      }>;
-    };
     spécialitésChoisies: Array<{
       nom: string;
       pourcentageAdmisAnnéePrécédente: number;

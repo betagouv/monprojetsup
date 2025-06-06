@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.formation.infrastructure.entity.ExpandedLabelEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +61,28 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si L1, renvoyer les formations de license`() {
+    fun `L1 Histoire a les labels l1 et histoire`() {
+        // Given
+        val idL1Histoire = "fl0004"
+
+        // When
+        val resultat =
+            entityManager.createNativeQuery(
+                "SELECT id,label, label_sans_accents,label_decoupe FROM expanded_label where id='$idL1Histoire'",
+                ExpandedLabelEntity::class.java,
+            )
+                .resultList
+                .map { (it as ExpandedLabelEntity).label_decoupe_brut }
+                .toSet()
+
+        // Then
+        val attendu = setOf("histoire", "l1")
+        assertThat(resultat).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si L1, renvoyer les formations de licence`() {
         // Given
         val recherche = "L1"
 
@@ -121,7 +143,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si ist, doit renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
+    fun `Si ist, ne doit pas renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
         // Given
         val recherche = "ist"
 
@@ -129,7 +151,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
-        val attendu =
+        val nonAttendu =
             listOf(
                 FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
                 FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
@@ -138,12 +160,13 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(resultat.map { it.formation }.toSet()).isEqualTo(attendu.toSet())
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(nonAttendu.none { formationsCourteResultat.contains(it) }).isTrue()
     }
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si LAS, doit retourner en premier ceux entre parenthèses`() {
+    fun `Si LAS, doit retourner les prefix et ne pas retourner les formations avec classe`() {
         // Given
         val recherche = "las"
 
@@ -154,7 +177,30 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val attendu =
             listOf(
                 FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
+                FormationCourte(id = "fl0017", nom = "BTS - Laser : technologies et sciences de la lumière"),
+            )
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
+        val nonAttendu =
+            listOf(
                 FormationCourte(id = "fl0012", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
+            )
+        assertThat(nonAttendu.none { formationsCourteResultat.contains(it) }).isTrue()
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si géographie, doit retourner seulement ceux non obsolètes`() {
+        // Given
+        val recherche = "géographie"
+
+        // When
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
         val formationsCourteResultat = resultat.map { it.formation }
         assertThat(formationsCourteResultat).isEqualTo(attendu)

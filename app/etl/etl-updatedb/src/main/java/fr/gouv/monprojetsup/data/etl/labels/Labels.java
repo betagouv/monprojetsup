@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.labels;
 
 import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.model.psup.PsupData;
@@ -8,11 +9,16 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.LAS_MPS_ID;
+import static fr.gouv.monprojetsup.data.Constants.PPPE_MPS_ID;
+import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.includeKey;
 
 public class Labels {
 
@@ -21,7 +27,13 @@ public class Labels {
 
         val result = new HashMap<String, String>();
         /* les noms affichés sur la carte */
-        val nomsFilieres = psupData.nomsFilieres();
+        val nomsFilieres = new HashMap<>(psupData.nomsFilieres());
+
+        Constants.MPS_SPECIFIC_FORMATION_IDS.forEach(id -> {
+            if (!nomsFilieres.containsKey(id)) {
+                nomsFilieres.put(id, "Formation " + id);
+            }
+        });
         val mpsKeyToPsupKeys = psupData.getMpsKeyToPsupKeys();
 
         nomsFilieres.forEach((key, libelle) -> {
@@ -40,8 +52,8 @@ public class Labels {
         psupData.formations().filieres.forEach((gFlCod, filiere) -> {
             String key = Constants.gFlCodToMpsId(gFlCod);
             if (!result.containsKey(key)) {
-                String frLib = psupData.formations().typesMacros.get(filiere.gFrCod);
-                String libelle = filiere.libelle;
+                String frLib = psupData.formations().typesMacros.get(filiere.gFrCod());
+                String libelle = filiere.libelle();
                 if (frLib != null && frLib.startsWith("Licence ")) {
                     libelle = libelle.replace(frLib, "Licence ");
                 }
@@ -50,15 +62,18 @@ public class Labels {
                 result.put(key, libelle);
             }
             //fallback pour les formations qui n'apparaissent qu'en apprentisssage dans psupData.formations().filieres
-            if(filiere.gFlCodeFi > 0) {
-                String keyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi);
+            if(filiere.gFlCodeFi() > 0) {
+                String keyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi());
                 if(!result.containsKey(keyFi)) {
                     String libelle;
-                    var formationSansApprentissage = psupData.formations().formations.get(filiere.gFlCodeFi);
+                    var formationSansApprentissage = psupData.formations().formations.get(filiere.gFlCodeFi());
                     if (formationSansApprentissage != null) {
                         libelle = formationSansApprentissage.libelle;
                     } else {
-                        libelle = filiere.libelle.replace((" en apprentissage"), "");
+                        libelle = filiere.libelle().replace((" en apprentissage"), "").trim();
+                        if(libelle.endsWith("-")) {
+                            libelle = libelle.substring(0, libelle.length() - 1).trim();
+                        }
                     }
                     libelle = getLibelleFront(keyFi, libelle);
                     if (includeKeys) libelle = includeKey(keyFi, libelle);
@@ -77,19 +92,21 @@ public class Labels {
         psupData.formations().formations.forEach((gTaCod, form) -> {
             String key = gTaCodToMpsId(gTaCod);
             String libelle = getLibelleFront(key, form.toString());
-            //if(includeKeys) libelle = includeKey(key, libelle);
             result.put(key, libelle);
         });
-
-        Map<String, String> lasToGeneric = psupData.getLasToGeneric();
-        lasToGeneric.forEach((lasKey, genericKey) -> {
-            if(result.containsKey(genericKey)) {
-                String libelle = result.get(genericKey) + " -  Accès Santé (LAS)";
-                if(includeKeys) libelle = includeKey(lasKey, libelle);
-                result.put(lasKey, libelle);
-            }
-        });
         return result;
+    }
+
+    @NotNull
+    public static Map<String, String> getLabelsOriginauxPsup(@NotNull PsupData psupData) {
+        val result = new HashMap<String, String>();
+
+        psupData.formations().formations.forEach((key, formation) -> result.put(gTaCodToMpsId(key), formation.libelle));
+        psupData.filieres().forEach((key, filiere) -> result.put(Constants.gFlCodToMpsId(key), filiere.libelle()));
+        psupData.formations().typesMacros.forEach((key, libelle) -> result.put(gFrCodToMpsId(key), libelle));
+
+        return result;
+
     }
 
 
@@ -105,49 +122,30 @@ public class Labels {
                 ));
     }
 
-    @NotNull
-    public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData, boolean includeKeys) {
-        val result = new HashMap<String, String>();
-        oniData.metiersIdeo().forEach(metier -> {
-                    String libelle = metier.lib();
-                    if (includeKeys) libelle = includeKey(metier.ideo(), libelle);
-                    result.put(
-                            metier.ideo(),
-                            libelle);
-                    metier.metiersAssocies().forEach(metierAssocie
-                            -> {
-                        String libelleMetierAssocie = metierAssocie.libelle();
-                        if (includeKeys) libelleMetierAssocie = includeKey(metierAssocie.id(), libelleMetierAssocie);
-                        result.put(
-                                cleanup(metierAssocie.id()),
-                                libelleMetierAssocie
-                        );
-                    });
-                }
-        );
-        return result;
-    }
-
     public static Map<String,@NotNull String> getLabels(
             PsupData psupData,
-            OnisepData oniData) {
+            OnisepData oniData,
+            @NotNull List<Specialite> specialites) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, false));
         result.putAll(getFormationsLabels(oniData, false));
-        result.putAll(getMetiersLabels(oniData, false));
+        result.putAll(oniData.getMetiersLabels(false));
         result.putAll(oniData.interets().getLabels(false));
         result.putAll(oniData.getDomainesLabels(false));
+        specialites.forEach(spe -> result.put(spe.idMps(), spe.label()));
         return result;
     }
 
+
     @NotNull
-    public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData) {
+    public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData, @NotNull List<Specialite> specialites) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, true));
         result.putAll(getFormationsLabels(oniData, true));
-        result.putAll(getMetiersLabels(oniData, true));
+        result.putAll(oniData.getMetiersLabels(true));
         result.putAll(oniData.interets().getLabels(true));
         result.putAll(oniData.getDomainesLabels(true));
+        specialites.forEach(spe -> result.put(spe.idMps(), spe.label() + "(" + spe.idMps()+ ")"));
         return result;
 
     }
@@ -160,6 +158,7 @@ public class Labels {
                 libelle
                         .replace(" - Sciences, technologie, santé - ", " - ")
                         .replace("L1", "Licence")
+                        .replace("LP", "Licence Professionnelle")
                         .replace("CPGE", "Classes prépa (CPGE)")
                         .replace("CUPGE", "Classes prépa universitaires (CUPGE)")
                 ;
@@ -167,7 +166,7 @@ public class Labels {
             newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +3)";
         }
         if(newLibelle.contains("EA-BAC5")) {
-            newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +5)";
+            newLibelle = libelle.replace("EA-BAC5", "Ecole ") + " (Bac +5)";
         }
         if(key.equals("fr90")) {
             newLibelle = "Sciences Po / Instituts d'études politiques (IEP)";
@@ -192,6 +191,12 @@ public class Labels {
         }
         if(key.equals("fl271")) {
             newLibelle = "Formations des écoles supérieures d'art (Bac +3)";
+        }
+        if(key.equals(LAS_MPS_ID)) {
+            newLibelle = "Licence option Accès Santé (LAS)";
+        }
+        if(key.equals(PPPE_MPS_ID)) {
+            newLibelle = "Parcours Préparatoire au Professorat des Ecoles (PPPE)";
         }
         return newLibelle;
     }

@@ -3,8 +3,10 @@ package fr.gouv.monprojetsup.metier.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -13,16 +15,18 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.Mockito.only
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
 class MetierBDDRepositoryTest : BDDRepositoryTest() {
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @Autowired
     lateinit var metierJPARepository: MetierJPARepository
+
+    @Autowired
+    lateinit var metierCourtJPARepository: MetierCourtJPARepository
 
     @Autowired
     lateinit var entityManager: EntityManager
@@ -31,14 +35,14 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        metierBDDRepository = MetierBDDRepository(metierJPARepository, entityManager, logger)
+        metierBDDRepository = MetierBDDRepository(metierJPARepository, metierCourtJPARepository, entityManager, logger)
     }
 
     @Nested
     inner class RecupererMetiersDeFormations {
         @Test
         @Sql("classpath:metier.sql")
-        fun `Doit retourner les métiers associés aux formations`() {
+        fun `Doit retourner les métiers associés aux formations sans filtrer les métiers obsolètes`() {
             // Given
             val idsFormations =
                 listOf(
@@ -49,7 +53,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations)
+            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations, true)
 
             // Then
             val attendu =
@@ -120,12 +124,76 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:metier.sql")
+        fun `Doit retourner les métiers associés aux formations en filtrant les métiers obsolètes`() {
+            // Given
+            val idsFormations =
+                listOf(
+                    "fl1",
+                    "fl10419",
+                    "fl250",
+                    "fl660008",
+                )
+
+            // When
+            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations, false)
+
+            // Then
+            val attendu =
+                mapOf(
+                    "fl1" to listOf(),
+                    "fl10419" to
+                        listOf(
+                            Metier(
+                                id = "MET003",
+                                nom = "Architecte",
+                                descriptif =
+                                    "L architecte est un professionnel du bâtiment qui conçoit des projets de construction ou de " +
+                                        "rénovation de bâtiments. Il peut travailler sur des projets de construction de maisons " +
+                                        "individuelles, d immeubles, de bureaux, d écoles, de musées, de centres commerciaux, de " +
+                                        "stades, etc. L architecte peut travailler en agence d architecture, en bureau d études, " +
+                                        "en entreprise de construction ou en collectivité territoriale.",
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/architecte",
+                                        ),
+                                    ),
+                            ),
+                        ),
+                    "fl250" to
+                        listOf(
+                            Metier(
+                                id = "MET003",
+                                nom = "Architecte",
+                                descriptif =
+                                    "L architecte est un professionnel du bâtiment qui conçoit des projets de construction ou de " +
+                                        "rénovation de bâtiments. Il peut travailler sur des projets de construction de maisons " +
+                                        "individuelles, d immeubles, de bureaux, d écoles, de musées, de centres commerciaux, de " +
+                                        "stades, etc. L architecte peut travailler en agence d architecture, en bureau d études, " +
+                                        "en entreprise de construction ou en collectivité territoriale.",
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/architecte",
+                                        ),
+                                    ),
+                            ),
+                        ),
+                    "fl660008" to listOf(),
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
+        }
+
+        @Test
+        @Sql("classpath:metier.sql")
         fun `Si la liste est vide, doit retourner une liste vide`() {
             // Given
             val ids = emptyList<String>()
 
             // When
-            val result = metierBDDRepository.recupererMetiersDeFormations(ids)
+            val result = metierBDDRepository.recupererMetiersDeFormations(ids, true)
 
             // Then
             val attendu = emptyMap<String, Metier>()
@@ -208,7 +276,11 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(logger).should(only()).error("Le métier MET004 n'est pas présent en base")
+            then(logger).should(only()).error(
+                type = "METIER_ABSENT_BDD",
+                message = "Le métier MET004 n'est pas présent en base",
+                parametres = mapOf("metierAbsent" to "MET004"),
+            )
         }
 
         @Test
@@ -291,7 +363,11 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(logger).should(only()).error("Le métier MET004 n'est pas présent en base")
+            then(logger).should(only()).error(
+                type = "METIER_ABSENT_BDD",
+                message = "Le métier MET004 n'est pas présent en base",
+                parametres = mapOf("metierAbsent" to "MET004"),
+            )
         }
 
         @Test
@@ -310,31 +386,75 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierMetiersExistent {
+    inner class RecupererLesMetiersCourts {
         @Test
         @Sql("classpath:metier.sql")
-        fun `si toutes les métiers existent, renvoyer true`() {
+        fun `Doit retourner les métiers reconnus et ignorer ceux inconnus`() {
             // Given
-            val ids = listOf("MET003", "MET002", "MET001")
+            val ids =
+                listOf(
+                    "MET004",
+                    "MET003",
+                    "ci17",
+                    "MET002",
+                    "MET001",
+                    "dom3",
+                )
 
             // When
-            val result = metierBDDRepository.verifierMetiersExistent(ids)
+            val result = metierBDDRepository.recupererLesMetiersCourts(ids)
 
             // Then
-            assertThat(result).isTrue()
+            val attendu =
+                listOf(
+                    MetierCourt(id = "MET001", nom = "Fleuriste"),
+                    MetierCourt(id = "MET002", nom = "Fleuriste événementiel"),
+                    MetierCourt(id = "MET003", nom = "Architecte"),
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
         }
 
         @Test
         @Sql("classpath:metier.sql")
-        fun `si un des métiers n'existent pas, renvoyer false`() {
+        fun `Si la liste est vide, doit retourner une liste vide`() {
+            // Given
+            val ids = emptyList<String>()
+
+            // When
+            val result = metierBDDRepository.recupererLesMetiersCourts(ids)
+
+            // Then
+            val attendu = emptyList<MetierCourt>()
+            assertThat(result).isEqualTo(attendu)
+        }
+    }
+
+    @Nested
+    inner class RecupererIdsMetiersInexistants {
+        @Test
+        @Sql("classpath:metier.sql")
+        fun `si toutes les métiers existent, renvoyer une liste vide`() {
+            // Given
+            val ids = listOf("MET003", "MET002", "MET001")
+
+            // When
+            val result = metierBDDRepository.recupererIdsMetiersInexistants(ids)
+
+            // Then
+            assertThat(result).isEqualTo(emptyList<String>())
+        }
+
+        @Test
+        @Sql("classpath:metier.sql")
+        fun `si un des métiers n'existent pas, renvoyer la liste de ces métiers`() {
             // Given
             val ids = listOf("MET_INCONNU", "MET003", "MET002", "MET001")
 
             // When
-            val result = metierBDDRepository.verifierMetiersExistent(ids)
+            val result = metierBDDRepository.recupererIdsMetiersInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("MET_INCONNU"))
         }
     }
 }

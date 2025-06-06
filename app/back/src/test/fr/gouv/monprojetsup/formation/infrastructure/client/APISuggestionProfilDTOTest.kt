@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.ChoixDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -19,7 +19,7 @@ class APISuggestionProfilDTOTest {
     @ParameterizedTest
     @MethodSource("testsProfileDTO")
     fun `doit créer le ProfilDTO attendu`(
-        entree: ProfilEleve.Identifie,
+        entree: ProfilEleve.AvecProfilExistant,
         dtoAttendu: APISuggestionProfilDTO,
     ) {
         // When
@@ -31,35 +31,34 @@ class APISuggestionProfilDTOTest {
 
     companion object {
         private val unProfil =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "adcf627c-36dd-4df5-897b-159443a6d49c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
-                moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0002"),
+                compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val unProfilDTO =
             APISuggestionProfilDTO(
@@ -82,47 +81,46 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "28",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0002"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_123"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_456"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0002"),
                     ),
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS.jsonValeur,
             )
 
         private val profilEleveSeconde =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
-                moyenneGenerale = 10.5f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001"),
+                compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
@@ -145,32 +143,33 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "21",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0001"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_123"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_456"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0001"),
                     ),
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS.jsonValeur,
             )
         private val profilEleveSecondeSTHR =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
                 baccalaureat = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                 alternance = ChoixAlternance.INDIFFERENT,
-                communesFavorites = listOf(Communes.LYON, Communes.CAEN),
+                communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.CAEN),
                 specialites = listOf("1053", "1055"),
                 centresInterets = emptyList(),
-                moyenneGenerale = 19.5f,
                 metiersFavoris = listOf("MET_001", "MET_004"),
                 formationsFavorites = emptyList(),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
@@ -185,15 +184,15 @@ class APISuggestionProfilDTOTest {
                         "1055",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "39",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_001"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_004"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_001"),
+                        ChoixDTO.FavorisChoixDTO(id = "MET_004"),
                     ),
+                situation = SituationAvanceeProjetSup.AUCUNE_IDEE.jsonValeur,
             )
         private val profilEleveSecondeTMD =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
@@ -203,25 +202,24 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = emptyList(),
                 specialites = emptyList(),
                 centresInterets = listOf("rechercher_experiences", "chiffres_jongler"),
-                moyenneGenerale = null,
                 metiersFavoris = emptyList(),
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0001",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl0005",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta4", "ta5"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
@@ -232,29 +230,30 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = emptyList(),
                 specialites = emptyList(),
                 interets = listOf("rechercher_experiences", "chiffres_jongler"),
-                moyenneGenerale = null,
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0001"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0005"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl0001"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl0005"),
                     ),
+                situation = SituationAvanceeProjetSup.QUELQUES_PISTES.jsonValeur,
             )
         private val profilElevePremiere =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
                 baccalaureat = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
-                communesFavorites = listOf(Communes.LYON, Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.PARIS15EME),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
-                moyenneGenerale = -1.0f,
                 metiersFavoris = emptyList(),
                 formationsFavorites = emptyList(),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
@@ -265,40 +264,39 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = listOf("69123", "75115"),
                 specialites = listOf("1045"),
                 interets = emptyList(),
-                moyenneGenerale = null,
                 choix = emptyList(),
+                situation = SituationAvanceeProjetSup.AUCUNE_IDEE.jsonValeur,
             )
 
         private val profilEleveTerminal =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 baccalaureat = "NC",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = null,
-                moyenneGenerale = 4.9f,
                 metiersFavoris = null,
                 formationsFavorites =
                     listOf(
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
-                        VoeuFormation(
+                        FormationFavorite(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            voeuxChoisis = listOf("ta1", "ta2"),
-                            priseDeNote = "Mon voeu préféré",
+                            priseDeNote = "Ma formation préférée",
                         ),
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0012"),
+                compteParcoursupLie = true,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTOTerminal =
             APISuggestionProfilDTO(
@@ -313,16 +311,16 @@ class APISuggestionProfilDTOTest {
                         "mat1049",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "9",
                 choix =
                     listOf(
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0012"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl1234"),
+                        ChoixDTO.FavorisChoixDTO(id = "fl5678"),
+                        ChoixDTO.CorbeilleChoixDTO(id = "fl0012"),
                     ),
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS.jsonValeur,
             )
         private val profilEleveNull =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "3e72892b-b6bb-4d5e-b349-81c2adfd292b",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = null,
@@ -332,11 +330,12 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = null,
                 specialites = null,
                 centresInterets = null,
-                moyenneGenerale = null,
                 metiersFavoris = null,
                 formationsFavorites = null,
                 domainesInterets = null,
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
+                voeuxFavoris = emptyList(),
             )
         private val profilDTONull =
             APISuggestionProfilDTO(
@@ -347,8 +346,8 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = null,
                 specialites = null,
                 interets = emptyList(),
-                moyenneGenerale = null,
                 choix = emptyList(),
+                situation = SituationAvanceeProjetSup.QUELQUES_PISTES.jsonValeur,
             )
 
         @JvmStatic

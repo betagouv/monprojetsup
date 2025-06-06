@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 
 class StatistiquesDesAdmisPourFormationsServiceTest {
     @Mock
@@ -25,14 +25,14 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
     lateinit var statistiquesDesAdmisBuilder: StatistiquesDesAdmisBuilder
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var moyenneGeneraleDesAdmisService: StatistiquesDesAdmisPourFormationsService
 
     private val frequencesCumulees =
         mapOf(
-            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale") to
+            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -75,7 +75,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     6670, // 19 - 19,5
                     6677, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG") to
+            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -118,7 +118,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     15, // 19 - 19,5
                     15, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D") to
+            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -263,7 +263,11 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     "fl0004" to null,
                 ),
             )
-            then(logger).should().warn("Les formations suivantes n'ont pas de statistiques : [fl0004]")
+            then(logger).should().warn(
+                type = "FORMATION_SANS_STATISTIQUE",
+                message = "Les formations suivantes n'ont pas de statistiques : [fl0004]",
+                mapOf("formationsSansStatistiques" to listOf("fl0004")),
+            )
         }
     }
 }

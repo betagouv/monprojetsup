@@ -36,7 +36,7 @@ public record GrilleAnalyse(
                 CEN_INT_FIELD, "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires"
         );
     }
-    public static List<Pair<String, String>> labelsFront = List.of(
+    public static final List<Pair<String, String>> labelsFront = List.of(
             Pair.of(RES_ACA_FIELD,  "Résultats académiques"),
             Pair.of(COM_ACA_FIELD,  "Compétences académiques"),
             Pair.of(SAV_ETR_FIELD,  "Savoir-être"),
@@ -44,37 +44,4 @@ public record GrilleAnalyse(
             Pair.of(CEN_INT_FIELD,  "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires")
     );
 
-    /*
-            {
-          "TABLE_NAME": "C_JUR_ADM",
-          "COLUMN_NAME": "C_JA_CGV_RES_ACA_PRC",
-          "COMMENTS": "Pourcentage (en valeur entière) de prise en compte du criètres, saisi par l\u0027utilisateur en charge du paramétrage et cela au niveau de chaque jury",
-          "ORIGIN_CON_ID": "0"
-        },
-        {
-          "TABLE_NAME": "C_JUR_ADM",
-          "COLUMN_NAME": "C_JA_CGV_COM_ACA_PRC",
-          "COMMENTS": "Pourcentage (en valeur entière) de prise en compte du criètres, saisi par l\u0027utilisateur en charge du paramétrage et cela au niveau de chaque jury",
-          "ORIGIN_CON_ID": "0"
-        },
-        {
-          "TABLE_NAME": "C_JUR_ADM",
-          "COLUMN_NAME": "C_JA_CGV_SAV_ETR_PRC",
-          "COMMENTS": "Pourcentage (en valeur entière) de prise en compte du criètres, saisi par l\u0027utilisateur en charge du paramétrage et cela au niveau de chaque jury",
-          "ORIGIN_CON_ID": "0"
-        },
-        {
-          "TABLE_NAME": "C_JUR_ADM",
-          "COLUMN_NAME": "C_JA_CGV_MOT_CON_PRC",
-          "COMMENTS": "Pourcentage (en valeur entière) de prise en compte du criètres, saisi par l\u0027utilisateur en charge du paramétrage et cela au niveau de chaque jury",
-          "ORIGIN_CON_ID": "0"
-        },
-        {
-          "TABLE_NAME": "C_JUR_ADM",
-          "COLUMN_NAME": "C_JA_CGV_ACT_CEN_INT_PRC",
-          "COMMENTS": "Pourcentage (en valeur entière) de prise en compte du criètres, saisi par l\u0027utilisateur en charge du paramétrage et cela au niveau de chaque jury",
-          "ORIGIN_CON_ID": "0"
-        }
-
-     */
 }

@@ -1,65 +1,153 @@
 import {
-  type RécupérerFormationsRéponseHTTP,
+  LiensFormationRéponseHTTP,
+  type RécupérerFichesFormationsRéponseHTTP,
+  RécupérerFormationsRéponseHTTP,
   type RécupérerSuggestionsFormationsRéponseHTTP,
 } from "./formationHttpRepository.interface";
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { dépendances } from "@/configuration/dépendances/dépendances";
+import { type Élève } from "@/features/élève/domain/élève.interface";
+import { type FicheFormation, Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
+import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
+import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
+import { components } from "@/types/api-mps";
+
+type ProfilÉlèveHTTP = components["schemas"]["ProfilDTO"];
 
 export class formationHttpRepository implements FormationRepository {
-  private _ENDPOINT = "/api/v1/formations" as const;
+  private _ENDPOINT = "/api/v1/public/formations" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
-  public async récupérer(formationId: string): Promise<Formation | undefined> {
-    const formations = await this.récupérerPlusieurs([formationId]);
+  public async récupérerUneFiche(formationId: string): Promise<FicheFormation | Error> {
+    const réponse = await this.récupérerPlusieursFiches([formationId]);
 
-    return formations?.[0];
-  }
-
-  public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | undefined> {
-    const paramètresDeRequête = new URLSearchParams();
-
-    for (const formationId of formationIds) {
-      paramètresDeRequête.append("ids", formationId);
+    if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
+      return new RessourceNonTrouvéeErreur();
     }
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
-      this._ENDPOINT,
-      paramètresDeRequête,
-    );
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
-    if (!réponse) return undefined;
-
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse?.[0];
   }
 
-  public async rechercher(recherche: string): Promise<Formation[] | undefined> {
-    const paramètresDeRequête = new URLSearchParams();
-    paramètresDeRequête.set("recherche", recherche);
+  public async récupérerPlusieursFiches(formationIds: string[]): Promise<FicheFormation[] | Error> {
+    const body = {
+      ids: formationIds,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFichesFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/fiches`,
+      body,
+    );
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
+  }
+
+  public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | Error> {
+    const body = {
+      ids: formationIds,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
+
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFormationsRéponseHTTP>(this._ENDPOINT, body);
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse.formations.map((formation) => this._mapperFormationVersLeDomaine(formation));
+  }
+
+  public async rechercherFichesFormations(recherche: string): Promise<FicheFormation[] | Error> {
+    const body = {
+      recherche,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
+
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFichesFormationsRéponseHTTP>(
       `${this._ENDPOINT}/recherche/detaillee`,
-      paramètresDeRequête,
+      body,
     );
 
-    if (!réponse) return undefined;
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
   }
 
-  public async suggérer(): Promise<Formation[] | undefined> {
-    const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
+  public async rechercherFormations(recherche: string): Promise<Formation[] | Error> {
+    const body = {
+      recherche,
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
+
+    const réponse = await this._mpsApiHttpClient.post<RécupérerFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/recherche/succincte`,
+      body,
+    );
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse.formations.map((formation) => this._mapperFormationVersLeDomaine(formation));
+  }
+
+  public async suggérer(): Promise<FicheFormation[] | Error> {
+    const body = {
+      profil: this._récupérerProfilLocal(),
+      numeroDePage: 1,
+    };
+
+    const réponse = await this._mpsApiHttpClient.post<RécupérerSuggestionsFormationsRéponseHTTP>(
       `${this._ENDPOINT}/suggestions`,
+      body,
     );
 
-    if (!réponse) return undefined;
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
-    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+    return réponse.formations.map((formation) => this._mapperFicheFormationVersLeDomaine(formation));
   }
 
-  private _mapperVersLeDomaine(formationHttp: RécupérerFormationsRéponseHTTP["formations"][number]): Formation {
-    const regexLienParcoursSup = /\/\/dossier\.parcoursup\.fr/u;
+  private _mapperFormationVersLeDomaine(
+    formationHttp: RécupérerFormationsRéponseHTTP["formations"][number],
+  ): Formation {
+    return {
+      id: formationHttp.id,
+      nom: formationHttp.nom,
+    };
+  }
+
+  private _mapperFicheFormationVersLeDomaine(
+    formationHttp: RécupérerFichesFormationsRéponseHTTP["formations"][number],
+  ): FicheFormation {
+    const lienParcourSup = formationHttp.formation.liens.find((lien) => /Parcoursup/u.exec(lien.nom));
+    const lienParcourSupAvecCommunesFavorites = lienParcourSup
+      ? {
+          nom: lienParcourSup.nom,
+          url: this._générerLeLienParcourSupAvecCommunesFavorites(
+            lienParcourSup.url,
+            formationHttp.formation.communesFavoritesAvecLeursVoeux,
+          ),
+        }
+      : null;
+
     return {
       id: formationHttp.formation.id,
       nom: formationHttp.formation.nom,
@@ -70,8 +158,8 @@ export class formationHttpRepository implements FormationRepository {
         conseils: formationHttp.formation.descriptifConseils ?? null,
       },
       estEnAlternance: formationHttp.formation.apprentissage,
-      lienParcoursSup: formationHttp.formation.liens.find((lien) => regexLienParcoursSup.exec(lien.url))?.url ?? null,
-      liens: formationHttp.formation.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
+      lienParcoursSup: lienParcourSupAvecCommunesFavorites?.url ?? null,
+      liens: this._mapperLiensVersLeDomaine(formationHttp.formation.liens, lienParcourSupAvecCommunesFavorites),
       admis: {
         moyenneGénérale: {
           idBac: formationHttp.formation.moyenneGeneraleDesAdmis?.baccalaureat?.id ?? null,
@@ -101,37 +189,37 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
-      établissements: formationHttp.formation.voeux.map((établissement) => ({
-        id: établissement.id,
-        nom: établissement.nom,
-        commune: { nom: établissement.commune.nom, code: établissement.commune.codeInsee },
+      voeux: formationHttp.formation.voeux.map((voeu) => ({
+        id: voeu.id,
+        nom: voeu.nom,
+        commune: { nom: voeu.commune.nom, code: voeu.commune.codeInsee },
       })),
-      établissementsParCommuneFavorites: formationHttp.formation.communesFavoritesAvecLeursVoeux.map((commune) => ({
+      voeuxParCommuneFavorites: formationHttp.formation.communesFavoritesAvecLeursVoeux.map((commune) => ({
         commune: {
           code: commune.commune.codeInsee,
           nom: commune.commune.nom,
         },
-        établissements: commune.voeuxAvecDistance.map((établissement) => ({
-          id: établissement.voeu.id,
-          nom: établissement.voeu.nom,
-          distanceEnKm: établissement.distanceKm,
+        voeux: commune.voeuxAvecDistance.map((voeu) => ({
+          id: voeu.voeu.id,
+          nom: voeu.voeu.nom,
+          distanceEnKm: voeu.distanceKm,
         })),
       })),
-      communesProposantLaFormation: this._extraireCommunesDesÉtablissements(formationHttp.formation.voeux),
+      communesProposantLaFormation: formationHttp.formation.communes.map((commune) => commune.nom),
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
         nom: `${métier.nom[0].toUpperCase()}${métier.nom.slice(1)}`,
         descriptif: métier.descriptif ?? null,
         liens: métier.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       })),
-      explications: this._mapperLesExplications(formationHttp.explications),
+      explications: this._mapperExplicationsVersLeDomaine(formationHttp.explications),
       affinité: this._calculerNombrePointsAffinité(formationHttp.explications),
     };
   }
 
-  private _mapperLesExplications = (
-    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
-  ): Formation["explications"] => {
+  private _mapperExplicationsVersLeDomaine = (
+    explications: RécupérerFichesFormationsRéponseHTTP["formations"][number]["explications"],
+  ): FicheFormation["explications"] => {
     if (!explications) {
       return null;
     }
@@ -142,25 +230,13 @@ export class formationHttpRepository implements FormationRepository {
           nom: commune.nomVille,
           distanceKm: commune.distanceKm,
         })) ?? [],
-      formationsSimilaires:
-        explications.formationsSimilaires.map((formation) => ({
-          id: formation.id,
-          nom: formation.nom,
-        })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      intérêtsEtDomainesChoisis: {
-        intérêts:
-          explications.interetsEtDomainesChoisis?.interets.map((intérêt) => ({
-            id: intérêt.id,
-            nom: intérêt.nom,
-          })) ?? [],
-        domaines:
-          explications.interetsEtDomainesChoisis?.domaines.map((domaine) => ({
-            id: domaine.id,
-            nom: domaine.nom,
-          })) ?? [],
-      },
+      choixÉlève:
+        explications.choixEleve?.map((choix) => ({
+          id: choix.id,
+          nom: choix.nom,
+        })) ?? [],
       spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
         nom: spécialité.nomSpecialite,
         pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
@@ -172,21 +248,13 @@ export class formationHttpRepository implements FormationRepository {
             pourcentageAdmisAnnéePrécédente: explications.typeBaccalaureat?.pourcentage,
           }
         : null,
-      autoEvaluationMoyenne: explications.autoEvaluationMoyenne
-        ? {
-            moyenne: explications.autoEvaluationMoyenne.moyenne,
-            intervalBas: explications.autoEvaluationMoyenne.basIntervalleNotes,
-            intervalHaut: explications.autoEvaluationMoyenne.hautIntervalleNotes,
-            idBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.id,
-            nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
-          }
-        : null,
       explicationsCalcul: explications.detailsCalculScore?.details ?? null,
+      autoEvaluationMoyenne: null,
     };
   };
 
   private _calculerNombrePointsAffinité = (
-    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
+    explications: RécupérerFichesFormationsRéponseHTTP["formations"][number]["explications"],
   ): number => {
     if (!explications) {
       return 0;
@@ -194,15 +262,11 @@ export class formationHttpRepository implements FormationRepository {
 
     const conditionsDeValidationExplication = [
       explications.geographique.length > 0,
-      explications.formationsSimilaires.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.interetsEtDomainesChoisis &&
-        (explications.interetsEtDomainesChoisis.domaines.length > 0 ||
-          explications.interetsEtDomainesChoisis.interets.length > 0),
+      explications.choixEleve && explications.choixEleve.length > 0,
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
-      explications.autoEvaluationMoyenne,
     ];
 
     let points = 0;
@@ -216,10 +280,122 @@ export class formationHttpRepository implements FormationRepository {
     return points;
   };
 
-  private _extraireCommunesDesÉtablissements(
-    établissements: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["voeux"],
-  ): string[] {
-    const nomsCommunes = établissements.map((établissement) => établissement.commune.nom);
-    return [...new Set(nomsCommunes)];
+  private _ajouterDesIdsVoeuxÀUrlParcourSup(voeuxIds: string[], lien: string) {
+    const lienParsé = new URL(lien);
+    const paramètresDeRecherche = new URLSearchParams(lienParsé.search);
+    paramètresDeRecherche.set("center_on_interests", voeuxIds.join(","));
+
+    return `${lienParsé.origin}${lienParsé.pathname}?${decodeURIComponent(paramètresDeRecherche.toString())}`;
+  }
+
+  private _générerLeLienParcourSupAvecCommunesFavorites(
+    lien: string,
+    voeuxParCommuneFavorites: RécupérerFichesFormationsRéponseHTTP["formations"][number]["formation"]["communesFavoritesAvecLeursVoeux"],
+  ): string {
+    const uneCommuneFavorite = voeuxParCommuneFavorites.length === 1;
+    const plusieursCommunesFavorites = voeuxParCommuneFavorites.length > 1;
+
+    if (uneCommuneFavorite) {
+      const voeuxDeLaCommune = voeuxParCommuneFavorites[0].voeuxAvecDistance;
+
+      const pasDeVoeuxÀProximitéCommune = voeuxDeLaCommune.length === 0;
+      const unVoeuÀProximitéCommune = voeuxDeLaCommune.length === 1;
+
+      if (pasDeVoeuxÀProximitéCommune) return lien;
+
+      const idVoeuLePlusProcheDeLaCommune = voeuxDeLaCommune[0]?.voeu.id;
+      const idVoeuLePlusLoinDeLaCommune = voeuxDeLaCommune?.[voeuxDeLaCommune.length - 1]?.voeu.id;
+      if (unVoeuÀProximitéCommune) return this._ajouterDesIdsVoeuxÀUrlParcourSup([idVoeuLePlusProcheDeLaCommune], lien);
+
+      return this._ajouterDesIdsVoeuxÀUrlParcourSup([idVoeuLePlusProcheDeLaCommune, idVoeuLePlusLoinDeLaCommune], lien);
+    } else if (plusieursCommunesFavorites) {
+      const communesAvecAuMoinsUnVoeu = voeuxParCommuneFavorites.filter((voeu) => voeu.voeuxAvecDistance.length > 0);
+      const aucuneCommuneAvecVoeu = communesAvecAuMoinsUnVoeu.length === 0;
+      const uneCommuneAvecVoeu = communesAvecAuMoinsUnVoeu.length === 1;
+
+      if (aucuneCommuneAvecVoeu) {
+        return lien;
+      }
+
+      if (uneCommuneAvecVoeu) {
+        const voeuxDeLaCommune = communesAvecAuMoinsUnVoeu[0].voeuxAvecDistance;
+        const unVoeuÀProximitéCommune = voeuxDeLaCommune.length === 1;
+        const idVoeuLePlusProcheDeLaCommune = voeuxDeLaCommune[0]?.voeu.id;
+        const idVoeuLePlusLoinDeLaCommune = voeuxDeLaCommune?.[voeuxDeLaCommune.length - 1]?.voeu.id;
+
+        if (unVoeuÀProximitéCommune) return this._ajouterDesIdsVoeuxÀUrlParcourSup([voeuxDeLaCommune[0].voeu.id], lien);
+
+        return this._ajouterDesIdsVoeuxÀUrlParcourSup(
+          [idVoeuLePlusProcheDeLaCommune, idVoeuLePlusLoinDeLaCommune],
+          lien,
+        );
+      }
+
+      // eslint-disable-next-line unicorn/no-array-reduce
+      const idsDesVoeuxDesCommunes = communesAvecAuMoinsUnVoeu.reduce<string[]>((idsDesVoeux, commune) => {
+        const idVoeuÀAjouter = commune.voeuxAvecDistance.find(
+          (voeuAvecDistance) => idsDesVoeux.includes(voeuAvecDistance.voeu.id) === false,
+        )?.voeu.id;
+
+        if (idVoeuÀAjouter) {
+          idsDesVoeux.push(idVoeuÀAjouter);
+        }
+
+        return idsDesVoeux;
+      }, []);
+
+      return this._ajouterDesIdsVoeuxÀUrlParcourSup(idsDesVoeuxDesCommunes, lien);
+    }
+
+    return lien;
+  }
+
+  private _mapperLiensVersLeDomaine(
+    liens: LiensFormationRéponseHTTP,
+    lienParcourSup: LiensFormationRéponseHTTP[number] | null,
+  ): FicheFormation["liens"] {
+    return liens.map((lien) => {
+      if (lienParcourSup && lienParcourSup.nom === lien.nom) {
+        return { intitulé: lienParcourSup.nom, url: lienParcourSup.url };
+      }
+
+      return { intitulé: lien.nom, url: lien.url };
+    });
+  }
+
+  private _récupérerProfilLocal() {
+    return this._mapperVersLApiMps(dépendances.récupérerProfilLocalUseCase.run());
+  }
+
+  private _mapperVersLApiMps(élève: Élève | null): ProfilÉlèveHTTP | undefined {
+    if (élève === null) {
+      return undefined;
+    }
+
+    return {
+      situation: élève.situation ?? undefined,
+      compteParcoursupAssocie: élève.compteParcoursupAssocié ?? undefined,
+      classe: élève.classe ?? undefined,
+      baccalaureat: élève.bac ?? undefined,
+      specialites: élève.spécialités ?? undefined,
+      domaines: élève.domaines ?? undefined,
+      centresInterets: élève.centresIntérêts ?? undefined,
+      metiersFavoris: élève.métiersFavoris ?? undefined,
+      dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
+      alternance: élève.alternance ?? undefined,
+      communesFavorites: élève.communesFavorites ?? undefined,
+      corbeilleFormations: élève.formationsMasquées ?? undefined,
+      formationsFavorites:
+        élève.formations?.map((idFormation) => ({
+          idFormation,
+          niveauAmbition: élève.ambitions?.find((ambition) => ambition.idFormation === idFormation)?.ambition ?? 0,
+          priseDeNote: élève.notesPersonnelles?.find((note) => note.idFormation === idFormation)?.note ?? undefined,
+        })) ?? undefined,
+      voeuxFavoris:
+        élève.voeuxFavoris?.map((voeuFavori) => ({
+          idVoeu: voeuFavori.id,
+          estFavoriParcoursup: voeuFavori.estParcoursup,
+        })) ?? undefined,
+    };
   }
 }

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.recherche.usecase.FiltrerRechercheBuilder
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte.ScoreMot
@@ -9,18 +10,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.inOrder
-import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 
 class RechercherFormationsServiceTest {
     @Mock
     private lateinit var rechercheFormationRepository: RechercheFormationRepository
+
+    @Mock
+    private lateinit var filtrerRechercheBuilder: FiltrerRechercheBuilder
 
     @InjectMocks
     private lateinit var rechercherFormationsService: RechercherFormationsService
@@ -33,80 +32,12 @@ class RechercherFormationsServiceTest {
     }
 
     @Nested
-    inner class FiltrerMotsRecherches {
-        @Test
-        fun `ne doit pas appeler le repository pour les mots alpha numérique`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            val inOrder = inOrder(rechercheFormationRepository)
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("12")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("réchèrche")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("peu")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("Toùt")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("peTit")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("lôngue")
-            verifyNoMoreInteractions(rechercheFormationRepository)
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "1")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "a")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "b")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "c")
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository pour les mots vides`() {
-            // Given
-            val rechercheAvecMotsVide =
-                "ma recherche avec ma liste de mots vides le la les aux un une des du des en sur sous dans chez par pour sans contre entre parmi vers derrière devant après avant autour et ou mais donc ni car que quand comme puisque quoique mon mes ton ta tes son sa ses notre nos votre vos leur leurs ce cet cette ces qui que quoi dont lequel laquelle lesquels lesquelles"
-
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheAvecMotsVide,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            val inOrder = inOrder(rechercheFormationRepository)
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("recherche")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("liste")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("mots")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("vides")
-            verifyNoMoreInteractions(rechercheFormationRepository)
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository plusieurs fois pour le même mot`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            then(rechercheFormationRepository).should(times(1)).rechercherUneFormation(motRecherche = "peu")
-        }
-    }
-
-    @Nested
     inner class CalculerScores {
         @Test
         fun `doit retourner la liste des formations sans doublons avec les scores additionnés`() {
             // Given
+            val motsRecherches = listOf("12", "réchèrche", "peu", "Toùt", "peTit", "lôngue")
+            given(filtrerRechercheBuilder.filtrerMotsRecherches(rechercheLongue, 2)).willReturn(motsRecherches)
             val formationsPour12 =
                 listOf(
                     ResultatRechercheFormationCourte(
@@ -128,7 +59,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                         scoreMotClef = null,
@@ -142,7 +73,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = true,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                         scoreMotClef =
@@ -152,7 +83,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = false,
+                                motEnPrefix = false,
                                 pourcentageMot = 43,
                             ),
                     ),
@@ -171,7 +102,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                     ),
@@ -185,7 +116,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 50,
                             ),
                     ),
@@ -199,7 +130,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = true,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 77,
                             ),
                     ),
@@ -213,7 +144,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = true,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 76,
                             ),
                     ),
@@ -235,7 +166,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = true,
                                 motExactMilieu = false,
-                                sequencePresenteMot = false,
+                                motEnPrefix = false,
                                 pourcentageMot = 80,
                             ),
                     ),
@@ -249,7 +180,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = true,
                                 motExactMilieu = false,
-                                sequencePresenteMot = false,
+                                motEnPrefix = false,
                                 pourcentageMot = 30,
                             ),
                     ),
@@ -267,7 +198,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = true,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                         scoreMotClef = null,
@@ -281,7 +212,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = true,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                         scoreMotClef = null,
@@ -295,7 +226,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = true,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 100,
                             ),
                         scoreMotClef = null,
@@ -309,7 +240,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = true,
+                                motEnPrefix = true,
                                 pourcentageMot = 83,
                             ),
                         scoreMotClef = null,
@@ -323,7 +254,7 @@ class RechercherFormationsServiceTest {
                                 motExactPresentDebutPhrase = false,
                                 motExactPresentFin = false,
                                 motExactMilieu = false,
-                                sequencePresenteMot = false,
+                                motEnPrefix = false,
                                 pourcentageMot = 37,
                             ),
                         scoreMotClef = null,
@@ -341,15 +272,15 @@ class RechercherFormationsServiceTest {
             // Then
             val attendu =
                 mapOf(
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 0 + (0.83 * 50).toInt(),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 150 + 85,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 130 + (0.84 * 30).toInt(),
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to (0.84 * 77).toInt() + (0.84 * 80).toInt() + 130,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to (76 * 0.84).toInt(),
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 130,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 130,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
-                    FormationCourte(id = "fl21", nom = "L1 - Science de la vie") to 37,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 4.823529411764707E-46,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0000000000000003E-36,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 3.2338308457711453E-37,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 7.529411764705884E-28,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 7.411764705882355E-46,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0000000000000003E-45,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0000000000000003E-45,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 8.461538461538464E-46,
+                    FormationCourte(id = "fl21", nom = "L1 - Science de la vie") to 2.8461538461538468E-46,
                 )
             assertThat(resultat).isEqualTo(attendu)
         }

@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
-import fr.gouv.monprojetsup.data.model.Candidat
+import fr.gouv.monprojetsup.data.model.PanierVoeux
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.Ville
 import fr.gouv.monprojetsup.data.model.Voeu
@@ -24,7 +24,7 @@ interface MpsDataPort {
     fun getGrilles(): Map<String, GrilleAnalyse>
     fun getMotsClesFormations(): Map<String, List<String>>
     fun getApprentissage(): Collection<String>
-    fun getLasToGenericIdMapping(): Map<String, String>
+    fun getApprentissagePct(): Map<String,Int>
     fun getVoeux(): Map<String,Collection<Voeu>>
     fun getDebugLabels(): Map<String, String>
     fun getCapacitesAccueil(): Map<String, Int>
@@ -34,8 +34,7 @@ interface MpsDataPort {
     fun getDurees(): Map<String, Int?>
     fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>>
     fun getPsupIdToMpsId(): Map<String, String>
-    fun getVoeuxParCandidat(): List<Candidat>
-    fun getLasToPasIdMapping(): Map<String, String>
+    fun getPaniersVoeux(): List<PanierVoeux>
     fun getEdges(): List<Triple<String,String,Int>>
     fun getBacs(): List<Bac>
     fun getDomaines(): Taxonomie
@@ -50,4 +49,5 @@ interface MpsDataPort {
 
     fun exportDiagnostics()
     fun getFormationToTypeformation(): Map<String,String>
+    fun getProfilsReference(): List<Map<String,String>>
 }

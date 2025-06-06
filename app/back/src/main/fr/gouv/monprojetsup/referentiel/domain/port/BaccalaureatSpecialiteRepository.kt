@@ -7,4 +7,6 @@ interface BaccalaureatSpecialiteRepository {
     fun recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat: String): List<String>
 
     fun recupererLesBaccalaureatsAvecLeursSpecialites(): Map<Baccalaureat, List<Specialite>>
+
+    fun recupererUnBaccalaureatEtLesIdsDeSesSpecialites(idBaccalaureat: String): Pair<String, List<String>>?
 }

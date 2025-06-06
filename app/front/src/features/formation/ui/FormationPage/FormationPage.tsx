@@ -1,0 +1,94 @@
+import FicheFormation from "./FicheFormation/FicheFormation";
+import Head from "@/components/_layout/Head/Head";
+import ListeEtAperçuBarreLatérale from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuBarreLatérale/ListeEtAperçuBarreLatérale";
+import ListeEtAperçuContenu from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuContenu/ListeEtAperçuContenu";
+import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuLayout";
+import {
+  actionsListeEtAperçuStore,
+  élémentAffichéListeEtAperçuStore,
+  rechercheListeEtAperçuStore,
+} from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import BarreLatéraleFormation from "@/features/formation/ui/FormationPage/BarreLatéraleFormation/BarreLatéraleFormation";
+import {
+  rechercherFichesFormationsQueryOptions,
+  suggérerFormationsQueryOptions,
+} from "@/features/formation/ui/formationQueries";
+import useFormation from "@/features/formation/ui/useFormation";
+import useMétier from "@/features/métier/ui/useMétier";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation, useRouterState } from "@tanstack/react-router";
+import { useEffect } from "react";
+
+const FormationPage = () => {
+  const recherche = rechercheListeEtAperçuStore();
+  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
+  const élémentAffiché = élémentAffichéListeEtAperçuStore();
+  const { hash } = useLocation();
+  const { pathname } = useRouterState().location;
+  const { estUnIdDeFormation } = useFormation();
+  const { estUnIdDeMétier } = useMétier();
+  const estPersonnalisé = useÉlève().aUnProfilPermettantUneExpériencePersonnalisée;
+
+  const { data: suggestions, isFetching: chargementSuggestionsEnCours } = useQuery({
+    ...suggérerFormationsQueryOptions,
+    enabled: recherche === undefined,
+  });
+
+  const { data: résultatsDeRecherche, isFetching: chargementRechercheEnCours } = useQuery({
+    ...rechercherFichesFormationsQueryOptions(recherche),
+    enabled: recherche !== undefined,
+  });
+
+  useEffect(() => {
+    if (hash !== "" && (estUnIdDeFormation(hash) || estUnIdDeMétier(hash))) {
+      changerÉlémentAffiché({
+        id: hash,
+        type: "formation",
+      });
+    } else if (recherche) {
+      changerÉlémentAffiché({
+        id: résultatsDeRecherche?.[0]?.id ?? null,
+        type: "formation",
+      });
+    } else if (pathname.includes("/formations")) {
+      changerÉlémentAffiché({
+        id: suggestions?.[0]?.id ?? null,
+        type: "formation",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changerÉlémentAffiché, hash, pathname, recherche, résultatsDeRecherche, suggestions]);
+
+  if (!résultatsDeRecherche && !suggestions) {
+    return <AnimationChargement />;
+  }
+
+  return (
+    <>
+      <Head titre={i18n.PAGE_FORMATION.TITRE_PAGE} />
+      <ListeEtAperçuLayout>
+        <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
+          <BarreLatéraleFormation
+            chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
+            estPersonnalisé={estPersonnalisé}
+            résultatsDeRecherche={résultatsDeRecherche}
+            suggestions={suggestions}
+          />
+        </ListeEtAperçuBarreLatérale>
+        <ListeEtAperçuContenu>
+          {élémentAffiché.id && (
+            <FicheFormation
+              afficherBoutonFavori
+              id={élémentAffiché.id}
+            />
+          )}
+        </ListeEtAperçuContenu>
+      </ListeEtAperçuLayout>
+    </>
+  );
+};
+
+export default FormationPage;

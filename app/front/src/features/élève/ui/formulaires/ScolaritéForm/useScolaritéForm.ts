@@ -1,56 +1,63 @@
-import { type BacOptions, type ClasseOptions, type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
+import { type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
-import useMoyenneScolaritéForm from "./useMoyenneScolaritéForm";
-import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
-import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import useÉlèveMutation from "@/features/élève/ui/hooks/useÉlèveMutation/useÉlèveMutation";
+import { BacÉlève, ClasseÉlève } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseScolaritéFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
-
-  const { register, erreurs, mettreÀJourÉlève, watch, setValue, getValues } = useÉlèveForm({
+  const { élève } = useÉlève();
+  const { mettreÀJourProfilÉlève } = useÉlèveMutation();
+  const { register, erreurs, mettreÀJourÉlève, watch, setValue } = useÉlèveForm({
     schémaValidation: scolaritéValidationSchema(référentielDonnées?.bacs ?? []),
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
   const valeurBac = watch("bac");
 
-  const classeOptions: ClasseOptions = useMemo(
+  const classeOptions: SelectProps.Option<ClasseÉlève>[] = useMemo(
     () =>
       référentielDonnées?.élève.classes.map((classe) => ({
-        valeur: classe,
+        value: classe,
         label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS[classe].LABEL,
       })) ?? [],
     [référentielDonnées],
   );
 
-  const bacOptions: BacOptions = useMemo(
+  const bacOptions: SelectProps.Option<NonNullable<BacÉlève>>[] = useMemo(
     () =>
       référentielDonnées?.bacs
         .filter((bac) => bac.id !== "NC")
         .map((bac) => ({
-          valeur: bac.id,
+          value: bac.id,
           label: bac.nom,
         })) ?? [],
     [référentielDonnées],
   );
 
-  const moyenneScolaritéForm = useMoyenneScolaritéForm({
-    référentielDonnées,
-    watch,
-    setValue,
-    getValues,
-  });
+  const spécialitésBac = useMemo(
+    () => référentielDonnées?.bacs.find((bac) => bac.id === valeurBac)?.spécialités ?? [],
+    [valeurBac],
+  );
 
-  const spécialitésScolaritéForm = useSpécialitésScolaritéForm({
-    référentielDonnées,
-    valeurBac,
-    setValue,
-    getValues,
-  });
+  useEffect(() => {
+    if (élève && valeurBac && valeurBac !== élève?.bac) {
+      void mettreÀJourProfilÉlève({ bac: valeurBac });
+    }
+  }, [valeurBac]);
+
+  // Garder synchronisé la valeur react-hook-form et le profil de l'élève
+  useEffect(() => {
+    if (élève) {
+      setValue("spécialités", élève?.spécialités ?? []);
+    }
+  }, [élève?.spécialités]);
 
   return {
     mettreÀJourÉlève,
@@ -59,7 +66,6 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     classeOptions,
     bacOptions,
     valeurBac,
-    ...moyenneScolaritéForm,
-    ...spécialitésScolaritéForm,
+    spécialitésBac,
   };
 }

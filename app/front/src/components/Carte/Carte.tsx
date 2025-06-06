@@ -1,35 +1,50 @@
 import { type CarteProps } from "./Carte.interface";
+import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/useListeEtAperçuStore/useListeEtAperçuStore";
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const Carte = ({ titre, estFavori, estMasqué, children, auClic, sélectionnée }: CarteProps) => {
+const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée, auClicHandler }: CarteProps) => {
+  const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
+
   const classEnFonctionDeLaSélection = () => {
     if (sélectionnée) return "border-[--border-active-blue-france]";
     return "border-transparent";
   };
 
   return (
-    <button
-      className={`grid w-full max-w-[500px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
-      onClick={auClic}
-      type="button"
+    <div
+      className={`fr-enlarge-link grid w-full max-w-[500px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
+      data-selected={sélectionnée ?? false}
     >
       <div className="grid grid-flow-col items-baseline justify-between gap-1">
-        <div className="*:mb-0">
-          <Titre
-            niveauDeTitre="h2"
-            styleDeTitre="h4"
-          >
-            {titre}
-          </Titre>
-        </div>
+        <LienInterne
+          ariaLabel={titre}
+          auClic={() => {
+            void auClicHandler();
+            changerAfficherBarreLatéraleEnMobile(false);
+          }}
+          hash={id}
+          href=""
+          réinitialiserScroll={false}
+          variante="neutre"
+        >
+          <div className="*:mb-0">
+            <Titre
+              niveauDeTitre="h2"
+              styleDeTitre="h4"
+            >
+              {titre}
+            </Titre>
+          </div>
+        </LienInterne>
         {estFavori && (
           <div>
             <span
               aria-hidden="true"
               className="fr-icon-heart-fill fr-icon--sm rounded bg-[--background-contrast-error] px-1 text-[--text-default-error]"
             />
-            <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
+            <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORI}</span>
           </div>
         )}
         {estMasqué && (
@@ -43,7 +58,7 @@ const Carte = ({ titre, estFavori, estMasqué, children, auClic, sélectionnée 
         )}
       </div>
       {children}
-    </button>
+    </div>
   );
 };
 

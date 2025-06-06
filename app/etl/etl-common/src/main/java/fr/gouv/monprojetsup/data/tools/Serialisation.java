@@ -1,13 +1,25 @@
 package fr.gouv.monprojetsup.data.tools;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -40,9 +52,8 @@ public class Serialisation {
     }
 
     public static InputStream getRemoteFile(String urlString, String dataDir) throws IOException, InterruptedException {
-        String dirName = dataDir;
         int i = urlString.lastIndexOf('/') + 1;
-        String cacheName = dirName + "/" + urlString.substring(i);
+        String cacheName = dataDir + "/" + urlString.substring(i);
         if (dataDir != null && Files.exists(Path.of(cacheName))) {
             LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
             return new FileInputStream(cacheName);
@@ -56,13 +67,13 @@ public class Serialisation {
                 .header("Content-Type", "application/json")
                 .GET() // or use .POST(), .PUT(), etc.
                 .build();
-        HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = HttpClient.newHttpClient();
         HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
         if (response.statusCode() == HTTP_OK) {
             val stream = response.body();
             if (dataDir != null) {
                 LOGGER.warning("Sauvegarde de " + urlString + " dans le cache " + cacheName);
-                if(!Files.exists(Path.of(dirName))) Files.createDirectories(Path.of(dirName));
+                if (!Files.exists(Path.of(dataDir))) Files.createDirectories(Path.of(dataDir));
                 try (OutputStream out = new FileOutputStream(cacheName)) {
                     stream.transferTo(out);
                 }
@@ -136,10 +147,6 @@ public class Serialisation {
         return fromJsonFile(Path.of(path), type);
     }
 
-    public static <T> @NotNull T fromZippedJson(String path, Class<T> type) throws IOException {
-        return fromZippedJson(Path.of(path), type);
-    }
-
     public static <T> @NotNull T fromZippedJson(Path path, Class<T> type) throws IOException {
         try (BufferedInputStream s = new BufferedInputStream(
                 Files.newInputStream(path))
@@ -147,8 +154,23 @@ public class Serialisation {
             ZipInputStream zip = new ZipInputStream(s);
             ZipEntry entry = zip.getNextEntry();
             if (entry == null) throw new RuntimeException("No data in " + path);
-            try (BufferedReader r = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
+            try (JsonReader r = new JsonReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
                 return new Gson().fromJson(r, type);
+            }
+        }
+    }
+
+    public static <T> @NotNull T fromLargeZippedJson(Path path, Class<T> type) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try (BufferedInputStream s = new BufferedInputStream(
+                Files.newInputStream(path))
+        ) {
+            ZipInputStream zip = new ZipInputStream(s);
+            ZipEntry entry = zip.getNextEntry();
+            if (entry == null) throw new RuntimeException("No data in " + path);
+            try (InputStreamReader inputStream = new InputStreamReader(zip, StandardCharsets.UTF_8)) {
+                return mapper.readValue(inputStream, type);
             }
         }
     }

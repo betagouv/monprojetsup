@@ -1,18 +1,20 @@
 import { type RécupérerRéférentielDonnéesRéponseHTTP } from "./référentielDonnéesHttpRepository.interface";
-import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { BacÉlève, type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 
 export class RéférentielDonnéesHttpRepository implements RéférentielDonnéesRepository {
-  private _ENDPOINT = "/api/v1/referentiel" as const;
+  private readonly _ENDPOINT = "/api/v1/public/referentiel";
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
-  public async récupérer(): Promise<RéférentielDonnées | undefined> {
+  public async récupérer(): Promise<RéférentielDonnées | Error> {
     const réponse = await this._mpsApiHttpClient.get<RécupérerRéférentielDonnéesRéponseHTTP>(this._ENDPOINT);
 
-    if (!réponse) return undefined;
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
     return this._mapperVersLeDomaine(réponse);
   }
@@ -31,8 +33,9 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         );
 
         return {
-          id: bac.baccalaureat.id,
+          id: bac.baccalaureat.id as BacÉlève,
           nom: bac.baccalaureat.nom,
+          idCarteParcoursup: bac.baccalaureat.idCarteParcoursup,
           spécialités: bac.specialites,
           statistiquesAdmission: {
             parMoyenneGénérale:
@@ -50,7 +53,12 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         sousCatégoriesCentreIntérêt: trierTableauDObjetsParOrdreAlphabétique(
           centreIntérêt.sousCategoriesInterets,
           "nom",
-        ),
+        ).map((intérêt) => ({
+          id: intérêt.id,
+          nom: intérêt.nom,
+          description: intérêt.description ?? null,
+          emoji: intérêt.emoji,
+        })),
       })),
       domainesProfessionnels: référentielDonnéesHttp.categoriesDomaineAvecLeursDomaines.map((domaineProfessionnel) => ({
         id: domaineProfessionnel.categorieDomaine.id,
@@ -59,7 +67,12 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         sousCatégoriesdomainesProfessionnels: trierTableauDObjetsParOrdreAlphabétique(
           domaineProfessionnel.domaines,
           "nom",
-        ),
+        ).map((domaine) => ({
+          id: domaine.id,
+          nom: domaine.nom,
+          description: domaine.description ?? null,
+          emoji: domaine.emoji,
+        })),
       })),
     };
 

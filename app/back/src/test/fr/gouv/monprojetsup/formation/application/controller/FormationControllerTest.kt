@@ -1,16 +1,21 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.AvecProfilExistant
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
+import fr.gouv.monprojetsup.formation.application.dto.GetFichesFormationsDTO
+import fr.gouv.monprojetsup.formation.application.dto.GetFormationDTO
+import fr.gouv.monprojetsup.formation.application.dto.GetSuggestionsDTO
+import fr.gouv.monprojetsup.formation.application.dto.RechercheFormationsDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
@@ -18,8 +23,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
@@ -29,22 +34,23 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
-import fr.gouv.monprojetsup.formation.entity.Communes.LYON
-import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
-import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.LYON
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MONTREUIL
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.STRASBOURG
 import fr.gouv.monprojetsup.formation.usecase.OrdonnerRechercheFormationsBuilder
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
-import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFicheFormationService
+import fr.gouv.monprojetsup.formation.usecase.RecupererFichesFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -52,23 +58,34 @@ import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import java.net.ConnectException
 
-@WebMvcTest(controllers = [FormationController::class])
+@WebMvcTest(
+    controllers = [FormationController::class],
+    includeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [HateoasBuilder::class])],
+)
 class FormationControllerTest(
     @Autowired val mvc: MockMvc,
+    @Autowired val hateoasBuilder: HateoasBuilder,
 ) : ControllerTest() {
     @MockBean
     lateinit var suggestionsFormationsService: SuggestionsFormationsService
 
     @MockBean
-    lateinit var recupererFormationService: RecupererFormationService
+    lateinit var recupererFicheFormationService: RecupererFicheFormationService
+
+    @MockBean
+    lateinit var recupererFichesFormationsService: RecupererFichesFormationsService
 
     @MockBean
     lateinit var recupererFormationsService: RecupererFormationsService
@@ -79,8 +96,9 @@ class FormationControllerTest(
     @MockBean
     lateinit var ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder
 
-    @MockBean
-    lateinit var hateoasBuilder: HateoasBuilder
+    companion object {
+        const val API_FORMATION = "/api/v1/public/formations"
+    }
 
     private val explications =
         ExplicationsSuggestionDetaillees(
@@ -103,26 +121,27 @@ class FormationControllerTest(
                     AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
                     AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
                 ),
-            domaines =
+            choixEleve =
                 listOf(
-                    Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
-                ),
-            interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
-            explicationAutoEvaluationMoyenne =
-                ExplicationAutoEvaluationMoyenne(
-                    baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
-                    moyenneAutoEvalue = 15f,
-                    basIntervalleNotes = 14f,
-                    hautIntervalleNotes = 16f,
-                ),
-            formationsSimilaires =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                    FormationCourte(id = "fl7", nom = "BUT Informatique"),
-                ),
+                    Label(id = "T_ITM_1356", nom = "soin aux animaux"),
+                ) +
+                    listOf(
+                        Label(
+                            id = "aider_autres",
+                            nom = "Aider les autres",
+                        ),
+                    ) +
+                    listOf(
+                        Label("MET.397", "analyste financier/ère"),
+                        Label("MET.103", "ingénieur/e en expérimentation et production végétales"),
+                    ) +
+                    listOf(
+                        Label(id = "fl1", nom = "CPGE MPSI"),
+                        Label(id = "fl7", nom = "BUT Informatique"),
+                    ),
             explicationTypeBaccalaureat =
                 ExplicationTypeBaccalaureat(
-                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1"),
                     pourcentage = 18,
                 ),
             detailsCalculScore = emptyList(),
@@ -158,31 +177,83 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            voeux =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                ),
-            voeuxParCommunesFavorites =
-                listOf(
-                    CommuneAvecVoeuxAuxAlentours(
-                        commune = PARIS15EME,
-                        distances =
-                            listOf(
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                                    km = 3,
-                                ),
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                                    km = 1,
-                                ),
+            informationsSurLesVoeuxEtLeursCommunes =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux =
+                        listOf(
+                            Voeu(
+                                id = "ta10",
+                                nom = "Nom du ta10",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
                             ),
-                    ),
+                            Voeu(
+                                id = "ta3",
+                                nom = "Nom du ta3",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
+                            Voeu(
+                                id = "ta11",
+                                nom = "Nom du ta11",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta32",
+                                nom = "Nom du ta32",
+                                commune = PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
+                            ),
+                            Voeu(
+                                id = "ta17",
+                                nom = "Nom du ta17",
+                                commune = STRASBOURG,
+                                longitude = 1.666667,
+                                latitude = 50.266666,
+                            ),
+                            Voeu(
+                                id = "ta7",
+                                nom = "Nom du ta7",
+                                commune = MARSEILLE,
+                                latitude = 43.300000,
+                                longitude = 5.400000,
+                            ),
+                        ),
+                    communes = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    voeuxParCommunesFavorites =
+                        listOf(
+                            CommuneAvecVoeuxAuxAlentours(
+                                communeFavorite = CommunesFavorites.PARIS15EME,
+                                distances =
+                                    listOf(
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta3",
+                                                nom = "Nom du ta3",
+                                                commune = PARIS5EME,
+                                                longitude = 2.344,
+                                                latitude = 48.846,
+                                            ),
+                                            km = 3,
+                                        ),
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta32",
+                                                nom = "Nom du ta32",
+                                                commune = PARIS15EME,
+                                                longitude = 2.2885659,
+                                                latitude = 48.851227,
+                                            ),
+                                            km = 1,
+                                        ),
+                                    ),
+                            ),
+                        ),
                 ),
             metiersTriesParAffinites =
                 listOf(
@@ -224,7 +295,13 @@ class FormationControllerTest(
                 StatistiquesDesAdmis(
                     moyenneGeneraleDesAdmis =
                         MoyenneGeneraleDesAdmis(
-                            baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                            baccalaureat =
+                                Baccalaureat(
+                                    id = "Générale",
+                                    idExterne = "Général",
+                                    nom = "Série Générale",
+                                    idCarteParcoursup = "1",
+                                ),
                             centiles =
                                 listOf(
                                     Centile(centile = 5, note = 13f),
@@ -239,15 +316,33 @@ class FormationControllerTest(
                             parBaccalaureat =
                                 listOf(
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "Générale",
+                                                idExterne = "Général",
+                                                nom = "Série Générale",
+                                                idCarteParcoursup = "1",
+                                            ),
                                         nombreAdmis = 6677,
                                     ),
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "STMG",
+                                                idExterne = "STMG",
+                                                nom = "Série STMG",
+                                                idCarteParcoursup = "2",
+                                            ),
                                         nombreAdmis = 15,
                                     ),
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "STI2D",
+                                                idExterne = "STI2D",
+                                                nom = "Série STI2D",
+                                                idCarteParcoursup = "2",
+                                            ),
                                         nombreAdmis = 223,
                                     ),
                                 ),
@@ -310,14 +405,83 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            voeux =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+            informationsSurLesVoeuxEtLeursCommunes =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux =
+                        listOf(
+                            Voeu(
+                                id = "ta10",
+                                nom = "Nom du ta10",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta3",
+                                nom = "Nom du ta3",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
+                            Voeu(
+                                id = "ta11",
+                                nom = "Nom du ta11",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta32",
+                                nom = "Nom du ta32",
+                                commune = PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
+                            ),
+                            Voeu(
+                                id = "ta17",
+                                nom = "Nom du ta17",
+                                commune = STRASBOURG,
+                                longitude = 1.666667,
+                                latitude = 50.266666,
+                            ),
+                            Voeu(
+                                id = "ta7",
+                                nom = "Nom du ta7",
+                                commune = MARSEILLE,
+                                latitude = 43.300000,
+                                longitude = 5.400000,
+                            ),
+                        ),
+                    communes = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    voeuxParCommunesFavorites =
+                        listOf(
+                            CommuneAvecVoeuxAuxAlentours(
+                                communeFavorite = CommunesFavorites.PARIS15EME,
+                                distances =
+                                    listOf(
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta3",
+                                                nom = "Nom du ta3",
+                                                commune = PARIS5EME,
+                                                longitude = 2.344,
+                                                latitude = 48.846,
+                                            ),
+                                            km = 3,
+                                        ),
+                                        VoeuAvecDistance(
+                                            Voeu(
+                                                id = "ta32",
+                                                nom = "Nom du ta32",
+                                                commune = PARIS15EME,
+                                                longitude = 2.2885659,
+                                                latitude = 48.851,
+                                            ),
+                                            km = 5,
+                                        ),
+                                    ),
+                            ),
+                        ),
                 ),
             criteresAnalyseCandidature =
                 listOf(
@@ -340,6 +504,25 @@ class FormationControllerTest(
                     moyenneGeneraleDesAdmis = null,
                 ),
             apprentissage = false,
+        )
+
+    private val ficheFormationPourProfil =
+        FicheFormation.FicheFormationPourProfil(
+            ficheFormationSansProfil.id,
+            ficheFormationSansProfil.nom,
+            ficheFormationSansProfil.descriptifGeneral,
+            ficheFormationSansProfil.descriptifDiplome,
+            ficheFormationSansProfil.descriptifAttendus,
+            ficheFormationSansProfil.descriptifConseils,
+            ficheFormationSansProfil.formationsAssociees,
+            ficheFormationSansProfil.liens,
+            ficheFormationSansProfil.criteresAnalyseCandidature,
+            ficheFormationSansProfil.statistiquesDesAdmis,
+            ficheFormationSansProfil.apprentissage,
+            ficheFormationSansProfil.informationsSurLesVoeuxEtLeursCommunes,
+            100,
+            ficheFormationSansProfil.metiers,
+            ExplicationsSuggestionDetaillees(),
         )
 
     private val metiersTriesParAffinites =
@@ -391,17 +574,6 @@ class FormationControllerTest(
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = formations,
-                )
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
             val idsFormations =
                 listOf(
                     "fl240",
@@ -428,7 +600,12 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    false,
+                ),
             ).willReturn(
                 listOf(
                     ficheFormation,
@@ -445,7 +622,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communes = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -454,7 +636,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -480,7 +670,7 @@ class FormationControllerTest(
                                   "centiles": [
                                     {
                                       "centile": 5,
-                                      "note": 13.0
+                                      "note": 13
                                     },
                                     {
                                       "centile": 25,
@@ -488,11 +678,11 @@ class FormationControllerTest(
                                     },
                                     {
                                       "centile": 75,
-                                      "note": 17.0
+                                      "note": 17
                                     },
                                     {
                                       "centile": 95,
-                                      "note": 18.0
+                                      "note": 18
                                     }
                                   ]
                                 },
@@ -548,6 +738,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -667,7 +883,25 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
                                   {
                                     "id": "fl1",
                                     "nom": "CPGE MPSI"
@@ -677,23 +911,6 @@ class FormationControllerTest(
                                     "nom": "BUT Informatique"
                                   }
                                 ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -714,15 +931,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []
@@ -744,384 +952,14 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
-                    ),
-                )
-        }
-
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour la page 2, doit retourner 200 avec une liste des fiches formations suggérées`() {
-            // Given
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
-                affinitesFormationEtMetier,
-            )
-            val listeCoupee =
-                listOf(
-                    FormationAvecSonAffinite(idFormation = "fl2016", tauxAffinite = 0.7217561f),
-                    FormationAvecSonAffinite(idFormation = "fl2118", tauxAffinite = 0.7103791f),
-                    FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
-                )
-            val hateoas = Hateoas(pageActuelle = 2, pageSuivante = 3, premierePage = 1, dernierePage = 4, listeCoupee = listeCoupee)
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-            val idsFormations = listOf("fl2016", "fl2118", "fl680003")
-            given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
-            ).willReturn(listOf(ficheFormation.copy(id = "fl2016")))
-
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=2"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "formation": {
-                                "id": "fl2016",
-                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                                "idsFormationsAssociees": [
-                                  "fl0012"
-                                ],
-                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "centiles": [
-                                    {
-                                      "centile": 5,
-                                      "note": 13.0
-                                    },
-                                    {
-                                      "centile": 25,
-                                      "note": 14.5
-                                    },
-                                    {
-                                      "centile": 75,
-                                      "note": 17.0
-                                    },
-                                    {
-                                      "centile": 95,
-                                      "note": 18.0
-                                    }
-                                  ]
-                                },
-                                "criteresAnalyseCandidature": [
-                                  {
-                                    "nom": "Compétences académiques",
-                                    "pourcentage": 10
-                                  },
-                                  {
-                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                    "pourcentage": 0
-                                  },
-                                  {
-                                    "nom": "Résultats académiques",
-                                    "pourcentage": 18
-                                  },
-                                  {
-                                    "nom": "Savoir-être",
-                                    "pourcentage": 42
-                                  },
-                                  {
-                                    "nom": "Motivation, connaissance",
-                                    "pourcentage": 30
-                                  }
-                                ],
-                                "repartitionAdmisAnneePrecedente": {
-                                  "total": 6915,
-                                  "parBaccalaureat": [
-                                    {
-                                      "baccalaureat": {
-                                        "id": "Générale",
-                                        "nom": "Série Générale"
-                                      },
-                                      "nombreAdmis": 6677
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STMG",
-                                        "nom": "Série STMG"
-                                      },
-                                      "nombreAdmis": 15
-                                    },
-                                    {
-                                      "baccalaureat": {
-                                        "id": "STI2D",
-                                        "nom": "Série STI2D"
-                                      },
-                                      "nombreAdmis": 223
-                                    }
-                                  ]
-                                },
-                                "liens": [
-                                  {
-                                    "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                                  }
-                                ],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [
-                                  {
-                                    "id": "MET001",
-                                    "nom": "géomaticien/ne",
-                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                    "liens": [
-                                      {
-                                        "nom": "Voir sur l'ONISEP",
-                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "id": "MET002",
-                                    "nom": "documentaliste",
-                                    "descriptif": null,
-                                    "liens": []
-                                  }
-                                ],
-                                "tauxAffinite": 90,
-                                "apprentissage": true
-                              },
-                              "explications": {
-                                "geographique": [
-                                  {
-                                    "nomVille": "Nantes",
-                                    "distanceKm": 1
-                                  },
-                                  {
-                                    "nomVille": "Paris",
-                                    "distanceKm": 3
-                                  }
-                                ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
-                                "specialitesChoisies": [
-                                  {
-                                    "nomSpecialite": "specialiteA",
-                                    "pourcentage": 12
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteB",
-                                    "pourcentage": 1
-                                  },
-                                  {
-                                    "nomSpecialite": "specialiteC",
-                                    "pourcentage": 89
-                                  }
-                                ],
-                                "typeBaccalaureat": {
-                                  "baccalaureat": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  },
-                                  "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
-                                "detailsCalculScore": {
-                                  "details": []
-                                }
-                              }
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=4"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=2"
-                            },
-                            {
-                              "rel": "suivant",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=3"
                             }
                           ]
                         }
@@ -1137,17 +975,6 @@ class FormationControllerTest(
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = formations,
-                )
-            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
             val idsFormations =
                 listOf(
                     "fl240",
@@ -1174,7 +1001,12 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    false,
+                ),
             ).willReturn(
                 listOf(
                     ficheFormation,
@@ -1191,7 +1023,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communes = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -1200,7 +1037,15 @@ class FormationControllerTest(
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -1226,7 +1071,7 @@ class FormationControllerTest(
                                   "centiles": [
                                     {
                                       "centile": 5,
-                                      "note": 13.0
+                                      "note": 13
                                     },
                                     {
                                       "centile": 25,
@@ -1234,11 +1079,11 @@ class FormationControllerTest(
                                     },
                                     {
                                       "centile": 75,
-                                      "note": 17.0
+                                      "note": 17
                                     },
                                     {
                                       "centile": 95,
-                                      "note": 18.0
+                                      "note": 18
                                     }
                                   ]
                                 },
@@ -1294,6 +1139,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -1413,7 +1284,25 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
                                   {
                                     "id": "fl1",
                                     "nom": "CPGE MPSI"
@@ -1423,23 +1312,6 @@ class FormationControllerTest(
                                     "nom": "BUT Informatique"
                                   }
                                 ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -1461,15 +1333,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -1490,60 +1353,14 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
                             }
                           ]
                         }
@@ -1552,25 +1369,20 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteSansId
-        @Test
-        fun `si connecté sans profil, doit retourner 403`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/suggestions")).andDo(print()).andExpect(status().isForbidden)
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/suggestions")).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le numéro de page envoyé est inférieur ou égale à 0, alors doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=0"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 0,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
                 .andExpect(
@@ -1578,46 +1390,10 @@ class FormationControllerTest(
                         """
                         {
                           "type": "about:blank",
-                          "title": "PAGINATION_COMMENCE_A_1",
+                          "title": "PAGE_INVALIDE",
                           "status": 400,
                           "detail": "La pagination commence à 1",
-                          "instance": "/api/v1/formations/suggestions"
-                        }
-                        """.trimIndent(),
-                    ),
-                )
-        }
-
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le numéro de page envoyé est dépasse, alors doit retourner 400`() {
-            //
-            val uneException =
-                MonProjetSupBadRequestException(
-                    code = "PAGE_DEMANDEE_INXISTANTE",
-                    msg = "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
-                )
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
-                affinitesFormationEtMetier,
-            )
-            given(
-                hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 100, tailleLot = 30),
-            ).willThrow(uneException)
-
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/suggestions?numeroDePage=100"),
-            ).andDo(print()).andExpect(status().isBadRequest)
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "type": "about:blank",
-                          "title": "PAGE_DEMANDEE_INXISTANTE",
-                          "status": 400,
-                          "detail": "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
-                          "instance": "/api/v1/formations/suggestions"
+                          "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
                     ),
@@ -1634,11 +1410,21 @@ class FormationControllerTest(
                     msg = "Erreur lors de la connexion à l'API de suggestions",
                     origine = ConnectException("Connection refused"),
                 )
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(
+                uneException,
+            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/suggestions"),
+                post("$API_FORMATION/suggestions")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetSuggestionsDTO(
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
                 .andExpect(
@@ -1649,7 +1435,7 @@ class FormationControllerTest(
                           "title": "ERREUR_API_SUGGESTIONS_CONNEXION",
                           "status": 500,
                           "detail": "Erreur lors de la connexion à l'API de suggestions",
-                          "instance": "/api/v1/formations/suggestions"
+                          "instance": "$API_FORMATION/suggestions"
                         }
                         """.trimIndent(),
                     ),
@@ -1658,302 +1444,341 @@ class FormationControllerTest(
     }
 
     @Nested
-    inner class `Quand on appelle la route de récupération d'une formation` {
+    inner class `Quand on appelle la route de récupération d'une fiche formation` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
-            mvc.perform(
-                get("/api/v1/formations/fl680002"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formation": {
-                            "id": "fl680002",
-                            "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "idsFormationsAssociees": [
-                              "fl0012"
-                            ],
-                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "centiles": [
-                                {
-                                  "centile": 5,
-                                  "note": 13.0
-                                },
-                                {
-                                  "centile": 25,
-                                  "note": 14.5
-                                },
-                                {
-                                  "centile": 75,
-                                  "note": 17.0
-                                },
-                                {
-                                  "centile": 95,
-                                  "note": 18.0
-                                }
-                              ]
-                            },
-                            "criteresAnalyseCandidature": [
-                              {
-                                "nom": "Compétences académiques",
-                                "pourcentage": 10
-                              },
-                              {
-                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                "pourcentage": 0
-                              },
-                              {
-                                "nom": "Résultats académiques",
-                                "pourcentage": 18
-                              },
-                              {
-                                "nom": "Savoir-être",
-                                "pourcentage": 42
-                              },
-                              {
-                                "nom": "Motivation, connaissance",
-                                "pourcentage": 30
-                              }
-                            ],
-                            "repartitionAdmisAnneePrecedente": {
-                              "total": 6915,
-                              "parBaccalaureat": [
-                                {
+            val contentJson =
+                mvc.perform(
+                    post("$API_FORMATION")
+                        .contentType(MediaType.APPLICATION_JSON).content(
+                            ObjectMapper().writeValueAsString(
+                                GetFormationDTO(
+                                    id = "fl680002",
+                                    profil = null,
+                                    numeroDePage = 1,
+                                ),
+                            ),
+                        ).accept(MediaType.APPLICATION_JSON),
+                )
+                    .andDo(print())
+                    .andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(
+                        content().json(
+                            """
+                            {
+                              "formation": {
+                                "id": "fl680002",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
                                   "baccalaureat": {
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   },
-                                  "nombreAdmis": 6677
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STMG",
-                                    "nom": "Série STMG"
-                                  },
-                                  "nombreAdmis": 15
-                                },
-                                {
-                                  "baccalaureat": {
-                                    "id": "STI2D",
-                                    "nom": "Série STI2D"
-                                  },
-                                  "nombreAdmis": 223
-                                }
-                              ]
-                            },
-                            "liens": [
-                              {
-                                "nom": "Voir sur l'ONISEP",
-                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                              }
-                            ],
-                            "voeux": [
-                              {
-                                "id": "ta10",
-                                "nom": "Nom du ta10",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta3",
-                                "nom": "Nom du ta3",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75105"
-                                }
-                              },
-                              {
-                                "id": "ta11",
-                                "nom": "Nom du ta11",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
-                              },
-                              {
-                                "id": "ta32",
-                                "nom": "Nom du ta32",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75115"
-                                }
-                              },
-                              {
-                                "id": "ta17",
-                                "nom": "Nom du ta17",
-                                "commune": {
-                                  "nom": "Strasbourg",
-                                  "codeInsee": "67482"
-                                }
-                              },
-                              {
-                                "id": "ta7",
-                                "nom": "Nom du ta7",
-                                "commune": {
-                                  "nom": "Marseille",
-                                  "codeInsee": "13055"
-                                }
-                              }
-                            ],
-                            "communesFavoritesAvecLeursVoeux": [
-                              {
-                                "commune": {
-                                  "codeInsee": "75115",
-                                  "nom": "Paris",
-                                  "latitude": 48.851227,
-                                  "longitude": 2.2885659
-                                },
-                                "voeuxAvecDistance": [
-                                  {
-                                    "voeu": {
-                                      "id": "ta3",
-                                      "nom": "Nom du ta3",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75105"
-                                      }
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13
                                     },
-                                    "distanceKm": 3
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
                                   },
                                   {
-                                    "voeu": {
-                                      "id": "ta32",
-                                      "nom": "Nom du ta32",
-                                      "commune": {
-                                        "nom": "Paris",
-                                        "codeInsee": "75115"
-                                      }
-                                    },
-                                    "distanceKm": 1
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
                                   }
-                                ]
-                              }
-                            ],
-                            "metiers": [
-                              {
-                                "id": "MET001",
-                                "nom": "géomaticien/ne",
-                                "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
                                 "liens": [
                                   {
                                     "nom": "Voir sur l'ONISEP",
-                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ]
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
-                              {
-                                "id": "MET002",
-                                "nom": "documentaliste",
-                                "descriptif": null,
-                                "liens": []
-                              }
-                            ],
-                            "tauxAffinite": 90,
-                            "apprentissage": true
-                          },
-                          "explications": {
-                            "geographique": [
-                              {
-                                "nomVille": "Nantes",
-                                "distanceKm": 1
-                              },
-                              {
-                                "nomVille": "Paris",
-                                "distanceKm": 3
-                              }
-                            ],
-                            "formationsSimilaires": [
-                              {
-                                "id": "fl1",
-                                "nom": "CPGE MPSI"
-                              },
-                              {
-                                "id": "fl7",
-                                "nom": "BUT Informatique"
-                              }
-                            ],
-                            "dureeEtudesPrevue": "longue",
-                            "alternance": "tres_interesse",
-                            "interetsEtDomainesChoisis": {
-                              "interets": [
-                                {
-                                  "id": "aider_autres",
-                                  "nom": "Aider les autres"
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
-                              ],
-                              "domaines": [
-                                {
-                                  "id": "T_ITM_1356",
-                                  "nom": "soin aux animaux",
-                                  "emoji": "\uD83D\uDC2E"
-                                }
-                              ]
-                            },
-                            "specialitesChoisies": [
-                              {
-                                "nomSpecialite": "specialiteA",
-                                "pourcentage": 12
-                              },
-                              {
-                                "nomSpecialite": "specialiteB",
-                                "pourcentage": 1
-                              },
-                              {
-                                "nomSpecialite": "specialiteC",
-                                "pourcentage": 89
                               }
-                            ],
-                            "typeBaccalaureat": {
-                              "baccalaureat": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              },
-                              "pourcentage": 18
-                            },
-                            "autoEvaluationMoyenne": {
-                              "moyenne": 15.0,
-                              "basIntervalleNotes": 14.0,
-                              "hautIntervalleNotes": 16.0,
-                              "baccalaureatUtilise": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              }
-                            },
-                            "detailsCalculScore": {
-                              "details": []
                             }
-                          }
-                        }
-                        """.trimIndent(),
-                    ),
-                )
+                            """.trimIndent(),
+                        ),
+                    )
         }
 
         @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -1977,7 +1802,7 @@ class FormationControllerTest(
                               "centiles": [
                                 {
                                   "centile": 5,
-                                  "note": 13.0
+                                  "note": 13
                                 },
                                 {
                                   "centile": 25,
@@ -1985,11 +1810,11 @@ class FormationControllerTest(
                                 },
                                 {
                                   "centile": 75,
-                                  "note": 17.0
+                                  "note": 17
                                 },
                                 {
                                   "centile": 95,
-                                  "note": 18.0
+                                  "note": 18
                                 }
                               ]
                             },
@@ -2045,6 +1870,32 @@ class FormationControllerTest(
                               {
                                 "nom": "Voir sur l'ONISEP",
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                              }
+                            ],
+                            "communes": [
+                              {
+                                "nom": "Paris",
+                                "codeInsee": "75115"
+                              },
+                              {
+                                "nom": "Paris",
+                                "codeInsee": "75105"
+                              },
+                              {
+                                "nom": "Montreuil",
+                                "codeInsee": "93048"
+                              },
+                              {
+                                "nom": "Lyon",
+                                "codeInsee": "69123"
+                              },
+                              {
+                                "nom": "Strasbourg",
+                                "codeInsee": "67482"
+                              },
+                              {
+                                "nom": "Marseille",
+                                "codeInsee": "13055"
                               }
                             ],
                             "voeux": [
@@ -2164,7 +2015,25 @@ class FormationControllerTest(
                                 "distanceKm": 3
                               }
                             ],
-                            "formationsSimilaires": [
+                            "dureeEtudesPrevue": "longue",
+                            "alternance": "tres_interesse",
+                            "choixEleve": [
+                              {
+                                "id": "T_ITM_1356",
+                                "nom": "soin aux animaux"
+                              },
+                              {
+                                "id": "aider_autres",
+                                "nom": "Aider les autres"
+                              },
+                              {
+                                "id": "MET.397",
+                                "nom": "analyste financier/ère"
+                              },
+                              {
+                                "id": "MET.103",
+                                "nom": "ingénieur/e en expérimentation et production végétales"
+                              },
                               {
                                 "id": "fl1",
                                 "nom": "CPGE MPSI"
@@ -2174,23 +2043,6 @@ class FormationControllerTest(
                                 "nom": "BUT Informatique"
                               }
                             ],
-                            "dureeEtudesPrevue": "longue",
-                            "alternance": "tres_interesse",
-                            "interetsEtDomainesChoisis": {
-                              "interets": [
-                                {
-                                  "id": "aider_autres",
-                                  "nom": "Aider les autres"
-                                }
-                              ],
-                              "domaines": [
-                                {
-                                  "id": "T_ITM_1356",
-                                  "nom": "soin aux animaux",
-                                  "emoji": "\uD83D\uDC2E"
-                                }
-                              ]
-                            },
                             "specialitesChoisies": [
                               {
                                 "nomSpecialite": "specialiteA",
@@ -2211,15 +2063,6 @@ class FormationControllerTest(
                                 "nom": "Série Générale"
                               },
                               "pourcentage": 18
-                            },
-                            "autoEvaluationMoyenne": {
-                              "moyenne": 15.0,
-                              "basIntervalleNotes": 14.0,
-                              "hautIntervalleNotes": 16.0,
-                              "baccalaureatUtilise": {
-                                "id": "Générale",
-                                "nom": "Série Générale"
-                              }
                             },
                             "detailsCalculScore": {
                               "details": []
@@ -2235,12 +2078,20 @@ class FormationControllerTest(
         @Test
         fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
             given(
-                recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+                recupererFicheFormationService.recupererFormation(profilEleve = AvecProfilExistant(""), idFormation = "fl680002"),
             ).willReturn(ficheFormationSansProfil)
-
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl680002"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl680002",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2249,94 +2100,67 @@ class FormationControllerTest(
                           "formation": {
                             "id": "fl680002",
                             "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "idsFormationsAssociees": [
-                              "fl0012"
-                            ],
+                            "idsFormationsAssociees": ["fl0012"],
                             "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "moyenneGeneraleDesAdmis": null,
                             "criteresAnalyseCandidature": [
-                              {
-                                "nom": "Compétences académiques",
-                                "pourcentage": 10
-                              },
+                              { "nom": "Compétences académiques", "pourcentage": 10 },
                               {
                                 "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
                                 "pourcentage": 0
                               },
-                              {
-                                "nom": "Résultats académiques",
-                                "pourcentage": 18
-                              },
-                              {
-                                "nom": "Savoir-être",
-                                "pourcentage": 42
-                              },
-                              {
-                                "nom": "Motivation, connaissance",
-                                "pourcentage": 30
-                              }
+                              { "nom": "Résultats académiques", "pourcentage": 18 },
+                              { "nom": "Savoir-être", "pourcentage": 42 },
+                              { "nom": "Motivation, connaissance", "pourcentage": 30 }
                             ],
-                            "repartitionAdmisAnneePrecedente": {
-                              "total": 12,
-                              "parBaccalaureat": []
-                            },
+                            "repartitionAdmisAnneePrecedente": { "total": 12, "parBaccalaureat": [] },
                             "liens": [
                               {
                                 "nom": "Voir sur l'ONISEP",
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                               }
                             ],
+                            "communes": [
+                              { "nom": "Paris", "codeInsee": "75115" },
+                              { "nom": "Paris", "codeInsee": "75105" },
+                              { "nom": "Montreuil", "codeInsee": "93048" },
+                              { "nom": "Lyon", "codeInsee": "69123" },
+                              { "nom": "Strasbourg", "codeInsee": "67482" },
+                              { "nom": "Marseille", "codeInsee": "13055" }
+                            ],
                             "voeux": [
                               {
                                 "id": "ta10",
                                 "nom": "Nom du ta10",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
+                                "commune": { "nom": "Lyon", "codeInsee": "69123" }
                               },
                               {
                                 "id": "ta3",
                                 "nom": "Nom du ta3",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75105"
-                                }
+                                "commune": { "nom": "Paris", "codeInsee": "75105" }
                               },
                               {
                                 "id": "ta11",
                                 "nom": "Nom du ta11",
-                                "commune": {
-                                  "nom": "Lyon",
-                                  "codeInsee": "69123"
-                                }
+                                "commune": { "nom": "Lyon", "codeInsee": "69123" }
                               },
                               {
                                 "id": "ta32",
                                 "nom": "Nom du ta32",
-                                "commune": {
-                                  "nom": "Paris",
-                                  "codeInsee": "75115"
-                                }
+                                "commune": { "nom": "Paris", "codeInsee": "75115" }
                               },
                               {
                                 "id": "ta17",
                                 "nom": "Nom du ta17",
-                                "commune": {
-                                  "nom": "Strasbourg",
-                                  "codeInsee": "67482"
-                                }
+                                "commune": { "nom": "Strasbourg", "codeInsee": "67482" }
                               },
                               {
                                 "id": "ta7",
                                 "nom": "Nom du ta7",
-                                "commune": {
-                                  "nom": "Marseille",
-                                  "codeInsee": "13055"
-                                }
+                                "commune": { "nom": "Marseille", "codeInsee": "13055" }
                               }
                             ],
                             "communesFavoritesAvecLeursVoeux": [],
@@ -2369,26 +2193,29 @@ class FormationControllerTest(
                 )
         }
 
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations/fl68000")).andDo(print()).andExpect(status().isUnauthorized)
-        }
-
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
             val uneException =
-                MonProjetIllegalStateErrorException(
+                MonProjetSupIllegalStateErrorException(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl00010 existe plusieurs fois entre id et dans les formations équivalentes",
                 )
-            given(recupererFormationService.recupererFormation(unProfilEleve, "fl00010")).willThrow(uneException)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "fl00010")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl00010"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "fl00010",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2402,11 +2229,20 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation inconnu n'existe pas",
                 )
-            given(recupererFormationService.recupererFormation(unProfilEleve, "inconnu")).willThrow(uneException)
+            given(recupererFicheFormationService.recupererFormation(unProfilEleve, "inconnu")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/inconnu"),
+                post(API_FORMATION)
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFormationDTO(
+                                id = "inconnu",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -2420,9 +2256,9 @@ class FormationControllerTest(
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
-                    FormationCourte(id = "fl3", nom = "L1 - Philosophie") to 100,
-                    FormationCourte(id = "fl7", nom = "L1 - Mathématique") to 100,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100.0,
+                    FormationCourte(id = "fl3", nom = "L1 - Philosophie") to 100.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Mathématique") to 100.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -2448,125 +2284,19 @@ class FormationControllerTest(
             given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(mapRechercheL1, formationsOrdonnees))
                 .willReturn(rechercheTriee)
 
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheTriee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=L1"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "id": "fl1",
-                              "nom": "L1 - Psychologie"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Mathématique"
-                            },
-                            {
-                              "id": "fl3",
-                              "nom": "L1 - Philosophie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
+                post(
+                    "$API_FORMATION/recherche/succincte",
+                ).contentType(MediaType.APPLICATION_JSON).content(
+                    ObjectMapper().writeValueAsString(
+                        RechercheFormationsDTO(
+                            recherche = "L1",
+                            profil = null,
+                            numeroDePage = 1,
+                        ),
                     ),
-                )
-        }
-
-        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
-            // Given
-            val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
-            val rechercheLongueMap =
-                mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 110,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 75,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 150,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 10,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 0,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 150,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
-                )
-            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
-            val formationsOrdonnees =
-                listOf(
-                    FormationAvecSonAffinite("fl1", 0.56f),
-                    FormationAvecSonAffinite("fl7", 0.36f),
-                    FormationAvecSonAffinite("fl3", 1f),
-                    FormationAvecSonAffinite("fl1000", 0f),
-                    FormationAvecSonAffinite("fl17", 0.24f),
-                    FormationAvecSonAffinite("fl20", 0.98f),
-                    FormationAvecSonAffinite("fl10", 0.24f),
-                    FormationAvecSonAffinite("fl18", 0.45f),
-                )
-            given(suggestionsPourUnProfil.formations).willReturn(formationsOrdonnees)
-            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(suggestionsPourUnProfil)
-            val rechercheTriee =
-                listOf(
-                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                    FormationCourte(id = "fl1000", nom = "BPJEPS"),
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                )
-            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(rechercheLongueMap, formationsOrdonnees))
-                .willReturn(rechercheTriee)
-
-            given(
-                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                    recherche = rechercheDe50Caracteres,
-                    tailleMinimumRecherche = 2,
                 ),
-            ).willReturn(rechercheLongueMap)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheTriee,
-                )
-            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2574,50 +2304,16 @@ class FormationControllerTest(
                         {
                           "formations": [
                             {
-                              "id": "fl10",
-                              "nom": "DUT Informatique"
-                            },
-                            {
-                              "id": "fl1000",
-                              "nom": "BPJEPS"
-                            },
-                            {
-                              "id": "fl18",
-                              "nom": "L1 - Littérature"
-                            },
-                            {
-                              "id": "fl7",
-                              "nom": "L1 - Philosophie"
-                            },
-                            {
                               "id": "fl1",
                               "nom": "L1 - Psychologie"
                             },
                             {
-                              "id": "fl3",
-                              "nom": "CAP Pâtisserie"
-                            },
-                            {
-                              "id": "fl17",
+                              "id": "fl7",
                               "nom": "L1 - Mathématique"
                             },
                             {
-                              "id": "fl20",
-                              "nom": "CAP Boulangerie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                              "id": "fl3",
+                              "nom": "L1 - Philosophie"
                             }
                           ]
                         }
@@ -2631,7 +2327,16 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=L"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2641,7 +2346,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_COURTE",
                           "status": 400,
                           "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
-                          "instance": "/api/v1/formations/recherche/succincte"
+                          "instance": "$API_FORMATION/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -2650,11 +2355,22 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+        fun `si le mot recherché fait strictement plus de 150 caractère, doit retourner 400`() {
             // When & Then
-            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            val rechercheDe151Caracteres =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
+                    "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe51Caracteres"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe151Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -2663,8 +2379,8 @@ class FormationControllerTest(
                           "type": "about:blank",
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
-                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
-                          "instance": "/api/v1/formations/recherche/succincte"
+                          "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
+                          "instance": "$API_FORMATION/recherche/succincte"
                         }
                         """.trimIndent(),
                     ),
@@ -2678,14 +2394,14 @@ class FormationControllerTest(
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
             val mapRechercheLongue =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -2704,22 +2420,41 @@ class FormationControllerTest(
                     FormationCourte(id = "fl10", nom = "DUT Informatique"),
                     FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
-            given(ordonnerRechercheFormationsBuilder.trierParScore(mapRechercheLongue)).willReturn(rechercheLongue)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheLongue,
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    rechercheLongue.map {
+                        FormationAvecSonAffinite(it.id, 1.0f)
+                    },
                 )
-            given(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
+            given(
+                suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(
+                    profilEleve = AvecProfilExistant(""),
+                ),
+            ).willReturn(
+                suggestions,
             )
+            given(ordonnerRechercheFormationsBuilder.trierParScore(mapRechercheLongue)).willReturn(rechercheLongue)
+
+            given(
+                ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                    resultats = mapRechercheLongue,
+                    formationsAvecLeurAffinite = suggestions.formations,
+                ),
+            ).willReturn(rechercheLongue)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
+                post("$API_FORMATION/recherche/succincte")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe50Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -2758,33 +2493,11 @@ class FormationControllerTest(
                               "id": "fl18",
                               "nom": "L1 - Littérature"
                             }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
-                            }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=test"),
-            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -2796,8 +2509,8 @@ class FormationControllerTest(
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             val rechercheL1 =
                 listOf(
@@ -2843,23 +2556,33 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl7"),
+                    false,
+                ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl7"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
+            Hateoas(
+                pageActuelle = 1,
+                pageSuivante = null,
+                premierePage = 1,
+                dernierePage = 1,
+                listeCoupee = listOf("fl1", "fl7"),
             )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -3072,33 +2795,9 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
+                                "choixEleve":[{"id":"T_ITM_1356","nom":"soin aux animaux"},{"id":"aider_autres","nom":"Aider les autres"},{"id":"MET.397","nom":"analyste financier/ère"},{"id":"MET.103","nom":"ingénieur/e en expérimentation et production végétales"},{"id":"fl1","nom":"CPGE MPSI"},{"id":"fl7","nom":"BUT Informatique"}],
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -3119,15 +2818,6 @@ class FormationControllerTest(
                                     "nom": "Série Générale"
                                   },
                                   "pourcentage": 18
-                                },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
                                 },
                                 "detailsCalculScore": {
                                   "details": []
@@ -3239,20 +2929,6 @@ class FormationControllerTest(
                               },
                               "explications": null
                             }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            }
                           ]
                         }
                         """.trimIndent(),
@@ -3266,8 +2942,8 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -3310,23 +2986,26 @@ class FormationControllerTest(
                     ficheFormation.copy(id = "fl1"),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl7", "fl1")),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl7", "fl1"),
+                    false,
+                ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl7", "fl1"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl7", "fl1"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -3644,33 +3323,9 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
-                                ],
+                                "choixEleve":[{"id":"T_ITM_1356","nom":"soin aux animaux"},{"id":"aider_autres","nom":"Aider les autres"},{"id":"MET.397","nom":"analyste financier/ère"},{"id":"MET.103","nom":"ingénieur/e en expérimentation et production végétales"},{"id":"fl1","nom":"CPGE MPSI"},{"id":"fl7","nom":"BUT Informatique"}],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -3692,33 +3347,10 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
                               }
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
                             }
                           ]
                         }
@@ -3732,7 +3364,16 @@ class FormationControllerTest(
         fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -3742,7 +3383,7 @@ class FormationControllerTest(
                           "title": "REQUETE_TROP_COURTE",
                           "status": 400,
                           "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
-                          "instance": "/api/v1/formations/recherche/detaillee"
+                          "instance": "$API_FORMATION/recherche/detaillee"
                         }
                         """.trimIndent(),
                     ),
@@ -3751,11 +3392,22 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+        fun `si le mot recherché fait strictement plus de 150 caractère, doit retourner 400`() {
             // When & Then
-            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            val rechercheDe151Caracteres =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in ornare nisl. " +
+                    "Donec blandit suscipit velit nec auctor. Interdum et malesuada fames in"
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=$rechercheDe51Caracteres"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = rechercheDe151Caracteres,
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -3764,8 +3416,8 @@ class FormationControllerTest(
                           "type": "about:blank",
                           "title": "REQUETE_TROP_LONGUE",
                           "status": 400,
-                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
-                          "instance": "/api/v1/formations/recherche/detaillee"
+                          "detail": "La taille de la requête dépasse la taille maximale de 150 caractères",
+                          "instance": "$API_FORMATION/recherche/detaillee"
                         }
                         """.trimIndent(),
                     ),
@@ -3778,8 +3430,8 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             given(
                 rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
@@ -3789,8 +3441,8 @@ class FormationControllerTest(
             ).willReturn(rechercheL1)
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormationPourProfil.copy(id = "fl1"),
+                    ficheFormationPourProfil.copy(
                         id = "fl7",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -3801,32 +3453,49 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).willReturn(fichesFormations)
-            given(ordonnerRechercheFormationsBuilder.trierParScore(rechercheL1)).willReturn(
+            val formationsAvecLeurAffinite =
+                listOf(
+                    FormationAvecSonAffinite("fl1", 1.0f),
+                    FormationAvecSonAffinite("fl7", 0.5f),
+                )
+            val suggestions = SuggestionsPourUnProfil(emptyList(), formationsAvecLeurAffinite)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(AvecProfilExistant(""))).willReturn(
+                suggestions,
+            )
+            given(
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    profilEleve = AvecProfilExistant(""),
+                    suggestions,
+                    listOf("fl1", "fl7"),
+                    false,
+                ),
+            ).willReturn(fichesFormations)
+            given(
+                ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
+                    rechercheL1,
+                    suggestions.formations,
+                ),
+            ).willReturn(
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 ),
             )
 
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl7"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
-
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+                post("$API_FORMATION/recherche/detaillee")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            RechercheFormationsDTO(
+                                recherche = "L1",
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -3841,9 +3510,9 @@ class FormationControllerTest(
                                   "fl0012"
                                 ],
                                 "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "moyenneGeneraleDesAdmis": null,
                                 "criteresAnalyseCandidature": [
                                   {
@@ -3877,6 +3546,32 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
                                 "voeux": [
                                   {
                                     "id": "ta10",
@@ -3927,7 +3622,40 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [
                                   {
                                     "id": "MET001",
@@ -3947,10 +3675,20 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null,
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
+                              "explications": {
+                                "geographique": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": [],
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             },
                             {
                               "formation": {
@@ -3967,6 +3705,32 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
+                                  }
+                                ],
                                 "voeux": [
                                   {
                                     "id": "ta10",
@@ -4017,26 +3781,73 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": null,
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                              "explications": {
+                                "geographique": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": [],
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             }
                           ]
                         }
@@ -4044,18 +3855,10 @@ class FormationControllerTest(
                     ),
                 )
         }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=test"),
-            ).andDo(print()).andExpect(status().isUnauthorized)
-        }
     }
 
     @Nested
-    inner class `Quand on appelle la route de récupération de formations` {
+    inner class `Quand on appelle la route de récupération de fiches formations` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail des formations`() {
@@ -4078,29 +3881,37 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communes = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl2"),
+                    true,
+                ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4126,7 +3937,7 @@ class FormationControllerTest(
                                   "centiles": [
                                     {
                                       "centile": 5,
-                                      "note": 13.0
+                                      "note": 13
                                     },
                                     {
                                       "centile": 25,
@@ -4134,11 +3945,11 @@ class FormationControllerTest(
                                     },
                                     {
                                       "centile": 75,
-                                      "note": 17.0
+                                      "note": 17
                                     },
                                     {
                                       "centile": 95,
-                                      "note": 18.0
+                                      "note": 18
                                     }
                                   ]
                                 },
@@ -4194,6 +4005,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -4313,7 +4150,25 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
                                   {
                                     "id": "fl1",
                                     "nom": "CPGE MPSI"
@@ -4323,23 +4178,6 @@ class FormationControllerTest(
                                     "nom": "BUT Informatique"
                                   }
                                 ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -4361,15 +4199,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -4390,60 +4219,14 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
                             }
                           ]
                         }
@@ -4474,29 +4257,37 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communes = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
+                recupererFichesFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl2"),
+                    true,
+                ),
             ).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
-                )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
-            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4522,7 +4313,7 @@ class FormationControllerTest(
                                   "centiles": [
                                     {
                                       "centile": 5,
-                                      "note": 13.0
+                                      "note": 13
                                     },
                                     {
                                       "centile": 25,
@@ -4530,11 +4321,11 @@ class FormationControllerTest(
                                     },
                                     {
                                       "centile": 75,
-                                      "note": 17.0
+                                      "note": 17
                                     },
                                     {
                                       "centile": 95,
-                                      "note": 18.0
+                                      "note": 18
                                     }
                                   ]
                                 },
@@ -4590,6 +4381,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -4709,7 +4526,25 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   }
                                 ],
-                                "formationsSimilaires": [
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "choixEleve": [
+                                  {
+                                    "id": "T_ITM_1356",
+                                    "nom": "soin aux animaux"
+                                  },
+                                  {
+                                    "id": "aider_autres",
+                                    "nom": "Aider les autres"
+                                  },
+                                  {
+                                    "id": "MET.397",
+                                    "nom": "analyste financier/ère"
+                                  },
+                                  {
+                                    "id": "MET.103",
+                                    "nom": "ingénieur/e en expérimentation et production végétales"
+                                  },
                                   {
                                     "id": "fl1",
                                     "nom": "CPGE MPSI"
@@ -4719,23 +4554,6 @@ class FormationControllerTest(
                                     "nom": "BUT Informatique"
                                   }
                                 ],
-                                "dureeEtudesPrevue": "longue",
-                                "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
-                                  "interets": [
-                                    {
-                                      "id": "aider_autres",
-                                      "nom": "Aider les autres"
-                                    }
-                                  ],
-                                  "domaines": [
-                                    {
-                                      "id": "T_ITM_1356",
-                                      "nom": "soin aux animaux",
-                                      "emoji": "\uD83D\uDC2E"
-                                    }
-                                  ]
-                                },
                                 "specialitesChoisies": [
                                   {
                                     "nomSpecialite": "specialiteA",
@@ -4757,15 +4575,6 @@ class FormationControllerTest(
                                   },
                                   "pourcentage": 18
                                 },
-                                "autoEvaluationMoyenne": {
-                                  "moyenne": 15.0,
-                                  "basIntervalleNotes": 14.0,
-                                  "hautIntervalleNotes": 16.0,
-                                  "baccalaureatUtilise": {
-                                    "id": "Générale",
-                                    "nom": "Série Générale"
-                                  }
-                                },
                                 "detailsCalculScore": {
                                   "details": []
                                 }
@@ -4786,60 +4595,14 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
                               },
                               "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
                             }
                           ]
                         }
@@ -4854,8 +4617,8 @@ class FormationControllerTest(
             // Given
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormationPourProfil.copy(id = "fl1"),
+                    ficheFormationPourProfil.copy(
                         id = "fl2",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -4866,26 +4629,45 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                emptyList(),
+                                emptyList(),
+                                emptyList(),
+                            ),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).willReturn(fichesFormations)
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl2"),
+            val suggestions =
+                SuggestionsPourUnProfil(
+                    emptyList(),
+                    listOf("fl1", "fl2").map { FormationAvecSonAffinite(it, 1.0f) },
                 )
-            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
-                hateoas,
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(AvecProfilExistant("")))
+                .willReturn(suggestions)
+
+            given(
+                recupererFichesFormationsService
+                    .recupererFichesFormationPourProfil(
+                        AvecProfilExistant(""),
+                        suggestions,
+                        listOf("fl1", "fl2"),
+                        true,
+                    ),
             )
+                .willReturn(fichesFormations)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -4900,9 +4682,9 @@ class FormationControllerTest(
                                   "fl0012"
                                 ],
                                 "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifDiplome": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "descriptifAttendus": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "moyenneGeneraleDesAdmis": null,
                                 "criteresAnalyseCandidature": [
                                   {
@@ -4934,6 +4716,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -4986,6 +4794,91 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 5
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 100,
+                                "apprentissage": false
+                              },
+                              "explications": {
+                                "geographique": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": [],
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "communes": [],
+                                "voeux": [],
                                 "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [
                                   {
@@ -5006,59 +4899,26 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null,
+                                "tauxAffinite": 100,
                                 "apprentissage": false
                               },
-                              "explications": null
-                            },
-                            {
-                              "formation": {
-                                "id": "fl2",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
-                                "metiers": [],
-                                "tauxAffinite": null,
-                                "apprentissage": false
-                              },
-                              "explications": null
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                              "explications": {
+                                "geographique": [],
+                                "dureeEtudesPrevue": null,
+                                "alternance": null,
+                                "choixEleve": [],
+                                "specialitesChoisies": [],
+                                "typeBaccalaureat": null,
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             }
                           ]
                         }
                         """.trimIndent(),
                     ),
                 )
-        }
-
-        @Test
-        fun `si pas connecté, doit retourner 401`() {
-            // When & Then
-            mvc.perform(get("/api/v1/formations?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -5068,16 +4928,94 @@ class FormationControllerTest(
             val uneException =
                 MonProjetSupInternalErrorException(
                     "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/formations?ids=fl1&ids=fl2",
+                    "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/public/formations?ids=fl1&ids=fl2",
                     null,
                 )
             given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations?ids=fl1&ids=fl2"),
+                post("$API_FORMATION/fiches")
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                        ObjectMapper().writeValueAsString(
+                            GetFichesFormationsDTO(
+                                ids = listOf("fl1", "fl2"),
+                                profil = null,
+                                numeroDePage = 1,
+                            ),
+                        ),
+                    ).accept(MediaType.APPLICATION_JSON),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
+        }
+    }
+
+    @Nested
+    inner class `Quand on appelle la route de récupération de formations` {
+        val formations =
+            listOf(
+                FormationCourte("fl1", "Cycle pluridisciplinaire d'Études Supérieures - Science"),
+                FormationCourte("fl2", "2eme formation"),
+                FormationCourte("fl3", "3eme formation"),
+            )
+
+        val contenuJson =
+            """
+            {
+              "formations": [
+                {
+                  "id": "fl1",
+                  "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science"
+                },
+                {
+                  "id": "fl2",
+                  "nom": "2eme formation"
+                },
+                {
+                  "id": "fl3",
+                  "nom": "3eme formation"
+                }
+              ]
+            }
+            """.trimIndent()
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+
+            // When & Then
+            mvc.perform(
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si enseignant, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+
+            // When & Then
+            mvc.perform(
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 200 avec les formations`() {
+            // Given
+            given(recupererFormationsService.recupererFormations(listOf("fl1", "fl2", "fl3"))).willReturn(formations)
+
+            // When & Then
+            mvc.perform(
+                get("$API_FORMATION?ids=fl1&ids=fl2&ids=fl3"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(contenuJson))
         }
     }
 }

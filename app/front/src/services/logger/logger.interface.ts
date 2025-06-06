@@ -1,7 +1,7 @@
-export type ILogger = {
-  debug: (object: unknown) => void;
-  error: (object: unknown) => void;
-  info: (object: unknown) => void;
-  trace: (object: unknown) => void;
-  warn: (object: unknown) => void;
-};
+export interface Logger {
+  consigner: (
+    niveau: "fatal" | "error" | "warning" | "log" | "info" | "debug",
+    erreur: Error,
+    contexte?: unknown,
+  ) => void;
+}

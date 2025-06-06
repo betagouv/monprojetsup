@@ -1,12 +1,15 @@
-import { type useIntérêtsFormArgs } from "./IntérêtsForm.interface";
+import { type UseIntérêtsFormArgs } from "./IntérêtsForm.interface";
 import { centresIntérêtsValidationSchema } from "./IntérêtsForm.validation";
-import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import { actionsToastStore } from "@/components/Toast/useToastStore/useToastStore";
+import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useId } from "react";
 
-export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccès }: useIntérêtsFormArgs) {
+export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseIntérêtsFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
+  const { déclencherToast } = actionsToastStore();
 
   const légendeId = useId();
 
@@ -19,15 +22,19 @@ export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccè
     référentielDonnées?.centresIntérêts.map((catégorie) => ({
       nom: catégorie.nom,
       emoji: catégorie.emoji,
+      afficherDétail: catégorie.sousCatégoriesCentreIntérêt.some((sousCatégorie) => sousCatégorie.description !== null),
       filtres: catégorie.sousCatégoriesCentreIntérêt,
     })) ?? [];
 
   const auChangementFiltresSélectionnés = (filtreIdsSélectionnés: string[]) =>
     setValue("centresIntérêts", filtreIdsSélectionnés);
 
+  if (erreurs.centresIntérêts?.message) {
+    déclencherToast(i18n.COMMUN.ERREURS_FORMULAIRES.TITRE_GÉNÉRIQUE, erreurs.centresIntérêts.message, "error");
+  }
+
   return {
     mettreÀJourÉlève,
-    erreurs,
     filtresGroupésParCatégories,
     filtreIdsSélectionnésParDéfaut: getValues("centresIntérêts") ?? [],
     auChangementFiltresSélectionnés,

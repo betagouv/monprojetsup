@@ -41,8 +41,15 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 listOf(
-                    Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                    Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                    Domaine(
+                        id = "animaux",
+                        nom = "Soins aux animaux",
+                        emoji = "\uD83D\uDC2E",
+                        description =
+                            "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les animaux, " +
+                                "les nourrir et assurer leur bien-être.",
+                    ),
+                    Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -79,8 +86,15 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
                         emoji = "🥕",
                     ) to
                         listOf(
-                            Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                            Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                            Domaine(
+                                id = "animaux",
+                                nom = "Soins aux animaux",
+                                emoji = "\uD83D\uDC2E",
+                                description =
+                                    "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner " +
+                                        "les animaux, les nourrir et assurer leur bien-être.",
+                            ),
+                            Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                         ),
                     CategorieDomaine(
                         id = "commerce",
@@ -93,31 +107,31 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierDomainesExistent {
+    inner class RecupererIdsDomainesInexistants {
         @Test
         @Sql("classpath:domaine.sql")
-        fun `si toutes les domaines existent, renvoyer true`() {
+        fun `si toutes les domaines existent, renvoyer liste vide`() {
             // Given
             val ids = listOf("agroequipement", "animaux")
 
             // When
-            val result = domaineBDDRepository.verifierDomainesExistent(ids)
+            val result = domaineBDDRepository.recupererIdsDomainesInexistants(ids)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:domaine.sql")
-        fun `si un des domaines n'existe pas, renvoyer false`() {
+        fun `si un des domaines n'existe pas, renvoyer la liste de ces domaines`() {
             // Given
             val ids = listOf("agroequipement", "agriculture_alimentaire", "animaux")
 
             // When
-            val result = domaineBDDRepository.verifierDomainesExistent(ids)
+            val result = domaineBDDRepository.recupererIdsDomainesInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("agriculture_alimentaire"))
         }
     }
 }

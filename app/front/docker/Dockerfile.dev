@@ -1,0 +1,12 @@
+# Use an official node image as the base image
+FROM node:22-alpine AS build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy frontend application files to the container
+COPY . .
+RUN rm -f .env.local
+
+# Clean install a project
+RUN npm ci

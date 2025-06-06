@@ -25,10 +25,9 @@ class SuggestionsEdgeEntity {
         const val TYPE_EDGE_SECTEURS_METIERS: Int = 3
         const val TYPE_EDGE_METIERS_ASSOCIES: Int = 4
         const val TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS: Int = 5
-        const val TYPE_EDGE_LAS_TO_GENERIC: Int = 6
-        const val TYPE_EDGE_LAS_TO_PASS: Int = 7
         const val TYPE_EDGE_ATOME_ELEMENT: Int = 8
         const val TYPE_EDGE_METIERS_FORMATIONS_PSUP: Int = 9
+        const val TYPE_EDGE_ALGO: Int = 10
     }
 
     @Id

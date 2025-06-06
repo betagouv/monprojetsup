@@ -17,6 +17,7 @@ export type TitreProps = {
     | "text--lead"
     | "text--lg"
     | "text"
+    | "text--md"
     | "text--sm"
     | "text--xs";
 };

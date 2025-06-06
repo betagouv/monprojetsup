@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.commun.erreur.domain
 
 abstract class MonProjetSupExceptions(
     open val code: String,
-    message: String,
+    override val message: String,
     cause: Throwable? = null,
 ) : Exception(message, cause)
 
@@ -30,7 +30,11 @@ data class MonProjetSupNotFoundException(
     val origine: Throwable? = null,
 ) : MonProjetSup4xxExceptions(code, msg, origine)
 
-class EleveSansCompteException : MonProjetSupForbiddenException("ELEVE_SANS_COMPTE", "L'élève connecté n'a pas encore crée son compte")
+fun eleveSansCompteException() =
+    MonProjetSupNotFoundException(
+        code = "ELEVE_SANS_COMPTE",
+        msg = "L'élève connecté n'a pas encore crée son compte",
+    )
 
 open class MonProjetSupForbiddenException(
     override val code: String,
@@ -43,7 +47,13 @@ data class MonProjetSupInternalErrorException(
     val origine: Throwable? = null,
 ) : MonProjetSup5xxExceptions(code, msg, origine)
 
-data class MonProjetIllegalStateErrorException(
+data class MonProjetSupIllegalStateErrorException(
+    override val code: String,
+    val msg: String,
+    val origine: Throwable? = null,
+) : MonProjetSup5xxExceptions(code, msg, origine)
+
+data class MonProjetSupServiceUnavailableException(
     override val code: String,
     val msg: String,
     val origine: Throwable? = null,

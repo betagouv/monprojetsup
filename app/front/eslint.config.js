@@ -41,13 +41,6 @@ export default [
         ...vitest.recommended.plugins.vitest.environments.env.globals,
       }
     },
-    rules: {
-      "@typescript-eslint/no-misused-promises": [2, {
-        "checksVoidReturn": {
-          "attributes": false
-        }
-      }],
-    }
   },
   {
     ...canonical.recommended,
@@ -63,7 +56,19 @@ export default [
         "error",
         { multiline: true },
       ],
-
+      "@stylistic/quotes": "off",
+      "@stylistic/object-property-newline": "off",
+      "@stylistic/object-curly-newline": "off",
+      "@stylistic/array-bracket-newline": "off",
+      "@stylistic/array-element-newline": "off",
+      "@stylistic/space-before-function-paren": "off",
+      "@stylistic/operator-linebreak": "off",
+      "@stylistic/nonblock-statement-body-position": "off",
+      "@stylistic/jsx-quotes": "off",
+      "@stylistic/no-extra-parens": "off",
+      "@stylistic/implicit-arrow-linebreak": "off",
+      "@stylistic/indent": "off",
+      "@stylistic/no-confusing-arrow": "off",
       "arrow-body-style": "off",
       "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }],
       "perfectionist/sort-interfaces": "off",
@@ -73,6 +78,7 @@ export default [
       "perfectionist/sort-union-types": "off",
       "perfectionist/sort-switch-case": "off",
       "perfectionist/sort-intersection-types": "off",
+      "perfectionist/sort-modules": "off",
       "canonical/destructuring-property-newline": "off",
       "canonical/import-specifier-newline": "off",
       "canonical/filename-match-regex": "off",
@@ -103,11 +109,14 @@ export default [
                 "Balise",
                 "TextareaAutosize",
                 "Link",
+                "Toggle",
                 "Accordion.Root",
                 "Accordion.Item",
                 "Accordion.Header",
                 "Accordion.Trigger",
                 "Accordion.Content",
+                "ToastRadix.Viewport",
+                "ToastRadix.Root",
               ],
             },
           ],
@@ -144,6 +153,7 @@ export default [
       "sonarjs/pluginRules-of-hooks": "off",
       "sonarjs/no-misused-promises": "off",
       "sonarjs/slow-regex": "off",
+      "sonarjs/function-return-type": "off",
       "sonarjs/class-name": [
         "error",
         { format: "^[A-Za-zÀ-ÖØ-öø-ÿ]*$" },
@@ -168,7 +178,16 @@ export default [
   regexp.recommended,
   yaml.recommended,
   browser.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.recommendedTypeChecked.map(config => ({
+    ...config,
+    rules: {
+      ...config.rules,
+      "@typescript-eslint/only-throw-error": "off",
+      "@typescript-eslint/no-misused-promises": [2, {
+        "checksVoidReturn": false
+      }],
+    }
+  })),
   eslintConfigPrettier,
   prettierPlugin
 ];

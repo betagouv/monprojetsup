@@ -12,4 +12,5 @@ export type LienExterneProps = {
   };
   estUnTéléchargement?: boolean;
   estUnTag?: boolean;
+  id?: string;
 };

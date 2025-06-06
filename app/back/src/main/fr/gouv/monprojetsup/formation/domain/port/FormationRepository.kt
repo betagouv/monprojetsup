@@ -1,17 +1,20 @@
 package fr.gouv.monprojetsup.formation.domain.port
 
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 
 interface FormationRepository {
-    @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
-    fun recupererUneFormationAvecSesMetiers(idFormation: String): Formation
+    @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
+    fun recupererUneFormation(idFormation: String): Formation
 
-    fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<Formation>
+    fun recupererLesFormations(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): List<Formation>
 
     fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte>
 
-    fun verifierFormationsExistent(ids: List<String>): Boolean
+    fun recupererIdsFormationsInexistantes(ids: List<String>): List<String>
 }

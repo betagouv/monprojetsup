@@ -11,7 +11,7 @@ data class ResultatRechercheFormationCourte(
         val motExactPresentDebutPhrase: Boolean,
         val motExactPresentFin: Boolean,
         val motExactMilieu: Boolean,
-        val sequencePresenteMot: Boolean,
+        val motEnPrefix: Boolean,
         val pourcentageMot: Int,
     )
 }

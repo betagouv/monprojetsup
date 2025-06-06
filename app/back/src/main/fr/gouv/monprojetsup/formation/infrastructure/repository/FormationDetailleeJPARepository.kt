@@ -5,4 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface FormationDetailleeJPARepository : JpaRepository<FormationDetailleeEntity, String> {
     fun findAllByIdIn(ids: List<String>): List<FormationDetailleeEntity>
+
+    fun findAllByIdInAndObsolete(
+        id: List<String>,
+        obsolete: Boolean,
+    ): List<FormationDetailleeEntity>
 }

@@ -4,20 +4,30 @@ import {
 } from "./métierHttpRepository.interface";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
+import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
+import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class métierHttpRepository implements MétierRepository {
-  private _ENDPOINT = "/api/v1/metiers" as const;
+  private _ENDPOINT = "/api/v1/public/metiers" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
-  public async récupérer(métierId: string): Promise<Métier | undefined> {
-    const métiers = await this.récupérerPlusieurs([métierId]);
+  public async récupérer(métierId: string): Promise<Métier | Error> {
+    const réponse = await this.récupérerPlusieurs([métierId]);
 
-    return métiers?.[0];
+    if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
+      return new RessourceNonTrouvéeErreur();
+    }
+
+    if (réponse instanceof Error) {
+      return réponse;
+    }
+
+    return réponse?.[0];
   }
 
-  public async récupérerPlusieurs(métierIds: string[]): Promise<Métier[] | undefined> {
+  public async récupérerPlusieurs(métierIds: string[]): Promise<Métier[] | Error> {
     const paramètresDeRequête = new URLSearchParams();
 
     for (const métierId of métierIds) {
@@ -26,12 +36,14 @@ export class métierHttpRepository implements MétierRepository {
 
     const réponse = await this._mpsApiHttpClient.get<RécupérerMétiersRéponseHTTP>(this._ENDPOINT, paramètresDeRequête);
 
-    if (!réponse) return undefined;
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
     return réponse.metiers.map((métier) => this._mapperVersLeDomaine(métier));
   }
 
-  public async rechercher(recherche: string): Promise<Métier[] | undefined> {
+  public async rechercher(recherche: string): Promise<Métier[] | Error> {
     const paramètresDeRequête = new URLSearchParams();
     paramètresDeRequête.set("recherche", recherche);
 
@@ -40,7 +52,9 @@ export class métierHttpRepository implements MétierRepository {
       paramètresDeRequête,
     );
 
-    if (!réponse) return undefined;
+    if (réponse instanceof Error) {
+      return réponse;
+    }
 
     return réponse.metiers.map((métier) =>
       this._mapperVersLeDomaine({

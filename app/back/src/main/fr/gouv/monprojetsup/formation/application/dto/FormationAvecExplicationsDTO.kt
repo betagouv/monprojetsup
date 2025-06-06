@@ -2,26 +2,22 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
-import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.InteretsEtDomainesDTO.InteretDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneCourte
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
-import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
-import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.Label
 
 data class FormationAvecExplicationsDTO(
     val formation: FicheFormationDTO,
@@ -48,6 +44,7 @@ data class FormationAvecExplicationsDTO(
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
+        val communes: List<CommuneCourteDTO>,
         val voeux: List<VoeuAvecCommuneDTO>,
         val communesFavoritesAvecLeursVoeux: List<CommuneAvecSesVoeuxDTO>,
         val metiers: List<MetierDTO>,
@@ -76,11 +73,15 @@ data class FormationAvecExplicationsDTO(
             communesFavoritesAvecLeursVoeux =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        ficheFormation.voeuxParCommunesFavorites.map {
+                        ficheFormation.informationsSurLesVoeuxEtLeursCommunes.voeuxParCommunesFavorites.map {
                             CommuneAvecSesVoeuxDTO(it)
                         }
 
                     is FicheFormation.FicheFormationSansProfil -> emptyList()
+                },
+            communes =
+                ficheFormation.informationsSurLesVoeuxEtLeursCommunes.communes.map {
+                    CommuneCourteDTO(it)
                 },
             metiers =
                 ficheFormation.metiers.map { metier ->
@@ -163,25 +164,18 @@ data class FormationAvecExplicationsDTO(
 
     data class ExplicationsDTO(
         val geographique: List<ExplicationGeographiqueDTO>,
-        val formationsSimilaires: List<FormationSimilaireDTO>,
         val dureeEtudesPrevue: ChoixDureeEtudesPrevue?,
         val alternance: ChoixAlternance?,
-        val interetsEtDomainesChoisis: InteretsEtDomainesDTO?,
+        val choixEleve: List<LabelDTO>?,
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
-        val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
         val detailsCalculScore: DetailsCalculScoreDTO?,
     ) {
         constructor(explications: ExplicationsSuggestionDetaillees) : this(
             geographique = explications.geographique.map { ExplicationGeographiqueDTO(it) },
-            formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
-            interetsEtDomainesChoisis =
-                InteretsEtDomainesDTO(
-                    interets = explications.interets.map { InteretDTO(it) },
-                    domaines = explications.domaines.map { DomaineDTO(it) },
-                ),
+            choixEleve = explications.choixEleve.map { LabelDTO(it) },
             specialitesChoisies =
                 explications.specialitesChoisies.map {
                     AffiniteSpecialiteDTO(
@@ -192,10 +186,6 @@ data class FormationAvecExplicationsDTO(
                 explications.explicationTypeBaccalaureat?.let {
                     TypeBaccalaureatDTO(it)
                 },
-            autoEvaluationMoyenne =
-                explications.explicationAutoEvaluationMoyenne?.let {
-                    AutoEvaluationMoyenneDTO(it)
-                },
             detailsCalculScore =
                 DetailsCalculScoreDTO(
                     details = explications.detailsCalculScore,
@@ -203,23 +193,11 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class InteretsEtDomainesDTO(
-        val interets: List<InteretDTO>,
-        val domaines: List<DomaineDTO>,
-    ) {
-        data class InteretDTO(
-            val id: String,
-            val nom: String,
-        ) {
-            constructor(interet: InteretSousCategorie) : this(id = interet.id, nom = interet.nom)
-        }
-    }
-
-    data class FormationSimilaireDTO(
+    data class LabelDTO(
         val id: String,
         val nom: String,
     ) {
-        constructor(formationCourte: FormationCourte) : this(id = formationCourte.id, nom = formationCourte.nom)
+        constructor(label: Label) : this(id = label.id, nom = label.nom)
     }
 
     data class AffiniteSpecialiteDTO(
@@ -242,20 +220,6 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class AutoEvaluationMoyenneDTO(
-        val moyenne: Float,
-        val basIntervalleNotes: Float,
-        val hautIntervalleNotes: Float,
-        val baccalaureatUtilise: BaccalaureatDTO,
-    ) {
-        constructor(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne) : this(
-            moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
-            basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
-            hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
-            baccalaureatUtilise = BaccalaureatDTO(autoEvaluationMoyenne.baccalaureatUtilise),
-        )
-    }
-
     data class TypeBaccalaureatDTO(
         val baccalaureat: BaccalaureatDTO,
         val pourcentage: Int,
@@ -273,7 +237,7 @@ data class FormationAvecExplicationsDTO(
         constructor(
             communeAvecVoeuxAuxAlentours: CommuneAvecVoeuxAuxAlentours,
         ) : this(
-            commune = ModificationProfilDTO.CommuneDTO(communeAvecVoeuxAuxAlentours.commune),
+            commune = ModificationProfilDTO.CommuneDTO(communeAvecVoeuxAuxAlentours.communeFavorite),
             voeuxAvecDistance = communeAvecVoeuxAuxAlentours.distances.map { VoeuAvecDistanceDTO(it) },
         )
 
@@ -296,11 +260,7 @@ data class FormationAvecExplicationsDTO(
         constructor(voeu: Voeu) : this(
             id = voeu.id,
             nom = voeu.nom,
-            commune =
-                CommuneCourteDTO(
-                    nom = voeu.commune.nom,
-                    codeInsee = voeu.commune.codeInsee,
-                ),
+            commune = CommuneCourteDTO(voeu.commune),
         )
     }
 
@@ -311,5 +271,10 @@ data class FormationAvecExplicationsDTO(
     data class CommuneCourteDTO(
         val nom: String,
         val codeInsee: String,
-    )
+    ) {
+        constructor(commune: CommuneCourte) : this(
+            nom = commune.nom,
+            codeInsee = commune.codeInsee,
+        )
+    }
 }

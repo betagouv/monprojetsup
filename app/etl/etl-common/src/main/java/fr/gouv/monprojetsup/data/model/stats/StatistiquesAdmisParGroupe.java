@@ -39,18 +39,15 @@ public record StatistiquesAdmisParGroupe(
     }
 
    StatistiquesAdmisParGroupe createGroupAdmisStatistique(
-            Map<String, String> groups,
-            Set<String> bacsKeys
+           Map<String, Collection<String>> groups,
+           Set<String> bacsKeys
     ) {
-
-        Map<String, Set<String>> reverseGroups = new HashMap<>();
-        groups.forEach((s, s2) -> reverseGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
        StatistiquesAdmisParGroupe result = new StatistiquesAdmisParGroupe();
-        reverseGroups.forEach((s, keys) ->
+        groups.forEach((s, keys) ->
                 result.parGroupe.put(
                         s,
                         StatistiquesAdmisParBac.getStatAgregee(
-                                keys.stream().map(parGroupe::get).filter(Objects::nonNull).toList(),
+                                keys.stream().distinct().map(parGroupe::get).filter(Objects::nonNull).toList(),
                                 bacsKeys
                         )
                 )

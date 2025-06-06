@@ -28,8 +28,7 @@ public class GetAffinitiesServiceDTO {
                     description =
                             """
                                Liste des formations dans l'ordre d'affichage, ainsi que le score d'affinité dans l'intervalle [0.0 , 1.0].
-                               """,
-                    required = true
+                               """
             )
             List<Affinity> affinites,
 
@@ -37,8 +36,7 @@ public class GetAffinitiesServiceDTO {
                     description =
                             """
                                Liste des métiers dans l'ordre d'affichage, triés par affinité.
-                               """,
-                    required = true
+                               """
             )
             List<String> metiers
 
@@ -69,8 +67,7 @@ public class GetAffinitiesServiceDTO {
                     description =
                             """
                                Score d'affinité entre 0.0 et 1.0. Précision 6 décimales.
-                               """,
-                    required = true
+                               """
             )
             double affinite,
 

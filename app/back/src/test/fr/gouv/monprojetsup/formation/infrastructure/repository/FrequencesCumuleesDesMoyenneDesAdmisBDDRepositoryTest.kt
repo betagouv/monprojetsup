@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -11,14 +12,14 @@ import org.springframework.test.context.jdbc.Sql
 
 class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
-    lateinit var moyenneGeneraleAdmisJPARepository: MoyenneGeneraleAdmisJPARepository
+    lateinit var entityManager: EntityManager
 
     lateinit var moyenneGeneraleAdmisBDDRepository: FrequencesCumuleesDesMoyenneDesAdmisBDDRepository
 
     @BeforeEach
     fun setup() {
         moyenneGeneraleAdmisBDDRepository =
-            FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(moyenneGeneraleAdmisJPARepository)
+            FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(entityManager)
     }
 
     @Nested
@@ -347,17 +348,15 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
     }
 
     companion object {
-        private val baccalaureatGeneral = Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale")
-        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC")
-        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P")
-        private val baccalaureatST2S = Baccalaureat(id = "ST2S", nom = "Bac ST2S", idExterne = "ST2S")
-        private val baccalaureatSTAV = Baccalaureat(id = "STAV", nom = "Bac STAV", idExterne = "STAV")
-        private val baccalaureatSTI2D = Baccalaureat(id = "STI2D", nom = "Bac STI2D", idExterne = "STI2D")
-        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL")
-        private val baccalaureatSTMG = Baccalaureat(id = "STMG", nom = "Bac STMG", idExterne = "STMG")
+        private val baccalaureatGeneral =
+            Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale", idCarteParcoursup = "1")
+        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P", idCarteParcoursup = "3")
+        private val baccalaureatST2S = Baccalaureat(id = "ST2S", nom = "Bac ST2S", idExterne = "ST2S", idCarteParcoursup = "2")
+        private val baccalaureatSTAV = Baccalaureat(id = "STAV", nom = "Bac STAV", idExterne = "STAV", idCarteParcoursup = "2")
+        private val baccalaureatSTI2D = Baccalaureat(id = "STI2D", nom = "Bac STI2D", idExterne = "STI2D", idCarteParcoursup = "2")
+        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL", idCarteParcoursup = "2")
+        private val baccalaureatSTMG = Baccalaureat(id = "STMG", nom = "Bac STMG", idExterne = "STMG", idCarteParcoursup = "2")
 
-        private val fl0002NC2023 =
-            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 5, 6, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9)
         private val fl0002General2023 =
             listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6)
         private val fl0002STMG2023 =
@@ -369,49 +368,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3, 3, 5, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8)
         private val fl0001STAV2024 =
             listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-        private val fl0001NC2024 =
-            listOf(
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                1,
-                1,
-                2,
-                6,
-                7,
-                14,
-                17,
-                21,
-                24,
-                29,
-                32,
-                32,
-                34,
-                35,
-                36,
-                36,
-                36,
-                36,
-                36,
-                36,
-                36,
-                36,
-                36,
-                36,
-            )
         private val fl0001STMG2024 =
             listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
         private val fl0001P2024 =

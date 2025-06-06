@@ -1,0 +1,1 @@
+ALTER TABLE ref_interet_sous_categorie ADD COLUMN description VARCHAR(255);

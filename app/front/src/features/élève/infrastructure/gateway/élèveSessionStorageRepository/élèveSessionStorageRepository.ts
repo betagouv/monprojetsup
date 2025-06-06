@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { type Élève } from "@/features/élève/domain/élève.interface";
+import { type Élève, ProgressionÉlève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
 export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
   private _SESSION_STORAGE_PREFIX = "élève";
 
   private _élève: Élève = {
+    compteParcoursupAssocié: false,
     situation: null,
     classe: null,
     bac: null,
@@ -15,13 +16,19 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     métiersFavoris: null,
     duréeÉtudesPrévue: null,
     alternance: null,
-    moyenneGénérale: null,
     communesFavorites: null,
-    formationsFavorites: null,
+    formations: null,
+    voeuxFavoris: null,
     formationsMasquées: null,
+    ambitions: null,
+    notesPersonnelles: null,
   };
 
-  public async récupérerProfil(): Promise<Élève | undefined> {
+  public async récupérerProfil(): Promise<Élève | Error> {
+    return this.récupérerProfilLocal();
+  }
+
+  public récupérerProfilLocal(): Élève {
     const élève = sessionStorage.getItem(this._SESSION_STORAGE_PREFIX);
 
     if (élève) {
@@ -33,10 +40,25 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     return this._élève;
   }
 
-  public async mettreÀJourProfil(élève: Élève): Promise<Élève | undefined> {
+  public async récupérerProgressionÉlève(): Promise<ProgressionÉlève> {
+    return 0;
+  }
+
+  public async mettreÀJourProfil(élève: Élève): Promise<Élève | Error> {
     this._élève = élève;
     sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(this._élève));
 
     return this._élève;
+  }
+
+  public async associerCompteParcourSup(): Promise<boolean | Error> {
+    const élève = await this.récupérerProfil();
+
+    if (élève instanceof Error) {
+      return false;
+    }
+
+    await this.mettreÀJourProfil({ ...élève, compteParcoursupAssocié: true });
+    return true;
   }
 }

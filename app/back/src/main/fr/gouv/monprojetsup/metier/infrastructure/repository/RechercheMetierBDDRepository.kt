@@ -1,18 +1,17 @@
 package fr.gouv.monprojetsup.metier.infrastructure.repository
 
-import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
+import fr.gouv.monprojetsup.commun.Constantes.REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT
+import fr.gouv.monprojetsup.metier.domain.entity.ResultatRechercheMetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.RechercheMetierRepository
-import fr.gouv.monprojetsup.metier.infrastructure.entity.MetierCourtEntity
+import fr.gouv.monprojetsup.metier.infrastructure.entity.RechercheMetierEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class RechercheMetierBDDRepository(
     private val entityManager: EntityManager,
 ) : RechercheMetierRepository {
-    @Transactional(readOnly = true)
-    override fun rechercherMetiersCourts(motRecherche: String): List<MetierCourt> {
+    override fun rechercherMetiersCourts(motRecherche: String): List<ResultatRechercheMetierCourt> {
         val resulat =
             entityManager.createNativeQuery(
                 """
@@ -22,42 +21,45 @@ class RechercheMetierBDDRepository(
                                  descriptif_general,
                                  COALESCE(lower(unaccent(label)), '')              AS label_clean,
                                  COALESCE(lower(unaccent(descriptif_general)), '') AS descriptif_clean
-                          FROM ref_metier),
+                          FROM ref_metier WHERE obsolete = false),
                      metiers_decoupes AS
                          (SELECT id,
                                  label,
                                  to_tsvector('french', descriptif_clean) @@
-                                 plainto_tsquery('french', unaccent(lower(:mot_recherche)))    as ts_vector_descriptif,
-                                 unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus)) as label_like,
-                                 regexp_split_to_table(label, '[ ()-]|/[^ ]+')                       as label_decoupe
+                                 plainto_tsquery('french', unaccent(lower(:mot_recherche)))               as mot_dans_le_descriptif,
+                                 regexp_split_to_table(label_clean, :regex_non_alpha_numeric_avec_accent) as label_decoupe
                           FROM metiers_clean),
                      metiers_similaire AS (SELECT id,
                                                   label,
-                                                  label_like,
-                                                  ts_vector_descriptif,
                                                   label_decoupe,
-                                                  similarity(COALESCE(unaccent(label_decoupe), ''), unaccent(:mot_recherche)) AS similarite_label_decoupe
+                                                  mot_dans_le_descriptif,
+                                                  unaccent(lower(label_decoupe)) LIKE unaccent(lower(:mot_recherche))                           AS label_contient_mot,
+                                                  unaccent(lower(label_decoupe)) LIKE unaccent(lower(:mot_recherche_prefix))                     AS prefix_dans_label,
+                                                  similarity(COALESCE(unaccent(lower(label_decoupe)), ''),
+                                                             unaccent(lower(:mot_recherche)))                                                   AS similarite_label_decoupe,
+                                                  ROW_NUMBER() OVER (PARTITION BY id ORDER BY 100 *
+                                                                                              similarity(unaccent(lower(label_decoupe)),
+                                                                                                         unaccent(lower(:mot_recherche))) DESC) AS numero_ligne_label
                                            FROM metiers_decoupes)
                 SELECT id,
                        label,
-                       CASE
-                            WHEN similarite_label_decoupe = 1 THEN 1                                
-                            WHEN label_like THEN 1.01
-                            WHEN similarite_label_decoupe > 0.25 THEN 12 - (11 * similarite_label_decoupe)
-                            WHEN ts_vector_descriptif THEN 11
-                            ELSE 32 - 80 * similarite_label_decoupe END AS rank
+                       mot_dans_le_descriptif,
+                       label_contient_mot,
+                       prefix_dans_label,
+                       similarite_label_decoupe
                 FROM metiers_similaire
-                WHERE ts_vector_descriptif
-                   OR label_like
-                   OR similarite_label_decoupe > 0.2
-                GROUP BY id, label, rank
-                ORDER BY rank
+                WHERE (mot_dans_le_descriptif
+                    OR label_contient_mot
+                    OR prefix_dans_label
+                    OR similarite_label_decoupe > 0.4)
+                  AND numero_ligne_label = 1;                        
                 """.trimIndent(),
-                MetierCourtEntity::class.java,
+                RechercheMetierEntity::class.java,
             )
                 .setParameter("mot_recherche", motRecherche)
-                .setParameter("mot_recherche_inclus", "%$motRecherche%")
+                .setParameter("mot_recherche_prefix", "$motRecherche%")
+                .setParameter("regex_non_alpha_numeric_avec_accent", REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT)
                 .resultList
-        return resulat.map { (it as MetierCourtEntity).toMetierCourt() }
+        return resulat.map { (it as RechercheMetierEntity).toResultatRechercheMetierCourt() }
     }
 }

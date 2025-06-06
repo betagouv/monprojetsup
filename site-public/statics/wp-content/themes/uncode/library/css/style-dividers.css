@@ -25,6 +25,10 @@ body.uncode-fullpage-slide .uncode-divider-wrap:not(.uncode-divider-flip) {
 .uncode-divider-wrap.uncode-divider-wrap-bottom {
   bottom: 0;
 }
+.uncode-divider-wrap.uncode-divider-wrap-bottom svg,
+.uncode-divider-wrap.uncode-divider-wrap-bottom img {
+  bottom: -1px;
+}
 .uncode-divider-wrap.uncode-divider-wrap-top:not(.uncode-row-divider-invert) svg,
 .uncode-divider-wrap.uncode-divider-wrap-top:not(.uncode-row-divider-invert) img {
   filter: FlipH;
@@ -39,6 +43,10 @@ body.uncode-fullpage-slide .uncode-divider-wrap:not(.uncode-divider-flip) {
 }
 .uncode-divider-wrap.uncode-divider-wrap-top {
   top: 0;
+}
+.uncode-divider-wrap.uncode-divider-wrap-top svg,
+.uncode-divider-wrap.uncode-divider-wrap-top img {
+  top: -1px;
 }
 .uncode-divider-wrap svg,
 .uncode-divider-wrap img {

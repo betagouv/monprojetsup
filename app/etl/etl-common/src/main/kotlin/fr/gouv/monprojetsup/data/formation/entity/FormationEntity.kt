@@ -5,13 +5,9 @@ import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.stats.Middle50
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -58,17 +54,11 @@ class FormationEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "liens", columnDefinition = "jsonb")
-    lateinit var liens: List<LienEntity>
+    var liens: List<LienEntity> = listOf()
 
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "mots_clefs", nullable = true)
     var motsClefs: List<String>? = null
-
-    /** begin ajouts suggestions **/
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "id_formation")
-    lateinit var voeux: List<VoeuEntity>
 
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     var labelDetails: String? = null
@@ -78,6 +68,9 @@ class FormationEntity {
 
     @Column(name = "apprentissage", nullable = true)
     var apprentissage: Boolean? = false
+
+    @Column(name = "apprentissage_pct", nullable = true)
+    var apprentissagePct: Int? = 0
 
     @Nullable
     @Column(name = "duree", nullable = true)
@@ -93,17 +86,12 @@ class FormationEntity {
     var stats : StatsEntity = StatsEntity()
 
     fun integrityCheck(): Boolean {
-        if(label.isEmpty()
-            || descriptifGeneral.isNullOrEmpty()
-            || formationsAssociees.isNullOrEmpty()
-            || motsClefs.isNullOrEmpty()
-            || voeux.isEmpty()
-            || liens.isEmpty()
-            || duree == null
-            ) {
-            return false
-        }
-        return true
+        return !(label.isEmpty()
+                || descriptifGeneral.isNullOrEmpty()
+                || formationsAssociees.isNullOrEmpty()
+                || motsClefs.isNullOrEmpty()
+                || liens.isEmpty()
+                || duree == null)
     }
 
     data class StatsEntity (
@@ -117,7 +105,7 @@ class FormationEntity {
         val pctAdmisParSpecialite: Map<String, Int> = mapOf(),
 
         //type de bac générique → formation → score
-        val formationsSimilaires : Map<Int, Map<String,Int>> = mapOf(),
+        val formationsSimilaires : Map<Int, Map<String,Long>> = mapOf(),
 
         ) : Serializable {
 
@@ -148,8 +136,6 @@ class FormationEntity {
             capacite ?: -1,
             apprentissage ?: false,
             duree ?: -1,
-            las,
-            voeux.map { it.toVoeu() },
             stats.toStats(),
             formationsAssociees ?: emptyList(),
         )

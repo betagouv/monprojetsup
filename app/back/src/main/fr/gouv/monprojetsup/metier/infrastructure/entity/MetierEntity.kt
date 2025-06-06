@@ -26,6 +26,9 @@ class MetierEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
+    @Column(name = "obsolete", nullable = false)
+    var obsolete: Boolean = false
+
     fun toMetier(): Metier {
         return Metier(
             id = id,

@@ -3,9 +3,6 @@ package fr.gouv.monprojetsup.suggestions.tools;
 import java.util.Collection;
 
 public class Stats {
-    public static Integer p25(Collection<Integer> values) {
-        return values.stream().sorted().skip(values.size() / 4).findFirst().orElse(0);
-    }
 
     public static Integer p50(Collection<Integer> values) {
         return values.stream().sorted().skip(values.size() / 2).findFirst().orElse(0);
@@ -15,7 +12,7 @@ public class Stats {
         return values.stream().sorted().skip(75L * values.size() / 100).findFirst().orElse(0);
     }
 
-    public static Integer p90(Collection<Integer> values) {
-        return values.stream().sorted().skip(90L * values.size()  /100).findFirst().orElse(0);
+    private Stats() {
     }
+
 }

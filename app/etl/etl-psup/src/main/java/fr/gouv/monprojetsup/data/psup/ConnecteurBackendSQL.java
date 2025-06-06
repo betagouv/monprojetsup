@@ -22,13 +22,13 @@ l'Innovation,
 package fr.gouv.monprojetsup.data.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.model.Candidat;
+import fr.gouv.monprojetsup.data.model.PanierVoeux;
 import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
-import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.model.psup.LettreMotivation;
 import fr.gouv.monprojetsup.data.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
@@ -41,7 +41,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 
@@ -117,9 +116,12 @@ public class ConnecteurBackendSQL {
     }
 
     public PsupData recupererData(@NotNull Set<Integer> eds) throws Exception {
-        PsupData data = new PsupData();
 
-        recupererAnnee(data);
+        int annee = recupererAnnee();
+        PsupData data = new PsupData(annee);
+
+        Map<Integer, String> bacs = recupereBacsCandidats();
+        recupererVoeuxParCandidat(data, bacs);
 
         recupererLas(data);
 
@@ -135,8 +137,6 @@ public class ConnecteurBackendSQL {
         recupererDiversPsup(data);
         recupererTypesBacs(data);
 
-        Map<Integer, String> bacs = recupereBacsCandidats();
-        recupererVoeuxParCandidat(data, bacs);
 
         Map<Integer, Integer> speBacs = recupereBacsSpecialitesCandidats();
         recupererProfilsScolaires(data.stats(), bacs, speBacs, eds);
@@ -182,7 +182,7 @@ public class ConnecteurBackendSQL {
         return bacs;
     }
 
-    private void recupererAnnee(PsupData data) throws SQLException {
+    private int recupererAnnee() throws SQLException {
         //mps_annee
         try (Statement stmt = this.conn.createStatement()) {
 
@@ -193,7 +193,7 @@ public class ConnecteurBackendSQL {
             try (ResultSet result = stmt.executeQuery(sql)) {
                 if (result.next()) {
                     Date date = result.getDate(1);
-                    data.stats().setAnnee(date.toLocalDate().getYear());
+                    return date.toLocalDate().getYear();
                 } else {
                     throw new RuntimeException("Echec de la récupération de l'année");
                 }
@@ -206,13 +206,15 @@ public class ConnecteurBackendSQL {
 
 
         Map<Integer, Set<Integer>> voeuxParCandidat = new HashMap<>();
+        Map<Integer, List<LettreMotivation>> lettresParCandidat = new HashMap<>();
+        Map<Integer, Set<Integer>> gtiToGta = new HashMap<>();
 
         try (Statement stmt = this.conn.createStatement()) {
 
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             LOGGER.info("Récupération des filieres par candidat");
             stmt.setFetchSize(1_000_000);
-            String sql = "SELECT g_cn_cod, g_ta_cod FROM mps_voeux";
+            String sql = "SELECT g_cn_cod, g_ta_cod, g_ti_cod FROM mps_voeux";
 
             LOGGER.info(sql);
 
@@ -220,16 +222,46 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int gTaCod = result.getInt(2);
+                    int gTiCod = result.getInt(3);
+                    gtiToGta.computeIfAbsent(gTiCod, z -> new HashSet<>()).add(gTaCod);
                     voeuxParCandidat.computeIfAbsent(gCnCod, z -> new HashSet<>()).add(gTaCod);
                 }
             }
 
         }
 
+            try (Statement stmt = this.conn.createStatement()) {
+
+                LOGGER.info("Récupération des lettres par candidat");
+                stmt.setFetchSize(1_000);
+                String sql = "SELECT g_cn_cod, g_ti_cod, i_lm_txt_let FROM mps_let_mot";
+                LOGGER.info(sql);
+                try (ResultSet result = stmt.executeQuery(sql)) {
+                    while (result.next()) {
+                        int gCnCod = result.getInt(1);
+                        int gTiCod = result.getInt(2);
+                        String lettre = result.getString(3);
+                        if (lettre != null) {
+                            lettresParCandidat
+                                    .computeIfAbsent(gCnCod, z -> new ArrayList<>())
+                                    .add(new LettreMotivation(lettre, gtiToGta.getOrDefault(gTiCod, Set.of())))
+                            ;
+                        }
+                    }
+                }
+
+            }
+
+
         data.voeuxParCandidat().clear();
         data.voeuxParCandidat().addAll(
                 voeuxParCandidat.entrySet().stream()
-                        .map(e -> new Candidat(bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS), e.getValue()))
+                        .map(e ->
+                                new PanierVoeux(
+                                        bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS),
+                                        e.getValue()
+                                    )
+                        )
                         .toList()
         );
     }
@@ -423,14 +455,7 @@ public class ConnecteurBackendSQL {
                     }
                     f.groupes.add(cGpCod);
 
-                    if (formations.hasFiliere(gFlCod)) {
-                        Filiere filiere = formations.getFiliere(gFlCod);
-                        String actuel = filiere.libellesGroupes.getOrDefault(cGpCod, "");
-                        filiere.libellesGroupes.put(cGpCod,
-                                (actuel.isEmpty() ? "" : (actuel + " | "))
-                                        + f.libelle + " (gTaCod=" + f.gTaCod + ")"
-                        );
-                    } else {
+                    if (!formations.hasFiliere(gFlCod)) {
                         filieresManquantes++;
                     }
                 }
@@ -451,13 +476,12 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select distinct g_fl_cod_aff, g_ta_flg_for_las from mps_filieres_actives";
+            String sql = "select distinct g_fl_cod_aff from mps_filieres_actives";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     int gFlCod = rs.getInt("g_fl_cod_aff");
-                    boolean flagLAS = rs.getBoolean("g_ta_flg_for_las");
-                    res.add(gFlCod + (flagLAS ? LAS_CONSTANT : 0));
+                    res.add(gFlCod);
                 }
             }
         }
@@ -539,10 +563,10 @@ public class ConnecteurBackendSQL {
 
         final Map<String, Set<String>> sources = new HashMap<>();
         carte.filieres.values().forEach(filiere -> {
-            if (filActives.contains(filiere.cle)) {
+            if (filActives.contains(filiere.cle())) {
                 //une fois avec et une fois sans accents
-                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
-                String[] chunks = filiere.libelle.split("\\P{L}+");
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle());
+                String[] chunks = filiere.libelle().split("\\P{L}+");
                 for (String s : chunks) {
                     String chunk = s.toLowerCase();
                     if (chunk.length() > 2 && !chunk.matches(".*\\d.*")) {
@@ -550,7 +574,7 @@ public class ConnecteurBackendSQL {
                     }
                 }
 
-                filiere.motsClesParcoursup.forEach(m -> sources.computeIfAbsent(m.trim(), z -> new HashSet<>()).add(idfiliere));
+                filiere.motsClesParcoursup().forEach(m -> sources.computeIfAbsent(m.trim(), z -> new HashSet<>()).add(idfiliere));
             }
         });
         sources.keySet().removeIf(m -> m.matches(".*\\d.*"));//We remove numeric data

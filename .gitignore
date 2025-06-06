@@ -18,3 +18,14 @@ metabase/db
 **.env**
 **#**
 **bin**
+.venv
+*.sh
+*.numbers
+*.json
+**scripts**
+**diagnostics**
+*.tzf
+package
+exports
+create_experts_accounts.py
+.env

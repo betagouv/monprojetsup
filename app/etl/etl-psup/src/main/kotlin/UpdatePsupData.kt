@@ -74,14 +74,6 @@ class Runner : CommandLineRunner {
 				true
 			)
 
-			logger.info("Export du legacy front data set")
-			data.minimizeForFront()
-			Serialisation.toZippedJson(
-				getSourceDataFilePath(FRONT_PSUP_DATA_FILENAME),
-				data.stats(),
-				true
-			)
-
 		}
 
 

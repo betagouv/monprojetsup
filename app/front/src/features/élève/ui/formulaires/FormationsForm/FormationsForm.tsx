@@ -1,20 +1,12 @@
-import { type FormationsFormProps, type SituationFormationsÉlève } from "./FormationsForm.interface";
+import { type FormationsFormProps } from "./FormationsForm.interface";
 import useFormationsForm from "./useFormationsForm";
-import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
-import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
-import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import MaSélectionFormations from "@/features/formation/ui/SélectionFormationsFavorites/MaSélectionFormations/MaSélectionFormations.tsx";
+import RechercheFormations from "@/features/formation/ui/SélectionFormationsFavorites/RechercheFormations/RechercheFormations.tsx";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 
 const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: FormationsFormProps) => {
-  const {
-    mettreÀJourÉlève,
-    situationFormations,
-    auChangementDesFormationsSélectionnées,
-    formationsSuggérées,
-    formationsSélectionnéesParDéfaut,
-    àLaRechercheDUneFormation,
-    rechercheFormationsEnCours,
-  } = useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès });
+  const { mettreÀJourÉlève, situationFormations } = useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
   return (
     <form
@@ -22,28 +14,18 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
       noValidate
       onSubmit={mettreÀJourÉlève}
     >
-      <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) =>
-          situationFormations.auChangement(valeur as SituationFormationsÉlève)
-        }
-        légende={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
+      <RadioButtons
+        legend={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
         options={situationFormations.options}
-        status={situationFormations.status}
+        orientation="horizontal"
+        state={situationFormations.status.type}
+        stateRelatedMessage={situationFormations.status.message}
       />
-      {situationFormations.valeur === "quelques_pistes" && formationsSélectionnéesParDéfaut && (
-        <div className="mt-12">
-          <SélecteurMultiple
-            auChangementOptionsSélectionnées={auChangementDesFormationsSélectionnées}
-            description={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.DESCRIPTION}
-            label={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL}
-            nombreDeCaractèreMinimumRecherche={constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE}
-            optionsSuggérées={formationsSuggérées}
-            optionsSélectionnéesParDéfaut={formationsSélectionnéesParDéfaut}
-            rechercheSuggestionsEnCours={rechercheFormationsEnCours}
-            texteOptionsSélectionnées={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.SÉLECTIONNÉES}
-            àLaRechercheDUneOption={àLaRechercheDUneFormation}
-          />
-        </div>
+      {situationFormations.optionSélectionnée === "quelques_pistes" && (
+        <fieldset className="mt-12 grid gap-6 border-0 p-0">
+          <RechercheFormations />
+          <MaSélectionFormations />
+        </fieldset>
       )}
     </form>
   );

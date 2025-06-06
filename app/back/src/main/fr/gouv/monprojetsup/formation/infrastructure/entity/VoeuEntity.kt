@@ -1,11 +1,27 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.formation.domain.entity.Voeu
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+
+@Entity
+@Table(name = "ref_voeu")
+class VoeuCourtEntity {
+    @Id
+    @Column(name = "id", nullable = false)
+    lateinit var id: String
+
+    @Column(name = "nom", nullable = false)
+    lateinit var label: String
+
+    fun toFormationCourte() =
+        FormationCourte(
+            id = id,
+            nom = label,
+        )
+}
 
 @Entity
 @Table(name = "ref_voeu")
@@ -28,19 +44,6 @@ class VoeuEntity {
     @Column(name = "longitude", nullable = false)
     var longitude: Double = 0.0
 
-    @Column(name = "id_formation", nullable = false)
-    lateinit var idFormation: String
-
-    fun toVoeu() =
-        Voeu(
-            id = id,
-            nom = nom,
-            commune =
-                Commune(
-                    codeInsee = codeCommune,
-                    nom = commune,
-                    latitude = latitude,
-                    longitude = longitude,
-                ),
-        )
+    @Column(name = "obsolete", nullable = false)
+    var obsolete: Boolean = false
 }

@@ -6,7 +6,6 @@ import { i18n } from "@/configuration/i18n/i18n";
 const IntérêtsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntérêtsFormProps) => {
   const {
     mettreÀJourÉlève,
-    erreurs,
     filtresGroupésParCatégories,
     filtreIdsSélectionnésParDéfaut,
     auChangementFiltresSélectionnés,
@@ -37,16 +36,6 @@ const IntérêtsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauD
           filtreIdsSélectionnésParDéfaut={filtreIdsSélectionnésParDéfaut}
           niveauDeTitre={niveauDeTitreCatégories}
         />
-        <div
-          aria-live="assertive"
-          id="intérêts-message"
-        >
-          {erreurs.centresIntérêts && (
-            <div className="fr-alert fr-alert--error fr-alert--sm mt-12">
-              <p>{erreurs.centresIntérêts.message}</p>
-            </div>
-          )}
-        </div>
       </fieldset>
     </form>
   );

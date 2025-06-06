@@ -207,28 +207,6 @@ public record FicheMetierIdeo(
     }
 
 
-    @SuppressWarnings("unused")//associe fonction publique à ouvrier/ère paysagiste
-    public @NotNull List<@NotNull String> getSecteursActiviteMps() {
-        if(secteursActivite == null) {
-            return List.of();
-        } else {
-            return secteursActivite.secteursActivite().stream()
-                    .map(SecteurActivite::id)
-                    .toList();
-        }
-    }
-
-    @SuppressWarnings("unused")//associe chorégraphe à maquilleuse
-    public @NotNull List<@NotNull String> getMetiersAssocies() {
-        if(metiersAssocies == null) {
-            return List.of();
-        } else {
-            return metiersAssocies.stream()
-                    .map(MetierAssocie::id)
-                    .toList();
-        }
-    }
-
     public @NotNull String getDescriptif() {
         StringBuilder sb = new StringBuilder();
         if (accroche_metier != null) {
@@ -243,18 +221,6 @@ public record FicheMetierIdeo(
                         return accroche.descriptif();
                     }
                 }
-            }
-        }
-        if(synonymes != null && !synonymes.isEmpty()) {
-            sb.append("\nSynonymes:\n");
-            for (val syn : synonymes) {
-                sb.append("\t").append(syn.nom_metier()).append("\n");
-            }
-        }
-        if(metiersAssocies != null && !metiersAssocies.isEmpty()) {
-            sb.append("\nMétiers associés:\n");
-            for (val syn : metiersAssocies) {
-                sb.append("\t").append(syn.libelle()).append("\n");
             }
         }
         return sb.toString();

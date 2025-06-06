@@ -12,7 +12,8 @@ INSERT INTO ref_interet_sous_categorie
 VALUES ('voyage',
         'Voyager',
         'decouvrir_monde',
-        '🚅');
+        '🚅',
+        'Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour organiser des voyages et des séjours.');
 
 INSERT INTO ref_interet_sous_categorie
 VALUES ('linguistique',

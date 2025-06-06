@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,36 +17,35 @@ public record ProfileDTO(
 
         @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "prem", "term"})
         String niveau,
-        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
-        String bac,
+        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", nullable = true, allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG", "NC"})
+        @Nullable String bac,
         @Schema(name = "duree", description = "durée envisagée des études", example = "long", allowableValues = {"", "court", "long", "indiff"})
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier (code insee ou nom)", example = "[\"33514\",\"Nantes\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier (code insee)", example = "[\"33514\",\"44001\"]"))
         Set<String> geo_pref,
-        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "spécialités (eds ou spécialités de bac) de terminale choisis ou envisagés", example = "[\"sp757\",\"mat5\"]"))
         Set<String> spe_classes,
         @ArraySchema(arraySchema = @Schema(name = "interests", description = "domaines et intérêts", example = "[\"ci1\",\"ci2\",\"ci3\",\"dom1\", \"dom2\", \"dom3\"]"))
         List<String> interests,
-        @Schema(description = "moyenne générale scolaire estimée en terminale, sur 40", example = "28")
-        String moygen,
-        @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
-        List<SuggestionDTO> choices,
-        @Schema(description = "statut de réflexion 0/1/2", example = "0")
-        String statut
+        @ArraySchema(arraySchema =  @Schema(name = "choix", description = "sélection de formations, voeux et métiers"))
+        List<ChoiceDTO> choix,
+        @Schema(description = "statut de réflexion", example = "quelques_pistes", allowableValues = { "aucune_idee", "quelques_pistes", "projet_precis" })
+        String situation
 
 ) {
 
-    public List<SuggestionDTO> suggApproved() {
-        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_APPROVED)).toList();
+    public List<ChoiceDTO> suggApproved() {
+        return choix == null ? List.of() : choix.stream().filter(ChoiceDTO::isApproved).toList();
     }
 
-    public List<SuggestionDTO> suggRejected() {
-        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_REJECTED)).toList();
+    public List<ChoiceDTO> suggRejected() {
+        return choix == null ? List.of() : choix.stream().filter(ChoiceDTO::isRejected).toList();
     }
 
     public int bacIndex() {
+        if(Objects.isNull(bac)) return 0;
         if(bac.startsWith("S")) return 2;
         return switch (bac) {
             case "Générale" -> 1;
@@ -56,6 +56,6 @@ public record ProfileDTO(
 
 
     public void removeAllFormationChoices() {
-          choices.removeIf(s -> isFiliere(s.fl()));
+          choix.removeIf(s -> isFiliere(s.id()));
     }
 }

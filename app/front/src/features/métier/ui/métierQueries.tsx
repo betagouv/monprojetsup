@@ -1,16 +1,26 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
+import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type Métier } from "@/features/métier/domain/métier.interface";
+import { RessourceNonTrouvéeErreur } from "@/services/erreurs/erreurs";
 import { queryOptions } from "@tanstack/react-query";
 
 export const récupérerMétierQueryOptions = (métierId: Métier["id"] | null) =>
   queryOptions({
     queryKey: ["métiers", métierId],
     queryFn: async () => {
-      if (métierId === null) {
+      if (métierId === null) return null;
+
+      const réponse = await dépendances.récupérerMétierUseCase.run(métierId);
+
+      if (réponse instanceof RessourceNonTrouvéeErreur) {
         return null;
       }
 
-      return (await dépendances.récupérerMétierUseCase.run(métierId)) ?? null;
+      if (réponse instanceof Error) {
+        throw réponse;
+      }
+
+      return réponse ?? null;
     },
   });
 
@@ -20,22 +30,43 @@ export const récupérerMétiersQueryOptions = (métierIds: Array<Métier["id"]>
     queryFn: async () => {
       if (métierIds.length === 0) return [];
 
-      const métiers = await dépendances.récupérerMétiersUseCase.run(métierIds);
+      const donnéesExistantesEnCache = métierIds.map((métierId) =>
+        queryClient.getQueryData<Métier>(["métiers", métierId]),
+      );
 
-      return métiers ?? [];
+      if (donnéesExistantesEnCache.every((donnée) => donnée !== undefined)) {
+        return donnéesExistantesEnCache;
+      }
+
+      const réponse = await dépendances.récupérerMétiersUseCase.run(métierIds);
+      if (réponse instanceof Error) {
+        throw réponse;
+      }
+
+      for (const métier of réponse) {
+        queryClient.setQueryData(["métiers", métier.id], métier);
+      }
+
+      return réponse;
     },
-    enabled: true,
   });
 
 export const rechercherMétiersQueryOptions = (recherche?: string) =>
   queryOptions({
     queryKey: ["métiers", "rechercher", recherche],
     queryFn: async () => {
-      if (recherche === undefined) return [];
+      if (recherche === undefined) return null;
 
-      const métiers = await dépendances.rechercherMétiersUseCase.run(recherche);
+      const réponse = await dépendances.rechercherMétiersUseCase.run(recherche);
 
-      return métiers ?? [];
+      if (réponse instanceof Error) {
+        throw réponse;
+      }
+
+      for (const métier of réponse) {
+        queryClient.setQueryData(["métiers", métier.id], métier);
+      }
+
+      return réponse;
     },
-    enabled: false,
   });

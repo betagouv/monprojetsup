@@ -2,7 +2,7 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>/</loc>
-		<lastmod>2024-07-17T10:16:47+00:00</lastmod>
+		<lastmod>2024-11-12T14:38:58+00:00</lastmod>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/05/logo_MPS.svg</image:loc>
 		</image:image>
@@ -13,7 +13,7 @@
 			<image:loc>/wp-content/uploads/2024/07/FLAyvqsXwAg1obn-150x150.png</image:loc>
 		</image:image>
 		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/MPS_UI-150x150.png</image:loc>
+			<image:loc>/wp-content/uploads/2024/10/mon-projet-sup-1-150x150.png</image:loc>
 		</image:image>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/05/Group-1000001085.svg</image:loc>
@@ -104,12 +104,34 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>/donnees-personnelles/</loc>
-		<lastmod>2024-06-04T14:35:40+00:00</lastmod>
+		<loc>/guide-a-destination-des-experts-metiers/</loc>
+		<lastmod>2024-10-01T12:55:35+00:00</lastmod>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/05/mps_logo.svg</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/05/as-tu-un-projet-2-e1717100191216-150x150.jpg</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/09/neplusvoir-150x150.jpg</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/09/neplusvoir-150x150.jpg</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-18.12.40-150x150.png</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/05/mps_logo.svg</image:loc>
+		</image:image>
 	</url>
 	<url>
-		<loc>/webinaire/</loc>
-		<lastmod>2024-07-01T10:05:22+00:00</lastmod>
+		<loc>/donnees-personnelles/</loc>
+		<lastmod>2024-10-03T20:40:56+00:00</lastmod>
+	</url>
+	<url>
+		<loc>/webinaire-experts/</loc>
+		<lastmod>2024-10-17T07:57:24+00:00</lastmod>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_303282642-150x150.jpeg</image:loc>
 		</image:image>
@@ -117,7 +139,7 @@
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_603239501-150x150.jpeg</image:loc>
 		</image:image>
 		<image:image>
-			<image:loc>/wp-content/uploads/2024/06/AdobeStock_407610701-150x150.jpeg</image:loc>
+			<image:loc>/wp-content/uploads/2024/10/AdobeStock_479025882-150x150.jpeg</image:loc>
 		</image:image>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_392860629-150x150.jpeg</image:loc>
@@ -145,48 +167,8 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>/guide-a-destination-des-experts-metiers/</loc>
-		<lastmod>2024-07-04T17:05:12+00:00</lastmod>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/mps_logo.svg</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Hero-1-e1715590615301-150x150.jpg</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-15.12.18-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-13-a-11.27.02-e1715592483663-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-15.01.41-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-15.07.57-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/as-tu-un-projet-2-e1717100191216-150x150.jpg</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-16.08.05-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-16.16.53-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-16.08.05-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/Capture-decran-2024-05-27-a-18.12.40-150x150.png</image:loc>
-		</image:image>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/05/mps_logo.svg</image:loc>
-		</image:image>
-	</url>
-	<url>
-		<loc>/webinaire-experts/</loc>
-		<lastmod>2024-07-31T06:59:19+00:00</lastmod>
+		<loc>/webinaire/</loc>
+		<lastmod>2024-10-17T07:57:32+00:00</lastmod>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_303282642-150x150.jpeg</image:loc>
 		</image:image>
@@ -194,7 +176,7 @@
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_603239501-150x150.jpeg</image:loc>
 		</image:image>
 		<image:image>
-			<image:loc>/wp-content/uploads/2024/06/AdobeStock_407610701-150x150.jpeg</image:loc>
+			<image:loc>/wp-content/uploads/2024/10/AdobeStock_479025882-150x150.jpeg</image:loc>
 		</image:image>
 		<image:image>
 			<image:loc>/wp-content/uploads/2024/04/AdobeStock_392860629-150x150.jpeg</image:loc>

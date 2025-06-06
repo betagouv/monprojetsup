@@ -4,8 +4,10 @@ import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.parametre.UpdateParametreDb
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.FormationVoeuEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
 import fr.gouv.monprojetsup.data.formation.entity.VilleVoeuxEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
@@ -13,6 +15,8 @@ import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.tools.GeodeticDistance
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -36,6 +40,9 @@ interface VoeuxDb :
 interface FormationDb : JpaRepository<FormationEntity, String>
 
 @Repository
+interface FormationVoeuDb : JpaRepository<FormationVoeuEntity, String>
+
+@Repository
 interface JoinFormationMetierDb : JpaRepository<FormationMetierEntity, String>
 
 @Repository
@@ -47,40 +54,52 @@ class UpdateFormationDbs(
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val mpsDataPort: MpsDataPort,
     private val batchUpdate: BatchUpdate,
-    private val villesVoeuxDb: VillesVoeuxDb,
     private val voeuxDb: VoeuxDb,
-    private val formationDb: FormationDb
+    private val formationDb: FormationDb,
+    private val formationVoeuxDb: FormationVoeuDb,
+    private val parametreDb: UpdateParametreDb,
+    private val environment: Environment
+
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
+    @Value("\${mps.minimalTestDataSet}")
+    var minimalTestDataSet : Boolean = false
+
     internal fun update() {
-        val voeuxOntChange = checkVoeuxOuFormationsOntChange()
-        if(voeuxOntChange) {
-            logger.info("Mise à jour de la table des formations")
-            updateFormationsDb()
-            logger.info("Mise à jour de la table des voeux")
-            updateVoeuxDb()
-            logger.info("Mise à jour de la table de correspondance ville voeux")
-            updateVillesVoeuxDb()
-        } else {
-            logger.info("Mise à jour de la table des formations")
-            updateFormationsDb()
+
+        if(isMinimalTestDatasetModeActive()) {
+            logger.info("Génération d'un dataset minimal pour les tests")
+            batchUpdate.clearEntities(MoyenneGeneraleAdmisEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationMetierEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
+            batchUpdate.clearEntities(FormationEntity::class.simpleName!!)
         }
+
+        logger.info("Mise à jour de la table des formations")
+        updateFormationsDb()
+        logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
+        val isForcedUpdate = checkForcedUpdate()
+        val nbPairesVoeuxFormationsAChange = updateVoeuxDb() || isMinimalTestDatasetModeActive()
+        if(isForcedUpdate || nbPairesVoeuxFormationsAChange) {
+            logger.info("Mise à jour de la table de correspondance ville voeux")
+            if(isForcedUpdate) {
+                batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
+            }
+            updateVillesVoeuxDb()
+        }
+
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
     }
 
-    public fun checkVoeuxOuFormationsOntChange(): Boolean {
-        val anciensVoeux = voeuxDb.findAll().map { Pair(it.idFormation, it.id) }.toSet()
-        val formationsMps = mpsDataPort.getFormationsMpsIds()
-        val nouveauxVoeux = mpsDataPort.getVoeux()
-            .filter { e -> formationsMps.contains(e.key)}
-            .flatMap { e -> e.value.map { Pair(it.formation, it.id) } }
-            .toSet()
-        return anciensVoeux != nouveauxVoeux
+    fun checkForcedUpdate(): Boolean {
+        return  parametreDb.getFormationUpdateForcedFlag() || isMinimalTestDatasetModeActive()
     }
 
 
@@ -97,27 +116,48 @@ class UpdateFormationDbs(
         moyennesGeneralesAdmisDb.saveAll(entities)
     }
 
-    fun updateVoeuxDb() {
+    fun updateVoeuxDb(): Boolean {
+        if(isMinimalTestDatasetModeActive()) {
+            batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+            batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
+        }
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val voeux = mpsDataPort.getVoeux()
-        val voeuxEntities = ArrayList<VoeuEntity>()
+        val voeuxEntities = HashMap<String, VoeuEntity>()
+        val formationsVoeuxEntities = ArrayList<FormationVoeuEntity>()
         formationsMpsIds.forEach { id ->
             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
-            voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
+            voeuxFormation.forEach { voeuxEntities.put(it.id, VoeuEntity(it)) }
+            formationsVoeuxEntities.addAll(
+                voeuxFormation.map {
+                    FormationVoeuEntity(id, it.id)
+                }
+            )
         }
 
-        val voeuxIds = voeuxEntities.map { it.id }.toSet()
+        val voeuxIds : Set<String> = HashSet(voeuxEntities.keys)
+
+        val nbFormationsVoeuxBefore = formationVoeuxDb.findAll().count()
+        val nbFormationsVoeuxAfter = formationsVoeuxEntities.count()
+        val changementNbVoeux = nbFormationsVoeuxBefore != nbFormationsVoeuxAfter
 
         val voeuxObsoletes = HashSet(voeuxDb.findAll())
         voeuxObsoletes.removeIf { voeuxIds.contains(it.id) }
-        if(voeuxObsoletes.isNotEmpty()) {
+        if (voeuxObsoletes.isNotEmpty()) {
             logger.warning("Marquage de ${voeuxObsoletes.count()} voeux obsoletes")
             voeuxObsoletes.forEach { it.obsolete = true }
             batchUpdate.upsertEntities(voeuxObsoletes)
         }
 
+        batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+
         logger.warning("Insertion et mise à jour de ${voeuxEntities.count()} voeux")
-        batchUpdate.upsertEntities(voeuxEntities)
+        batchUpdate.upsertEntities(voeuxEntities.values)
+
+        logger.warning("Insertion et mise à jour de ${formationsVoeuxEntities.count()} paires formations voeux")
+        batchUpdate.setEntities(FormationVoeuEntity::class.simpleName!!, formationsVoeuxEntities)
+
+        return changementNbVoeux
 
     }
 
@@ -132,7 +172,7 @@ class UpdateFormationDbs(
          val tagsSources = mpsDataPort.getMotsClesFormations()
          val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
          val apprentissage = mpsDataPort.getApprentissage()
-         val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
+         val apprentissagePct = mpsDataPort.getApprentissagePct()
          val formationToTypeformation = mpsDataPort.getFormationToTypeformation()
          val debugLabels = mpsDataPort.getDebugLabels()
          val capacitesAccueil = mpsDataPort.getCapacitesAccueil()
@@ -190,7 +230,7 @@ class UpdateFormationDbs(
              entity.labelDetails = debugLabels.getOrDefault(id, id)
              entity.capacite = capacitesAccueil.getOrDefault(id, 0)
              entity.apprentissage = apprentissage.contains(id)
-             entity.las = lasToGeneric[id]
+             entity.apprentissagePct = apprentissagePct.getOrDefault(id,0)
 
 
              val statsFormation = stats[id]
@@ -215,16 +255,34 @@ class UpdateFormationDbs(
          batchUpdate.upsertEntities(formationEntities)
      }
 
+
+    fun isTestSuggestionsProfileActive(): Boolean {
+        return environment.activeProfiles.contains("test")
+                || environment.activeProfiles.contains("test_suggestions")
+    }
+
+    fun isMinimalTestDatasetModeActive(): Boolean {
+        return minimalTestDataSet
+    }
+
     fun updateVillesVoeuxDb() {
+
+        val onlyParis20 = isTestSuggestionsProfileActive()
+
         val cities = mpsDataPort.getCities()
             .sortedBy { it.nom }
+            .filter { !onlyParis20 || it.codeInsee == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }
             .associateBy { it.codeInsee }
             .values
 
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
         logger.info("Récupération des paires villes voeux actuelles")
-        val villesVoeuxActuels = villesVoeuxDb.findAll().associateBy { v -> v.idVille }
+        val villesVoeuxEntities = batchUpdate.getEntities(
+            VilleVoeuxEntity::class.simpleName!!,
+            VilleVoeuxEntity::class.java )
+
+        val villesVoeuxActuels = villesVoeuxEntities.associateBy { v -> v.idVille }
 
         var letter = '_'
 
@@ -232,13 +290,13 @@ class UpdateFormationDbs(
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
-                logger.info("Calcul des distances pour les villes commençant par $newLetter")
-                letter = newLetter
                 if(entities.isNotEmpty()) {
-                    logger.info("Enregistrement des correspondances villes-voeux commençant par $letter")
+                    logger.info("Enregistrement des ${entities.count()} correspondances villes-voeux commençant par $letter")
                     batchUpdate.upsertEntities(entities)
                     entities.clear()
                 }
+                logger.info("Calcul des distances pour les villes commençant par $newLetter")
+                letter = newLetter
             }
             val currentEntity = villesVoeuxActuels[city.codeInsee]
 
@@ -296,6 +354,7 @@ class UpdateFormationDbs(
         criteresDb.deleteAll()
         criteresDb.saveAll(criteres)
     }
+
 
 
 }

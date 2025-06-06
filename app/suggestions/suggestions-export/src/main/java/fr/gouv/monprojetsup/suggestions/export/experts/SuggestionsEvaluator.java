@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.suggestions.export.experts;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -78,17 +78,17 @@ public class SuggestionsEvaluator {
                 Map<String, Integer> suggestionsRanks = new HashMap<>();
                 int k = 1;
                 for (Suggestion sugg : refCase.suggestions()) {
-                    if(Constants.isFiliere(sugg.fl())) {
-                        suggestionsRanks.put(sugg.fl(), k);
+                    if(Constants.isFiliere(sugg.id())) {
+                        suggestionsRanks.put(sugg.id(), k);
                         k++;
                     }
                 }
                 Suggestion worstExpl = refCase.suggestions()
-                        .stream().filter(s -> Constants.isFiliere(s.fl()) )
+                        .stream().filter(s -> Constants.isFiliere(s.id()) )
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
                 String worst = worstExpl == null ? "null" : worstExpl.humanReadable(labels);
-                String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.fl());
+                String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.id());
 
                 if(refCase.expectations() != null && !refCase.expectations().isEmpty()) {
                     fos.write("\n\n\n***********************************************\n");
@@ -98,8 +98,6 @@ public class SuggestionsEvaluator {
                     fos.write("\n");
                     fos.write("************ EXPECTATIONS ******************\n");
                     for (String expectation : refCase.expectations()) {//Todo compute distance between expectation and details
-                        /*if(!expectation.contains("parcours coordination et gestion des établissements et services sanitaires ")
-                        || expectation.contains("apprentissage")) continue;*/
                         int rank = getRank(expectation, suggestionsRanks);
                         if (rank > 0) {
                             fos.write("OK rank " + rank + " \t" + expectation + "\n");
@@ -130,29 +128,19 @@ public class SuggestionsEvaluator {
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write(worst);
-                                /*
-                                if (stopOnFirstKO) {
-                                    stoppedBecauseOfKo = true;
-                                    break;
-                                }*/
                             }
                         }
                     }
                     fos.write("\n");
-                    if(refCase.suggestions() != null) {
-                        fos.write("************ ACTUAL SUGGESTIONS ******************\n");
-                        fos.append(refCase.suggestions().stream()
-                                .filter(s -> Constants.isFiliere(s.fl()))
-                                .map(e -> getOKPrefix(refCase, e.fl()) + data.getLabel(e.fl()))
-                                .collect(Collectors.joining("\n", "", "\n")));
-                    }
+                    fos.write("************ ACTUAL SUGGESTIONS ******************\n");
+                    fos.append(refCase.suggestions().stream()
+                            .filter(s -> Constants.isFiliere(s.id()))
+                            .map(e -> getOKPrefix(refCase, e.id()) + data.getLabel(e.id()))
+                            .collect(Collectors.joining("\n", "", "\n")));
 
 
                 }
                 i++;
-                if(stoppedBecauseOfKo && stopOnFirstKO) {
-                    break;
-                }
             }
             fos.flush();
         }
@@ -161,7 +149,7 @@ public class SuggestionsEvaluator {
 
     private static String getOKPrefix(ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
-                .map(SuggestionDTO::fl)
+                .map(ChoiceDTO::id)
                 .filter(Constants::isFiliere)
                 .collect(Collectors.toMap(fl -> fl, fl -> 1));
         int rank = getRank(flCodSugg, favoris);
@@ -202,10 +190,12 @@ public class SuggestionsEvaluator {
 
     static String toApprentissageExplanationString(String apprentissage) {
         if (apprentissage == null) return "Non-renseigné";
-        if (apprentissage.equals("A")) return "Indifférent";
-        if (apprentissage.equals("B")) return "Indifférent";
-        if (apprentissage.equals("C")) return "Peu intéressé";
-        return apprentissage;
+        return switch (apprentissage) {
+            case "A" -> "Indifférent";
+            case "B" -> "Indifférent";
+            case "C" -> "Peu intéressé";
+            default -> apprentissage;
+        };
     }
 
 

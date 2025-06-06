@@ -2,11 +2,12 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
-import fr.gouv.monprojetsup.formation.entity.Communes.MONTREUIL
-import fr.gouv.monprojetsup.formation.entity.Communes.NANCY
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS19EME
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
-import fr.gouv.monprojetsup.formation.entity.Communes.RENNES
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MONTREUIL
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.NANCY
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS19EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.RENNES
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -18,11 +19,17 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var voeuJPARepository: VoeuJPARepository
 
+    @Autowired
+    lateinit var voeuCourtJPARepository: VoeuCourtJPARepository
+
+    @Autowired
+    lateinit var entityManager: EntityManager
+
     lateinit var voeuBDDRepository: VoeuBDDRepository
 
     @BeforeEach
     fun setup() {
-        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository)
+        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository, voeuCourtJPARepository, entityManager)
     }
 
     @Nested
@@ -31,21 +38,33 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:formation_voeu.sql")
         fun `Doit retourner les voeux grouper par formation en ignorant les inconnus`() {
             // Given
-            val idsFormations = listOf("ta0001", "ta0002", "tainconnu")
+            val idsVoeux = listOf("ta0001", "ta0002", "tainconnu")
 
             // When
-            val result = voeuBDDRepository.recupererVoeux(idsFormations)
+            val result = voeuBDDRepository.recupererVoeux(idsVoeux)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
                 mapOf(
                     "fl0001" to
                         listOf(
-                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
                         ),
                     "fl0003" to
                         listOf(
-                            Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
+                            Voeu(
+                                id = "ta0002",
+                                nom = "ENSAPLV",
+                                commune = PARIS19EME,
+                                longitude = 2.393,
+                                latitude = 48.889,
+                            ),
                         ),
                 ),
             )
@@ -56,29 +75,105 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesVoeuxDeFormations {
         @Test
         @Sql("classpath:formation_voeu.sql")
-        fun `Doit retourner les voeux de formations`() {
+        fun `Si les obsoletes sont inclus, doit retourner tous les voeux de formations`() {
             // Given
             val idsFormations = listOf("fl0001", "fl0004", "fl0003")
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
                 mapOf(
                     "fl0001" to
                         listOf(
-                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
                         ),
                     "fl0004" to
                         listOf(
-                            Voeu(id = "ta0005", nom = "Université Paris 1 Panthéon-Sorbonne", commune = PARIS5EME),
+                            Voeu(
+                                id = "ta0005",
+                                nom = "Université Paris 1 Panthéon-Sorbonne",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
                         ),
                     "fl0003" to
                         listOf(
-                            Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
-                            Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
-                            Voeu(id = "ta0004", nom = "ENSAB", commune = RENNES),
+                            Voeu(
+                                id = "ta0002",
+                                nom = "ENSAPLV",
+                                commune = PARIS19EME,
+                                longitude = 2.393,
+                                latitude = 48.889,
+                            ),
+                            Voeu(
+                                id = "ta0003",
+                                nom = "ENSA Nancy",
+                                commune = NANCY,
+                                latitude = 48.692,
+                                longitude = 6.184,
+                            ),
+                            Voeu(
+                                id = "ta0004",
+                                nom = "ENSAB",
+                                commune = RENNES,
+                                latitude = 48.117,
+                                longitude = 1.677,
+                            ),
+                        ),
+                ),
+            )
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `Si les obsoletes ne sont pas inclus, doit retourner les voeux non obsoletes des formations`() {
+            // Given
+            val idsFormations = listOf("fl0001", "fl0004", "fl0003")
+
+            // When
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, false)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(
+                mapOf(
+                    "fl0001" to
+                        listOf(
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
+                        ),
+                    "fl0004" to
+                        listOf(
+                            Voeu(
+                                id = "ta0005",
+                                nom = "Université Paris 1 Panthéon-Sorbonne",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
+                        ),
+                    "fl0003" to
+                        listOf(
+                            Voeu(
+                                id = "ta0003",
+                                nom = "ENSA Nancy",
+                                commune = NANCY,
+                                latitude = 48.692,
+                                longitude = 6.184,
+                            ),
                         ),
                 ),
             )
@@ -91,7 +186,7 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             val idsFormations = listOf("fl0002")
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(mapOf("fl0002" to emptyList<Voeu>()))
@@ -104,7 +199,7 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             val idsFormations = emptyList<String>()
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(emptyMap<String, List<Voeu>>())
@@ -115,19 +210,60 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesVoeuxDUneFormation {
         @Test
         @Sql("classpath:formation_voeu.sql")
-        fun `Doit retourner les voeux d'une formation`() {
+        fun `Doit retourner les voeux d'une formation en incluant les obsolètes`() {
             // Given
             val idFormation = "fl0003"
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation)
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
                 listOf(
-                    Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
-                    Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
-                    Voeu(id = "ta0004", nom = "ENSAB", commune = RENNES),
+                    Voeu(
+                        id = "ta0002",
+                        nom = "ENSAPLV",
+                        commune = PARIS19EME,
+                        longitude = 2.393,
+                        latitude = 48.889,
+                    ),
+                    Voeu(
+                        id = "ta0003",
+                        nom = "ENSA Nancy",
+                        commune = NANCY,
+                        latitude = 48.692,
+                        longitude = 6.184,
+                    ),
+                    Voeu(
+                        id = "ta0004",
+                        nom = "ENSAB",
+                        commune = RENNES,
+                        latitude = 48.117,
+                        longitude = 1.677,
+                    ),
+                ),
+            )
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `Doit retourner les voeux d'une formation en retirant les obsolètes`() {
+            // Given
+            val idFormation = "fl0003"
+
+            // When
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = false)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(
+                listOf(
+                    Voeu(
+                        id = "ta0003",
+                        nom = "ENSA Nancy",
+                        commune = NANCY,
+                        latitude = 48.692,
+                        longitude = 6.184,
+                    ),
                 ),
             )
         }
@@ -139,10 +275,39 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             val idFormation = "fl0002"
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation)
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(emptyList<Voeu>())
+        }
+    }
+
+    @Nested
+    inner class RecupererIdsVoeuxInexistants {
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `si toutes les voeux existent, renvoyer la liste vide`() {
+            // Given
+            val idsVoeux = listOf("ta0001", "ta0002")
+
+            // When
+            val result = voeuBDDRepository.recupererIdsVoeuxInexistants(idsVoeux)
+
+            // Then
+            assertThat(result).isEqualTo(emptyList<String>())
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `si un des voeux n'existe pas, renvoyer la liste des voeux inexistants`() {
+            // Given
+            val idsVoeux = listOf("ta0001", "ta0002", "tainconnu")
+
+            // When
+            val result = voeuBDDRepository.recupererIdsVoeuxInexistants(idsVoeux)
+
+            // Then
+            assertThat(result).isEqualTo(listOf("tainconnu"))
         }
     }
 }

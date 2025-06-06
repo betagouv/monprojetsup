@@ -12,8 +12,6 @@ import org.hibernate.type.SqlTypes
 @Table(name = "sugg_villes")
 class SuggestionsVilleEntity {
 
-    constructor()
-
     fun toVille(): Ville {
         return Ville(this.insee, this.nom, this.coords)
     }
@@ -30,15 +28,13 @@ class SuggestionsVilleEntity {
     lateinit var coords : List<LatLng>
 
     companion object {
-        fun getEntities(it: Ville): Iterable<SuggestionsVilleEntity> {
-            return listOf(
-                SuggestionsVilleEntity().apply {
-                    id = it.codeInsee
-                    nom = it.nom
-                    insee = it.codeInsee
-                    coords = it.coords
-                }
-            )
+        fun toEntity(it: Ville): SuggestionsVilleEntity {
+            return SuggestionsVilleEntity().apply {
+                id = it.codeInsee
+                nom = it.nom
+                insee = it.codeInsee
+                coords = it.coords
+            }
         }
     }
 

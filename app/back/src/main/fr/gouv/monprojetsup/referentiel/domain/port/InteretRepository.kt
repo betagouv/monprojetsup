@@ -5,11 +5,11 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 
 interface InteretRepository {
-    fun recupererLesSousCategoriesDInterets(idsInterets: List<String>): Map<String, InteretSousCategorie>
+    fun recupererLesSousCategories(idsSousCategoriesInterets: List<String>): List<InteretSousCategorie>
 
     fun recupererLesInteretsDeSousCategories(idsSousCategoriesInterets: List<String>): List<Interet>
 
     fun recupererToutesLesCategoriesEtLeursSousCategoriesDInterets(): Map<InteretCategorie, List<InteretSousCategorie>>
 
-    fun verifierCentresInteretsExistent(ids: List<String>): Boolean
+    fun recupererIdsCentresInteretsInexistants(ids: List<String>): List<String>
 }

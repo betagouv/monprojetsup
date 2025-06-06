@@ -3,21 +3,18 @@ package fr.gouv.monprojetsup.commun.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
-import okhttp3.Credentials
-import okhttp3.FormBody
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import org.slf4j.Logger
 
 abstract class ApiHttpClient(
     open val baseUrl: String,
     protected open val objectMapper: ObjectMapper,
     protected open val httpClient: OkHttpClient,
-    protected open val logger: Logger,
+    protected open val logger: MonProjetSupLogger,
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     protected inline fun <reified T> get(
@@ -34,7 +31,7 @@ abstract class ApiHttpClient(
     @Throws(MonProjetSupInternalErrorException::class)
     protected inline fun <reified T> post(
         url: String,
-        requeteDTO: APISuggestionRequeteDTO,
+        requeteDTO: Any,
         token: String? = null,
     ): T {
         val requete = creerLaRequetePost(requeteDTO, url, token)
@@ -45,7 +42,7 @@ abstract class ApiHttpClient(
     }
 
     protected fun creerLaRequetePost(
-        requeteDTO: APISuggestionRequeteDTO,
+        requeteDTO: Any,
         url: String,
         token: String?,
     ): Request.Builder {
@@ -63,31 +60,6 @@ abstract class ApiHttpClient(
         val requete = Request.Builder().get().url(url)
         token?.let { requete.header("Authorization", "Bearer $token") }
         return requete
-    }
-
-    @Throws(MonProjetSupInternalErrorException::class)
-    protected fun recupererAccessToken(
-        clientId: String,
-        clientSecret: String,
-        urlToken: String,
-    ): String? {
-        val formBody =
-            FormBody.Builder()
-                .add("grant_type", "client_credentials")
-                .build()
-
-        val request =
-            Request.Builder()
-                .url(urlToken)
-                .post(formBody)
-                .header("Authorization", Credentials.basic(clientId, clientSecret))
-                .build()
-
-        httpClient.newCall(request).execute().use { response ->
-            verifierCodeErreur(response, urlToken)
-            val bodyRetour = deserialisation<TokenReponseDTO>(response.body?.string(), urlToken)
-            return bodyRetour.token
-        }
     }
 
     @Throws(MonProjetSupInternalErrorException::class)

@@ -4,7 +4,7 @@ import { type RéférentielDonnéesRepository } from "@/features/référentielDo
 export class RécupérerRéférentielDonnéesUseCase {
   public constructor(private readonly _référentielDonnéesRepository: RéférentielDonnéesRepository) {}
 
-  public async run(): Promise<RéférentielDonnées | undefined> {
+  public async run(): Promise<RéférentielDonnées | Error> {
     return await this._référentielDonnéesRepository.récupérer();
   }
 }

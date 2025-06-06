@@ -4,15 +4,144 @@
  */
 
 export interface paths {
-    "/api/v1/profil": {
+    "/api/v1/public/formations": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupération d'une liste de formations
+         * @description A partir d'une liste d'ids, récupère l'id et le nom des formations, plus un lien de pagination.
+         */
+        get: operations["getFormations"];
+        put?: never;
+        /**
+         * Récupération d'une formation, mode détaillé
+         * @description A partir de l'identifiant d'une fiche formation, récupère toutes les informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion.
+         */
+        post: operations["getFormation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/formations/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Récupère les suggestions de formations
+         * @description Récupère les suggestions de formations pour un profil d'élève. Chaque suggestion s'accompagne des informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion. Un lien permet la pagination des résultats.
+         */
+        post: operations["getSuggestionsFormations"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/formations/recherche/succincte": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Recherche de formation, mode succint
+         * @description A partir du contenu de la barre de recherche, récupérer la liste des formations associées à cette recherche, et le lien de pagination.
+         */
+        post: operations["getRechercheFormationSuccincte"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/formations/recherche/detaillee": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Recherche de formation, mode détaillé
+         * @description A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des explications sur la raison de cette suggestion.
+         */
+        post: operations["getRechercheFormationDetaillee"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/formations/fiches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Récupération d'une liste de fiches formations
+         * @description A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.Ces informations sont personnalisées en fonction du profil transmis
+         */
+        post: operations["getFichesFormations"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/trace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ajoute une trace de navigation */
+        post: operations["ajoutTrace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/profil": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer le profil de l'utilisateur connecté
+         * @description Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup
+         */
         get: operations["getProfilEleve"];
         put?: never;
+        /**
+         * Modifier le profil de l'utilisateur connecté
+         * @description  Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)
+         */
         post: operations["postProfilEleve"];
         delete?: never;
         options?: never;
@@ -20,13 +149,37 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/referentiel": {
+    "/api/v1/auth/profil/parcoursup": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        get?: never;
+        put?: never;
+        /**
+         * Lier à un compte Parcoursup
+         * @description Lie le compte MPS à un compte Parcoursup pour récupération automatique des favoris Parcoursup
+         */
+        post: operations["postCompteParcoursup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/referentiel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer les données nécessaires au parcours d'inscription de MonProjetSup
+         * @description Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.
+         */
         get: operations["getReferentielPourInscription"];
         put?: never;
         post?: never;
@@ -36,13 +189,17 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/metiers": {
+    "/api/v1/public/metiers": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupérer des métiers en indiquant leurs ids
+         * @description Renvoie les métiers correspondant aux ids dans l'ordre donné. Ce endpoint est paginé à 30 résultats par page.
+         */
         get: operations["getMetiers"];
         put?: never;
         post?: never;
@@ -52,13 +209,17 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/metiers/recherche/succincte": {
+    "/api/v1/public/metiers/recherche/succincte": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /**
+         * Rechercher des métiers selons des mots clés
+         * @description Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à 30 résultats par page.
+         */
         get: operations["getRechercheMetierSuccincte"];
         put?: never;
         post?: never;
@@ -68,130 +229,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/formations": {
+    "/api/v1/auth/profil/progression": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getFormations"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/formations/{idformation}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getFormation"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/formations/suggestions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Récupérer les suggestions de formations pour un profil d'élève */
-        get: operations["getSuggestionsFormations"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/formations/recherche/succincte": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getRechercheFormationSuccincte"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/formations/recherche/detaillee": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getRechercheFormationDetaillee"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator root web endpoint */
-        get: operations["links"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health' */
-        get: operations["health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/actuator/health/**": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Actuator web endpoint 'health-path' */
-        get: operations["health-path"];
+        /**
+         * Récupérer le niveau de progression pédagogique
+         * @description Récupère le niveau de progression pédagogique, entre 0 et 6
+         */
+        get: operations["getProgressionMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -228,6 +277,305 @@ export interface components {
              */
             longitude: number;
         };
+        FormationFavoriteDTO: {
+            /**
+             * @description Id de la formation
+             * @example fl490030
+             */
+            idFormation: string;
+            /**
+             * Format: int32
+             * @description Niveau de l'ambition du voeux avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux
+             * @example 2
+             */
+            niveauAmbition: number;
+            /**
+             * @description Prise de note additionnel sur la formation favorite
+             * @example Ma note personnalisée
+             */
+            priseDeNote?: string;
+        };
+        GetFormationDTO: {
+            /**
+             * @description id de la formation
+             * @example fl33
+             */
+            id: string;
+            profil?: components["schemas"]["ProfilDTO"];
+            /**
+             * Format: int32
+             * @description Numéro de page
+             * @default 1
+             */
+            numeroDePage: number;
+        };
+        /** @description Profil de l'élève */
+        ProfilDTO: {
+            /**
+             * @description Etat d'avancée du projet de l'élève
+             * @example aucune_idee
+             * @enum {string}
+             */
+            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis" | "aucune_idee" | "quelques_pistes" | "projet_precis";
+            /**
+             * @description Classe actuelle
+             * @example terminale
+             * @enum {string}
+             */
+            classe?: "seconde" | "premiere" | "terminale" | "seconde" | "premiere" | "terminale";
+            /**
+             * @description Type de Bac choisi ou envisagé
+             * @example Générale
+             * @enum {string}
+             */
+            baccalaureat?: "NC" | "Générale" | "P" | "PA" | "S2TMD" | "ST2S" | "STAV" | "STD2A" | "STHR" | "STI2D" | "STL" | "STMG";
+            /**
+             * @description Enseignements de spécialité de terminale choisis ou envisagés
+             * @example [
+             *       "mat707",
+             *       "mat700"
+             *     ]
+             */
+            specialites?: string[];
+            /**
+             * @description Domaines d'activité
+             * @example [
+             *       "dom41",
+             *       "dom32",
+             *       "dom26"
+             *     ]
+             */
+            domaines?: string[];
+            /**
+             * @description Centres d'intérêt
+             * @example [
+             *       "ci16",
+             *       "ci27",
+             *       "ci6",
+             *       "ci11"
+             *     ]
+             */
+            centresInterets?: string[];
+            /**
+             * @description Les idées de métiers de l'élève
+             * @example [
+             *       "MET_384",
+             *       "MET_469"
+             *     ]
+             */
+            metiersFavoris?: string[];
+            /**
+             * @description Durée envisagée des études
+             * @example indifferent
+             * @enum {string}
+             */
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee" | "indifferent" | "courte" | "longue" | "aucune_idee";
+            /**
+             * @description Intérêt pour les formations en apprentissage
+             * @example pas_interesse
+             * @enum {string}
+             */
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
+            /** @description Villes préférées pour étudier */
+            communesFavorites?: components["schemas"]["CommuneDTO"][];
+            /** @description Les idées de formations de l'élève */
+            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
+            /**
+             * @description Les formations masquées par l'élève
+             * @example [
+             *       "fl1",
+             *       "fl810505"
+             *     ]
+             */
+            corbeilleFormations?: string[];
+            /**
+             * @description Prénom de l'élève
+             * @example false
+             */
+            compteParcoursupAssocie: boolean;
+            /** @description Liste des voeux favoris */
+            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
+        };
+        VoeuFavoriDTO: {
+            /**
+             * @description Id du voeu
+             * @example ta490030
+             */
+            idVoeu: string;
+            /**
+             * @description Marquage des favoris Parcoursup
+             * @example true
+             */
+            estFavoriParcoursup: boolean;
+        };
+        AffiniteSpecialiteDTO: {
+            nomSpecialite: string;
+            /** Format: int32 */
+            pourcentage: number;
+        };
+        BaccalaureatDTO: {
+            id: string;
+            nom: string;
+        };
+        CentileDTO: {
+            /** Format: int32 */
+            centile: number;
+            /** Format: float */
+            note: number;
+        };
+        CommuneAvecSesVoeuxDTO: {
+            commune: components["schemas"]["CommuneDTO"];
+            voeuxAvecDistance: components["schemas"]["VoeuAvecDistanceDTO"][];
+        };
+        CommuneCourteDTO: {
+            nom: string;
+            codeInsee: string;
+        };
+        CriteresAnalyseCandidatureDTO: {
+            nom: string;
+            /** Format: int32 */
+            pourcentage: number;
+        };
+        DetailsCalculScoreDTO: {
+            details: string[];
+        };
+        ExplicationGeographiqueDTO: {
+            nomVille: string;
+            /** Format: int32 */
+            distanceKm: number;
+        };
+        ExplicationsDTO: {
+            geographique: components["schemas"]["ExplicationGeographiqueDTO"][];
+            /** @enum {string} */
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
+            /** @enum {string} */
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
+            choixEleve?: components["schemas"]["LabelDTO"][];
+            specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
+            typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
+            detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
+        };
+        FicheFormationDTO: {
+            id: string;
+            nom: string;
+            idsFormationsAssociees: string[];
+            descriptifFormation?: string;
+            descriptifDiplome?: string;
+            descriptifConseils?: string;
+            descriptifAttendus?: string;
+            moyenneGeneraleDesAdmis?: components["schemas"]["MoyenneGeneraleDesAdmisDTO"];
+            criteresAnalyseCandidature: components["schemas"]["CriteresAnalyseCandidatureDTO"][];
+            repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
+            liens: components["schemas"]["LienDTO"][];
+            communes: components["schemas"]["CommuneCourteDTO"][];
+            voeux: components["schemas"]["VoeuAvecCommuneDTO"][];
+            communesFavoritesAvecLeursVoeux: components["schemas"]["CommuneAvecSesVoeuxDTO"][];
+            metiers: components["schemas"]["MetierDTO"][];
+            /** Format: int32 */
+            tauxAffinite?: number;
+            apprentissage: boolean;
+        };
+        FormationAvecExplicationsDTO: {
+            formation: components["schemas"]["FicheFormationDTO"];
+            explications?: components["schemas"]["ExplicationsDTO"];
+        };
+        LabelDTO: {
+            id: string;
+            nom: string;
+        };
+        LienDTO: {
+            nom: string;
+            url: string;
+        };
+        MetierDTO: {
+            id: string;
+            nom: string;
+            descriptif?: string;
+            liens: components["schemas"]["LienDTO"][];
+        };
+        MoyenneGeneraleDesAdmisDTO: {
+            baccalaureat?: components["schemas"]["BaccalaureatDTO"];
+            centiles: components["schemas"]["CentileDTO"][];
+        };
+        RepartitionAdmisAnneePrecedenteDTO: {
+            /** Format: int32 */
+            total: number;
+            parBaccalaureat: components["schemas"]["TotalAdmisPourUnBaccalaureatDTO"][];
+        };
+        TotalAdmisPourUnBaccalaureatDTO: {
+            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            /** Format: int32 */
+            nombreAdmis: number;
+        };
+        TypeBaccalaureatDTO: {
+            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            /** Format: int32 */
+            pourcentage: number;
+        };
+        VoeuAvecCommuneDTO: {
+            id: string;
+            nom: string;
+            commune: components["schemas"]["CommuneCourteDTO"];
+        };
+        VoeuAvecDistanceDTO: {
+            voeu: components["schemas"]["VoeuAvecCommuneDTO"];
+            /** Format: int32 */
+            distanceKm: number;
+        };
+        GetSuggestionsDTO: {
+            profil?: components["schemas"]["ProfilDTO"];
+            /**
+             * Format: int32
+             * @description Numéro de page
+             * @default 1
+             */
+            numeroDePage: number;
+        };
+        FormationsAvecExplicationsDTO: {
+            formations: components["schemas"]["FormationAvecExplicationsDTO"][];
+        };
+        RechercheFormationsDTO: {
+            /** @description Termes de recherche */
+            recherche: string;
+            profil?: components["schemas"]["ProfilDTO"];
+            /**
+             * Format: int32
+             * @description Numéro de page
+             * @default 1
+             */
+            numeroDePage: number;
+        };
+        FormationCourteDTO: {
+            id: string;
+            nom: string;
+        };
+        FormationsCourtesDTO: {
+            formations: components["schemas"]["FormationCourteDTO"][];
+        };
+        GetFichesFormationsDTO: {
+            /**
+             * @description ids des formations
+             * @example [
+             *       "fl1",
+             *       "fl490030"
+             *     ]
+             */
+            ids: string[];
+            profil?: components["schemas"]["ProfilDTO"];
+            /**
+             * Format: int32
+             * @description Numéro de page
+             * @default 1
+             */
+            numeroDePage: number;
+        };
+        TraceDTO: {
+            /** @enum {string} */
+            action: "fiche_formation" | "recherche_formation" | "suggestions" | "onglet_fiche_formation" | "lien_externe" | "ajout_favori_formation" | "ajout_favori_metier" | "fiche_metier" | "edition_profil";
+            param1?: string;
+            param2?: string;
+        };
+        Unit: Record<string, never>;
         ModificationProfilDTO: {
             /**
              * @description Etat d'avancée du projet de l'élève
@@ -296,14 +644,10 @@ export interface components {
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             /** @description Villes préférées pour étudier */
             communesFavorites?: components["schemas"]["CommuneDTO"][];
-            /**
-             * Format: float
-             * @description Moyenne générale scolaire estimée en terminale
-             * @example 14
-             */
-            moyenneGenerale?: number;
-            /** @description Les idées de formations de l'élève */
-            formationsFavorites?: components["schemas"]["VoeuFormationDTO"][];
+            /** @description Les formations favorites de l'élève */
+            formationsFavorites?: components["schemas"]["FormationFavoriteDTO"][];
+            /** @description Les voeux favoris de l'élève */
+            voeuxFavoris?: components["schemas"]["VoeuFavoriDTO"][];
             /**
              * @description Les formations mises à la corbeille par l'élève
              * @example [
@@ -313,44 +657,23 @@ export interface components {
              */
             corbeilleFormations?: string[];
         };
-        VoeuFormationDTO: {
-            /**
-             * @description Id de la formation
-             * @example fl490030
-             */
-            idFormation: string;
-            /**
-             * Format: int32
-             * @description Niveau de l'ambition du voeux avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux
-             * @example 2
-             */
-            niveauAmbition: number;
-            /**
-             * @description Les voeux (triplets d'affectation) souhaités
-             * @example [
-             *       "ta15974",
-             *       "ta17831"
-             *     ]
-             */
-            voeuxChoisis: string[];
-            /**
-             * @description Prise de note additionnel sur le voeu
-             * @example Ma note personnalisée
-             */
-            priseDeNote?: string;
+        AjoutCompteParcoursupDTO: {
+            codeVerifier: string;
+            code: string;
+            redirectUri: string;
         };
-        Unit: Record<string, never>;
         AdmissionsParcoursupDTO: {
             annee: string;
             parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
         };
         BaccalaureatAvecSesSpecialitesDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            baccalaureat: components["schemas"]["BaccalaureatRefDTO"];
             specialites: components["schemas"]["SpecialitesDTO"][];
         };
-        BaccalaureatDTO: {
+        BaccalaureatRefDTO: {
             id: string;
             nom: string;
+            idCarteParcoursup: string;
         };
         CategorieDomaineAvecDomainesDTO: {
             categorieDomaine: components["schemas"]["CategorieDomaineDTO"];
@@ -368,6 +691,7 @@ export interface components {
         DomaineDTO: {
             id: string;
             nom: string;
+            description?: string;
             emoji: string;
         };
         InteretCategorieDTO: {
@@ -378,6 +702,7 @@ export interface components {
         InteretSousCategorieDTO: {
             id: string;
             nom: string;
+            description?: string;
             emoji: string;
         };
         PourcentagesMoyenneDTO: {
@@ -387,7 +712,7 @@ export interface components {
             pourcentageAdmisAyantCetteMoyenneOuMoins: number;
         };
         PourcentagesPourChaqueMoyenneParBaccalaureatDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            baccalaureat: components["schemas"]["BaccalaureatRefDTO"];
             pourcentages: components["schemas"]["PourcentagesMoyenneDTO"][];
         };
         ReferentielDTO: {
@@ -403,14 +728,6 @@ export interface components {
         SpecialitesDTO: {
             id: string;
             nom: string;
-        };
-        FormationCourteDTO: {
-            id: string;
-            nom: string;
-        };
-        LienDTO: {
-            nom: string;
-            url: string;
         };
         LienHateoasDTO: {
             rel: string;
@@ -435,141 +752,14 @@ export interface components {
             metiers: components["schemas"]["MetierCourtDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
-        AffiniteSpecialiteDTO: {
-            nomSpecialite: string;
-            /** Format: int32 */
-            pourcentage: number;
-        };
-        AutoEvaluationMoyenneDTO: {
-            /** Format: float */
-            moyenne: number;
-            /** Format: float */
-            basIntervalleNotes: number;
-            /** Format: float */
-            hautIntervalleNotes: number;
-            baccalaureatUtilise: components["schemas"]["BaccalaureatDTO"];
-        };
-        CentileDTO: {
-            /** Format: int32 */
-            centile: number;
-            /** Format: float */
-            note: number;
-        };
-        CommuneAvecSesVoeuxDTO: {
-            commune: components["schemas"]["CommuneDTO"];
-            voeuxAvecDistance: components["schemas"]["VoeuAvecDistanceDTO"][];
-        };
-        CommuneCourteDTO: {
-            nom: string;
-            codeInsee: string;
-        };
-        CriteresAnalyseCandidatureDTO: {
-            nom: string;
-            /** Format: int32 */
-            pourcentage: number;
-        };
-        DetailsCalculScoreDTO: {
-            details: string[];
-        };
-        ExplicationGeographiqueDTO: {
-            nomVille: string;
-            /** Format: int32 */
-            distanceKm: number;
-        };
-        ExplicationsDTO: {
-            geographique: components["schemas"]["ExplicationGeographiqueDTO"][];
-            formationsSimilaires: components["schemas"]["FormationSimilaireDTO"][];
-            /** @enum {string} */
-            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
-            /** @enum {string} */
-            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
-            interetsEtDomainesChoisis?: components["schemas"]["InteretsEtDomainesDTO"];
-            specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
-            typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
-            autoEvaluationMoyenne?: components["schemas"]["AutoEvaluationMoyenneDTO"];
-            detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
-        };
-        FicheFormationDTO: {
-            id: string;
-            nom: string;
-            idsFormationsAssociees: string[];
-            descriptifFormation?: string;
-            descriptifDiplome?: string;
-            descriptifConseils?: string;
-            descriptifAttendus?: string;
-            moyenneGeneraleDesAdmis?: components["schemas"]["MoyenneGeneraleDesAdmisDTO"];
-            criteresAnalyseCandidature: components["schemas"]["CriteresAnalyseCandidatureDTO"][];
-            repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
-            liens: components["schemas"]["LienDTO"][];
-            voeux: components["schemas"]["VoeuAvecCommuneDTO"][];
-            communesFavoritesAvecLeursVoeux: components["schemas"]["CommuneAvecSesVoeuxDTO"][];
-            metiers: components["schemas"]["MetierDTO"][];
-            /** Format: int32 */
-            tauxAffinite?: number;
-            apprentissage: boolean;
-        };
-        FormationAvecExplicationsDTO: {
-            formation: components["schemas"]["FicheFormationDTO"];
-            explications?: components["schemas"]["ExplicationsDTO"];
-        };
-        FormationSimilaireDTO: {
-            id: string;
-            nom: string;
-        };
-        FormationsAvecExplicationsDTO: {
-            formations: components["schemas"]["FormationAvecExplicationsDTO"][];
-            liens: components["schemas"]["LienHateoasDTO"][];
-        };
-        InteretDTO: {
-            id: string;
-            nom: string;
-        };
-        InteretsEtDomainesDTO: {
-            interets: components["schemas"]["InteretDTO"][];
-            domaines: components["schemas"]["DomaineDTO"][];
-        };
-        MetierDTO: {
-            id: string;
-            nom: string;
-            descriptif?: string;
-            liens: components["schemas"]["LienDTO"][];
-        };
-        MoyenneGeneraleDesAdmisDTO: {
-            baccalaureat?: components["schemas"]["BaccalaureatDTO"];
-            centiles: components["schemas"]["CentileDTO"][];
-        };
-        RepartitionAdmisAnneePrecedenteDTO: {
-            /** Format: int32 */
-            total: number;
-            parBaccalaureat: components["schemas"]["TotalAdmisPourUnBaccalaureatDTO"][];
-        };
-        TotalAdmisPourUnBaccalaureatDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
-            /** Format: int32 */
-            nombreAdmis: number;
-        };
-        TypeBaccalaureatDTO: {
-            baccalaureat: components["schemas"]["BaccalaureatDTO"];
-            /** Format: int32 */
-            pourcentage: number;
-        };
-        VoeuAvecCommuneDTO: {
-            id: string;
-            nom: string;
-            commune: components["schemas"]["CommuneCourteDTO"];
-        };
-        VoeuAvecDistanceDTO: {
-            voeu: components["schemas"]["VoeuAvecCommuneDTO"];
-            /** Format: int32 */
-            distanceKm: number;
-        };
-        FormationsCourtesDTO: {
-            formations: components["schemas"]["FormationCourteDTO"][];
-            liens: components["schemas"]["LienHateoasDTO"][];
-        };
-        Link: {
-            href?: string;
-            templated?: boolean;
+        ProgressionDTO: {
+            /**
+             * Format: int32
+             * @description Progression dans les six niveaux MPS
+             * @example 6
+             * @enum {integer}
+             */
+            progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
         };
     };
     responses: never;
@@ -580,6 +770,174 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getFormations: {
+        parameters: {
+            query: {
+                ids: string[];
+                /** @description Numéro de page */
+                numeroDePage?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsCourtesDTO"];
+                };
+            };
+        };
+    };
+    getFormation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GetFormationDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    getSuggestionsFormations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GetSuggestionsDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    getRechercheFormationSuccincte: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RechercheFormationsDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsCourtesDTO"];
+                };
+            };
+        };
+    };
+    getRechercheFormationDetaillee: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RechercheFormationsDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    getFichesFormations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GetFichesFormationsDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
+                };
+            };
+        };
+    };
+    ajoutTrace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TraceDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
     getProfilEleve: {
         parameters: {
             query?: never;
@@ -595,7 +953,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ModificationProfilDTO"];
+                    "*/*": components["schemas"]["ProfilDTO"];
                 };
             };
         };
@@ -610,6 +968,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ModificationProfilDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProfilDTO"];
+                };
+            };
+        };
+    };
+    postCompteParcoursup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AjoutCompteParcoursupDTO"];
             };
         };
         responses: {
@@ -692,126 +1074,7 @@ export interface operations {
             };
         };
     };
-    getFormations: {
-        parameters: {
-            query: {
-                ids: string[];
-                /** @description Numéro de page */
-                numeroDePage?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    getFormation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                idformation: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    getSuggestionsFormations: {
-        parameters: {
-            query?: {
-                /** @description Numéro de page */
-                numeroDePage?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    getRechercheFormationSuccincte: {
-        parameters: {
-            query: {
-                /** @description Formation recherchée */
-                recherche: string;
-                /** @description Numéro de page */
-                numeroDePage?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationsCourtesDTO"];
-                };
-            };
-        };
-    };
-    getRechercheFormationDetaillee: {
-        parameters: {
-            query: {
-                /** @description Formation recherchée */
-                recherche: string;
-                /** @description Numéro de page */
-                numeroDePage?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["FormationsAvecExplicationsDTO"];
-                };
-            };
-        };
-    };
-    links: {
+    getProgressionMPS: {
         parameters: {
             query?: never;
             header?: never;
@@ -826,65 +1089,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/vnd.spring-boot.actuator.v3+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/vnd.spring-boot.actuator.v2+json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                    "application/json": {
-                        [key: string]: {
-                            [key: string]: components["schemas"]["Link"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    "health-path": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/vnd.spring-boot.actuator.v3+json": Record<string, never>;
-                    "application/vnd.spring-boot.actuator.v2+json": Record<string, never>;
-                    "application/json": Record<string, never>;
+                    "*/*": components["schemas"]["ProgressionDTO"];
                 };
             };
         };

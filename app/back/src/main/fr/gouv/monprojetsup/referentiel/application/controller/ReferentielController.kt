@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api/v1/referentiel")
+@RequestMapping("api/v1/public/referentiel")
 @RestController
 @Tag(name = "Référentiel", description = "API des données référentielles de MonProjetSup")
 class ReferentielController(
@@ -17,7 +17,9 @@ class ReferentielController(
     @GetMapping
     @Operation(
         summary = "Récupérer les données nécessaires au parcours d'inscription de MonProjetSup",
-        description = "Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.",
+        description =
+            "Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis" +
+                " Parcoursup, les interêts et domaines.",
     )
     fun getReferentielPourInscription(): ReferentielDTO {
         return ReferentielDTO(referentielService.recupererReferentiel())

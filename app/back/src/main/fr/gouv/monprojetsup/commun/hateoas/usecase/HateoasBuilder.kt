@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PREMIERE_PAGE
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import org.springframework.stereotype.Component
-import kotlin.jvm.Throws
 import kotlin.math.ceil
 import kotlin.math.min
 
@@ -23,7 +22,7 @@ class HateoasBuilder {
             }
         if (numeroDePageActuelle > dernierePage) {
             throw MonProjetSupBadRequestException(
-                code = "PAGE_DEMANDEE_INXISTANTE",
+                code = "PAGE_DEMANDEE_INEXISTANTE",
                 msg = "La page $numeroDePageActuelle n'existe pas. Veuillez en donner une entre $NUMERO_PREMIERE_PAGE et $dernierePage",
             )
         }

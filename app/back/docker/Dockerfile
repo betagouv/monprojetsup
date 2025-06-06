@@ -27,10 +27,5 @@ COPY --from=build /usr/src/mps-backend.jar .
 # Exposed port
 EXPOSE 3000
 
-# Install postgresql client
-RUN apt-get update && apt-get install -y \
-  postgresql-client \
-  && rm -rf /var/lib/apt/lists/*
-
 # Set the command to run the application
 CMD ["java", "-jar", "mps-backend.jar"]

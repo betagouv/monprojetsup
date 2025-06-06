@@ -1,9 +1,14 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
+import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ProgressionDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
-import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
+import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -14,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api/v1/profil")
+@RequestMapping("api/v1/auth/profil")
 @RestController
 @Tag(name = "Profil Élève", description = "API des profils des utilisateurs MonProjetSup")
 class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
-    private val miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService,
+    private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
+    private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
+    private val recupererProgressionService: RecupererProgressionService,
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -28,13 +35,14 @@ class ProfilEleveController(
     )
     fun postProfilEleve(
         @RequestBody modificationProfilDTO: ModificationProfilDTO,
-    ): ResponseEntity<Unit> {
+    ): ProfilDTO {
         val eleve = recupererEleve()
-        miseAJourEleveService.mettreAJourUnProfilEleve(
-            miseAJourDuProfil = modificationProfilDTO.toModificationProfilEleve(),
-            profilActuel = eleve,
-        )
-        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
+        val profilEleve =
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = modificationProfilDTO.toModificationProfilEleve(),
+                profilActuel = eleve,
+            )
+        return ProfilDTO(profilEleve)
     }
 
     @GetMapping
@@ -42,9 +50,39 @@ class ProfilEleveController(
         summary = "Récupérer le profil de l'utilisateur connecté",
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
-    fun getProfilEleve(): ModificationProfilDTO {
-        val profil = recupererEleveIdentifie()
-        val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
-        return ModificationProfilDTO(profilMisAJour)
+    fun getProfilEleve(): ProfilDTO {
+        val profil = recupererEleveAvecProfilExistant()
+        val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
+        return ProfilDTO(profil, voeuxFavoris)
+    }
+
+    @PostMapping("/parcoursup")
+    @Operation(
+        summary = "Lier à un compte Parcoursup",
+        description = "Lie le compte MPS à un compte Parcoursup pour récupération automatique des favoris Parcoursup",
+    )
+    fun postCompteParcoursup(
+        @RequestBody ajoutCompteParcoursup: AjoutCompteParcoursupDTO,
+    ): ResponseEntity<Unit> {
+        miseAJourIdParcoursupService.mettreAJourIdParcoursup(
+            profil = recupererEleveAvecProfilExistant(),
+            parametresPourRecupererToken = ajoutCompteParcoursup.toParametresPourRecupererToken(),
+        )
+        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
+    }
+
+    @GetMapping("/progression")
+    @Operation(
+        summary = "Récupérer le niveau de progression pédagogique",
+        description = "Récupère le niveau de progression pédagogique, entre 0 et 6",
+    )
+    fun getProgressionMPS(): ProgressionDTO {
+        val profil = recupererEleveAvecProfilExistant()
+        return ProgressionDTO(
+            progression =
+                recupererProgressionService.recupererProgression(
+                    profil,
+                ),
+        )
     }
 }

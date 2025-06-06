@@ -21,71 +21,25 @@ l'Innovation,
 package fr.gouv.monprojetsup.data.model.formations;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  *
  * @author gimbert
  */
-public class Filiere implements Serializable {
-    
-    public final int gFlCod;
-
-    public final int gFlCodeFi;
-    
+public record Filiere
+(
+    /* le code de la filière */
+    int gFlCod,
     /* le groupe de formations auquel appartient la filière */
-    public final int gFrCod;
-
-    public final String libelle;
-
-    public final boolean apprentissage;
-    
-    /* groupes représentés par leur C_GP_COD */
-    public final Set<Integer> groupes() { return libellesGroupes.keySet(); }
-
-    public final Map<Integer, String > libellesGroupes = new HashMap<>();
-
-    /* liste de liens vers des anciens g_ta_cod */
-    public final Set<Integer> ancienGFlCod = new HashSet<>();
-
-    Filiere(int gFlCod, int gFrCod, String libelle, boolean apprentissage, int gFlCodFi) {
-        this.gFlCod = gFlCod;
-        this.gFrCod = gFrCod;
-        this.libelle = libelle;
-        this.apprentissage = apprentissage;
-        this.gFlCodeFi = gFlCodFi;
-    }
+    int gFrCod,
+    String libelle,
+    boolean apprentissage,
+    int gFlCodeFi
+) implements Serializable{
     
     @Override
     public String toString() {
         return "Filière '" + libelle + " (" + gFlCod + ")"; 
-    }
-
-    private Filiere() {
-        this.gFlCod = Integer.MIN_VALUE;
-        this.gFrCod = Integer.MIN_VALUE;
-        this.libelle = null;
-        apprentissage = false;
-        this.gFlCodeFi = Integer.MIN_VALUE;
-    }
-
-
-
-    public boolean hasGroup(int cGpCod) {
-        return libellesGroupes.containsKey(cGpCod);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Filiere filiere = (Filiere) o;
-        return gFlCod == filiere.gFlCod && gFrCod == filiere.gFrCod;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gFlCod, gFrCod);
     }
 
     public boolean isL1() {
@@ -99,4 +53,10 @@ public class Filiere implements Serializable {
     public boolean isLouvre() {
         return gFlCod == 250001;
     }
+
+    @SuppressWarnings("unused")
+    private Filiere() {
+        this(Integer.MIN_VALUE,Integer.MIN_VALUE,null,false,Integer.MIN_VALUE);
+    }
+
 }

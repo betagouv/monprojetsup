@@ -7,5 +7,5 @@ export type HttpClientOptions = {
 };
 
 export type IHttpClient = {
-  récupérer: <O extends object>(options: HttpClientOptions) => Promise<O | undefined>;
+  récupérer: <O extends object>(options: HttpClientOptions) => Promise<O | Error>;
 };

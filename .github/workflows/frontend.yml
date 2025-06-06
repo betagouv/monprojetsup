@@ -37,6 +37,9 @@ jobs:
       - name: Setup Node and packages
         uses: ./.github/actions/setupNodeAndPackages
 
+      - name: Copy .env
+        run: cp .env.ci .env
+        
       - name: Run test command
         run: npm run test
 
@@ -70,7 +73,7 @@ jobs:
         uses: ./.github/actions/setupNodeAndPackages
 
       - name: Audit npm packages
-        run: npm audit --production
+        run: npm audit --omit=dev
   
   playwright:
     name: E2E Tests

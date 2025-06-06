@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
-import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -39,7 +39,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 import java.net.ConnectException
 
 class SuggestionApiHttpClientTest {
@@ -47,7 +46,7 @@ class SuggestionApiHttpClientTest {
     lateinit var httpClient: OkHttpClient
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @Captor
     lateinit var requeteCaptor: ArgumentCaptor<Request>
@@ -57,35 +56,34 @@ class SuggestionApiHttpClientTest {
     private lateinit var suggestionApiHttpClient: SuggestionApiHttpClient
 
     private val unProfil =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
             situation = SituationAvanceeProjetSup.PROJET_PRECIS,
             classe = ChoixNiveau.TERMINALE,
             baccalaureat = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            communesFavorites = listOf(Communes.PARIS15EME),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME),
             specialites = listOf("mat1001", "mat1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-            moyenneGenerale = 14f,
             metiersFavoris = listOf("MET_123", "MET_456"),
             formationsFavorites =
                 listOf(
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
-                    VoeuFormation(
+                    FormationFavorite(
                         idFormation = "fl5678",
                         niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
+                        priseDeNote = "Ma formation préférée",
                     ),
                 ),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             corbeilleFormations = listOf("fl0001"),
+            compteParcoursupLie = true,
+            voeuxFavoris = emptyList(),
         )
 
     @BeforeEach
@@ -317,7 +315,8 @@ class SuggestionApiHttpClientTest {
                     "MET_654",
                     "MET_420",
                     "MET_630"
-                  ]
+                  ],
+                  "situation":"projet_precis"
                 }
                 """.trimIndent().toResponseBody(mediaType)
             val callMock = mock(Call::class.java)
@@ -361,34 +360,34 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "28",
-                        "choices": [
+                        "choix": [
                           {
-                            "fl": "MET_123",
+                            "id": "MET_123",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "MET_456",
+                            "id": "MET_456",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl1234",
+                            "id": "fl1234",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl5678",
+                            "id": "fl5678",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl0001",
+                            "id": "fl0001",
                             "status": 2,
                             "date": null
                           }
-                        ]
+                        ],
+                        "situation":"projet_precis"
                       }
                     }
                     """.trimIndent(),
@@ -521,13 +520,13 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "simi": {
-                            "fl": "fl1",
+                            "id": "fl1",
                             "p": 0.15
                           }
                         },
                         {
                           "simi": {
-                            "fl": "fl7",
+                            "id": "fl7",
                             "p": 0.30
                           }
                         },
@@ -535,19 +534,6 @@ class SuggestionApiHttpClientTest {
                           "tbac": {
                             "percentage": 18,
                             "bac": "Général"
-                          }
-                        },
-                        {
-                          "moygen": {
-                            "moy": 29,
-                            "middle50": {
-                              "rangEch10": 20,
-                              "rangEch25": 27,
-                              "rangEch50": 31,
-                              "rangEch75": 33,
-                              "rangEch90": 35
-                            },
-                            "bacUtilise": "Général"
                           }
                         },
                         {
@@ -600,8 +586,11 @@ class SuggestionApiHttpClientTest {
                           "tags": {
                             "ns": [
                               "T_ROME_731379930",
+                              "MET.612",
                               "T_IDEO2_4812",
-                              "T_ROME_803089798"
+                              "MET.483",
+                              "T_ROME_803089798",
+                              "MET.461"
                             ]
                           }
                         },
@@ -618,11 +607,6 @@ class SuggestionApiHttpClientTest {
                         {
                           "debug": {
                             "expl": "preférences apprentissage 1 * (1 - 1E-5) + 1E-5"
-                          }
-                        },
-                        {
-                          "debug": {
-                            "expl": "moyenne générale 1 * (1 - 1E-1) + 1E-1"
                           }
                         },
                         {
@@ -662,11 +646,11 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "debug": {
-                            "expl": "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  0 (proximité intérêts et favoris) ,  ]"
+                            "expl": "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  0 (proximité intérêts et favoris) ,  ]"
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -732,7 +716,6 @@ class SuggestionApiHttpClientTest {
                                     "Pas de stats spécialités pour cette filiere",
                                     "Pas de stats pour cette filiere",
                                     "preférences apprentissage 1 * (1 - 1E-5) + 1E-5",
-                                    "moyenne générale 1 * (1 - 1E-1) + 1E-1",
                                     "EDS 0.5 * (1 - 1E-1) + 1E-1",
                                     "type de bac 0.01 * (1 - 1E-8) + 1E-8",
                                     "durée 0 * (1 - 1E-4) + 1E-4",
@@ -741,28 +724,19 @@ class SuggestionApiHttpClientTest {
                                     "proximité intérêts et favoris 0 * (1 - 1E-8) + 1E-8",
                                     "Scores de diversité: {OFFRE_FORMATION=0.0}",
                                     "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  " +
-                                        "1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  " +
+                                        "0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  " +
                                         "0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  " +
                                         "0 (proximité intérêts et favoris) ,  ]",
                                 ),
-                            autoEvaluationMoyenne =
-                                AutoEvaluationMoyenne(
-                                    echellonDeLaMoyenneAutoEvalue = 29,
-                                    rangs =
-                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                            rangEch10 = 20,
-                                            rangEch25 = 27,
-                                            rangEch50 = 31,
-                                            rangEch75 = 33,
-                                            rangEch90 = 35,
-                                        ),
-                                    baccalaureatUtilise = "Général",
-                                ),
-                            interetsEtDomainesChoisis =
+                            autoEvaluationMoyenne = null,
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
+                                    "MET.612",
                                     "T_IDEO2_4812",
+                                    "MET.483",
                                     "T_ROME_803089798",
+                                    "MET.461",
                                 ),
                             exemplesDeMetiers =
                                 listOf(
@@ -773,6 +747,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_884",
                                     "MET_634",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                 )
             assertThat(result).isEqualTo(attendu)
@@ -822,7 +797,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -840,7 +815,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",
@@ -885,7 +860,7 @@ class SuggestionApiHttpClientTest {
                                     ),
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            interetsEtDomainesChoisis =
+                            choix =
                                 listOf(
                                     "T_ROME_731379930",
                                     "T_IDEO2_4812",
@@ -900,6 +875,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_884",
                                     "MET_634",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                     "fl2015" to
                         ExplicationsSuggestionEtExemplesMetiers(
@@ -918,6 +894,7 @@ class SuggestionApiHttpClientTest {
                                     "MET_431",
                                     "MET_557",
                                 ),
+                            donneesDeReference = ExplicationsSuggestionEtExemplesMetiers.ListeChoixReference(details = emptyList()),
                         ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
@@ -967,7 +944,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -985,7 +962,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",
@@ -1043,34 +1020,34 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "28",
-                        "choices": [
+                        "choix": [
                           {
-                            "fl": "MET_123",
+                            "id": "MET_123",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "MET_456",
+                            "id": "MET_456",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl1234",
+                            "id": "fl1234",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl5678",
+                            "id": "fl5678",
                             "status": 1,
                             "date": null
                           },
                           {
-                            "fl": "fl0001",
+                            "id": "fl0001",
                             "status": 2,
                             "date": null
                           }
-                        ]
+                        ],
+                        "situation":"projet_precis"
                       },
                       "keys":["fl2014"]
                     }
@@ -1124,7 +1101,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_361",
                         "MET_592",
                         "MET_871",
@@ -1142,7 +1119,7 @@ class SuggestionApiHttpClientTest {
                           }
                         }
                       ],
-                      "examples": [
+                      "metiers": [
                         "MET_639",
                         "MET_292",
                         "MET_890",
@@ -1179,8 +1156,11 @@ class SuggestionApiHttpClientTest {
             then(
                 logger,
             ).should().error(
-                "Les formations [fl1] n'ont pas d'explications renvoyées par l'API suggestion pour le profil " +
-                    "élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c",
+                type = "FORMATIONS_SANS_EXPLICATIONS",
+                message =
+                    "Les formations [fl1] n'ont pas d'explications renvoyées par l'API suggestion pour le profil " +
+                        "élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c",
+                parametres = mapOf("formationsSansExplications" to listOf("fl1"), "idEleve" to "adcf627c-36dd-4df5-897b-159443a6d49c"),
             )
         }
 

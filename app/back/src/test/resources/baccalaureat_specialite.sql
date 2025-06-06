@@ -1,11 +1,11 @@
 INSERT INTO ref_baccalaureat
-VALUES ('Général', 'Série Générale', 'Générale');
+VALUES ('Général', 'Série Générale', 'Générale', '1');
 
 INSERT INTO ref_baccalaureat
-VALUES ('Professionnel', 'Série Pro', 'P');
+VALUES ('Professionnel', 'Série Pro', 'P', '3');
 
 INSERT INTO ref_baccalaureat
-VALUES ('PA', 'Bac Pro Agricole', 'PA');
+VALUES ('PA', 'Bac Pro Agricole', 'PA', '3');
 
 INSERT INTO ref_specialite(id, label)
 VALUES ('4',

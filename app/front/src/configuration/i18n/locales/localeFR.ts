@@ -2,11 +2,8 @@ const pages = {
   TABLEAU_DE_BORD: "Tableau de bord",
   FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
-  PLAN_DU_SITE: "Plan du site",
-  ACCESSIBILITÉ: "Accessibilité : non conforme",
-  MENTIONS_LÉGALES: "Mentions légales",
-  DONNÉES_PERSONNELLES: "Données personnelles",
   GESTION_COOKIES: "Gestion des cookies",
+  EXPLORATION: "Les formations",
 } as const;
 
 const app = {
@@ -26,10 +23,7 @@ export const localeFR = {
   PIED_DE_PAGE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
     LIENS_INTERNES: {
-      PLAN_DU_SITE: pages.PLAN_DU_SITE,
-      ACCESSIBILITÉ: pages.ACCESSIBILITÉ,
-      MENTIONS_LÉGALES: pages.MENTIONS_LÉGALES,
-      DONNÉES_PERSONNELLES: pages.DONNÉES_PERSONNELLES,
+      DONNÉES_PERSONNELLES: "Données personnelles",
       GESTION_COOKIES: pages.GESTION_COOKIES,
     },
   },
@@ -37,19 +31,28 @@ export const localeFR = {
     TABLEAU_DE_BORD: pages.TABLEAU_DE_BORD,
     FORMATIONS: "Explorer les formations",
     FAVORIS: "Consulter ma sélection",
+    PROFIL: "Enrichir mon profil",
   },
   CARTE_MÉTIER: {
     FORMATIONS: "formation(s) pour apprendre le métier",
   },
   CARTE_FORMATION: {
     POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
-    VILLES_PROPOSANT_FORMATION: "Formation disponible dans",
-    VILLES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
+    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
+  },
+  PAGE_COOKIES: {
+    TITRE_PAGE: "Cookies",
+  },
+  PAGE_DÉCLARATION_ACCESSIBILITÉ: {
+    TITRE_PAGE: "Déclaration accessibilité",
+  },
+  PAGE_PLAN_DU_SITE: {
+    TITRE_PAGE: "Plan du site",
   },
   PAGE_FAVORIS: {
     TITRE_PAGE: pages.FAVORIS,
-    CATÉGORIE: "Catégorie",
     AUCUN_FAVORI: {
       EMOJI: "😅",
       OUPS: "Oups...",
@@ -61,22 +64,25 @@ export const localeFR = {
     AFFICHER_FORMATIONS_SUPPLÉMENTAIRES: "Afficher les autres formations",
   },
   PAGE_FORMATION: {
+    TITRE_PAGE: pages.EXPLORATION,
     AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
     RETOUR_AUX_SUGGESTIONS: "Retour aux suggestions",
     CHAMP_RECHERCHE_LABEL: "Recherche une formation",
     CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
+    SUGGESTIONS_TRIÉES_ALEATOIRE: "Résultats triés aléatoirement... pour les personnaliser complète",
+    SUGGESTIONS_TRIÉES_ALEATOIRE_SUITE: "ton profil ›",
     ONGLET_FORMATION: "La formation",
-    ONGLET_DÉTAILS: "Plus de détails",
+    ONGLET_DÉTAILS: "En général",
     ONGLET_CRITÈRES: "Critères d’admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l’année dernière",
-    VILLES_PROPOSANT_FORMATION: "Formation disponible dans",
-    VILLES_PROPOSANT_FORMATION_SUITE: "ville(s)",
-    VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
+    COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
+    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
-    RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
+    RÉPARTITION_PAR_BAC: "Répartition par filières de bacs",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
     MOYENNE_GÉNÉRALE: "Moyenne générale des lycéens admis à la formation",
     LES_ATTENDUS: "Les attendus de la formation",
@@ -84,7 +90,8 @@ export const localeFR = {
       PREMIER_DÉCILE: "5% des lycéens admis avaient une moyenne générale inférieure à",
       SECOND_DÉCILE: "20% des lycéens admis avaient une moyenne générale comprise entre",
       TROISIÈME_DÉCILE: "50% des lycéens admis avaient une moyenne générale comprise entre",
-      QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
+      QUATRIÈME_DÉCILE: "20% des lycéens admis avaient une moyenne générale comprise entre",
+      CINQUIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles via cette formation",
     ALTERNANCE: {
@@ -100,18 +107,17 @@ export const localeFR = {
       DURÉE_FORMATION: "Tu as une préférence pour les études",
       ALTERNANCE: "Formation réalisable",
       ALTERNANCE_SUITE: "en alternance",
-      FORMATIONS_SIMILAIRES: "Tu as sélectionné",
-      INTÉRÊTS_ET_DOMAINES: "Tu as demandé à voir des formations correspondant à",
+      INTÉRÊTS_ET_DOMAINES: "Tu as sélectionné",
       ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l’année dernière,",
-      ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
-      MOYENNE: "Parmi les lycéennes et lycéens admis dans cette formation l’année dernière, de série",
+      ADMISSION_BAC_SUITE: "étaient des bacheliers de filière",
+      MOYENNE: "Parmi les lycéennes et lycéens admis dans cette formation l’année dernière, de filière",
       MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l’intervalle",
       EXPLICATION_CALCUL: "Détails du calcul du score (mode expert)",
     },
-    VOEUX: {
+    CHOIX: {
       TITRE: "Dis-nous en plus sur ce choix",
       AMBITIONS: {
-        LÉGENDE: "Je dirais que c’est un choix ...",
+        TITRE: "Je dirais que c’est un choix ...",
         PLAN_B: {
           LABEL: "Plan B",
           EMOJI: "🛟",
@@ -125,17 +131,18 @@ export const localeFR = {
           EMOJI: "🙏",
         },
       },
-      ÉTABLISSEMENTS: {
-        LÉGENDE: "Etablissements pour lesquels je souhaite candidater",
+      VOEUX: {
+        TITRE: "Établissements pour lesquels je souhaite candidater",
         LIENS: {
           PARCOURSUP: "Carte Parcoursup",
           PRÉFÉRENCES: "Préférences de villes",
         },
         PAR_COMMUNE: {
+          TITRE: "Établissements",
           RAYON: "Dans un rayon de",
           VOIR_PLUS: "établissements dans ce rayon, retrouve toute l’offre de formation sur la",
-          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
-          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE:
+          AUCUN_VOEU_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
+          AUCUN_VOEU_À_PROXIMITÉ_SUITE:
             'km autour de cette ville, consulte la carte des formations Parcoursup ou l’onglet "Toutes les villes"',
         },
         TOUTES_LES_COMMUNES: {
@@ -143,13 +150,13 @@ export const localeFR = {
           RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",
           LABEL: "Établissements",
-          DESCRIPTION:
-            "Commence à taper puis sélectionne des établissements. Les résultats retournés sont limités à 5, retrouve toute l'offre de formation sur la carte Parcoursup.",
-          SÉLECTIONNÉS: "Établissement(s) sélectionné(s)",
-          VOIR_PLUS: "établissement(s) conforme(s) à ta recherche, retrouve toute l’offre de formation sur la",
+          DESCRIPTION: "Commence à taper puis sélectionne des établissements",
+        },
+        MA_SÉLECTION: {
+          AUCUN: "Aucun établissement sélectionné en favoris",
         },
       },
-      COMMENTAIRE: {
+      NOTE_PERSONNELLE: {
         LABEL: "Note additionnelle",
         BOUTON: "Enregistrer",
       },
@@ -209,14 +216,17 @@ export const localeFR = {
         DESCRIPTION:
           "Ton auto-évaluation est utilisée pour te recommander en priorité les formations auxquelles tu as les meilleures chances d’accéder, sans pour autant en exclure aucune.",
         AUTO_CENSURE: "L’année dernière,",
-        AUTO_CENSURE_SUITE: "% des élèves de terminale de série",
+        AUTO_CENSURE_SUITE: "% des élèves de terminale de filière",
         AUTO_CENSURE_SUITE_2: "admis dans un cursus sur Parcoursup avaient une moyenne de",
         AUTO_CENSURE_FIN: "ou moins.",
       },
       SPÉCIALITÉS: {
-        LABEL: "Spécialités (EDS) choisies ou envisagées",
+        LABEL: "Spécialité de bac ou enseignement(s) de spécialité(s) choisi(s) ou envisagé(s)",
         DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
         SÉLECTIONNÉS: "Spécialité(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune spécialité sélectionnée",
+        },
       },
     },
     DOMAINES: {
@@ -224,14 +234,14 @@ export const localeFR = {
         TITRE_ÉTAPE: "Domaines professionnels",
         TITRE: "Les domaines professionnels qui t’attirent",
       },
-      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste",
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste.",
     },
     INTÉRÊTS: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Centres d’intérêts",
         TITRE: "Plus tard, je voudrais ...",
       },
-      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste",
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste.",
     },
     MÉTIERS: {
       PARCOURS_INSCRIPTION: {
@@ -257,6 +267,9 @@ export const localeFR = {
         LABEL: "Métiers envisagés",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les métiers qui pourraient t’intéresser",
         SÉLECTIONNÉS: "Métier(s) sélectionné(s)",
+        MA_SÉLECTION: {
+          AUCUN: "Aucun métier sélectionné",
+        },
       },
     },
     ÉTUDE: {
@@ -290,7 +303,7 @@ export const localeFR = {
             LABEL: "Pas du tout intéressé(e)",
           },
           indifferent: {
-            LABEL: "Indifférent(e)",
+            LABEL: "Indifférent(e) / je ne sais pas",
           },
           interesse: {
             LABEL: "Intéressé(e)",
@@ -301,9 +314,12 @@ export const localeFR = {
         },
       },
       COMMUNES_ENVISAGÉES: {
-        LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
+        LABEL: "Y a-t-il des villes près desquelles tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune ville sélectionnée en favoris",
+        },
       },
     },
     FORMATIONS: {
@@ -329,12 +345,15 @@ export const localeFR = {
         LABEL: "Formations envisagées",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les formations qui pourraient t’intéresser",
         SÉLECTIONNÉES: "Formation(s) sélectionnée(s)",
+        MA_SÉLECTION: {
+          AUCUNE: "Aucune formation sélectionnée",
+        },
       },
     },
     CONFIRMATION_INSCRIPTION: {
       TITRE_PAGE: "Inscription terminée",
       TITRE: "Félicitations",
-      SOUS_TITRE: "Ton inscription est terminée 👌",
+      SOUS_TITRE: "Ton profil est complété 👌",
       CONTENU: "N’hésite pas à enrichir ton profil pour trouver plus facilement ta voie.",
       BOUTON_ACTION: "Découvre ton espace MPS",
       BANDEAU: {
@@ -343,8 +362,16 @@ export const localeFR = {
       },
     },
     TABLEAU_DE_BORD: {
-      TITRE: "Bienvenue dans ton espace MPS",
-      MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
+      TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
+      TITRE_DECONNECTE: "C'est parti!",
+      MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
+      MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
+      MODALE_PARCOURSUP: {
+        TITRE: "Synchronisation avec Parcoursup",
+        CONTENU:
+          "J’autorise MonProjetSup à accéder à mes favoris enregistrés depuis mon compte Parcoursup. A noter que MonProjetSup n’accède à aucun autre élément de ton dossier Parcoursup. Cette autorisation est valable toute la durée de l'année scolaire en cours, et révocable en écrivant à",
+        BOUTON_ACTION: "C'est parti",
+      },
       CARTES: {
         SUGGESTIONS: {
           TITRE: "Explore les suggestions de formations post-bac",
@@ -358,32 +385,66 @@ export const localeFR = {
           TITRE: "Enrichis ton profil pour améliorer les suggestions",
           SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
         },
+        PROFIL_VIDE: {
+          TITRE: "Renseigne ton profil pour obtenir des suggestions personnalisées",
+          SOUS_TITRE:
+            "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
+        },
+        CONNECTE_TOI: {
+          TITRE: "Connecte-toi à ton compte MPS-Avenir(s)",
+          SOUS_TITRE: "En te connectant, tu conserveras tes préférences et tes favoris.",
+        },
         AVIS: {
           TITRE: "Que penses-tu de MPS ?",
           SOUS_TITRE: "Donne ton avis sur ton expérience en quelques clics",
           BOUTON: "Je donne mon avis",
         },
+        PARCOURSUP: {
+          TITRE: "Synchronise MPS à ton compte Parcoursup",
+          SOUS_TITRE: "3 clics pour te faciliter la vie",
+          BOUTON: "Synchroniser",
+          ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
+          SI_SYNCHRO: {
+            SOUS_TITRE: "Tes comptes sont bien synchronisés. Cette autorisation est revocable en écrivant à",
+          },
+        },
+      },
+      TOAST_PARCOURSUP: {
+        SUCCÈS: {
+          TITRE: "Synchronisation réussie",
+          DESCRIPTION: "Tes comptes MPS & ParcourSup sont désormais associés.",
+        },
+        ERREUR: {
+          TITRE: "Échec de la synchronisation",
+          DESCRIPTION: "Une erreur est survenue, réessaye dans quelques instants.",
+        },
       },
       TÉMOIGNAGE: {
-        AUTEUR: "Charlotte",
+        AUTEUR: "Mathilde",
         RÔLE: "De l’équipe MPS",
+        PHRASE_NIVEAU: "Tu as atteint le niveau ",
+        PHRASE_FELICITATIONS: ", félicitations!",
         PHRASE:
-          "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup.",
+          "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup, en atteignant progressivement les",
+        PHRASE_SUITE: "6 niveaux MPS.",
       },
     },
   },
   PAGE_TABLEAU_DE_BORD: {
     TITRE_PAGE: pages.TABLEAU_DE_BORD,
   },
-  FORMATIONS_MASQUÉES: {
-    TITRE: "Formations masquées",
-    BOUTON_NE_PLUS_MASQUER: "Ne plus masquer",
-    MESSAGE_AUCUNE: "Aucune formation masquée pour le moment !",
-  },
   PAGE_PROFIL: {
     TITRE_PAGE: pages.PROFIL,
     TITRE: pages.PROFIL,
     SE_DÉCONNECTER: "Se déconnecter",
+    FORMATIONS_MASQUÉES: {
+      TITRE: "Formations masquées",
+      BOUTON_NE_PLUS_MASQUER: "Ne plus masquer",
+      MESSAGE_AUCUNE: "Aucune formation masquée pour le moment !",
+    },
+    MÉTIERS: {
+      TITRE_ONGLET: "Métiers",
+    },
   },
   COMMUN: {
     FERMER: "Fermer",
@@ -397,8 +458,11 @@ export const localeFR = {
     MÉTIER: "Métier",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
     PRÉCISER_CATÉGORIES: "Sélectionne la ou les catégories qui t’intéressent",
+    DÉTAILS_CATÉGORIES: "Détails des catégories",
+    DÉTAILS: "Détails",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
+      TITRE_GÉNÉRIQUE: "Oups...",
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
       AU_MOINS_UNE: "Tu dois indiquer au moins une",
@@ -419,23 +483,50 @@ export const localeFR = {
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",
     BOUTON_AFFICHER_CONTENU_PRINCIPAL: "Retour à la fiche",
     NE_VEUT_PAS_RÉPONDRE: "Je n’en ai aucune idée / Je ne veux pas répondre",
+    FAVORIS: {
+      VOIR_PLUS: "Plus de résultats",
+      MA_SÉLÉCTION: "Ma sélection",
+    },
+  },
+  ERREURS: {
+    SERVEUR_INDISPONIBLE: {
+      EMOJI: "😅",
+      TITRE: "Oups, le service est temporairement indisponible",
+      SOUS_TITRE: "Essaye de nouveau dans quelques minutes.",
+    },
+    GÉNÉRIQUE: {
+      EMOJI: "🤓",
+      TITRE: "Oups, on dirait bien un bug",
+      SOUS_TITRE: "On a pris note de l'erreur et on corrige ça au plus vite.",
+    },
   },
   ACCESSIBILITÉ: {
     CHARGEMENT: "Chargement",
-    FAVORIS: "Favoris",
+    FAVORI: "Favori",
+    LISTE_SUGGESTIONS_FAVORIS: "Éléments correspondants",
+    LISTE_FAVORIS_SÉLECTIONNÉS: "Éléments sélectionnés",
     MASQUÉ: "Masqué",
+    METTRE_EN_FAVORI: "Mettre en favori",
+    FAVORI_PARCOURSUP: "Favori provenant de Parcoursup",
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
     RETIRER: "Retirer",
-    VOIR_FIL_ARIANE: "Voir le fil d’ariane",
+    VOIR_FIL_ARIANE: "Voir le fil d’Ariane",
     VOUS_ÊTES_ICI: "Vous êtes ici :",
     MENU_PRINCIPAL: "Menu principal",
     ONGLETS_FORMATION: "Détails sur la formation",
-    ONGLETS_VOEUX_ÉTABLISSEMENTS: "Établissements par ville",
+    ONGLETS_VOEUX: "Établissements par ville",
     VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
     FERMER_MODALE: "Fermer la fenêtre modale",
+    ACCÈS_RAPIDE: "Accès rapide",
     CONTENU: "Contenu",
+    FOCUS_FICHE: "Déplacer focus sur la fiche",
+    FOCUS_RÉSULTATS: "Déplacer focus sur les résultats",
     PIED_PAGE: "Pied de page",
+    NOUVEAUX_RÉSULATS: "nouveaux résultats",
+    LISTE_FORMATIONS: "Liste formations",
+    LISTE_MÉTIERS: "Liste métiers",
+    CATÉGORIE: "Catégorie",
   },
 } as const;

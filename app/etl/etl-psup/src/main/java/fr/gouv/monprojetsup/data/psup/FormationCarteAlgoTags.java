@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
-
 public class FormationCarteAlgoTags implements Serializable {
 
-    public FormationCarteAlgoTags(int gTaCod, int gFlCod, boolean isLAS) {
+    public FormationCarteAlgoTags(int gTaCod, int gFlCod) {
         this.gTaCod = gTaCod;
-        this.gFlCod = gFlCod + (isLAS ? LAS_CONSTANT : 0);
+        this.gFlCod = gFlCod;
     }
 
     /* code formation */

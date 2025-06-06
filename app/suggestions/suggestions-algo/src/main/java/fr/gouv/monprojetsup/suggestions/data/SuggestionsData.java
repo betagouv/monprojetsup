@@ -1,18 +1,19 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
+import fr.gouv.monprojetsup.data.formation.entity.FormationVoeuEntity;
 import fr.gouv.monprojetsup.data.model.Edge;
 import fr.gouv.monprojetsup.data.model.Formation;
 import fr.gouv.monprojetsup.data.model.LatLng;
 import fr.gouv.monprojetsup.data.model.Ville;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Config;
 import fr.gouv.monprojetsup.suggestions.port.ConfigPort;
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
+import fr.gouv.monprojetsup.suggestions.port.FormationsVoeuxPort;
 import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
+import fr.gouv.monprojetsup.suggestions.port.VoeuxPort;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,8 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
@@ -39,10 +38,13 @@ import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 public class SuggestionsData {
 
     private static final int DUREE_DEFAULT_VALUE = 3;
+    private static final long REFRESH_CONFIG_DELAY_MS = 1000;
     private final EdgesPort edgesPort;
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
     private final FormationsMetiersPort formationsMetierPort;
+    private final FormationsVoeuxPort formationsVoeuxPort;
+    private final VoeuxPort voeuxPort;
     private final VillesPort villesPort;
     private final ConfigPort configPort;
 
@@ -53,13 +55,17 @@ public class SuggestionsData {
             FormationsPort formationsPort,
             VillesPort villesPort,
             FormationsMetiersPort formationsMetierPort,
-            ConfigPort configPort
+            ConfigPort configPort,
+            FormationsVoeuxPort formationsVoeuxPort,
+            VoeuxPort voeuxPort
             ) {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
         this.formationsPort = formationsPort;
         this.villesPort = villesPort;
         this.formationsMetierPort = formationsMetierPort;
+        this.formationsVoeuxPort = formationsVoeuxPort;
+        this.voeuxPort = voeuxPort;
         this.configPort = configPort;
         val activeConfig = configPort.retrieveActiveConfig();
         if(activeConfig == null) {
@@ -73,21 +79,30 @@ public class SuggestionsData {
     @Getter
     private @NotNull Config config;
 
-    @Scheduled(fixedDelay = 1000) // Every second
+    @Scheduled(fixedDelay = REFRESH_CONFIG_DELAY_MS) // Every second
     private void refreshConfig() {
-        // Fetch the latest config from a database, external service, or file
-        val activeConfig = configPort.retrieveActiveConfig();
-        if(activeConfig != null) {
-            this.config = activeConfig;
+        synchronized (this) {
+            // Fetch the latest config from a database, external service, or file
+            val activeConfig = configPort.retrieveActiveConfig();
+            if (activeConfig != null && activeConfig.isViable()) {
+                activeConfig.fix();
+                this.config = activeConfig;
+            }
         }
     }
 
-    public @NotNull String getLabel(@NotNull String key) {
-        return labelsPort.retrieveLabel(key).orElse(key);
+
+    public void setConfig(@NotNull Config config) {
+        synchronized (this) {
+            config.fix();
+            this.config = config;
+            configPort.setActiveConfig(config);
+        }
     }
 
-    public @NotNull String getDebugLabel(@NotNull String key) {
-        return labelsPort.retrieveDebugLabel(key).orElse(key);
+
+    public @NotNull String getLabel(@NotNull String key) {
+        return labelsPort.retrieveLabel(key).orElse(key);
     }
 
     public @NotNull Map<String, String> getLabels() {
@@ -100,14 +115,15 @@ public class SuggestionsData {
         return labelsPort.retrieveDebugLabels();
     }
 
-    public @NotNull Map<String, Integer> getFormationsSimilaires(String formationId, int typeBac) {
+    public @NotNull Map<String, Long> getFormationsSimilaires(String formationId, int typeBac) {
         val f = formationsPort.retrieveFormation(formationId).orElse(null);
         if(f == null) return Map.of();
         return f.stats().formationsSimilaires().getOrDefault(typeBac, Map.of());
     }
 
-    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String id) {
-        return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(List.of());
+    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String formationId) {
+        val voeuxIds = formationsVoeuxPort.getVoeuxOfFormation(formationId);
+        return voeuxPort.retrieveCoords(voeuxIds);
     }
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {
@@ -121,20 +137,6 @@ public class SuggestionsData {
         return f.map(Formation::duree).orElse(DUREE_DEFAULT_VALUE);
     }
 
-    public @Nullable Pair<String, Middle50> getStatsBac(String formationId, String bac) {
-        val f = formationsPort.retrieveFormation(formationId);
-        if(f.isEmpty()) return null;
-        val stats = f.get().stats().admissions();
-        if(stats.containsKey(bac)) {
-            return Pair.of(bac, stats.get(bac));
-        } else {
-            val d = stats.get(TOUS_BACS_CODE_MPS);
-            if(d == null) return null;
-            return Pair.of(TOUS_BACS_CODE_MPS, d);
-        }
-    }
-
-
     public @Nullable Double getStatsSpecialite(String formationId, String iMtCod) {
         return formationsPort.retrieveFormation(formationId)
                 .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, 0))
@@ -146,8 +148,7 @@ public class SuggestionsData {
     }
 
     public int getNbVoeux(String formationId) {
-        val f = formationsPort.retrieveFormation(formationId);
-        return f.map(Formation::nbVoeux).orElse(0);
+        return formationsVoeuxPort.getVoeuxOfFormation(formationId).size();
     }
 
     public int getCapacity(@NotNull String formationId) {
@@ -159,34 +160,6 @@ public class SuggestionsData {
         return formationsPort.retrieveFormations().values().stream()
                 .filter(Formation::apprentissage)
                 .map(Formation::id)
-                .collect(Collectors.toSet());
-    }
-
-
-    public Set<String> getLASFormations() {
-        return formationsPort.retrieveFormations().entrySet()
-                .stream()
-                .filter(e -> e.getValue().las() != null)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-    }
-
-    public Map<String, Set<String>> getMetiersVersFormations() {
-        return formationsMetierPort.findAll().stream()
-                .collect(Collectors.groupingBy( e -> e.idMetier))
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().stream().map(t -> t.idFormation).collect(Collectors.toSet())
-                ));
-    }
-
-    public Set<String> getMetiersPass() {
-        val metiersVersFormation = getMetiersVersFormations();
-        String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
-        return metiersVersFormation.entrySet().stream()
-                .filter(e -> e.getValue().contains( passKey))
-                .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }
 
@@ -214,14 +187,6 @@ public class SuggestionsData {
         return edgesPort.getEdgesFormationPsupFormationMps();
     }
 
-    public List<Edge> lasToGeneric() {
-        return edgesPort.getEdgesLasToGeneric();
-    }
-
-    public List<Edge> lasToPass() {
-        return edgesPort.getEdgesLasToPass();
-    }
-
     public @Nullable Ville getVille(String id) {
         return villesPort.getVille(id);
     }
@@ -242,7 +207,9 @@ public class SuggestionsData {
 
     public int p50NbFormations() {
         return p50(
-                formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
+                formationsVoeuxPort.findAll().stream().collect(
+                        Collectors.groupingBy(FormationVoeuEntity::getIdFormation)
+                ).values().stream().map(List::size).toList()
         );
     }
 
@@ -251,6 +218,14 @@ public class SuggestionsData {
                 Formation::id,
                 Formation::typeFormation
         ));
+    }
+
+    public List<String> getFormationsOfVoeu(String idVoeu) {
+        return formationsVoeuxPort.getFormationsOfVoeu(idVoeu);
+    }
+
+    public void saveAlgoEdges(@NotNull Map<String, Set<String>> edges) {
+        edgesPort.setAlgoEdges(edges.entrySet().stream().flatMap(e -> e.getValue().stream().map(dst -> new Edge(e.getKey(),dst))).toList());
     }
 
 }

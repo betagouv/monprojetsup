@@ -56,16 +56,19 @@ class BaccalaureatSpecialiteBDDRepositoryTest : BDDRepositoryTest() {
                         id = "Professionnel",
                         nom = "Série Pro",
                         idExterne = "P",
+                        idCarteParcoursup = "3",
                     ) to listOf(speSI, speBio, speEcoHotelier, speSAE, speRHCom, speDroitEco, speEPS),
                     Baccalaureat(
                         id = "Général",
                         nom = "Série Générale",
                         idExterne = "Générale",
+                        idCarteParcoursup = "1",
                     ) to listOf(speSI, speBio, speDroitEco, spePCMath),
                     Baccalaureat(
                         id = "PA",
                         nom = "Bac Pro Agricole",
                         idExterne = "PA",
+                        idCarteParcoursup = "3",
                     ) to emptyList(),
                 )
             assertThat(resultat).isEqualTo(attendu)

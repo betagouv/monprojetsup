@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl
 
-import org.hibernate.StatelessSession
 import org.hibernate.Transaction
 import org.springframework.stereotype.Component
 
@@ -9,26 +8,43 @@ class BatchUpdate(
     private val sessionFactory: org.hibernate.SessionFactory
 ) {
 
-    fun <T> setEntities(entityName: String, entities: Collection<T> ) {
-        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
-        val transaction: Transaction = statelessSession.beginTransaction()
+    fun clearEntities(entityName: String) {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
 
-        val hql = "DELETE FROM $entityName"
-        val query = statelessSession.createMutationQuery(hql)
-        query.executeUpdate()
+            val hql = "DELETE FROM $entityName"
+            val query = statelessSession.createMutationQuery(hql)
+            query.executeUpdate()
 
-        entities.forEach{ statelessSession.insert(it)}
+            transaction.commit()
+        }
+    }
 
-        transaction.commit()
-        statelessSession.close()
+    fun <T> setEntities(entityName: String, entities: Collection<T>) {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
+            val hql = "DELETE FROM $entityName"
+            val query = statelessSession.createMutationQuery(hql)
+            query.executeUpdate()
+            entities.forEach { statelessSession.insert(it) }
+            transaction.commit()
+        }
     }
 
     fun <T> upsertEntities(entities: Collection<T>) {
-        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
-        val transaction: Transaction = statelessSession.beginTransaction()
-        entities.forEach{ statelessSession.upsert(it)}
-        transaction.commit()
-        statelessSession.close()
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
+            entities.forEach { statelessSession.upsert(it) }
+            transaction.commit()
+        }
+    }
+
+    fun <T> getEntities(entityName: String, classe: Class<T> ): Collection<T> {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val hql = "FROM $entityName"
+            val query = statelessSession.createSelectionQuery(hql, classe)
+            return query.resultList
+        }
     }
 
 }

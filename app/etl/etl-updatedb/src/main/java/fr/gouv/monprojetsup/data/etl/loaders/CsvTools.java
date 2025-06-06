@@ -31,7 +31,7 @@ public class CsvTools implements Closeable {
     }
 
     public static CsvTools getWriter(String filename) throws IOException {
-        return new CsvTools(filename, ';', StandardCharsets.ISO_8859_1);
+        return new CsvTools(filename, ',', StandardCharsets.UTF_8);
     }
 
     public static @NotNull List<Map<@NotNull String,@NotNull String>> readCSV(String path) {
@@ -76,7 +76,7 @@ public class CsvTools implements Closeable {
         csvWriter.close();
     }
 
-    public void appendHeaders(List<String> headers) throws IOException {
+    public void appendHeaders(List<String> headers) {
         append(headers);
     }
     public void append(List<String> items) {
