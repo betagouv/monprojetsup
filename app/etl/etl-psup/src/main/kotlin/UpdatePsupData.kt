@@ -47,8 +47,9 @@ class Runner : CommandLineRunner {
 	lateinit var psupPassword : String
 
 	companion object {
-		const val FRONT_PSUP_DATA_FILENAME = "parcoursup/psupDataFront.zip"
-		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
+		const val FULL_BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
+		const val PSUP_STATS_FILENAME = "parcoursup/psupStats.zip"
+		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBackNoStats.zip"
 	}
 
 
@@ -65,22 +66,42 @@ class Runner : CommandLineRunner {
 				)
 
 			logger.info("Récupération des données backend autres que les stats")
-			val data = conn.recupererData(specialites.eds.keys)
+			val psupData = conn.recupererData(specialites.eds.keys)
 
 			logger.info("Export du backend data au format json  ")
+			val fullBackDataFilename = getSourceDataFilePath(FULL_BACK_PSUP_DATA_FILENAME)
+			val statsFilename = getSourceDataFilePath(PSUP_STATS_FILENAME)
+			val backDataFilename = getSourceDataFilePath(BACK_PSUP_DATA_FILENAME)
+
 			Serialisation.toZippedJson(
-				getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
-				data,
+				fullBackDataFilename,
+				psupData,
+				true
+			)
+
+			logger.info("Export des stats au format json  ")
+			Serialisation.toZippedJson(
+				statsFilename,
+				psupData.stats,
+				true
+			)
+
+			logger.info("Minimisation des données")
+			psupData.keepOnlyBackData()
+
+			logger.info("Export des données back au format json  ")
+			Serialisation.toZippedJson(
+				backDataFilename,
+				psupData,
 				true
 			)
 
 		}
 
-
 	}
 
 
-	fun getSourceDataFilePath(filename: String): String {
+	private fun getSourceDataFilePath(filename: String): String {
 		val path = Path.of(dataRootDirectory, filename)
 		return path.toString()
 	}
