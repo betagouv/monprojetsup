@@ -221,7 +221,7 @@ class MpsDataFromFiles(
     override fun getLabels(): Map<String, String> {
         val formationsMpsIds = getFormationsMpsIds()
         val metiersMpsIds = getMetiersMpsIds()
-        val voeuxIds = getVoeux().keys
+        val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
         return Labels.getLabels(
             psupData,
             onisepData,
@@ -894,7 +894,7 @@ class MpsDataFromFiles(
             .map { p ->
             val id = p.bac
             val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
-            PanierVoeux(id, voeux)
+            PanierVoeux(id, voeux, p.lettres)
         }.filter { it.voeux.isNotEmpty() }.take(if (minimalTestDataSet) 500 else Int.MAX_VALUE)
     }
 

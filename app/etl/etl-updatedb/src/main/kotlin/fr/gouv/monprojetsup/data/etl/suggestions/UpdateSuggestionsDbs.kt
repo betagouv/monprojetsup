@@ -53,7 +53,7 @@ class UpdateSuggestionsDbs(
             batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
         }
 
-        if (voeuxOntChange || minimalTestDataSet) {
+        if (true || voeuxOntChange || minimalTestDataSet) {
             logger.info("Mise à jour des paniers de voeux")
             updatePaniersVoeuxDb()
         }
