@@ -894,7 +894,7 @@ class MpsDataFromFiles(
             .map { p ->
             val id = p.bac
             val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
-            PanierVoeux(id, voeux)
+            PanierVoeux(id, voeux, p.lettres)
         }.filter { it.voeux.isNotEmpty() }.take(if (minimalTestDataSet) 500 else Int.MAX_VALUE)
     }
 

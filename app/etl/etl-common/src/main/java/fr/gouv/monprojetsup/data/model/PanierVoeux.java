@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +16,5 @@ public record PanierVoeux(
 ) implements Serializable {
     public PanierVoeux(@NotNull String bac, @NotNull Set<Integer> voeux) {
         this(bac, voeux.stream().map(Constants::gTaCodToMpsId).toList(), new ArrayList<>());
-    }
-    public PanierVoeux(@NotNull String bac, @NotNull Collection<String> voeux) {
-        this(bac, voeux.stream().toList(), new ArrayList<>());
     }
 }
