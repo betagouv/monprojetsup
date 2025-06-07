@@ -20,16 +20,16 @@ class SuggestionsPaniersVoeuxEntity {
     @GeneratedValue
     var id: Long = 0
 
-    constructor(c : PanierVoeux) {
+    constructor(c: PanierVoeux) {
         this.bac = c.bac
         this.voeux = ArrayList(c.voeux)
         this.lettres = c.lettres
     }
 
-    lateinit var bac : String
+    lateinit var bac: String
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    lateinit var voeux : List<String>
+    lateinit var voeux: List<String>
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "lettres", columnDefinition = "jsonb")
