@@ -28,6 +28,7 @@ import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.model.psup.LettreMotivation;
 import fr.gouv.monprojetsup.data.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
@@ -35,24 +36,13 @@ import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_ADMIS_CODE;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_GROUPES_CODE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 
 public class ConnecteurBackendSQL {
 
@@ -130,6 +120,8 @@ public class ConnecteurBackendSQL {
         int annee = recupererAnnee();
         PsupData data = new PsupData(annee);
 
+        Map<Integer, String> bacs = recupereBacsCandidats();
+        recupererVoeuxParCandidat(data, bacs);
 
         recupererLas(data);
 
@@ -145,8 +137,6 @@ public class ConnecteurBackendSQL {
         recupererDiversPsup(data);
         recupererTypesBacs(data);
 
-        Map<Integer, String> bacs = recupereBacsCandidats();
-        recupererVoeuxParCandidat(data, bacs);
 
         Map<Integer, Integer> speBacs = recupereBacsSpecialitesCandidats();
         recupererProfilsScolaires(data.stats(), bacs, speBacs, eds);
@@ -216,13 +206,15 @@ public class ConnecteurBackendSQL {
 
 
         Map<Integer, Set<Integer>> voeuxParCandidat = new HashMap<>();
+        Map<Integer, List<LettreMotivation>> lettresParCandidat = new HashMap<>();
+        Map<Integer, Set<Integer>> gtiToGta = new HashMap<>();
 
         try (Statement stmt = this.conn.createStatement()) {
 
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             LOGGER.info("Récupération des filieres par candidat");
             stmt.setFetchSize(1_000_000);
-            String sql = "SELECT g_cn_cod, g_ta_cod FROM mps_voeux";
+            String sql = "SELECT g_cn_cod, g_ta_cod, g_ti_cod FROM mps_voeux";
 
             LOGGER.info(sql);
 
@@ -230,16 +222,47 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int gTaCod = result.getInt(2);
+                    int gTiCod = result.getInt(3);
+                    gtiToGta.computeIfAbsent(gTiCod, z -> new HashSet<>()).add(gTaCod);
                     voeuxParCandidat.computeIfAbsent(gCnCod, z -> new HashSet<>()).add(gTaCod);
                 }
             }
 
         }
 
+            try (Statement stmt = this.conn.createStatement()) {
+
+                LOGGER.info("Récupération des lettres par candidat");
+                stmt.setFetchSize(1_000);
+                String sql = "SELECT g_cn_cod, g_ti_cod, i_lm_txt_let FROM mps_let_mot";
+                LOGGER.info(sql);
+                try (ResultSet result = stmt.executeQuery(sql)) {
+                    while (result.next()) {
+                        int gCnCod = result.getInt(1);
+                        int gTiCod = result.getInt(2);
+                        String lettre = result.getString(3);
+                        if (lettre != null) {
+                            lettresParCandidat
+                                    .computeIfAbsent(gCnCod, z -> new ArrayList<>())
+                                    .add(new LettreMotivation(lettre, gtiToGta.getOrDefault(gTiCod, Set.of())))
+                            ;
+                        }
+                    }
+                }
+
+            }
+
+
         data.voeuxParCandidat().clear();
         data.voeuxParCandidat().addAll(
                 voeuxParCandidat.entrySet().stream()
-                        .map(e -> new PanierVoeux(bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS), e.getValue()))
+                        .map(e ->
+                                new PanierVoeux(
+                                        bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS),
+                                        e.getValue(),
+                                        lettresParCandidat.getOrDefault(e.getKey(), List.of())
+                                    )
+                        )
                         .toList()
         );
     }
@@ -320,12 +343,7 @@ public class ConnecteurBackendSQL {
             List<Bac> bacs = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    bacs.add(
-                            new Bac(
-                                    rs.getString(1),
-                                    rs.getString(2)
-                            )
-                    );
+                    bacs.add(new Bac(rs.getString(1), rs.getString(2)));
                 }
             data.setBacs(bacs);            }
         }
@@ -355,8 +373,8 @@ public class ConnecteurBackendSQL {
         sql = "SELECT G_FL_COD,fr.G_FR_COD,G_FR_LIB,G_FL_LIB,G_FL_FLG_APP,G_FL_COD_FI FROM  "
                 + FIL_TYPE_TABLE + " fil,"
                 + FOR_TYPE_TABLE + " fr "
-                + WHERE + " fil.G_FR_COD=fr.G_FR_COD "
-                + "ORDER BY fr.G_FR_COD,G_FL_COD";
+                + WHERE + " fil.g_fr_cod=fr.g_fr_cod "
+                + "ORDER BY fr.g_fr_cod,G_FL_COD";
         try (
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(sql)) {
@@ -459,7 +477,7 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select distinct g_fl_cod_aff, g_ta_flg_for_las from mps_filieres_actives";
+            String sql = "select distinct g_fl_cod_aff from mps_filieres_actives";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -573,7 +591,7 @@ public class ConnecteurBackendSQL {
 
 
     //group bac mat
-    final Map<String, Map<String, Map<String, int[] >>> percCounters = new HashMap<>();
+    Map<String, Map<String, Map<String, int[] >>> percCounters = new HashMap<>();
 
     void incremente(String bac, String group, String matCod, double note) {
         int[] c = percCounters

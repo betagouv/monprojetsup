@@ -170,7 +170,7 @@ and NVL(a_rg_pla,0) > 0
 
 drop table mps_voeux;
 create table mps_voeux as 
-(SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod
+(SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod, arecgrp.g_ti_cod g_ti_cod
                     FROM &A_VOE_stats voeu,
                     &I_INS_stats ins,
                     &A_REC_GRP_stats  arecgrp,
@@ -183,6 +183,14 @@ create table mps_voeux as
                     AND voeu.a_sv_cod > -90
                     AND NVL(ins.i_is_val,0) = 1
                     );
+drop table mps_candidats;
+create table mps_candidats as (
+select distinct g_cn_cod from mps_candidats_filieres);
+
+drop table mps_let_mot;
+create table mps_let_mot as (
+select i_let_mot.g_cn_cod, g_ti_cod, i_lm_txt_let from i_let_mot, mps_candidats
+where i_let_mot.g_cn_cod=mps_candidats.g_cn_cod and 0=MOD(mps_candidats.g_cn_cod, 37));
 
 drop table mps_admis_bacs_spe;
 create table mps_admis_bacs_spe as
