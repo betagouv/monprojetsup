@@ -259,7 +259,8 @@ public class ConnecteurBackendSQL {
                         .map(e ->
                                 new PanierVoeux(
                                         bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS),
-                                        e.getValue()
+                                        e.getValue(),
+                                        lettresParCandidat.getOrDefault(e.getKey(), List.of())
                                     )
                         )
                         .toList()

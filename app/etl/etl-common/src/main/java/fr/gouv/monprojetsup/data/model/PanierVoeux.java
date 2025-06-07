@@ -14,7 +14,7 @@ public record PanierVoeux(
         @NotNull List<@NotNull String> voeux,
         @NotNull List<@NotNull LettreMotivation> lettres
 ) implements Serializable {
-    public PanierVoeux(@NotNull String bac, @NotNull Set<Integer> voeux) {
-        this(bac, voeux.stream().map(Constants::gTaCodToMpsId).toList(), new ArrayList<>());
+    public PanierVoeux(@NotNull String bac, @NotNull Set<Integer> voeux, @NotNull List<@NotNull LettreMotivation> lettres) {
+        this(bac, voeux.stream().map(Constants::gTaCodToMpsId).toList(), lettres);
     }
 }
