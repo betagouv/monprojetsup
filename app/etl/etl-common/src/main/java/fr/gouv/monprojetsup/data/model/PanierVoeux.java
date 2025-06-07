@@ -5,7 +5,6 @@ import fr.gouv.monprojetsup.data.model.psup.LettreMotivation;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

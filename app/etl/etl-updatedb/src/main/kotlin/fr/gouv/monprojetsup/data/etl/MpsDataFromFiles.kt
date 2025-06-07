@@ -221,7 +221,7 @@ class MpsDataFromFiles(
     override fun getLabels(): Map<String, String> {
         val formationsMpsIds = getFormationsMpsIds()
         val metiersMpsIds = getMetiersMpsIds()
-        val voeuxIds = getVoeux().keys
+        val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
         return Labels.getLabels(
             psupData,
             onisepData,
