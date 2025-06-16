@@ -67,7 +67,7 @@ public final class Config {
 
     public static final double NO_MATCH_SCORE = 0.0;
 
-    public static final double FULL_MATCH_MULTIPLIER = 1.0;
+    public static final double FULL_MATCH_SCORE = 1.0;
 
     public static final Map<String,String> BONUS_LABELS = Map.of(
             BONUS_TAGS,"proximité intérêts et favoris (graphe)",
@@ -82,17 +82,18 @@ public final class Config {
             BONUS_NAIVE_BAYES, "proximité profils de référence (NaiveBayes)"
     );
 
-    static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
-    static final double MULTIPLIER_FOR_UNFITTED_BAC = 1.0E-08;
-    static final double MULTIPLIER_FOR_UNFITTED_TAGS = 1.0E-08;
-    static final double MULTIPLIER_FOR_UNFITTED_APP = 1.0E-05;
-    static final double MULTIPLIER_FOR_UNFITTED_GEO = 1.0E-04;
-    static final double MULTIPLIER_FOR_UNFITTED_DURATION = 1.0E-04;
-    static final double MULTIPLIER_FOR_UNFITTED_SIM = 1.0E-03;
-    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
-    static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
-    static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
+    static final double MULTIPLIER_FOR_UNFITTED_GEO = 0.1;
+    static final double MULTIPLIER_FOR_UNFITTED_DURATION = 0.9;
+    static final double MULTIPLIER_FOR_UNFITTED_APP = 0.9;
+    static final double MULTIPLIER_FOR_UNFITTED_SIM = 0.1;
+    static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 0.01;
+    static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.9;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 0.1;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 0.001;
+    static final double MULTIPLIER_FOR_UNFITTED_TAGS = 0.01;
     public static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-08;
+
+    static final double NOSTATS_BAC_SCORE = 0.01;
 
     public static Map<String, Double> defaultMultipliers = Map.ofEntries(
             entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
