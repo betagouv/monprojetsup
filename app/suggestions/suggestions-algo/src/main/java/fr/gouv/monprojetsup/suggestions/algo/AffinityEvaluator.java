@@ -37,12 +37,12 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_MULTIPLIER;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_DISTANCE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_SCORE_PATH_LENGTH_2;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_SCORE_PATH_LENGTH_3;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MIN_SPEC_PCT_FOR_EXP;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.MULTIPLIER_FOR_NOSTATS_BAC;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.NOSTATS_BAC_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation.getDebugExplanation;
 import static java.util.Map.entry;
@@ -340,7 +340,7 @@ public class AffinityEvaluator {
     }
 
     private double aggregateScores(Map<String, Double> scores) {
-        double score = FULL_MATCH_MULTIPLIER;
+        double score = FULL_MATCH_SCORE;
 
         //on fait la somme pondérée des interests additifs
         for(Map.Entry<String, Double> e : scores.entrySet()) {
@@ -357,23 +357,23 @@ public class AffinityEvaluator {
         val minMultiplier = cfg.getMinMultipliers().get(key);
         if (minMultiplier == null)
             throw new RuntimeException("Unknown key:" + key);
-        value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
+        value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_SCORE, value));
         return minMultiplier + (1.0 - minMultiplier) * value;
     }
 
 
 
     private double getBonusTypeBac(String grp, Explanations expl) {
-        if (bac.equals(TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
+        if (bac.equals(TOUS_BACS_CODE_MPS)) return NOSTATS_BAC_SCORE;
         @Nullable Integer nbAdmisTousBac = algo.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
         @Nullable Integer nbAdmisBac = algo.getNbAdmis(grp, bac);
         if(nbAdmisTousBac != null && nbAdmisBac == null) return NO_MATCH_SCORE;
-        if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
-        double percentage = FULL_MATCH_MULTIPLIER * nbAdmisBac / nbAdmisTousBac;
+        if (nbAdmisBac == null || nbAdmisTousBac == null) return NOSTATS_BAC_SCORE;
+        double percentage = FULL_MATCH_SCORE * nbAdmisBac / nbAdmisTousBac;
         if (percentage <= Config.SEUIL_TYPE_BAC_NO_MATCH) return Config.NO_MATCH_SCORE;
         final double bonus;
         if (percentage >= Config.SEUIL_TYPE_BAC_FULL_MATCH)
-            bonus = FULL_MATCH_MULTIPLIER;
+            bonus = FULL_MATCH_SCORE;
         else
             bonus = (percentage - Config.SEUIL_TYPE_BAC_NO_MATCH) / (Config.SEUIL_TYPE_BAC_FULL_MATCH - Config.SEUIL_TYPE_BAC_NO_MATCH);
         if (expl != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
@@ -426,7 +426,7 @@ public class AffinityEvaluator {
                     result = NO_MATCH_SCORE;
                 } else {
                     result =
-                            FULL_MATCH_MULTIPLIER
+                            FULL_MATCH_SCORE
                             * (Config.DUREE_LONGUE - duree)
                             / (Config.DUREE_LONGUE - DUREE_COURTE);
                     if (expl != null)
@@ -438,14 +438,14 @@ public class AffinityEvaluator {
                     result = Config.NO_MATCH_SCORE;
                 } else {
                     result =
-                            FULL_MATCH_MULTIPLIER
+                            FULL_MATCH_SCORE
                             * (duree - (Config.DUREE_LONGUE - 1) )
                             / (Config.DUREE_MAX - (Config.DUREE_LONGUE - 1) );
                     if (expl != null)
                         expl.add(Explanation.getDurationExplanation(pf.duree()));
                 }
             }
-            default -> result = FULL_MATCH_MULTIPLIER;
+            default -> result = FULL_MATCH_SCORE;
         }
         return result;
     }
@@ -514,7 +514,7 @@ public class AffinityEvaluator {
 
         score  = score / Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT;
 
-        score = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, score));
+        score = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_SCORE, score));
 
         if (expl != null) {
             /* on regroupe les chemins en gardant juste la première node
@@ -552,11 +552,11 @@ public class AffinityEvaluator {
         if (pf.apprentissage() == null) return 0.0;
         boolean isApp = algo.existsInApprentissage(grp);
         double resultat = switch (pf.apprentissage()) {
-            case "A" -> isApp ? FULL_MATCH_MULTIPLIER : 0.5 * FULL_MATCH_MULTIPLIER;//très intéressé
-            case "B" -> isApp ? FULL_MATCH_MULTIPLIER : 0.8 * FULL_MATCH_MULTIPLIER;//intéressé
-            case "C" -> FULL_MATCH_MULTIPLIER;//indifférent
-            case "D" -> FULL_MATCH_MULTIPLIER;//pas du tout intéressé
-            default -> FULL_MATCH_MULTIPLIER;
+            case "A" -> isApp ? FULL_MATCH_SCORE : 0.5 * FULL_MATCH_SCORE;//très intéressé
+            case "B" -> isApp ? FULL_MATCH_SCORE : 0.8 * FULL_MATCH_SCORE;//intéressé
+            case "C" -> FULL_MATCH_SCORE;//indifférent
+            case "D" -> FULL_MATCH_SCORE;//pas du tout intéressé
+            default -> FULL_MATCH_SCORE;
         };
         if (expl != null && (pf.apprentissage().equals("A") || pf.apprentissage().equals("B")) && isApp) {
             expl.add(Explanation.getAppExplanation(pf.apprentissage()));
@@ -566,7 +566,7 @@ public class AffinityEvaluator {
 
     private double getBonusSpecialites(String fl, Explanations expl) {
         if (pf.spe_classes() == null || pf.spe_classes().isEmpty())
-            return FULL_MATCH_MULTIPLIER;
+            return FULL_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
             Double stat = algo.getStatsSpecialite(fl, s);
@@ -584,7 +584,7 @@ public class AffinityEvaluator {
             stats.values().removeIf(x -> x < MIN_SPEC_PCT_FOR_EXP);
             expl.add(Explanation.getSpecialitesExplanation(stats));
         }
-        return Math.min(FULL_MATCH_MULTIPLIER, score);
+        return Math.min(FULL_MATCH_SCORE, score);
     }
 
     /**
@@ -649,7 +649,7 @@ public class AffinityEvaluator {
         if(flApproved.contains(fl)) return NO_MATCH_SCORE;
 
         val voeux = flConnectedToVoeuxFavori.getOrDefault(fl, List.of());
-        val result = voeux.isEmpty() ? NO_MATCH_SCORE : FULL_MATCH_MULTIPLIER;
+        val result = voeux.isEmpty() ? NO_MATCH_SCORE : FULL_MATCH_SCORE;
         if(result > 0 && expl != null) {
             voeux.forEach(v -> expl.explanations.add(Explanation.getSimilarityExplanation(v, 100)));
         }
