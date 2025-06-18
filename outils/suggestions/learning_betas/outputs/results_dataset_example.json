@@ -1,0 +1,54 @@
+{
+    "raw_betas": {
+        "geo": 2.1972243785858154,
+        "duration": -2.1972246170043945,
+        "app": -3.0254480838775635,
+        "sim": -0.12660236656665802,
+        "OFFRE_FORMATION": 3.4482669830322266,
+        "fav": -0.12660236656665802,
+        "typebac": 1.9711734056472778,
+        "spec": -0.12660236656665802,
+        "tags": -4.738239765167236,
+        "spec_bac_pro": -0.053075358271598816,
+        "nbayes": -12.765377044677734
+    },
+    "betas": {
+        "geo": 0.8999999761581421,
+        "duration": 0.10000000149011612,
+        "app": 0.046289365738630295,
+        "sim": 0.4683915972709656,
+        "OFFRE_FORMATION": 0.9691793918609619,
+        "fav": 0.4683915972709656,
+        "typebac": 0.8777371048927307,
+        "spec": 0.4683915972709656,
+        "tags": 0.00867807399481535,
+        "spec_bac_pro": 0.4867342710494995,
+        "nbayes": 2.85802457256068e-06
+    },
+    "loss": 0.009584545157849789,
+    "config": {
+        "training_dataset_file": "datasets/training_dataset_example.json",
+        "scores": [
+            "geo",
+            "duration",
+            "app",
+            "sim",
+            "OFFRE_FORMATION",
+            "fav",
+            "typebac",
+            "spec",
+            "tags",
+            "spec_bac_pro",
+            "nbayes"
+        ],
+        "num_scores": 11,
+        "epochs": 1000,
+        "learning_rate": 0.01,
+        "batch_size": 1024,
+        "fixed_beta": {
+            "geo": 0.9,
+            "duration": 0.1
+        },
+        "default_init_beta": 0.5
+    }
+}
