@@ -67,13 +67,7 @@ public class SuggestionsData {
         this.formationsVoeuxPort = formationsVoeuxPort;
         this.voeuxPort = voeuxPort;
         this.configPort = configPort;
-        val activeConfig = configPort.retrieveActiveConfig();
-        if(activeConfig == null) {
-            this.config = new Config();
-            configPort.setActiveConfig(this.config);
-        } else {
-            this.config = activeConfig;
-        }
+        refreshConfig();
     }
 
     @Getter
@@ -84,9 +78,9 @@ public class SuggestionsData {
         synchronized (this) {
             // Fetch the latest config from a database, external service, or file
             val activeConfig = configPort.retrieveActiveConfig();
-            if (activeConfig != null && activeConfig.isViable()) {
-                activeConfig.fix();
-                this.config = activeConfig;
+            if(activeConfig == null || !activeConfig.isViable()) {
+                this.config = new Config();
+                configPort.setActiveConfig(this.config);
             }
         }
     }
@@ -94,7 +88,9 @@ public class SuggestionsData {
 
     public void setConfig(@NotNull Config config) {
         synchronized (this) {
-            config.fix();
+            if(!config.isViable()) {
+                throw new IllegalArgumentException("La nouvelle configuration n'est pas viable");
+            }
             this.config = config;
             configPort.setActiveConfig(config);
         }
