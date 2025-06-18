@@ -138,15 +138,9 @@ public final class Config {
 
     @JsonIgnore
     public boolean isViable() {
-        return minMultipliers != null && !minMultipliers.isEmpty();
+        return minMultipliers != null
+                && !minMultipliers.isEmpty()
+                && Config.defaultMultipliers.keySet().stream().allMatch(key -> minMultipliers.containsKey(key));
     }
 
-    public void fix() {
-        Config.defaultMultipliers.forEach((k, v) -> {
-            if(!getMinMultipliers().containsKey(k)) {
-                getMinMultipliers().put(k, v);
-            }
-        });
-
-    }
 }
