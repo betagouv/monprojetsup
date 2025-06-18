@@ -5,6 +5,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,12 +15,12 @@ public record DataSuggestions2(
         @Nullable ExplanationAndExamples explanations
 ) {
     public static Map<String, DataSuggestions2> build(
-            @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
+            @NotNull List<String> keys, @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
     ) {
         val explanationsNaiveBayesMap = explanationsNaiveBayes.stream().collect(
                 Collectors.toMap(ExplanationAndExamples::key, e -> e)
         );
-        return explanationsNaiveBayes.stream().collect(
+        val result = new HashMap<>(explanationsNaiveBayes.stream().collect(
                 Collectors.toMap(
                         ExplanationAndExamples::key,
                         a -> new DataSuggestions2(
@@ -27,6 +28,12 @@ public record DataSuggestions2(
                                 explanationsNaiveBayesMap.get(a.key())
                         )
                 )
-        );
+        ));
+        for (String key : keys) {
+            if (!result.containsKey(key)) {
+                result.put(key, new DataSuggestions2(-1, null));
+            }
+        }
+        return result;
     }
 }

@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -239,9 +240,10 @@ public class AlgoSuggestions {
                                 fl -> affinityEvaluator.getAffinityEvaluation(
                                         fl,
                                         inclureScores,
-                                        affinitesNaiveBayesParCle.containsKey(fl)
-                                                ? Map.of(BONUS_NAIVE_BAYES, new DataSuggestions2(affinitesNaiveBayesParCle.get(fl), null) )
-                                                : Map.of()
+                                        Map.of(
+                                                BONUS_NAIVE_BAYES,
+                                                new DataSuggestions2(affinitesNaiveBayesParCle.getOrDefault(fl, NO_MATCH_SCORE), null)
+                                        )
                                 )
                         ));
 
@@ -399,11 +401,21 @@ public class AlgoSuggestions {
             return List.of();
         }
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this, false, generateDetailedExplanations);
-        val dataSuggestions2 = DataSuggestions2.build(explanationsNaiveBayes);
+        val dataSuggestions2 = DataSuggestions2.build(keys, explanationsNaiveBayes);
         return keys.stream().map(
                 fl -> affinityEvaluator.getExplanationsAndExamples(
                         fl,
-                        dataSuggestions2.get(fl)
+                        dataSuggestions2.getOrDefault(
+                                fl,
+                                new DataSuggestions2(
+                                        NO_MATCH_SCORE,
+                                        new ExplanationAndExamples(
+                                                fl,
+                                                NO_MATCH_SCORE,
+                                                List.of(Explanation.getDebugExplanation("pas d'explication")),
+                                                List.of())
+                                )
+                        )
                 )
         ).toList();
 
