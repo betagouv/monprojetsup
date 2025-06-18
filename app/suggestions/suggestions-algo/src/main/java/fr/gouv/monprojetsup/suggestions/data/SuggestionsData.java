@@ -68,7 +68,7 @@ public class SuggestionsData {
         this.voeuxPort = voeuxPort;
         this.configPort = configPort;
         refreshConfig();
-    }
+        }
 
     @Getter
     private @NotNull Config config;
@@ -81,6 +81,8 @@ public class SuggestionsData {
             if(activeConfig == null || !activeConfig.isViable()) {
                 this.config = new Config();
                 configPort.setActiveConfig(this.config);
+            } else {
+                this.config = activeConfig;
             }
         }
     }
