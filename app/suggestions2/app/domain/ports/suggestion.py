@@ -16,5 +16,5 @@ class ExplainableSuggestionsEngine(ABC):
         raise NotImplementedError("Method 'suggest' not implemented")
 
     @abstractmethod
-    def explain(self, profile: Profile) -> Explanations:
+    def explain(self, profile: Profile, keys: list[str]) -> Explanations:
         raise NotImplementedError("Method 'explain' not implemented")

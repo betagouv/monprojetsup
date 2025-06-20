@@ -4,8 +4,8 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
-from app.domain.models.explanation import Explanations
-from app.domain.models.profile import Item, Profile
+from app.domain.models.explanation import Explanation, Explanations
+from app.domain.models.profile import Profile
 from app.domain.models.suggestion import Suggestions
 from app.domain.ports.suggestion import ExplainableSuggestionsEngine
 
@@ -31,11 +31,11 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
 
         return Suggestions(scores=scores)
 
-    def explain(self, profile: Profile) -> Explanations:
+    def explain(self, profile: Profile, keys: list[str]) -> Explanations:
         scores = explain_naive_bayes(
-            self.explanation_matrix, profile.features, self.explanation_popularity
+            self.explanation_matrix, profile, keys, self.explanation_popularity
         )
-        return Explanations()
+        return Explanations(expls=scores)
 
     def __str__(self) -> str:
         return str(self.matrix)
@@ -121,12 +121,21 @@ def compute_explanation_matrix(matrix: pd.DataFrame) -> Tuple[pd.DataFrame, pd.S
 
 
 def explain_naive_bayes(
-    explain_matrix: pd.DataFrame, items: List[Item], popularity_matrix: pd.Series
-) -> Tuple[Dict[str, Dict[Tuple[str, ItemSide], float]], Dict[str, float]]:
+    explain_matrix: pd.DataFrame, profile: Profile, keys: List[str], popularity_matrix: pd.Series
+) -> Dict[str, Explanation]:
     # Ignore items/keys that are not in the matrix's index/columns
-    items = [it for it in items if it in explain_matrix.index]
+    items = [it for it in profile.features_str() if it in explain_matrix.index]
     keys = [k for k in keys if k in explain_matrix.columns]
 
     scores: Dict[str, Dict[str, float]] = explain_matrix[keys].loc[items].to_dict()  # type: ignore
     popularity: Dict[str, float] = popularity_matrix[keys].to_dict()
-    return {k: {decode_item(it): s for (it, s) in scores[k].items()} for k in scores}, popularity
+    return {
+        k: Explanation(
+            key=k,
+            popularity=popularity[k],
+            relative_frequency={
+                it: scores[k][str(it)] for it in profile.features if str(it) in scores[k]
+            },
+        )
+        for k in scores
+    }

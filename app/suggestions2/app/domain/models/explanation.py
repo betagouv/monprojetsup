@@ -1,9 +1,18 @@
 from dataclasses import dataclass
-from pydantic import BaseModel
+
+from app.domain.models.profile import Item
 
 
-class Explanations(BaseModel):
-    pass
+@dataclass
+class Explanation:
+    key: str
+    relative_frequency: dict[Item, float]
+    popularity: float
+
+
+@dataclass
+class Explanations:
+    expls: dict[str, Explanation]
 
 
 @dataclass

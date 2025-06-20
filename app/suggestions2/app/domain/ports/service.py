@@ -11,5 +11,5 @@ class SuggestionsService(ABC):
         raise NotImplementedError("Method 'suggest' not implemented")
 
     @abstractmethod
-    def explain(self, profile: Profile) -> MultiExplanations:
+    def explain(self, profile: Profile, keys: list[str]) -> MultiExplanations:
         raise NotImplementedError("Method 'explain' not implemented")

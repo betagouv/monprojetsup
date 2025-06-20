@@ -139,3 +139,12 @@ class SuggestionRequest(BaseModel):
         default_factory=list,
         examples=[["fl210", "fr22", "fl2014"]],
     )
+
+
+class ExplanationRequest(BaseModel):
+    profile: SuggestionRequestProfile = Field(description="Profil utilisé pour évaluer les scores.")
+    keys: list[str] = Field(
+        description="Liste des clés pour lesquelles les explications sont demandées.",
+        default_factory=list,
+        examples=[["fl210", "fr22", "fl2014"]],
+    )

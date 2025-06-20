@@ -15,6 +15,8 @@ class MultiSuggestionsService(SuggestionsService):
         scores = {name: engine.suggest(profile) for name, engine in self.services.items()}
         return MultiSuggestions(scores=scores)
 
-    def explain(self, profile: Profile) -> MultiExplanations:
-        explanations = {name: engine.explain(profile) for name, engine in self.services.items()}
+    def explain(self, profile: Profile, keys: list[str]) -> MultiExplanations:
+        explanations = {
+            name: engine.explain(profile, keys) for name, engine in self.services.items()
+        }
         return MultiExplanations(explanations=explanations)
