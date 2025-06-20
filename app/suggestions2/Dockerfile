@@ -13,4 +13,4 @@ RUN uv pip install --no-cache-dir --upgrade --system -r /code/requirements.txt
 COPY ./app /code/app
 
 # Start app
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${SUGGESTIONS2_ENDPOINT_PORT}"]
+CMD ["sh", "-c", "uvicorn suggestions2main:app --host 0.0.0.0 --port ${SUGGESTIONS2_ENDPOINT_PORT}"]

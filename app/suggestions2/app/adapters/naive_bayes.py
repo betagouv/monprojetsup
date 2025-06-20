@@ -1,32 +1,16 @@
-import logging
-import time
 from collections import defaultdict
 from typing import Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
 
-from app.data_types import Basket, DatasetStudents, ItemSide, decode_item
-from app.database.db import load_students_dataset
-
-LOGGER = logging.getLogger("uvicorn.error.app")
-
-
-def load_data_and_create_matrix() -> "NaiveBayesMatrix":
-    LOGGER.info("Loading students from db.")
-    students = load_students_dataset()
-
-    LOGGER.info("Creating NaiveBayes Matrix.")
-    start_time = time.time()
-    m = NaiveBayesMatrix()
-    m.fit(students)
-    elapsed = time.time() - start_time
-    LOGGER.debug("NaiveBayesMatrix::fit() took %f s.", elapsed)
-
-    return m
+from app.domain.models.explanation import Explanations
+from app.domain.models.profile import Item, Profile
+from app.domain.models.suggestion import Suggestions
+from app.domain.ports.suggestion import ExplainableSuggestionsEngine
 
 
-class NaiveBayesMatrix:
+class NaiveBayesMatrix(ExplainableSuggestionsEngine):
     def __init__(
         self,
         regularization_laplace: float = 1.0,
@@ -36,36 +20,29 @@ class NaiveBayesMatrix:
         self.explanation_popularity: pd.Series = pd.Series()
         self.regularization_laplace = regularization_laplace
 
-    def fit(self, dataset: DatasetStudents) -> "NaiveBayesMatrix":
-        self.matrix = compute_naive_bayes_matrix(dataset, self.regularization_laplace)
+    def init_from_profiles(self, profiles: list[Profile]):
+        self.matrix = compute_naive_bayes_matrix(profiles, self.regularization_laplace)
         self.explanation_matrix, self.explanation_popularity = compute_explanation_matrix(
             self.matrix
         )
-        return self
 
-    def explain(
-        self, basket: Basket, keys: List[str]
-    ) -> Tuple[Dict[str, Dict[Tuple[str, ItemSide], float]], Dict[str, float]]:
-        return explain_naive_bayes(
-            self.explanation_matrix, basket.get_items(), keys, self.explanation_popularity
+    def suggest(self, profile: Profile) -> Suggestions:
+        scores = predict_naive_bayes(self.matrix, profile.features_str())
+
+        return Suggestions(scores=scores)
+
+    def explain(self, profile: Profile) -> Explanations:
+        scores = explain_naive_bayes(
+            self.explanation_matrix, profile.features, self.explanation_popularity
         )
-
-    def predict(self, basket: Basket) -> Dict[str, float]:
-        return predict_naive_bayes(self.matrix, basket.get_items())
-
-    def predict_top_k(self, basket: Basket, k: int) -> List[Tuple[str, float]]:
-        scores = self.predict(basket)
-        return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:k]
+        return Explanations()
 
     def __str__(self) -> str:
         return str(self.matrix)
 
 
-N_FEATURES = 3  # Each feature has 3 possible states: positive, negative or absent.
-
-
 def compute_naive_bayes_matrix(
-    dataset: DatasetStudents,
+    profiles: list[Profile],
     regularization_laplace: float,
 ) -> pd.DataFrame:
     """
@@ -78,16 +55,15 @@ def compute_naive_bayes_matrix(
     """
     co_occurences_target_key: Dict[Tuple[str, str], int] = defaultdict(int)
     occurences_target: Dict[str, int] = defaultdict(int)
-    n_students: int = len(dataset)
+    n_profiles: int = len(profiles)
     all_key_values: set[str] = set()
 
     # Count occurrences and co-occurrences
-    for student in dataset:
-        basket = student.basket
-        for t in basket.get_targets():
+    for profile in profiles:
+        for t in profile.targets:
             occurences_target[t] += 1
 
-            for v in basket.get_items():
+            for v in profile.features_str():
                 all_key_values.add(v)
                 co_occurences_target_key[(t, v)] += 1
 
@@ -98,14 +74,14 @@ def compute_naive_bayes_matrix(
             count_v_and_t = co_occurences_target_key[(t, v)]
             # Apply Laplace regularization
             dict_bayes[t][v] = (count_v_and_t + regularization_laplace) / (
-                count_t + regularization_laplace * N_FEATURES
+                count_t + regularization_laplace
             )
     bayes_df = pd.DataFrame(dict_bayes)
 
     # Compute the frequency of each target value, and add it as a "bias" row
-    probabilites_items = {item: occurences_target[item] / n_students for item in occurences_target}
+    probabilites_items = {item: occurences_target[item] / n_profiles for item in occurences_target}
     bias_row = pd.Series(
-        [probabilites_items[item] for item in bayes_df.columns],
+        [probabilites_items[item] for item in bayes_df.columns],  # type: ignore
         index=bayes_df.columns,
         name="bias",
     )
@@ -118,7 +94,9 @@ def predict_naive_bayes(matrix: pd.DataFrame, items: List[str]) -> Dict[str, flo
     # Ignore items that are not in the matrix's index
     items = [it for it in items if it in matrix.index]
     items.append("bias")
-    scores: pd.Series[float] = matrix.loc[items].prod(axis=0)
+    scores: pd.Series[float] = (
+        matrix.loc[items].prod(axis=0).pow(1 / len(items))
+    )  # Apply pow 1/len(items) to scale the scores
 
     return {t: float(scores[t]) for t in scores.index}
 
@@ -143,7 +121,7 @@ def compute_explanation_matrix(matrix: pd.DataFrame) -> Tuple[pd.DataFrame, pd.S
 
 
 def explain_naive_bayes(
-    explain_matrix: pd.DataFrame, items: List[str], keys: List[str], popularity_matrix: pd.Series
+    explain_matrix: pd.DataFrame, items: List[Item], popularity_matrix: pd.Series
 ) -> Tuple[Dict[str, Dict[Tuple[str, ItemSide], float]], Dict[str, float]]:
     # Ignore items/keys that are not in the matrix's index/columns
     items = [it for it in items if it in explain_matrix.index]
