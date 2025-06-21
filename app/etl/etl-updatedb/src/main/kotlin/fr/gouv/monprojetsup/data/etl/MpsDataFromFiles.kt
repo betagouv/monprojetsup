@@ -3,15 +3,13 @@ package fr.gouv.monprojetsup.data.etl
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import fr.gouv.monprojetsup.data.Constants
-import fr.gouv.monprojetsup.data.Constants.CARTE_PARCOURSUP_PREFIX_URI
 import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
 import fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL
-import fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS
+import fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX
 import fr.gouv.monprojetsup.data.Constants.LAS_MPS_ID
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL1
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL2
 import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
-import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.isFiliere
@@ -249,21 +247,22 @@ class MpsDataFromFiles(
 
 
     override fun getLabels(): Map<String, String> {
-        return if(useRemoteSheet) {
-            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_LABEL)
-        } else {
-            val formationsMpsIds = getFormationsMpsIds()
-            val metiersMpsIds = getMetiersMpsIds()
-            val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
-            Labels.getLabels(
-                psupData,
-                onisepData,
-                getSpecialites().toSpecialitesList()
-            )
-                .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
-                .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
-                .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+        val formationsMpsIds = getFormationsMpsIds()
+        val metiersMpsIds = getMetiersMpsIds()
+        val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
+        val result = Labels.getLabels(
+            psupData,
+            onisepData,
+            getSpecialites().toSpecialitesList()
+        )
+            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
+            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
+            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+            .toMutableMap()
+        if(useRemoteSheet) {
+            result.putAll(formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_LABEL))
         }
+        return result
     }
 
     override fun getDescriptifs(): DescriptifsFormationsMetiers {
@@ -536,7 +535,7 @@ class MpsDataFromFiles(
             val key = line[mpsIdHeader] ?: throw java.lang.RuntimeException("Empty $mpsIdHeader in $line")
             val urls = line[liensHeader] ?: throw java.lang.RuntimeException("Empty $liensHeader in $line")
             val urlList = urls
-                .split(";\n")
+                .split("\n")
                 .map { s -> s.trim()}
                 .map { s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL) }
                 .map { s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL) }
@@ -998,119 +997,6 @@ class MpsDataFromFiles(
         }
     }
 
-    private fun exportResumesManquants() {
-        val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(RESUMES_MPS_PATH), ',')
-
-        val mpsIds = getFormationsMpsIds()
-        val debugLabels = getDebugLabels()
-
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumes.csv").use { csv ->
-            val headers = listOf(
-                "code filiere",
-                "intitulé web",
-                "code type formation",
-                "intitule type formation",
-                "url onisep",
-                "url psup",
-                "resume type formation",
-                "resume filiere"
-            )
-            csv.appendHeaders(headers)
-            val codesFilieres = mutableSetOf<String>()
-            for (line in lines) {
-                val codeFiliere = line["code filiere"].orEmpty()
-                val label = debugLabels.getOrDefault(codeFiliere, "")
-                line["intitulé web"] = label
-                if(mpsIds.contains(codeFiliere)) {
-                    val nextLine = mutableListOf<String>()
-                    codesFilieres.add(codeFiliere)
-                    for (header in headers) {
-                        nextLine.add(line[header].orEmpty())
-                    }
-                    csv.append(nextLine)
-                }
-            }
-
-            val missingcodes = mpsIds.filter { it !in codesFilieres }
-
-            val labels = getLabels()
-            val liens = getLiens()
-            for (code in missingcodes) {
-                val liensOnisep =
-                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val liensPsup =
-                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val autresLiens =
-                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
-                        .distinct().joinToString("\n")
-                val nextLine = listOf(
-                    code,
-                    labels[code].orEmpty(),
-                    "",
-                    "",
-                    liensOnisep,
-                    "",//url corrections
-                    autresLiens,
-                    liensPsup,//url psup
-                    "",//resume type formation
-                    "",//resume filiere
-                )
-                csv.append(nextLine)
-            }
-            val nextLineLas = listOf(
-                "texte_etude_santes",
-                LABEL_ARTICLE_PAS_LAS,
-                "",
-                "",
-                URL_ARTICLE_PAS_LAS,
-                "",//url corrections
-                CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
-                "",//resume type formation
-                "",//resume filiere
-                ""
-            )
-            csv.append(nextLineLas)
-        }
-
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv").use { csv ->
-            val headers = listOf("code filiere")
-            csv.appendHeaders(headers)
-            val codesFilieres = mutableSetOf<String>()
-            codesFilieres.addAll(lines.map { it["code filiere"].orEmpty() })
-            val missingCodes = getFormationsMpsIds().filter { it !in codesFilieres }
-
-            val labels = getLabels()
-            val liens = getLiens()
-            for (code in missingCodes) {
-                val liensOnisep =
-                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val liensPsup =
-                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val autresLiens =
-                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
-                        .distinct().joinToString("\n")
-                val nextLine = listOf(
-                    code,
-                    labels[code].orEmpty(),
-                    "",
-                    "",
-                    liensOnisep,
-                    "",//url corrections
-                    liensPsup,//url psup
-                    "",//resume type formation
-                    "",//resume filiere
-                    autresLiens,
-                    ""
-                )
-                csv.append(nextLine)
-            }
-        }
-    }
-
     private fun exportLiens() {
         val labels = getLabels()
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
@@ -1136,6 +1022,40 @@ class MpsDataFromFiles(
             }
         }
 
+    }
+
+    private fun exportFilieresPsupOrphelines() {
+        val usedflCods = getMpsIdToPsupFlIds().values.flatten().toHashSet()
+        usedflCods.addAll(readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
+            .filter { it.isNotEmpty() }
+            .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
+            .toSet()
+        )
+        val usedFlIntCodes = usedflCods.filter { it.startsWith(FILIERE_PREFIX) }.map { it.substring(2).toInt() }.toSet()
+        val unusedFlCods = (psupData.filActives - usedFlIntCodes).toList()
+
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_hors_mps.csv").use { csv ->
+            csv.appendHeaders(
+                listOf(
+                    "fl_cod",
+                    "code générique",
+                    "libellé",
+                )
+            )
+            unusedFlCods.forEach { flCod : Int ->
+                val filiere = psupData.formations.filieres[flCod]
+                if (filiere != null) {
+                    csv.append(
+                        listOf(
+                            flCod.toString(),
+                            filiere.gFrCod.toString(),
+                            filiere.libelle
+                        )
+                    )
+                }
+            }
+
+        }
     }
 
     private fun exportRemoteSheets() {
@@ -1232,7 +1152,7 @@ class MpsDataFromFiles(
     override fun exportDiagnostics() {
         val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
         exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
-        exportResumesManquants()
+        exportFilieresPsupOrphelines()
         exportRemoteSheets()
         exportLiens()
     }
