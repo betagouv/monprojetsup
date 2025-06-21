@@ -355,6 +355,4 @@ class UpdateFormationDbs(
         criteresDb.saveAll(criteres)
     }
 
-
-
 }

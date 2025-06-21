@@ -38,7 +38,7 @@ class Suggestion2ApiHttpClient(
         return reponseDTO.affinites
     }
 
-    override fun recupererLesExplications(profil: ProfileDTO, keys: List<String>): List<ExplanationAndExamples> {
+    override fun recupererLesExplications(request: ProfileDTO, keys: List<String>): List<ExplanationAndExamples> {
         if(!enabled) {
             logger.info("SUGGESTIONS2", "recupererLesExplications: désactivé")
             return emptyList()
@@ -47,7 +47,7 @@ class Suggestion2ApiHttpClient(
         val reponseDTO =
             post<GetExplanationsAndExamplesServiceDTO.Response>(
                 url = "$baseUrl/explanations",
-                requeteDTO = GetExplanationsAndExamplesServiceDTO.Request(profil, keys),
+                requeteDTO = GetExplanationsAndExamplesServiceDTO.Request(request, keys),
             )
         logger.info("SUGGESTIONS2", "recupererLesExplications: réponse de l'API Suggestions2")
         return reponseDTO.liste
