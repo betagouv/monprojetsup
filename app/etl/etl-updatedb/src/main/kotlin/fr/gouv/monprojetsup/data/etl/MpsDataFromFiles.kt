@@ -41,7 +41,9 @@ import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LA
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LIENS
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MOTS_CLES
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MPS_ID
-import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP_IDS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_EXCLUES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_FICHES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_GENERIQUES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_GENERIQUE_ID_HEADER
@@ -172,19 +174,13 @@ class MpsDataFromFiles(
 
         if (useRemoteSheet) {
             logger.info("Chargement des formations MPS depuis la feuille de calcul distante")
-            val feuilleId = REMOTE_SHEET_FEUILLE_FICHES_ID
-            val uri =
-                "$remoteSheetsApiUri/$remoteSheetsSpreadSheetId/values/$feuilleId?key=$remoteSheetsApiKey"
-            val stream = RemoteFileAccess.getRemoteStream(uri)
+            val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_FICHES_ID))
             formationsRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
-            check(formationsRemoteSheet.values.isNotEmpty() && formationsRemoteSheet.values[0].isNotEmpty() ) { "No data found in the Sheet " }
+            check(formationsRemoteSheet.values.isNotEmpty() && formationsRemoteSheet.values[0].isNotEmpty()) { "No data found in the Sheet " }
         }
         if (useRemoteSheet) {
             logger.info("Chargement des formations génériques MPS depuis la feuille de calcul distante")
-            val feuilleId = REMOTE_SHEET_FEUILLE_GENERIQUES_ID
-            val uri =
-                "$remoteSheetsApiUri/$remoteSheetsSpreadSheetId/values/$feuilleId?key=$remoteSheetsApiKey"
-            val stream = RemoteFileAccess.getRemoteStream(uri)
+            val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_GENERIQUES_ID))
             formationsGeneriquesRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
             check(formationsGeneriquesRemoteSheet.values.isNotEmpty() && formationsGeneriquesRemoteSheet.values[0].isNotEmpty() ) { "No data found in the Sheet " }
         }
@@ -749,7 +745,7 @@ class MpsDataFromFiles(
 
     override fun getMpsIdToPsupFlIds(): Map<String, Collection<String>> {
         return if(useRemoteSheet) {
-            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_PSUP)
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_PSUP_IDS)
                 .mapValues { it.value.split(";").map { s -> s.trim() }.filter { s -> s.isNotBlank() } }
         } else {
             val ids = getFormationsMpsIds()
@@ -1026,37 +1022,53 @@ class MpsDataFromFiles(
 
     private fun exportFilieresPsupOrphelines() {
         val usedflCods = getMpsIdToPsupFlIds().values.flatten().toHashSet()
-        usedflCods.addAll(readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
-            .filter { it.isNotEmpty() }
-            .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
-            .toSet()
-        )
+        if(useRemoteSheet) {
+            logger.info("Chargement des filières psup exclues depuis la feuille de calcul distante")
+            val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_EXCLUES_ID))
+            val sheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
+            usedflCods.addAll(sheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_PSUP_ID).values)
+        } else {
+            usedflCods.addAll(
+                readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
+                .filter { it.isNotEmpty() }
+                .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
+                .toSet()
+            )
+        }
         val usedFlIntCodes = usedflCods.filter { it.startsWith(FILIERE_PREFIX) }.map { it.substring(2).toInt() }.toSet()
         val unusedFlCods = (psupData.filActives - usedFlIntCodes).toList()
 
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_hors_mps.csv").use { csv ->
-            csv.appendHeaders(
-                listOf(
-                    "fl_cod",
-                    "code générique",
-                    "libellé",
-                )
-            )
-            unusedFlCods.forEach { flCod : Int ->
-                val filiere = psupData.formations.filieres[flCod]
-                if (filiere != null) {
-                    csv.append(
-                        listOf(
-                            flCod.toString(),
-                            filiere.gFrCod.toString(),
-                            filiere.libelle
-                        )
+        if(unusedFlCods.isEmpty()) {
+            logger.info("Aucune filière PSUP orpheline")
+            return
+        } else {
+            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_hors_mps.csv").use { csv ->
+                csv.appendHeaders(
+                    listOf(
+                        "fl_cod",
+                        "code générique",
+                        "libellé",
                     )
+                )
+                unusedFlCods.forEach { flCod: Int ->
+                    val filiere = psupData.formations.filieres[flCod]
+                    if (filiere != null) {
+                        csv.append(
+                            listOf(
+                                flCod.toString(),
+                                filiere.gFrCod.toString(),
+                                filiere.libelle
+                            )
+                        )
+                    }
                 }
-            }
 
+            }
         }
     }
+
+    private fun getRemoteSheetUri(feuilleId: String) = "$remoteSheetsApiUri/$remoteSheetsSpreadSheetId/values/$feuilleId?key=$remoteSheetsApiKey"
+
 
     private fun exportRemoteSheets() {
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "remote_sheet_fiches.csv").use { csv ->
@@ -1065,7 +1077,7 @@ class MpsDataFromFiles(
                     REMOTE_SHEET_COLUMNS_MPS_ID,
                     REMOTE_SHEET_COLUMNS_LABEL,
                     REMOTE_SHEET_COLUMNS_GENERIC_ID,
-                    REMOTE_SHEET_COLUMNS_PSUP,
+                    REMOTE_SHEET_COLUMNS_PSUP_IDS,
                     REMOTE_SHEET_COLUMNS_DESCRIPTION,
                     REMOTE_SHEET_COLUMNS_LIENS,
                     REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS,
