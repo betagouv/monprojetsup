@@ -359,6 +359,24 @@ class MpsDataFromFiles(
         return CsvTools.readCSV(dataSources.getSourceDataFilePath(PROFILS_REFERENCE_MPS_PATH), ',')
     }
 
+    override fun getCompatEtudesCourtes(): Set<String> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ETUDES_COURTES).filter { it.value.isNotBlank() }.keys
+        } else {
+            val durees = getDurees();
+            durees.entries.filter { it.value != null && it.value!! <= 3 }.map { it.key }.toSet()
+        }
+    }
+
+    override fun getCompatEtudesLongues(): Set<String> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ETUDES_LONGUES).filter { it.value.isNotBlank() }.keys
+        } else {
+            val durees = getDurees();
+            durees.entries.filter { it.value != null && it.value!! >= 3 }.map { it.key }.toSet()
+        }
+    }
+
     override fun getAttendus(): Map<String, String> {
         return if(useRemoteSheet) {
             formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ATTENDUS)
@@ -814,7 +832,7 @@ class MpsDataFromFiles(
     }
 
 
-    override fun getDurees(): Map<String, Int?> {
+     fun getDurees(): Map<String, Int?> {
         return if(useRemoteSheet) {
             val lines = formationsRemoteSheet.lines()
              lines.associate {
@@ -1103,12 +1121,13 @@ class MpsDataFromFiles(
             val mpsIdsToPsupIds = getMpsIdToPsupFlIds()
             val attendus = getAttendus()
             val conseils = getConseils()
-            val durees = getDurees()
+            val courtes = getCompatEtudesCourtes()
+            val longues = getCompatEtudesLongues()
             mpsIds.forEach { mpsId ->
                 val resume = resumes.find { it[RESUMES_MPS_ID_HEADER] == mpsId }.orEmpty()
                 val lien = liens.find { it[LIENS_MPS_PATH_HEADER_ID] == mpsId }.orEmpty()
-                val estOkEtudesCourtes = durees[mpsId]?.compareTo(3)
-                val estOkEtudesLongues = durees[mpsId]?.compareTo(3)
+                val estOkEtudesCourtes = courtes.contains(mpsId)
+                val estOkEtudesLongues = longues.contains(mpsId)
                 csv.append(
                     listOf(
                         mpsId,
@@ -1122,8 +1141,8 @@ class MpsDataFromFiles(
                         "",//REMOTE_SHEET_COLUMNS_MOTS_CLES
                         attendus[mpsId].orEmpty(),
                         conseils[mpsId].orEmpty(),
-                        if (estOkEtudesCourtes != null && estOkEtudesCourtes <= 0) "X" else "",
-                        if (estOkEtudesLongues != null && estOkEtudesLongues >= 0) "X" else "",
+                        if (estOkEtudesCourtes) "X" else "",
+                        if (estOkEtudesLongues) "X" else "",
                     )
                 )
 

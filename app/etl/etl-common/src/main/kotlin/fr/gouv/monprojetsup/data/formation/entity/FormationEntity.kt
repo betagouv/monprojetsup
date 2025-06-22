@@ -11,7 +11,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
-import org.jetbrains.annotations.Nullable
 import java.io.Serializable
 
 @Entity
@@ -72,15 +71,17 @@ class FormationEntity {
     @Column(name = "apprentissage_pct", nullable = true)
     var apprentissagePct: Int? = 0
 
-    @Nullable
-    @Column(name = "duree", nullable = true)
-    var duree: Int? = null
-
     @Column(nullable = false)
     var obsolete: Boolean = false
 
     @JdbcTypeCode(SqlTypes.JSON)
     var stats : StatsEntity = StatsEntity()
+
+    @Column(name = "etudes_longues",nullable = false)
+    var compatibleEtudeLongues: Boolean = false
+
+    @Column(name = "etudes_courtes",nullable = false)
+    var compatibleEtudeCourtes: Boolean = false
 
     fun integrityCheck(): Boolean {
         return !(label.isEmpty()
@@ -88,7 +89,8 @@ class FormationEntity {
                 || formationsAssociees.isNullOrEmpty()
                 || motsClefs.isNullOrEmpty()
                 || liens.isEmpty()
-                || duree == null)
+                || (!compatibleEtudeLongues && !compatibleEtudeCourtes)
+                )
     }
 
     data class StatsEntity (
@@ -133,9 +135,10 @@ class FormationEntity {
             labelDetails,
             capacite ?: -1,
             apprentissage ?: false,
-            duree ?: -1,
             stats.toStats(),
             formationsAssociees ?: emptyList(),
+            compatibleEtudeCourtes,
+            compatibleEtudeLongues
         )
     }
 
