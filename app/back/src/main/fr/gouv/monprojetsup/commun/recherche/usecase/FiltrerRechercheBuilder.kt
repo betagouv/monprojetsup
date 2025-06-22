@@ -15,5 +15,4 @@ class FiltrerRechercheBuilder {
             .distinct()
             .filter { it.length >= tailleMinimumRecherche }
     }
-
 }
