@@ -215,7 +215,6 @@ class UpdateFormationDbs(
              entity.liens = urlListe
                  .map { link -> Pair(link.label, link.uri) }
                  .distinct()
-                 .sortedBy { it.first }
                  .map { pair -> LienEntity(pair.first, pair.second) }
 
              val motsClefs = tagsSources.getOrDefault(id, listOf(label))
@@ -354,7 +353,5 @@ class UpdateFormationDbs(
         criteresDb.deleteAll()
         criteresDb.saveAll(criteres)
     }
-
-
 
 }

@@ -127,6 +127,7 @@ class FormationEntity {
     }
 
 
+    @Suppress("unused")
     fun toFormation(): Formation {
         return Formation(
             id,

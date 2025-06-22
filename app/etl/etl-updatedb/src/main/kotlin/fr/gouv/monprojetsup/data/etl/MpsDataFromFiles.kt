@@ -1,27 +1,55 @@
 package fr.gouv.monprojetsup.data.etl
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import fr.gouv.monprojetsup.data.Constants
-import fr.gouv.monprojetsup.data.Constants.CARTE_PARCOURSUP_PREFIX_URI
 import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
 import fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL
-import fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS
+import fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX
 import fr.gouv.monprojetsup.data.Constants.LAS_MPS_ID
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL1
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL2
 import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
-import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.data.Constants.isMetier
 import fr.gouv.monprojetsup.data.Constants.isVoeu
 import fr.gouv.monprojetsup.data.Constants.mpsIdToGFlCod
+import fr.gouv.monprojetsup.data.RemoteFileAccess
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.CsvTools
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.BACK_PSUP_DATA_FILENAME
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.CITIES_FILE_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_EXTRAS
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_ID
-import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_IGNORER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MOTS_CLES_MPS_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_EXCLUES_HEADER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_EXCLUES_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.PROFILS_REFERENCE_MPS_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_ATTENDUS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_CONSEILS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_DESCRIPTION
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_ETUDES_COURTES
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_ETUDES_LONGUES
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_GENERIC_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LABEL
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LIENS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MOTS_CLES
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MPS_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_FICHES_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_GENERIQUES_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_GENERIQUE_ID_HEADER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_ID_HEADER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_RESUME_GENERIQUE_HEADER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_RESUME_PRINCIPAL_HEADER
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.STATS_PSUP_DATA_FILENAME
 import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader.loadLiensFormationsMpsDomainesMps
@@ -41,7 +69,6 @@ import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.model.formations.Formation
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.CARTE_PSUP
-import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.IDEO_HOTLINE
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.AdmissionStats
 import fr.gouv.monprojetsup.data.model.psup.PsupData
@@ -69,18 +96,53 @@ import java.util.*
 import java.util.logging.Logger
 
 
+data class RemoteSheet(
+    val range : String,
+    val majorDimension: String,
+    val values: List<List<String>>
+) {
+    fun getValuesOfColumn(columnHeader: String): Map<String,String> {
+        val index = values.firstOrNull()?.indexOf(columnHeader)
+            ?: throw IllegalArgumentException("Column header '$columnHeader' not found in values")
+        return values.drop(1)
+            .filter { it.isNotEmpty() && it[0].isNotBlank() }
+            .associate { it[0] to it.getOrElse(index) { "" } }
+    }
+
+    fun lines(): List<Map<String, String>> {
+        if (values.isEmpty()) return emptyList()
+        val headers = values[0]
+        return values.drop(1)
+            .filter { it.isNotEmpty() && it[0].isNotBlank() }
+            .map { line ->
+            headers.mapIndexed { index, header -> header to line.getOrElse(index) { "" } }.toMap()
+        }
+    }
+
+}
+
 @Component
 class MpsDataFromFiles(
     private val dataSources: DataSources
 ) : MpsDataPort {
 
     private lateinit var psupData: PsupData
-    private lateinit var  onisepData: OnisepData
-    private lateinit var  statistiques: AdmissionStats
+    private lateinit var onisepData: OnisepData
+    private lateinit var statistiques: AdmissionStats
+    private lateinit var formationsRemoteSheet: RemoteSheet
+    private lateinit var formationsGeneriquesRemoteSheet: RemoteSheet
+    private lateinit var formationsMpsIds : List<String>
+    private lateinit var specialites : Specialites
+    private lateinit var descriptifs : DescriptifsFormationsMetiers
 
-    private var descriptifs : DescriptifsFormationsMetiers? = null
-    private var specialites : Specialites? = null
-    private var formationsMpsIds : List<String>? = null
+    @Value("\${mps.data.google.use-api}")
+    var useRemoteSheet : Boolean = false
+    @Value("\${mps.data.google.api.uri}")
+    lateinit var remoteSheetsApiUri : String
+    @Value("\${mps.data.google.api.key}")
+    lateinit var remoteSheetsApiKey : String
+    @Value("\${mps.data.google.api.spreadsheet-id}")
+    lateinit var remoteSheetsSpreadSheetId : String
 
     @Value("\${mps.minimalTestDataSet}")
     var minimalTestDataSet : Boolean = false
@@ -88,14 +150,17 @@ class MpsDataFromFiles(
     private val logger: Logger = Logger.getLogger(MpsDataFromFiles::class.java.simpleName)
     @PostConstruct
     private fun load() {
-        logger.info("Chargement de " + dataSources.getSourceDataFilePath(
-            DataSources.BACK_PSUP_DATA_FILENAME))
+        logger.info(
+            "Chargement de " + dataSources.getSourceDataFilePath(
+                BACK_PSUP_DATA_FILENAME
+            )
+        )
         psupData = Serialisation.fromLargeZippedJson(
-            Path.of(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME)),
+            Path.of(dataSources.getSourceDataFilePath(BACK_PSUP_DATA_FILENAME)),
             PsupData::class.java
         )
         val psupStats = Serialisation.fromLargeZippedJson(
-            Path.of(dataSources.getSourceDataFilePath(DataSources.STATS_PSUP_DATA_FILENAME)),
+            Path.of(dataSources.getSourceDataFilePath(STATS_PSUP_DATA_FILENAME)),
             PsupStatistiques::class.java
         )
         psupData.inject(psupStats)
@@ -105,8 +170,723 @@ class MpsDataFromFiles(
         logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
 
-        val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
-        exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
+        if (useRemoteSheet) {
+            logger.info("Chargement des formations MPS depuis la feuille de calcul distante")
+            val feuilleId = REMOTE_SHEET_FEUILLE_FICHES_ID
+            val uri =
+                "$remoteSheetsApiUri/$remoteSheetsSpreadSheetId/values/$feuilleId?key=$remoteSheetsApiKey"
+            val stream = RemoteFileAccess.getRemoteStream(uri)
+            formationsRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
+            check(formationsRemoteSheet.values.isNotEmpty() && formationsRemoteSheet.values[0].isNotEmpty() ) { "No data found in the Sheet " }
+        }
+        if (useRemoteSheet) {
+            logger.info("Chargement des formations génériques MPS depuis la feuille de calcul distante")
+            val feuilleId = REMOTE_SHEET_FEUILLE_GENERIQUES_ID
+            val uri =
+                "$remoteSheetsApiUri/$remoteSheetsSpreadSheetId/values/$feuilleId?key=$remoteSheetsApiKey"
+            val stream = RemoteFileAccess.getRemoteStream(uri)
+            formationsGeneriquesRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
+            check(formationsGeneriquesRemoteSheet.values.isNotEmpty() && formationsGeneriquesRemoteSheet.values[0].isNotEmpty() ) { "No data found in the Sheet " }
+        }
+
+        formationsMpsIds = loadMpsIds().sortedBy {  it.substring(2).toInt() }
+        descriptifs = loadDescriptifs()
+        specialites = SpecialitesLoader.load(
+            dataSources,
+            psupData.getSpesBacs()
+        )
+
+    }
+
+    private fun loadMpsIds(): List<String> {
+        //computeMpsIds
+        return if (useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MPS_ID).values.toList()
+        } else {
+            val result = HashSet(psupData.formationsMpsIds)
+            val toRemove = readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
+                .filter { it.isNotEmpty() }
+                .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
+                .toSet()
+            result.removeAll(toRemove)
+            if (minimalTestDataSet) result.removeIf { !it.endsWith("11") }
+            result.toList()
+        }
+    }
+
+    private fun loadDescriptifs(): DescriptifsFormationsMetiers {
+        val result = DescriptifsFormationsMetiers()
+        DescriptifsLoader.injectFichesMetiers(onisepData.metiersIdeo, result)
+        if (useRemoteSheet) {
+            val linesFormations = formationsRemoteSheet.lines()
+            val descriptifsGeneriques = formationsGeneriquesRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_DESCRIPTION)
+            DescriptifsLoader.addMpsdescriptifsFromRemoteSheet(
+                result,
+                linesFormations,
+                descriptifsGeneriques,
+                REMOTE_SHEET_COLUMNS_MPS_ID,
+                REMOTE_SHEET_COLUMNS_GENERIC_ID,
+                REMOTE_SHEET_COLUMNS_DESCRIPTION
+            )
+        } else {
+            val lines = CsvTools.readCSV(
+                dataSources.getSourceDataFilePath(RESUMES_MPS_PATH),
+                ','
+            )
+            DescriptifsLoader.addMpsdescriptifsFromFile(
+                result,
+                lines,
+                RESUMES_MPS_ID_HEADER,
+                RESUMES_GENERIQUE_ID_HEADER,
+                RESUMES_RESUME_GENERIQUE_HEADER,
+                RESUMES_RESUME_PRINCIPAL_HEADER
+            )
+        }
+        return result
+    }
+
+
+    override fun getLabels(): Map<String, String> {
+        val formationsMpsIds = getFormationsMpsIds()
+        val metiersMpsIds = getMetiersMpsIds()
+        val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
+        val result = Labels.getLabels(
+            psupData,
+            onisepData,
+            getSpecialites().toSpecialitesList()
+        )
+            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
+            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
+            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+            .toMutableMap()
+        if(useRemoteSheet) {
+            result.putAll(formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_LABEL))
+        }
+        return result
+    }
+
+    override fun getDescriptifs(): DescriptifsFormationsMetiers {
+        return  descriptifs
+    }
+
+    override fun getSpecialites(): Specialites {
+        return specialites
+    }
+
+
+    override fun getDebugLabels(): Map<String, String> {
+        val formationsMpsIds = getFormationsMpsIds()
+        val metiersMpsIds = getMetiersMpsIds()
+        val voeuxIds = getVoeux().keys
+        return Labels.getDebugLabels(
+            psupData,
+            onisepData,
+            getSpecialites().toSpecialitesList()
+        )
+            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
+            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
+            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
+
+    }
+
+    private fun getLabelsOriginauxPsup(): MutableMap<String, String> {
+        return Labels.getLabelsOriginauxPsup(
+            psupData
+        )
+    }
+
+    override fun getFormationsLabels(): Map<String, String> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_LABEL)
+        } else {
+            val formationsMpsIds = getFormationsMpsIds()
+            Labels.getFormationsLabels(
+                psupData,
+                false
+            ).filter { formationsMpsIds.contains(it.key) }
+        }
+    }
+
+    override fun getMetiersLabels(): Map<String, String> {
+        val metiersMps = getMetiersMpsIds()
+        return onisepData.getMetiersLabels(
+            false
+        ).filter { metiersMps.contains(it.key) }
+    }
+
+    override fun getMetiersAssociesLabels(): Map<String, List<String>> {
+        val metiersMps = getMetiersMpsIds()
+        return onisepData.getMetiersAssociesLabels()
+            .filter { metiersMps.contains(it.key) }
+    }
+
+    override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
+
+        val mpsToPsup = psupData.mpsKeyToPsupKeys
+        val psupToIdeo = onisepData.filieresToFormationsOnisep
+            .associate { Pair(gFlCodToMpsId(it.gFlCod)!!, it.ideoFormationsIds!!) }
+
+        val result = HashMap<String, List<String>>()
+        getFormationsMpsIds().forEach { mpsId ->
+            result[mpsId] =
+                mpsToPsup.getOrDefault(mpsId, listOf(mpsId)).flatMap { psupToIdeo[it].orEmpty() }.toList()
+        }
+        if (useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS)
+                .forEach { (mpsId, extraIds) ->
+                    val extraIdeos = extraIds.split(";")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                    if (extraIdeos.isNotEmpty()) {
+                        result[mpsId] = result.getOrDefault(mpsId, emptyList()) + extraIdeos
+                    }
+                }
+        }
+        return result
+    }
+
+
+    override fun getFormationToTypeformation(): Map<String, String> {
+        val result = HashMap<String, String>()
+        psupData.formations.filieres.values.forEach{ f ->
+            result[gFlCodToMpsId(f.gFlCod)] = gFrCodToMpsId(f.gFrCod)
+            if(f.gFlCodeFi > 0) {
+                result[gFlCodToMpsId(f.gFlCodeFi)] = gFrCodToMpsId(f.gFrCod)
+            }
+            result[gFrCodToMpsId(f.gFrCod)] = gFrCodToMpsId(f.gFrCod)
+        }
+        return result
+    }
+
+
+    override fun getProfilsReference(): List<Map<String,String>> {
+        return CsvTools.readCSV(dataSources.getSourceDataFilePath(PROFILS_REFERENCE_MPS_PATH), ',')
+    }
+
+    override fun getAttendus(): Map<String, String> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ATTENDUS)
+        } else {
+            val attendusPsup = Attendus.getAttendusSimplifies(
+                psupData
+            )
+            val mpsIds = getFormationsMpsIds()
+            val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+            val labels = getLabels()
+            val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it)) }
+            val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.attendusFront.orEmpty() }
+            mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
+        }
+    }
+
+    override fun getConseils(): Map<String, String> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_CONSEILS)
+        } else {
+            val attendusPsup = Attendus.getAttendusSimplifies(
+                psupData
+            )
+            val mpsIds = getFormationsMpsIds()
+            val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+            val labels = getLabels()
+            val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it)) }
+            val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.conseilsFront.orEmpty() }
+            mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
+        }
+    }
+
+    private fun mergeAttendusOrConseils(
+        allTexts: Map<String, String>,
+        mpsIds: List<String>,
+        mpsKeyToPsupKeys: Map<String, MutableSet<String>>,
+        labels: Map<String, String>
+    ): Map<String, String> {
+        val result = HashMap<String, String>()
+        mpsIds.forEach { id ->
+            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
+            val formuleVersLibelles = HashMap<String, MutableList<String>>()
+            psupKeys.forEach { psupKey ->
+                val formule = allTexts[psupKey]
+                val libelle = labels.getOrDefault(psupKey, "")
+                if (formule != null && !formule.contains("null") && formule.isNotBlank() && libelle.isNotBlank()) {
+                    val l = formuleVersLibelles.computeIfAbsent(formule) { ArrayList() }
+                    l.add(libelle)
+                }
+            }
+            val texte: String = if (formuleVersLibelles.size <= 1) {
+                formuleVersLibelles.keys.firstOrNull().orEmpty()
+            } else {
+                formuleVersLibelles.entries.joinToString("\n\n") { (formule, libelles) ->
+                    val libellesTexte = libelles.joinToString(" - ")
+                    "$libellesTexte: $formule"
+                }
+            }
+            if (texte.isNotBlank()) {
+                result[id] = texte
+            }
+        }
+        return result
+    }
+
+
+    override fun getCities(): List<Ville> {
+        val citiesOld = Serialisation.fromJsonFile(
+            dataSources.getSourceDataFilePath(CITIES_FILE_PATH),
+            CitiesExternal::class.java
+        )
+
+        //indexation département --> villes du département
+        val mByDpt = HashMap<String, Pair<String, MutableList<Coords>>>()
+        citiesOld.cities()
+            .filter { c -> c.zip_code != null }
+            .forEach { c ->
+                var key = c.name()
+                key += c.zip_code().toInt() / 1000
+                val paireNomCoords = mByDpt.computeIfAbsent(key) { _ ->
+                    Pair.of(
+                        c.name(),
+                        ArrayList()
+                    )
+                }
+                paireNomCoords.right.add(
+                    Coords(
+                        c.zip_code(),
+                        c.insee_code(),
+                        c.gps_lat(),
+                        c.gps_lng()
+                    )
+                )
+            }
+        val cities: HashMap<String, Ville> = HashMap()
+        mByDpt.values.forEach { value: Pair<String, MutableList<Coords>> ->
+            //dans un même département on regroupe toutes les coordonnées à nom fixé.
+            //Par exemple Lyon regroupe différents code insee pour ses différents arrondissements.
+            val nom = value.left
+            val coords = value.right
+            if (coords != null) {
+                val gpsCoords: List<LatLng> = coords
+                    .filter { it.gps_lat != null && it.gps_lng != null }
+                    .map {
+                        LatLng(
+                            it.gps_lat,
+                            it.gps_lng
+                        )
+                    }
+                if (gpsCoords.isNotEmpty()) {
+                    coords.forEach { c: Coords ->
+                        if(
+                            c.insee_code != null
+                            && (!minimalTestDataSet || c.insee_code.endsWith("20"))
+                        ) {
+                            cities[c.insee_code] = Ville(
+                                c.insee_code,
+                                nom,
+                                gpsCoords
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        val voeuxSansCommune = getVoeux().flatMap { it.value }.filter { !cities.containsKey(it.codeCommune) }
+        voeuxSansCommune.forEach { v ->
+            if(v.lat != null && v.lng != null) {
+                cities[v.codeCommune] = Ville(
+                    v.codeCommune,
+                    v.commune,
+                    listOf(LatLng(v.lat!!, v.lng!!))
+                )
+            }
+        }
+        return cities.values.toList()
+    }
+
+    override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
+
+        val extraLiens = if(useRemoteSheet) {
+            getLiensMpsExtras(formationsRemoteSheet.lines(), REMOTE_SHEET_COLUMNS_MPS_ID, REMOTE_SHEET_COLUMNS_LIENS)
+        } else {
+            val lines = CsvTools.readCSV(
+                dataSources.getSourceDataFilePath(LIENS_MPS_PATH),
+                ','
+            )
+            getLiensMpsExtras(lines, LIENS_MPS_PATH_HEADER_ID, LIENS_MPS_PATH_HEADER_EXTRAS)
+        }
+        return UrlsUpdater.updateUrls(
+            onisepData.metiersIdeo,
+            getMpsIdToIdeoIds(),
+            psupData.psupKeyToMpsKey,
+            onisepData.liensCarteParcoursup,
+            getFormationsMpsIds(),
+            getLabels(),
+            getLabelsOriginauxPsup(),
+            extraLiens
+        )
+    }
+
+
+    private fun getLiensMpsExtras(
+        lines: List<Map<String, String>>,
+        mpsIdHeader: String,
+        liensHeader: String
+    ): Map<String, Collection<String>> {
+        val result = HashMap<String, Collection<String>>()
+        for (line in lines) {
+            val key = line[mpsIdHeader] ?: throw java.lang.RuntimeException("Empty $mpsIdHeader in $line")
+            val urls = line[liensHeader] ?: throw java.lang.RuntimeException("Empty $liensHeader in $line")
+            val urlList = urls
+                .split("\n")
+                .map { s -> s.trim()}
+                .map { s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL) }
+                .map { s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL) }
+            result[key] = urlList
+        }
+        return result
+    }
+
+    override fun getGrilles(): Map<String, GrilleAnalyse> {
+        return GrilleAnalyse.getGrilles(psupData)
+    }
+
+    override fun getMotsClesFormations(): Map<String, List<String>> {
+
+        //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
+        val motsClesPsup = psupData.motsCles
+
+        val motsCleMps = Serialisation.fromJsonFile(dataSources.getSourceDataFilePath(MOTS_CLES_MPS_PATH), TagsFormations::class.java)
+        motsCleMps.tags.forEach { (key, value) ->
+            motsClesPsup.add(value, key)
+        }
+
+        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
+
+        val labels = getLabels()
+
+        val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
+
+        val mpsToIdeo = getMpsIdToIdeoIds()
+
+        val formationsIdeo = onisepData.formationsIdeo.associateBy { it.ideo }
+
+        val mpsIds = getFormationsMpsIds()
+
+        //le référentiel des formations front
+        mpsIds.forEach { mpsId ->
+            val label = labels.getOrDefault(mpsId, mpsId)
+            motsClesPsup.add(label, mpsId)
+            //recherche par clé
+            motsClesPsup.add(mpsId + "x", mpsId)
+            if(mpsToIdeo.containsKey(mpsId)) {
+                val ideoKeys = mpsToIdeo[mpsId].orEmpty()
+                ideoKeys.forEach { ideoKey ->
+                    val formationIdeo = formationsIdeo[ideoKey]
+                    if (formationIdeo != null) {
+                        motsClesPsup.add(formationIdeo.motsCles, mpsId)
+                    }
+                }
+            }
+            formationsVersMetiers[mpsId]?.forEach { idMetierOuMetierAssocie ->
+                val labelMetier = labels[idMetierOuMetierAssocie]
+                if(labelMetier != null) {
+                    motsClesPsup.add(labelMetier, mpsId)
+                }
+            }
+        }
+        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
+
+        val extras = if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MOTS_CLES)
+        } else {
+            mapOf("fl550001" to "IFSI")
+        }
+        extras.forEach { (mpsId, motsCles) ->
+            motsCles.split(";").map { it.trim() }.filter { it.isNotBlank() }.forEach { motCle ->
+                motsClesPsup.add(motCle, mpsId)
+            }
+        }
+
+        motsClesPsup.normalize()
+        return motsClesPsup.getKeyToTags()
+    }
+
+    override fun getMetiersMpsIds(): List<String> {
+        return onisepData.metiersIdeo.asSequence()
+            .map { it.ideo() }.toList().sorted()
+            .filter { !minimalTestDataSet || it.endsWith("7") }
+            .toList()
+    }
+
+    override fun getFormationsMpsIds(): List<String> {
+        return formationsMpsIds
+    }
+
+    override fun getApprentissage() : Collection<String> {
+        return psupData.getApprentissage().entries.filter { it.value > 0 }.map { it.key }
+    }
+
+    override fun getApprentissagePct() : Map<String,Int> {
+        return psupData.getApprentissage()
+    }
+
+    override fun getVoeux(): Map<String, Collection<Voeu>> {
+        val formationsMps = getFormationsMpsIds()
+        return psupData.getVoeuxGroupedByFormation(formationsMps)
+            .entries
+            .associate{ it.key to it.value.filter { itt -> !minimalTestDataSet || itt.id.endsWith("7") } }
+    }
+
+
+
+    override fun getCapacitesAccueil(): Map<String, Int> {
+        val result = HashMap<String, Int>()
+        val formationsToVoeux = psupData.getFormationToVoeux()
+        formationsToVoeux.forEach { (key, value) ->
+            result[key] = value.stream()
+                .mapToInt { f: Formation -> f.capacite }
+                .sum()
+        }
+        return result
+
+    }
+
+    /**
+     * metiers vers filieres
+     * @return a map metiers -> filieres
+     */
+    private fun getMetiersVersFormationsExtendedWithGroups(
+        edgesMetiersFormations: List<Pair<String, String>>,
+        psupKeyToMpsKey: Map<String?, String>
+    ): Map<String, Set<String>> {
+        val metiersVersFormations: MutableMap<String, MutableSet<String>> = HashMap()
+
+        edgesMetiersFormations.forEach { p ->
+            metiersVersFormations.computeIfAbsent(p.left) { HashSet() }.add(p.right)
+        }
+
+        metiersVersFormations.keys.removeIf { k -> !isMetier(k) }
+
+        metiersVersFormations.values.forEach { strings ->
+            strings.removeIf { s -> !isFiliere(s) }
+        }
+
+        /* ajouts des las aux metiers PASS.*/
+        val passKey = gFlCodToMpsId(PASS_FL_COD)
+        val metiersPass = metiersVersFormations.entries
+                .filter { e ->  e.value.contains(passKey) }
+                .map { z -> z.key }
+                .toSet()
+        metiersPass.forEach { m ->
+            metiersVersFormations.computeIfAbsent(m) { HashSet() }.add(LAS_MPS_ID)
+        }
+        metiersVersFormations.entries.forEach { e ->
+            val mpsFormationsKeysBase = HashSet(e.value)
+            val mpsFormationsKeys = HashSet(mpsFormationsKeysBase)
+            mpsFormationsKeysBase.forEach { mpsKey ->
+                /* ajouts des groupes génériques aux metiers des formations correspondantes */
+                mpsFormationsKeys.add(psupKeyToMpsKey.getOrDefault(mpsKey, mpsKey))
+            }
+            e.setValue(mpsFormationsKeys)
+        }
+
+        if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS)
+                .forEach { (mpsId, extraIds) ->
+                    extraIds.split(";").map { it.trim() }.filter { it.isNotBlank() }.forEach {
+                        extraId -> metiersVersFormations.computeIfAbsent(extraId) { HashSet() }.add(mpsId)
+                    }
+                }
+        }
+
+        return metiersVersFormations
+    }
+
+    override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
+        val metiersVersFormations = getMetiersVersFormationsExtendedWithGroups(
+            onisepData.edgesMetiersFormations,
+            psupData.psupKeyToMpsKey
+        )
+        val psupKeyToMpsKey = psupData.psupKeyToMpsKey
+        val formationsVersMetiers = HashMap<String, MutableSet<String>>()
+        metiersVersFormations.forEach { (metier, formations) ->
+            formations.forEach { f ->
+                val metiers = formationsVersMetiers.computeIfAbsent(f) { _ -> HashSet() }
+                metiers.add(metier)
+                val father = psupKeyToMpsKey[f]
+                if(father != null) {
+                    val metiersFather = formationsVersMetiers.computeIfAbsent(father) { _ -> HashSet() }
+                    metiersFather.addAll(metiers)
+                }
+            }
+        }
+        if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS)
+                .forEach { (mpsId, extraIds) ->
+                    extraIds.split(";").map { it.trim() }.filter { it.isNotBlank() }.forEach {
+                            extraId -> formationsVersMetiers.computeIfAbsent(mpsId) { HashSet() }.add(extraId)
+                    }
+                }
+        }
+        return  formationsVersMetiers
+    }
+
+    override fun getStatsFormation(): Map<String, StatsFormation> {
+        val ids = getFormationsMpsIds()
+        val result = HashMap<String, StatsFormation>()
+        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+        ids.forEach { id ->
+            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
+            if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
+            val stat = StatsFormation(
+                statistiques.getStatsMoyGenParBac(id).entries.associateByTo(HashMap(), { it.key }, { it.value.middle50 }),
+                statistiques.getNbAdmisParBac(id),
+                statistiques.getPctAdmisParSpec(id),
+                psupData.getStatsFilSim(psupKeys)
+            )
+            result[id] = stat
+        }
+        return result
+    }
+
+    override fun getMpsIdToPsupFlIds(): Map<String, Collection<String>> {
+        return if(useRemoteSheet) {
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_PSUP)
+                .mapValues { it.value.split(";").map { s -> s.trim() }.filter { s -> s.isNotBlank() } }
+        } else {
+            val ids = getFormationsMpsIds()
+            val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+            ids.associateWith { mpsKeyToPsupKeys.getOrDefault(it, setOf(it)) }
+        }
+    }
+
+    override fun getPsupIdToMpsId(): Map<String, String> {
+        return getMpsIdToPsupFlIds().entries.flatMap { it.value.map { itt -> Pair(it.key, itt) } }
+            .associate { it.second to it.first }
+    }
+
+    override fun getPaniersVoeux(): List<PanierVoeux> {
+        val idVoeuxConnus = getVoeux().values.flatten()
+            .map { it.id }.distinct().toSet()
+        return psupData.voeuxParCandidat
+            .map { p ->
+            val id = p.bac
+            val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
+            PanierVoeux(id, voeux, p.lettres)
+        }.filter { it.voeux.isNotEmpty() }.take(if (minimalTestDataSet) 500 else Int.MAX_VALUE)
+    }
+
+    override fun getEdges(): List<Triple<String, String, Int>> {
+        val result = ArrayList<Triple<String, String, Int>>()
+
+        val psupToMps = HashMap(getPsupIdToMpsId())
+        psupToMps.values.retainAll(getFormationsMpsIds().toSet())
+
+        result.addAll(getEdges(onisepData.edgesAtomeToElement, TYPE_EDGE_ATOME_ELEMENT))
+        result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
+        result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
+
+        //injection patch JMB
+        val mpsFormationsMpsDomaines = loadLiensFormationsMpsDomainesMps(dataSources)
+        mpsFormationsMpsDomaines.forEach{ (src, dsts) ->
+            dsts.forEach{
+                result.add(Triple(src, it, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
+            }
+        }
+
+        result.addAll(getEdges(onisepData.edgesMetiersFormations, TYPE_EDGE_METIERS_FORMATIONS_PSUP))
+        result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
+        result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
+        result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
+        result.addAll(getEdges(psupToMps, TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS))
+
+        val metiersIds = getMetiersMpsIds()
+        result.removeIf { (src, _, _) -> isMetier(src) && !metiersIds.contains(src) }
+        result.removeIf { (_, dst, _) -> isMetier(dst) && !metiersIds.contains(dst) }
+
+        return result
+    }
+
+    private fun getEdges(
+        m: List<Pair<String, String>>,
+        t: Int
+    ): Collection<Triple<String, String, Int>> {
+        return m.map { (src, dst) -> Triple(src, dst, t) }
+    }
+
+    @Suppress("SameParameterValue")
+    private fun getEdges(edges: Map<String, String>, type: Int): List<Triple<String, String, Int>> {
+        return edges.entries.map { (src, dst) -> Triple(src, dst, type) }
+    }
+
+
+    override fun getDurees(): Map<String, Int?> {
+        return if(useRemoteSheet) {
+            val lines = formationsRemoteSheet.lines()
+             lines.associate {
+                val duree = if (!it[REMOTE_SHEET_COLUMNS_ETUDES_LONGUES].isNullOrBlank()) {
+                        5
+                    } else if (!it[REMOTE_SHEET_COLUMNS_ETUDES_COURTES].isNullOrBlank()) {
+                        1
+                    } else {
+                        3
+                    }
+                it.getOrElse(REMOTE_SHEET_COLUMNS_MPS_ID){""} to duree
+            }
+        } else {
+            val ids = getFormationsMpsIds()
+            val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+            val result = HashMap<String, Int?>()
+            ids.forEach { id ->
+                var duree = psupData.getDuree(id, mpsKeyToPsupKeys)
+                if (duree == null && Constants.isPsupFiliere(id)) {
+                    try {
+                        val codeFilierePsup = mpsIdToGFlCod(id)
+                        val filiere = psupData.filieres()[codeFilierePsup]
+                        if (filiere != null) {
+                            duree = psupData.getDuree(filiere)
+                        }
+                    } catch (e: NumberFormatException) {
+                        //ignore
+                    }
+                }
+                result[id] = duree
+            }
+            result
+        }
+    }
+
+    override fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>> {
+        val annee = statistiques.annee.toString()
+        val result = HashMap<MoyenneGeneraleAdmisId, List<Int>>()
+        val bacs = getBacs().map { it.key }.toSet()
+
+        getFormationsMpsIds().forEach { id ->
+            statistiques.getStatsMoyGenParBac(id).forEach { (bac, stat) ->
+                if(bacs.contains(bac)) {
+                    val moyGenId = MoyenneGeneraleAdmisId(annee, id, bac)
+                    result[moyGenId] = stat.frequencesCumulees.toList()
+                }
+            }
+        }
+
+        return result
+    }
+
+    override fun getBacs(): List<Bac> {
+        val result = ArrayList(psupData.bacs)
+        if(!result.any { it.key == PsupStatistiques.TOUS_BACS_CODE_MPS }) {
+            result.add(Bac(PsupStatistiques.TOUS_BACS_CODE_MPS, "Non communiqué"))
+        }
+        return result
+    }
+
+    override fun getDomaines(): Taxonomie {
+        return onisepData.domaines
+    }
+
+
+    override fun getInterets() : Taxonomie {
+        return onisepData.interets
+
     }
 
     private fun exportLiensFormationsMetiersDiagnostics(
@@ -217,131 +997,8 @@ class MpsDataFromFiles(
         }
     }
 
-
-    override fun getLabels(): Map<String, String> {
-        val formationsMpsIds = getFormationsMpsIds()
-        val metiersMpsIds = getMetiersMpsIds()
-        val voeuxIds = getVoeux().flatMap { it.value.map { v -> v.id } }
-        return Labels.getLabels(
-            psupData,
-            onisepData,
-            getSpecialites().toSpecialitesList()
-        )
-            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
-            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
-            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
-    }
-
-
-    override fun getDebugLabels(): Map<String, String> {
-        val formationsMpsIds = getFormationsMpsIds()
-        val metiersMpsIds = getMetiersMpsIds()
-        val voeuxIds = getVoeux().keys
-        return Labels.getDebugLabels(
-            psupData,
-            onisepData,
-            getSpecialites().toSpecialitesList()
-        )
-            .filter { !isFiliere(it.key) || formationsMpsIds.contains(it.key) }
-            .filter { !isMetier(it.key) || metiersMpsIds.contains(it.key) }
-            .filter { !isVoeu(it.key) || voeuxIds.contains(it.key) }
-
-    }
-
-    private fun getLabelsOriginauxPsup(): MutableMap<String, String> {
-        return Labels.getLabelsOriginauxPsup(
-            psupData
-        )
-    }
-
-    override fun getFormationsLabels(): Map<String, String> {
-        val formationsMpsIds = getFormationsMpsIds()
-        return Labels.getFormationsLabels(
-            psupData,
-            false
-        ).filter { formationsMpsIds.contains(it.key) }
-    }
-
-    override fun getMetiersLabels(): Map<String, String> {
-        val metiersMps = getMetiersMpsIds()
-        return onisepData.getMetiersLabels(
-            false
-        ).filter { metiersMps.contains(it.key) }
-    }
-
-    override fun getMetiersAssociesLabels(): Map<String, List<String>> {
-        val metiersMps = getMetiersMpsIds()
-        return onisepData.getMetiersAssociesLabels()
-            .filter { metiersMps.contains(it.key) }
-    }
-
-    override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
-
-        val psupToIdeo = onisepData.filieresToFormationsOnisep
-            .associate { Pair(gFlCodToMpsId(it.gFlCod)!!, it.ideoFormationsIds!!) }
-
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val result = HashMap<String, List<String>>()
-        getFormationsMpsIds().forEach { mpsId ->
-            result[mpsId] =
-                mpsKeyToPsupKeys.getOrDefault(mpsId, listOf(mpsId)).
-                flatMap { psupToIdeo[it].orEmpty() }.toList()
-        }
-        return result
-    }
-
-    override fun exportDiagnostics() {
-        exportResumesManquants()
-        exportLiens()
-    }
-
-    override fun getFormationToTypeformation(): Map<String, String> {
-        val result = HashMap<String, String>()
-        psupData.formations.filieres.values.forEach{ f ->
-            result[gFlCodToMpsId(f.gFlCod)] = gFrCodToMpsId(f.gFrCod)
-            if(f.gFlCodeFi > 0) {
-                result[gFlCodToMpsId(f.gFlCodeFi)] = gFrCodToMpsId(f.gFrCod)
-            }
-            result[gFrCodToMpsId(f.gFrCod)] = gFrCodToMpsId(f.gFrCod)
-        }
-        return result
-    }
-
-
     private fun exportLiens() {
-        val ignorer = getLiensMpsIgnorer()
-        val extras = getLiensMpsExtras()
         val labels = getLabels()
-
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens.csv").use { csv ->
-            val headers = listOf(
-                LIENS_MPS_PATH_HEADER_ID,
-                "label",
-                "en ligne labels",
-                "en ligne urls",
-                LIENS_MPS_PATH_HEADER_EXTRAS,
-                "onisep data labels",
-                "onisep data urls",
-                LIENS_MPS_PATH_HEADER_IGNORER,
-                "analyse"
-            )
-            csv.appendHeaders(headers)
-            val liens = getLiens()
-            for(id in getFormationsMpsIds().sortedBy { labels.getOrDefault(it,it) }) {
-                val nextLine = listOf(
-                    id,
-                    labels[id].orEmpty(),
-                    liens[id].orEmpty().filter { !it.source.contains(CARTE_PSUP) }.joinToString("\n") { it.label},
-                    liens[id].orEmpty().filter { !it.source.contains(CARTE_PSUP) }.joinToString("\n") { it.uri },
-                    extras[id].orEmpty().joinToString("\n"),
-                    liens[id].orEmpty().filter { l -> l.source.contains(IDEO_HOTLINE) }.joinToString("\n") { it.label},
-                    liens[id].orEmpty().filter { l -> l.source.contains(IDEO_HOTLINE) }.joinToString("\n") { it.uri },
-                    ignorer[id].orEmpty().joinToString("\n"),
-                    ""
-                )
-                csv.append(nextLine)
-            }
-        }
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
             val headers = listOf(
                 "id",
@@ -367,636 +1024,137 @@ class MpsDataFromFiles(
 
     }
 
-    override fun getProfilsReference(): List<Map<String,String>> {
-        return CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.PROFILS_REFERENCE_MPS_PATH), ',')
-    }
-
-    private fun exportResumesManquants() {
-        val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
-
-        val mpsIds = getFormationsMpsIds()
-        val debugLabels = getDebugLabels()
-
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumes.csv").use { csv ->
-            val headers = listOf(
-                "code filiere",
-                "intitulé web",
-                "code type formation",
-                "intitule type formation",
-                "url onisep",
-                "url psup",
-                "resume type formation",
-                "resume filiere"
-            )
-            csv.appendHeaders(headers)
-            val codesFilieres = mutableSetOf<String>()
-            for (line in lines) {
-                val codeFiliere = line["code filiere"].orEmpty()
-                val label = debugLabels.getOrDefault(codeFiliere, "")
-                line["intitulé web"] = label
-                if(mpsIds.contains(codeFiliere)) {
-                    val nextLine = mutableListOf<String>()
-                    codesFilieres.add(codeFiliere)
-                    for (header in headers) {
-                        nextLine.add(line[header].orEmpty())
-                    }
-                    csv.append(nextLine)
-                }
-            }
-
-            val missingcodes = mpsIds.filter { it !in codesFilieres }
-
-            val labels = getLabels()
-            val liens = getLiens()
-            for (code in missingcodes) {
-                val liensOnisep =
-                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val liensPsup =
-                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val autresLiens =
-                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
-                        .distinct().joinToString("\n")
-                val nextLine = listOf(
-                    code,
-                    labels[code].orEmpty(),
-                    "",
-                    "",
-                    liensOnisep,
-                    "",//url corrections
-                    autresLiens,
-                    liensPsup,//url psup
-                    "",//resume type formation
-                    "",//resume filiere
-                )
-                csv.append(nextLine)
-            }
-            val nextLineLas = listOf(
-                "texte_etude_santes",
-                LABEL_ARTICLE_PAS_LAS,
-                "",
-                "",
-                URL_ARTICLE_PAS_LAS,
-                "",//url corrections
-                CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
-                "",//resume type formation
-                "",//resume filiere
-                ""
-            )
-            csv.append(nextLineLas)
-        }
-
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv").use { csv ->
-            val headers = listOf("code filiere")
-            csv.appendHeaders(headers)
-            val codesFilieres = mutableSetOf<String>()
-            codesFilieres.addAll(lines.map { it["code filiere"].orEmpty() })
-            val missingCodes = getFormationsMpsIds().filter { it !in codesFilieres }
-
-            val labels = getLabels()
-            val liens = getLiens()
-            for (code in missingCodes) {
-                val liensOnisep =
-                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val liensPsup =
-                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
-                        .joinToString("\n")
-                val autresLiens =
-                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
-                        .distinct().joinToString("\n")
-                val nextLine = listOf(
-                    code,
-                    labels[code].orEmpty(),
-                    "",
-                    "",
-                    liensOnisep,
-                    "",//url corrections
-                    liensPsup,//url psup
-                    "",//resume type formation
-                    "",//resume filiere
-                    autresLiens,
-                    ""
-                )
-                csv.append(nextLine)
-            }
-        }
-    }
-
-    override fun getDescriptifs(): DescriptifsFormationsMetiers {
-        if(descriptifs == null) {
-            descriptifs = DescriptifsLoader.loadDescriptifs(
-                onisepData,
-                dataSources
-            )
-        }
-        return descriptifs!!
-    }
-
-    override fun getSpecialites(): Specialites {
-        if(specialites == null) {
-            specialites = SpecialitesLoader.load(
-                dataSources,
-                psupData.getSpesBacs()
-            )
-        }
-        return specialites!!
-    }
-
-    override fun getAttendus(): Map<String, String> {
-        val attendusPsup =  Attendus.getAttendusSimplifies(
-            psupData
+    private fun exportFilieresPsupOrphelines() {
+        val usedflCods = getMpsIdToPsupFlIds().values.flatten().toHashSet()
+        usedflCods.addAll(readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
+            .filter { it.isNotEmpty() }
+            .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
+            .toSet()
         )
-        val mpsIds = getFormationsMpsIds()
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val labels = getLabels()
-        val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it))}
-        val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.attendusFront.orEmpty() }
-        return mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
-    }
+        val usedFlIntCodes = usedflCods.filter { it.startsWith(FILIERE_PREFIX) }.map { it.substring(2).toInt() }.toSet()
+        val unusedFlCods = (psupData.filActives - usedFlIntCodes).toList()
 
-    override fun getConseils(): Map<String, String> {
-        val attendusPsup =  Attendus.getAttendusSimplifies(
-            psupData
-        )
-        val mpsIds = getFormationsMpsIds()
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val labels = getLabels()
-        val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it))}
-        val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.conseilsFront.orEmpty() }
-        return mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
-    }
-
-    private fun mergeAttendusOrConseils(
-        allTexts: Map<String, String>,
-        mpsIds: List<String>,
-        mpsKeyToPsupKeys: Map<String, MutableSet<String>>,
-        labels: Map<String, String>
-    ): Map<String, String> {
-        val result = HashMap<String, String>()
-        mpsIds.forEach { id ->
-            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
-            val formuleVersLibelles = HashMap<String, MutableList<String>>()
-            psupKeys.forEach { psupKey ->
-                val formule = allTexts[psupKey]
-                val libelle = labels.getOrDefault(psupKey, "")
-                if (formule != null && !formule.contains("null") && formule.isNotBlank() && libelle.isNotBlank()) {
-                    val l = formuleVersLibelles.computeIfAbsent(formule) { ArrayList() }
-                    l.add(libelle)
-                }
-            }
-            val texte: String = if (formuleVersLibelles.size <= 1) {
-                formuleVersLibelles.keys.firstOrNull().orEmpty()
-            } else {
-                formuleVersLibelles.entries.joinToString("\n\n") { (formule, libelles) ->
-                    val libellesTexte = libelles.joinToString(" - ")
-                    "$libellesTexte: $formule"
-                }
-            }
-            if (texte.isNotBlank()) {
-                result[id] = texte
-            }
-        }
-        return result
-    }
-
-
-    override fun getCities(): List<Ville> {
-        val citiesOld = Serialisation.fromJsonFile(
-            dataSources.getSourceDataFilePath(DataSources.CITIES_FILE_PATH),
-            CitiesExternal::class.java
-        )
-
-        //indexation département --> villes du département
-        val mByDpt = HashMap<String, Pair<String, MutableList<Coords>>>()
-        citiesOld.cities()
-            .filter { c -> c.zip_code != null }
-            .forEach { c ->
-                var key = c.name()
-                key += c.zip_code().toInt() / 1000
-                val paireNomCoords = mByDpt.computeIfAbsent(key) { _ ->
-                    Pair.of(
-                        c.name(),
-                        ArrayList()
-                    )
-                }
-                paireNomCoords.right.add(
-                    Coords(
-                        c.zip_code(),
-                        c.insee_code(),
-                        c.gps_lat(),
-                        c.gps_lng()
-                    )
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_hors_mps.csv").use { csv ->
+            csv.appendHeaders(
+                listOf(
+                    "fl_cod",
+                    "code générique",
+                    "libellé",
                 )
-            }
-        val cities: HashMap<String, Ville> = HashMap()
-        mByDpt.values.forEach { value: Pair<String, MutableList<Coords>> ->
-            //dans un même département on regroupe toutes les coordonnées à nom fixé.
-            //Par exemple Lyon regroupe différents code insee pour ses différents arrondissements.
-            val nom = value.left
-            val coords = value.right
-            if (coords != null) {
-                val gpsCoords: List<LatLng> = coords
-                    .filter { it.gps_lat != null && it.gps_lng != null }
-                    .map {
-                        LatLng(
-                            it.gps_lat,
-                            it.gps_lng
+            )
+            unusedFlCods.forEach { flCod : Int ->
+                val filiere = psupData.formations.filieres[flCod]
+                if (filiere != null) {
+                    csv.append(
+                        listOf(
+                            flCod.toString(),
+                            filiere.gFrCod.toString(),
+                            filiere.libelle
                         )
-                    }
-                if (gpsCoords.isNotEmpty()) {
-                    coords.forEach { c: Coords ->
-                        if(
-                            c.insee_code != null
-                            && (!minimalTestDataSet || c.insee_code.endsWith("20"))
-                        ) {
-                            cities[c.insee_code] = Ville(
-                                c.insee_code,
-                                nom,
-                                gpsCoords
-                            )
-                        }
-                    }
+                    )
                 }
             }
+
         }
-        val voeuxSansCommune = getVoeux().flatMap { it.value }.filter { !cities.containsKey(it.codeCommune) }
-        voeuxSansCommune.forEach { v ->
-            if(v.lat != null && v.lng != null) {
-                cities[v.codeCommune] = Ville(
-                    v.codeCommune,
-                    v.commune,
-                    listOf(LatLng(v.lat!!, v.lng!!))
+    }
+
+    private fun exportRemoteSheets() {
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "remote_sheet_fiches.csv").use { csv ->
+            csv.appendHeaders(
+                listOf(
+                    REMOTE_SHEET_COLUMNS_MPS_ID,
+                    REMOTE_SHEET_COLUMNS_LABEL,
+                    REMOTE_SHEET_COLUMNS_GENERIC_ID,
+                    REMOTE_SHEET_COLUMNS_PSUP,
+                    REMOTE_SHEET_COLUMNS_DESCRIPTION,
+                    REMOTE_SHEET_COLUMNS_LIENS,
+                    REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS,
+                    REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS,
+                    REMOTE_SHEET_COLUMNS_MOTS_CLES,
+                    REMOTE_SHEET_COLUMNS_ATTENDUS,
+                    REMOTE_SHEET_COLUMNS_CONSEILS,
+                    REMOTE_SHEET_COLUMNS_ETUDES_COURTES,
+                    REMOTE_SHEET_COLUMNS_ETUDES_LONGUES
+                )
+            )
+            val mpsIds = getFormationsMpsIds()
+            val labels = getLabels()
+            val resumes = CsvTools.readCSV(
+                dataSources.getSourceDataFilePath(RESUMES_MPS_PATH),
+                ','
+            )
+            val liens = CsvTools.readCSV(
+                dataSources.getSourceDataFilePath(LIENS_MPS_PATH),
+                ','
+            )
+            val descriptifs = getDescriptifs()
+            val mpsIdsToPsupIds = getMpsIdToPsupFlIds()
+            val attendus = getAttendus()
+            val conseils = getConseils()
+            val durees = getDurees()
+            mpsIds.forEach { mpsId ->
+                val resume = resumes.find { it[RESUMES_MPS_ID_HEADER] == mpsId }.orEmpty()
+                val lien = liens.find { it[LIENS_MPS_PATH_HEADER_ID] == mpsId }.orEmpty()
+                val estOkEtudesCourtes = durees[mpsId]?.compareTo(3)
+                val estOkEtudesLongues = durees[mpsId]?.compareTo(3)
+                csv.append(
+                    listOf(
+                        mpsId,
+                        labels[mpsId].orEmpty(),
+                        resume[RESUMES_GENERIQUE_ID_HEADER].orEmpty(),
+                        mpsIdsToPsupIds[mpsId]?.joinToString(" ; ") ?: "",
+                        descriptifs.getDescriptifGeneralFront(mpsId),
+                        lien[LIENS_MPS_PATH_HEADER_EXTRAS].orEmpty(),
+                        "",//REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS
+                        "",//REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS
+                        "",//REMOTE_SHEET_COLUMNS_MOTS_CLES
+                        attendus[mpsId].orEmpty(),
+                        conseils[mpsId].orEmpty(),
+                        if (estOkEtudesCourtes != null && estOkEtudesCourtes <= 0) "X" else "",
+                        if (estOkEtudesLongues != null && estOkEtudesLongues >= 0) "X" else "",
+                    )
+                )
+
+            }
+        }
+
+        val resumesGeneriques = HashMap<String, Pair<String,String>>()
+        val resumes = CsvTools.readCSV(
+            dataSources.getSourceDataFilePath(RESUMES_MPS_PATH),
+            ','
+        )
+        for (line in resumes) {
+            val frCod = line[RESUMES_GENERIQUE_ID_HEADER]
+            val descFormation = line[RESUMES_RESUME_GENERIQUE_HEADER]
+            if (frCod != null && descFormation != null && frCod.isNotBlank() && descFormation.isNotBlank()) {
+                resumesGeneriques[frCod] = Pair.of(descFormation.trim(),line["intitule type formation"])
+            }
+        }
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "remote_sheet_generiques.csv").use { csv ->
+            csv.appendHeaders(
+                listOf(
+                    REMOTE_SHEET_COLUMNS_GENERIC_ID,
+                    REMOTE_SHEET_COLUMNS_LABEL,
+                    REMOTE_SHEET_COLUMNS_DESCRIPTION,
+                )
+            )
+            resumesGeneriques.forEach { (id, description) ->
+                csv.append(
+                    listOf(
+                        id, description.right, description.left
+                    )
                 )
             }
         }
-        return cities.values.toList()
-    }
-
-    override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
-        val urls = UrlsUpdater.updateUrls(
-            onisepData.metiersIdeo,
-            getMpsIdToIdeoIds(),
-            psupData.psupKeyToMpsKey,
-            onisepData.liensCarteParcoursup,
-            getFormationsMpsIds(),
-            getLabels(),
-            getLabelsOriginauxPsup(),
-            getLiensMpsExtras(),
-        )
-        return urls
-    }
-
-
-    private fun getLiensMpsIgnorer(): Map<String, Collection<String>> {
-        val lines = CsvTools.readCSV(
-            dataSources.getSourceDataFilePath(DataSources.LIENS_MPS_PATH),
-            ','
-        )
-        val result = HashMap<String, Collection<String>>()
-        //key	label	onisep	corrections	extras
-        for (line in lines) {
-            val key = line[LIENS_MPS_PATH_HEADER_ID] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_ID in $line")
-            val urls = line[LIENS_MPS_PATH_HEADER_IGNORER] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_IGNORER in $line")
-            val urlList = urls.split("\n")
-            result[key] = urlList
-        }
-        return result
-    }
-    private fun getLiensMpsExtras(): Map<String, Collection<String>> {
-        val lines = CsvTools.readCSV(
-            dataSources.getSourceDataFilePath(DataSources.LIENS_MPS_PATH),
-            ','
-        )
-        val result = HashMap<String, Collection<String>>()
-        for (line in lines) {
-            val key = line[LIENS_MPS_PATH_HEADER_ID] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_ID in $line")
-            val urls = line[LIENS_MPS_PATH_HEADER_EXTRAS] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_EXTRAS in $line")
-            val urlList = urls
-                .split("\n")
-                .map { s -> s.trim()}
-                .map { s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL) }
-                .map { s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL) }
-            result[key] = urlList
-        }
-        return result
-    }
-
-    override fun getGrilles(): Map<String, GrilleAnalyse> {
-        return GrilleAnalyse.getGrilles(psupData)
-    }
-
-    override fun getMotsClesFormations(): Map<String, List<String>> {
-
-        //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-        val motsClesPsup = psupData.motsCles
-
-        val motsCleMps = Serialisation.fromJsonFile(dataSources.getSourceDataFilePath(DataSources.MOTS_CLES_MPS_PATH), TagsFormations::class.java)
-        motsCleMps.tags.forEach { (key, value) ->
-            motsClesPsup.add(value, key)
-        }
-
-        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
-
-        val labels = getLabels()
-
-        val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
-
-        val mpsToIdeo = getMpsIdToIdeoIds()
-
-        val formationsIdeo = onisepData.formationsIdeo.associateBy { it.ideo }
-
-        val mpsIds = getFormationsMpsIds()
-
-        //le référentiel des formations front
-        mpsIds.forEach { formation ->
-            val label = labels.getOrDefault(formation, formation)
-            motsClesPsup.add(label, formation)
-            //recherche par clé
-            motsClesPsup.add(formation + "x", formation)
-            if (label.contains("L1")) {
-                motsClesPsup.add("licence", formation)
-            }
-            if (label.lowercase().contains("infirmier")) {
-                motsClesPsup.add("IFSI", formation)
-            }
-            if(mpsToIdeo.containsKey(formation)) {
-                val ideoKeys = mpsToIdeo[formation].orEmpty()
-                ideoKeys.forEach { ideoKey ->
-                    val formationIdeo = formationsIdeo[ideoKey]
-                    if (formationIdeo != null) {
-                        motsClesPsup.add(formationIdeo.motsCles, formation)
-                    }
-                }
-            }
-            formationsVersMetiers[formation]?.forEach { idMetierOuMetierAssocie ->
-                val labelMetier = labels[idMetierOuMetierAssocie]
-                if(labelMetier != null) {
-                    motsClesPsup.add(labelMetier, formation)
-                }
-            }
-        }
-        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
-        motsClesPsup.normalize()
-
-        return motsClesPsup.getKeyToTags()
-    }
-
-    override fun getMetiersMpsIds(): List<String> {
-        return onisepData.metiersIdeo.asSequence()
-            .map { it.ideo() }.toList().sorted()
-            .filter { !minimalTestDataSet || it.endsWith("7") }
-            .toList()
-    }
-
-    override fun getFormationsMpsIds(): List<String> {
-        if(formationsMpsIds == null) {
-            val result = HashSet(psupData.formationsMpsIds)
-            val toRemove = readCSV(dataSources.getSourceDataFilePath(DataSources.MPS_FORMATIONS_EXCLUES_PATH),',')
-                .filter { it.isNotEmpty() }
-                .map { it[DataSources.MPS_FORMATIONS_EXCLUES_HEADER].toString() }
-                .toSet()
-            result.removeAll(toRemove)
-            if(minimalTestDataSet) result.removeIf { !it.endsWith("11") }
-            formationsMpsIds = ArrayList(result)
-        }
-        return formationsMpsIds!!
-    }
-
-    override fun getApprentissage() : Collection<String> {
-        return psupData.getApprentissage().entries.filter { it.value > 0 }.map { it.key }
-    }
-
-    override fun getApprentissagePct() : Map<String,Int> {
-        return psupData.getApprentissage()
-    }
-
-    override fun getVoeux(): Map<String, Collection<Voeu>> {
-        val formationsMps = getFormationsMpsIds()
-        return psupData.getVoeuxGroupedByFormation(formationsMps)
-            .entries
-            .associate{ it.key to it.value.filter { itt -> !minimalTestDataSet || itt.id.endsWith("7") } }
-    }
-
-
-
-    override fun getCapacitesAccueil(): Map<String, Int> {
-        val result = HashMap<String, Int>()
-        val formationsToVoeux = psupData.getFormationToVoeux()
-        formationsToVoeux.forEach { (key, value) ->
-            result[key] = value.stream()
-                .mapToInt { f: Formation -> f.capacite }
-                .sum()
-        }
-        return result
 
     }
 
-
-
-    /**
-     * metiers vers filieres
-     * @return a map metiers -> filieres
-     */
-    private fun getMetiersVersFormationsExtendedWithGroups(
-        edgesMetiersFormations: List<Pair<String, String>>,
-        psupKeyToMpsKey: Map<String?, String>
-    ): Map<String, Set<String>> {
-        val metiersVersFormations: MutableMap<String, MutableSet<String>> = HashMap()
-
-        edgesMetiersFormations.forEach { p ->
-            metiersVersFormations.computeIfAbsent(p.left) { HashSet() }.add(p.right)
-        }
-
-        metiersVersFormations.keys.removeIf { k -> !isMetier(k) }
-
-        metiersVersFormations.values.forEach { strings ->
-            strings.removeIf { s -> !isFiliere(s) }
-        }
-
-        /* ajouts des las aux metiers PASS.*/
-        val passKey = gFlCodToMpsId(PASS_FL_COD)
-        val metiersPass = metiersVersFormations.entries
-                .filter { e ->  e.value.contains(passKey) }
-                .map { z -> z.key }
-                .toSet()
-        metiersPass.forEach { m ->
-            metiersVersFormations.computeIfAbsent(m) { HashSet() }.add(LAS_MPS_ID)
-        }
-        metiersVersFormations.entries.forEach { e ->
-            val mpsFormationsKeysBase = HashSet(e.value)
-            val mpsFormationsKeys = HashSet(mpsFormationsKeysBase)
-            mpsFormationsKeysBase.forEach { mpsKey ->
-                /* ajouts des groupes génériques aux metiers des formations correspondantes */
-                mpsFormationsKeys.add(psupKeyToMpsKey.getOrDefault(mpsKey, mpsKey))
-            }
-            e.setValue(mpsFormationsKeys)
-        }
-        return metiersVersFormations
-    }
-
-    override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
-        val metiersVersFormations = getMetiersVersFormationsExtendedWithGroups(
-            onisepData.edgesMetiersFormations,
-            psupData.psupKeyToMpsKey
-        )
-
-        val psupKeyToMpsKey = psupData.psupKeyToMpsKey
-        val formationsVersMetiers = HashMap<String, MutableSet<String>>()
-        metiersVersFormations.forEach { (metier, formations) ->
-            formations.forEach { f ->
-                val metiers = formationsVersMetiers.computeIfAbsent(f) { _ -> HashSet() }
-                metiers.add(metier)
-                val father = psupKeyToMpsKey[f]
-                if(father != null) {
-                    val metiersFather = formationsVersMetiers.computeIfAbsent(father) { _ -> HashSet() }
-                    metiersFather.addAll(metiers)
-                }
-            }
-        }
-
-        return  formationsVersMetiers
-    }
-
-    override fun getStatsFormation(): Map<String, StatsFormation> {
-        val ids = getFormationsMpsIds()
-        val result = HashMap<String, StatsFormation>()
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        ids.forEach { id ->
-            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
-            if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
-            val stat = StatsFormation(
-                statistiques.getStatsMoyGenParBac(id).entries.associateByTo(HashMap(), { it.key }, { it.value.middle50 }),
-                statistiques.getNbAdmisParBac(id),
-                statistiques.getPctAdmisParSpec(id),
-                psupData.getStatsFilSim(psupKeys)
-            )
-            result[id] = stat
-        }
-        return result
-    }
-
-    override fun getMpsIdToPsupFlIds(): Map<String, Collection<String>> {
-        val ids = getFormationsMpsIds()
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        return ids.associateWith { mpsKeyToPsupKeys.getOrDefault(it, setOf(it)) }
-    }
-
-    override fun getPsupIdToMpsId(): Map<String, String> {
-        return psupData.psupKeyToMpsKey
-    }
-
-    override fun getPaniersVoeux(): List<PanierVoeux> {
-        val idVoeuxConnus = getVoeux().values.flatten()
-            .map { it.id }.distinct().toSet()
-        return psupData.voeuxParCandidat
-            .map { p ->
-            val id = p.bac
-            val voeux = p.voeux.filter { v -> idVoeuxConnus.contains(v) }
-            PanierVoeux(id, voeux, p.lettres)
-        }.filter { it.voeux.isNotEmpty() }.take(if (minimalTestDataSet) 500 else Int.MAX_VALUE)
-    }
-
-    override fun getEdges(): List<Triple<String, String, Int>> {
-        val result = ArrayList<Triple<String, String, Int>>()
-
-        val psupToMps = HashMap(getPsupIdToMpsId())
-        psupToMps.values.retainAll(getFormationsMpsIds().toSet())
-
-        result.addAll(getEdges(onisepData.edgesAtomeToElement, TYPE_EDGE_ATOME_ELEMENT))
-        result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
-        result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
-
-        //injection patch JMB
-        val mpsFormationsMpsDomaines = loadLiensFormationsMpsDomainesMps(dataSources)
-        mpsFormationsMpsDomaines.forEach{ (src, dsts) ->
-            dsts.forEach{
-                result.add(Triple(src, it, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
-            }
-        }
-
-        result.addAll(getEdges(onisepData.edgesMetiersFormations, TYPE_EDGE_METIERS_FORMATIONS_PSUP))
-        result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
-        result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
-        result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
-        result.addAll(getEdges(psupToMps, TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS))
-
-        val metiersIds = getMetiersMpsIds()
-        result.removeIf { (src, _, _) -> isMetier(src) && !metiersIds.contains(src) }
-        result.removeIf { (_, dst, _) -> isMetier(dst) && !metiersIds.contains(dst) }
-
-        return result
-    }
-
-    private fun getEdges(
-        m: List<Pair<String, String>>,
-        t: Int
-    ): Collection<Triple<String, String, Int>> {
-        return m.map { (src, dst) -> Triple(src, dst, t) }
-    }
-
-    @Suppress("SameParameterValue")
-    private fun getEdges(edges: Map<String, String>, type: Int): List<Triple<String, String, Int>> {
-        return edges.entries.map { (src, dst) -> Triple(src, dst, type) }
-    }
-
-
-    override fun getDurees(): Map<String, Int?> {
-        val ids = getFormationsMpsIds()
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val result = HashMap<String,Int?>()
-        ids.forEach { id ->
-            var duree = psupData.getDuree(id, mpsKeyToPsupKeys)
-            if(duree == null && Constants.isPsupFiliere(id)) {
-                try {
-                    val codeFilierePsup = mpsIdToGFlCod(id)
-                    val filiere = psupData.filieres()[codeFilierePsup]
-                    if(filiere != null) {
-                        duree = psupData.getDuree(filiere)
-                    }
-                } catch (e: NumberFormatException) {
-                    //ignore
-                }
-            }
-            result[id] = duree
-        }
-        return result
-    }
-
-    override fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>> {
-        val annee = statistiques.annee.toString()
-        val result = HashMap<MoyenneGeneraleAdmisId, List<Int>>()
-        val bacs = getBacs().map { it.key }.toSet()
-
-        getFormationsMpsIds().forEach { id ->
-            statistiques.getStatsMoyGenParBac(id).forEach { (bac, stat) ->
-                if(bacs.contains(bac)) {
-                    val moyGenId = MoyenneGeneraleAdmisId(annee, id, bac)
-                    result[moyGenId] = stat.frequencesCumulees.toList()
-                }
-            }
-        }
-
-        return result
-    }
-
-    override fun getBacs(): List<Bac> {
-        val result = ArrayList(psupData.bacs)
-        if(!result.any { it.key == PsupStatistiques.TOUS_BACS_CODE_MPS }) {
-            result.add(Bac(PsupStatistiques.TOUS_BACS_CODE_MPS, "Non communiqué"))
-        }
-        return result
-    }
-
-    override fun getDomaines(): Taxonomie {
-        return onisepData.domaines
-    }
-
-
-    override fun getInterets() : Taxonomie {
-        return onisepData.interets
-
+    override fun exportDiagnostics() {
+        val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
+        exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
+        exportFilieresPsupOrphelines()
+        exportRemoteSheets()
+        exportLiens()
     }
 
 
