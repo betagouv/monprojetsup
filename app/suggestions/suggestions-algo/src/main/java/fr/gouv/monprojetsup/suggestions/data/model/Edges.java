@@ -94,19 +94,10 @@ public final class Edges {
         return backs == null ? 0 : backs.size();
     }
 
-
-
     public void putAll(List<Edge> edges, boolean reverse, double weight) {
         edges.forEach(edge ->
                 this.put(edge.src(), edge.dst(), reverse, weight));
     }
-
-    public void putAll(List<Edge> edges) {
-
-        putAll(edges, true, 1.0);
-
-    }
-
 
     public void clear() {
         edges.clear();
@@ -172,43 +163,6 @@ public final class Edges {
         backEdges.keySet().retainAll(useful);
         edges.values().forEach(m -> m.keySet().retainAll(useful));
         backEdges.values().forEach(m -> m.keySet().retainAll(useful));
-    }
-
-    public void createLabelledGraphFrom(Edges edgesKeys, Map<String, String> globalDict) {
-        clear();
-        edgesKeys.edges.forEach((k, m) -> {
-            String label = globalDict.get(k);
-            if (label == null) label = k;
-            String finalKey = label;
-            m.forEach((s, value) -> {
-                String val = globalDict.get(s);
-                if (val == null) val = s;
-                put(finalKey, val, false, value);
-            });
-        });
-
-    }
-
-    /**
-     * the specifics inherit from the generics
-     *
-     * @param poorToRich the edges from the specifics to the generics
-     * @param coef             the coefficient to apply to the weights
-     */
-    public void inheritEdgesFromRicherItem(List<Edge> poorToRich, double coef) {
-
-        poorToRich.forEach(e -> {
-            val poor = e.src();//e.g. las
-            val rich = e.dst();//e.g. not las
-            Map<String, Double> edgesFromRich = this.edges.get(rich);
-            if (edgesFromRich != null) {
-                edgesFromRich.forEach((target, weight) -> put(poor, target, false, weight* coef));
-            }
-            Map<String, Double> edgesToRich = this.backEdges.get(rich);
-            if (edgesToRich != null) {
-                edgesToRich.forEach((origin, weight) -> put(origin, poor, false, weight * coef));
-            }
-        });
     }
 
     public void replaceSpecificByGeneric(List<Edge> specificToGeneric, double coef) {
