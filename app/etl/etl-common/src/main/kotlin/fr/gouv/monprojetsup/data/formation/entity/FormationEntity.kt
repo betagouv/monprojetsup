@@ -76,9 +76,6 @@ class FormationEntity {
     @Column(name = "duree", nullable = true)
     var duree: Int? = null
 
-    @Column(nullable = true)
-    var las: String? = null
-
     @Column(nullable = false)
     var obsolete: Boolean = false
 
