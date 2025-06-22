@@ -50,9 +50,8 @@ import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_L
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_DOMAINES_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_FICHES_URL;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_FICHES_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_SIMPLE_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_SIMPLE_URL;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_METIERS_SIMPLE_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OLD_TO_NEW_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_TO_MPS_DOMAINE_DOMAINE_HEADER;
@@ -621,7 +620,7 @@ public class OnisepDataLoader {
                         ))
         );
 
-        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_SIMPLE_URL);
+        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_SIMPLE_PATH);
 
         //in this order, so that richer information with fiche wins
         formationsPerKey.putAll(
@@ -634,7 +633,7 @@ public class OnisepDataLoader {
                         ))
         );
 
-        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_FICHES_URL);
+        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_FICHES_PATH);
 
         return formationsPerKey.values().stream()
                 .collect(Collectors.toMap(
@@ -762,7 +761,7 @@ public class OnisepDataLoader {
                 FicheFormationIdeo.class
         );
         List<FicheFormationIdeo> result = Serialisation.fromZippedXml(
-                sources.getSourceDataFilePath(DataSources.IDEO_OD_FORMATIONS_FICHES_PATH),
+                sources.getSourceDataFilePath(IDEO_OD_FORMATIONS_FICHES_PATH),
                 listType
         );
         return result.stream()
