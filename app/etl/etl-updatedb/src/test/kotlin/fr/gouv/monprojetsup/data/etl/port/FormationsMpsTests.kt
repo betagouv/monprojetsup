@@ -27,18 +27,18 @@ class FormationsMpsTests : DataPortTest() {
     }
 
     @Test
-    fun `au plus 1 formation n'a pas de durée`() {
+    fun `les formations sont soient compatibles courtes soit compatible longues`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
-        val durees = mpsDataPort.getDurees()
-        val nbSansDuree = formationsIds.count { durees[it] == null }
-        assertThat(nbSansDuree).isLessThan(TestData.MAX_NB_FORMATIONS_SANS_DUREE)
-
+        val courtes = mpsDataPort.getCompatEtudesCourtes()
+        val longues = mpsDataPort.getCompatEtudesLongues()
+        val niCourtesNiLongues = formationsIds.filter { !courtes.contains(it) && !longues.contains(it) }
+        assertThat(niCourtesNiLongues).isEmpty() // toutes les formations sont compatibles courtes ou longues
     }
 
 
     @Nested
-    inner class CritersTests {
+    inner class CriteresTests {
         @Test
         fun `Les grilles d'analyse doivent être non vides`() {
             val grilles = mpsDataPort.getGrilles()

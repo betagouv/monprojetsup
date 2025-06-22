@@ -117,7 +117,8 @@ public class AlgoSuggestions {
         capacites.clear();
         nbAdmis.clear();
         voeuxCoords.clear();
-        durees.clear();
+        etudesCourtes.clear();
+        etudesLongues.clear();
         debugLabels.clear();
         statsSpecialites.clear();
         candidatsMetiers.clear();
@@ -469,9 +470,15 @@ public class AlgoSuggestions {
         return voeuxCoords.computeIfAbsent(fl, z -> data.getVoeuxCoords(fl));
     }
 
-    private final ConcurrentHashMap<String, @NotNull Integer> durees = new ConcurrentHashMap<>();
-    public int getDuree(String fl) {
-        return durees.computeIfAbsent(fl, z -> data.getDuree(fl));
+    private final ConcurrentHashMap<String, @NotNull Boolean> etudesCourtes = new ConcurrentHashMap<>();
+    public boolean isEtudesCourtes(String fl) {
+        return etudesCourtes.computeIfAbsent(fl, z -> data.getEtudeCourte(fl));
+    }
+
+    private final ConcurrentHashMap<String, @NotNull Boolean> etudesLongues = new ConcurrentHashMap<>();
+    public boolean isEtudesLongues(String fl) {
+        return etudesLongues.computeIfAbsent(fl, z -> data.getEtudeLongue(fl));
+
     }
 
     @Getter

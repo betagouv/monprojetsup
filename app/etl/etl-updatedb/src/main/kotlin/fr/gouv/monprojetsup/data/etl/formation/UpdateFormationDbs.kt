@@ -177,7 +177,8 @@ class UpdateFormationDbs(
          val debugLabels = mpsDataPort.getDebugLabels()
          val capacitesAccueil = mpsDataPort.getCapacitesAccueil()
          val stats = mpsDataPort.getStatsFormation()
-         val durees = mpsDataPort.getDurees()
+         val etudesCourtes = mpsDataPort.getCompatEtudesCourtes()
+         val etudesLongues = mpsDataPort.getCompatEtudesLongues()
          val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
          val mpsKeyToIdeoKeys = mpsDataPort.getMpsIdToIdeoIds()
 
@@ -240,13 +241,9 @@ class UpdateFormationDbs(
                  entity.stats = FormationEntity.StatsEntity()
              }
 
-             val duree = durees[id]
-             if (duree != null) {
-                 entity.duree = duree
-             } else {
-                 logger.info("formation $id n'a pas de duree")
-                 entity.duree = 3
-             }
+             entity.compatibleEtudeCourtes = etudesCourtes.contains(id)
+             entity.compatibleEtudeLongues = etudesLongues.contains(id)
+
              formationEntities.add(entity)
          }
 
