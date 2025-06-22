@@ -11,17 +11,6 @@ public class Constants {
     private static final String FILIERE_PREFIX = "fl";//like g_fl_cod
 
 
-    /**
-     * creates a clean string suitable for indexing in js
-     *
-     * @param dirty the dirty string
-     * @return the clean string
-     */
-    public static String cleanup(String dirty) {
-        return dirty;
-        //return dirty.replaceAll("[^a-zA-Z0-9]", "_");
-    }
-
     private Constants() {
     }
 }
