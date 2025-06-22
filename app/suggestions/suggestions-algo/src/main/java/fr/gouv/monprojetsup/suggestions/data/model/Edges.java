@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.data.model;
 
 import fr.gouv.monprojetsup.data.model.Edge;
-import fr.gouv.monprojetsup.suggestions.Constants;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -24,14 +23,12 @@ public final class Edges {
 
     public void put(String a, String b, boolean reverse, double weight) {
         //defaults to true for not creating problems in front
-        String ca = Constants.cleanup(a);
-        String cb = Constants.cleanup(b);
-        if(!ca.equals(cb)) {//no self loops
-            edges.computeIfAbsent(ca, z -> new HashMap<>()).put(cb, weight);
-            backEdges.computeIfAbsent(cb, z -> new HashMap<>()).put(ca, weight);
+        if(!a.equals(b)) {//no self loops
+            edges.computeIfAbsent(a, z -> new HashMap<>()).put(b, weight);
+            backEdges.computeIfAbsent(b, z -> new HashMap<>()).put(a, weight);
             if (reverse) {
-                edges.computeIfAbsent(cb, z -> new HashMap<>()).put(ca, weight);
-                backEdges.computeIfAbsent(ca, z -> new HashMap<>()).put(cb, weight);
+                edges.computeIfAbsent(b, z -> new HashMap<>()).put(a, weight);
+                backEdges.computeIfAbsent(a, z -> new HashMap<>()).put(b, weight);
             }
         }
     }
@@ -97,19 +94,10 @@ public final class Edges {
         return backs == null ? 0 : backs.size();
     }
 
-
-
     public void putAll(List<Edge> edges, boolean reverse, double weight) {
         edges.forEach(edge ->
                 this.put(edge.src(), edge.dst(), reverse, weight));
     }
-
-    public void putAll(List<Edge> edges) {
-
-        putAll(edges, true, 1.0);
-
-    }
-
 
     public void clear() {
         edges.clear();
@@ -177,53 +165,16 @@ public final class Edges {
         backEdges.values().forEach(m -> m.keySet().retainAll(useful));
     }
 
-    public void createLabelledGraphFrom(Edges edgesKeys, Map<String, String> globalDict) {
-        clear();
-        edgesKeys.edges.forEach((k, m) -> {
-            String label = globalDict.get(k);
-            if (label == null) label = k;
-            String finalKey = label;
-            m.forEach((s, value) -> {
-                String val = globalDict.get(s);
-                if (val == null) val = s;
-                put(finalKey, val, false, value);
-            });
-        });
-
-    }
-
-    /**
-     * the specifics inherit from the generics
-     *
-     * @param poorToRich the edges from the specifics to the generics
-     * @param coef             the coefficient to apply to the weights
-     */
-    public void inheritEdgesFromRicherItem(List<Edge> poorToRich, double coef) {
-
-        poorToRich.forEach(e -> {
-            val poor = e.src();//e.g. las
-            val rich = e.dst();//e.g. not las
-            Map<String, Double> edgesFromRich = this.edges.get(Constants.cleanup(rich));
-            if (edgesFromRich != null) {
-                edgesFromRich.forEach((target, weight) -> put(poor, target, false, weight* coef));
-            }
-            Map<String, Double> edgesToRich = this.backEdges.get(Constants.cleanup(rich));
-            if (edgesToRich != null) {
-                edgesToRich.forEach((origin, weight) -> put(origin, poor, false, weight * coef));
-            }
-        });
-    }
-
     public void replaceSpecificByGeneric(List<Edge> specificToGeneric, double coef) {
 
         specificToGeneric.forEach(e -> {
             val specific = e.src();//e.g. fl4041 = CMI meca
             val generic = e.dst();//e.g. fr22 = CMI en général
-            Map<String, Double> edgesFromSpecific = this.edges.get(Constants.cleanup(specific));
+            Map<String, Double> edgesFromSpecific = this.edges.get(specific);
             if (edgesFromSpecific != null) {
                 edgesFromSpecific.forEach((target, weight) -> put(generic, target, false, weight* coef));
             }
-            Map<String, Double> edgesToSpecific = this.backEdges.get(Constants.cleanup(specific));
+            Map<String, Double> edgesToSpecific = this.backEdges.get(specific);
             if (edgesToSpecific != null) {
                 edgesToSpecific.forEach((origin, weight) -> put(origin, generic, false, weight * coef));
             }
