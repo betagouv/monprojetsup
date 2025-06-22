@@ -283,7 +283,7 @@ public record FicheFormationIdeo(
                 }
             }
         }
-        if (nature_certificat != null) result.addAll(nature_certificat);
+        //trop large if (nature_certificat != null) result.addAll(nature_certificat);
         if (element_enseignement != null) result.addAll(element_enseignement);
         if (sousDomainesWeb != null) {
             for (SousDomaineWeb sousDomaine : sousDomainesWeb) {
