@@ -34,8 +34,8 @@ LOGGER.info(
 data_profil_eleve = data_repo.load_profiles(
     table_name=DB_SUGGESTIONS2_REF_EXPERT, config=CONFIG
 )
-profil_eleve_service = NaiveBayesMatrix(regularization_laplace=1.0)
-profil_eleve_service.init_from_profiles(data_profil_eleve)
+profil_expert_service = NaiveBayesMatrix(regularization_laplace=1.0)
+profil_expert_service.init_from_profiles(data_profil_eleve)
 
 LOGGER.info(
     f"Creating 'profil_eleve' service service based on ref table ${DB_SUGGESTIONS2_REF_LYCEEN}..."
@@ -49,6 +49,7 @@ profil_eleve_service.init_from_profiles(data_profil_eleve)
 
 LOGGER.info("Creating aggregate service...")
 service = MultiSuggestionsService(
+    profil_expert=profil_expert_service,
     profil_eleve=profil_eleve_service,
 )
 
