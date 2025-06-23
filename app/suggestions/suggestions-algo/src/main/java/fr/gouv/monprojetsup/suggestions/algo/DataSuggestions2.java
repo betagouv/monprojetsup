@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2MultiExplanationsDto;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,19 +13,21 @@ import java.util.stream.Collectors;
 
 public record DataSuggestions2(
         double affinity,
-        @Nullable ExplanationAndExamples explanations
+        @Nullable
+        Suggestions2MultiExplanationsDto explanations
 ) {
     public static Map<String, DataSuggestions2> build(
-            @NotNull List<String> keys, @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
+            @NotNull List<String> keys,
+            @NotNull List<Suggestions2MultiExplanationsDto> explanationsNaiveBayes
     ) {
         val explanationsNaiveBayesMap = explanationsNaiveBayes.stream().collect(
-                Collectors.toMap(ExplanationAndExamples::key, e -> e)
+                Collectors.toMap(Suggestions2MultiExplanationsDto::getKey, e -> e)
         );
         val result = new HashMap<>(explanationsNaiveBayes.stream().collect(
                 Collectors.toMap(
-                        ExplanationAndExamples::key,
+                        Suggestions2MultiExplanationsDto::getKey,
                         a -> new DataSuggestions2(
-                                a.affinity(),
+                                a.,
                                 explanationsNaiveBayesMap.get(a.key())
                         )
                 )

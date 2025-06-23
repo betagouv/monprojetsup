@@ -10,7 +10,7 @@ import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2MultiExplanationsDto;
 import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -385,7 +385,7 @@ public class AlgoSuggestions {
     synchronized public List<ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
             @NotNull List<String> keys,
-            @NotNull List<ExplanationAndExamples> explanationsNaiveBayes
+            @NotNull  List<Suggestions2MultiExplanationsDto> explanationsNaiveBayes
     ) {
         if(profile == null) {
             return List.of();
@@ -399,11 +399,10 @@ public class AlgoSuggestions {
                                 fl,
                                 new DataSuggestions2(
                                         NO_MATCH_SCORE,
-                                        new ExplanationAndExamples(
+                                        new Suggestions2MultiExplanationsDto(
                                                 fl,
-                                                NO_MATCH_SCORE,
-                                                List.of(Explanation.getDebugExplanation("pas d'explication")),
-                                                List.of())
+                                                Map.of()
+                                        )
                                 )
                         )
                 )

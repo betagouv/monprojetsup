@@ -12,7 +12,9 @@ class ServerStatus(Enum):
 
 class ResponseHeader(BaseModel):
     status: ServerStatus = ServerStatus.OK
-    error: Optional[str] = Field(default=None, description="explication de l'erreur si status != 0")
+    error: Optional[str] = Field(
+        default=None, description="explication de l'erreur si status != 0"
+    )
     userMessage: Optional[str] = Field(
         default=None, description="message à afficher à l'utilisateur final."
     )
@@ -20,7 +22,10 @@ class ResponseHeader(BaseModel):
 
 class Score(BaseModel):
     key: str = Field(examples=["fl2014"])
-    scores: Dict[str, float] = Field(description="Scores obtenus aux différents critères.")
+    scores: Dict[str, float] = Field(
+        description="Scores obtenus aux différents critères.",
+        examples=[{"expert": 0.5, "eleve": 0.3}],
+    )
 
 
 class SuggestionResponse(BaseModel):
@@ -29,7 +34,9 @@ class SuggestionResponse(BaseModel):
 
 
 class ExplanationResponseScore(BaseModel):
-    key: str = Field(description="Identifiant de la feature responsable de la différence de score")
+    key: str = Field(
+        description="Identifiant de la feature responsable de la différence de score"
+    )
     log_influence: float = Field(
         description="Influence de cette feature sur le score, en échelle logarithmique"
     )

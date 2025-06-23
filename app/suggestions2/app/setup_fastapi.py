@@ -49,8 +49,8 @@ profil_eleve_service.init_from_profiles(data_profil_eleve)
 
 LOGGER.info("Creating aggregate service...")
 service = MultiSuggestionsService(
-    profil_expert=profil_expert_service,
-    profil_eleve=profil_eleve_service,
+    expert=profil_expert_service,
+    eleve=profil_eleve_service,
 )
 
 LOGGER.info("Creating endpoint...")
