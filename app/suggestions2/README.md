@@ -19,7 +19,8 @@ Récapitulatif des variables d'environnement:
 |`DB_SUGGESTIONS2_USERNAME`| Nom d'utilisateur pour accéder à la BDD | :x: Non |
 |`DB_SUGGESTIONS2_PASSWORD`| Mot de passe pour accéder à la BDD | :x: Non |
 |`DB_SUGGESTIONS2_HOSTNAME`| Nom de l'hôte de la base de données | :white_check_mark: Oui, défault: `localhost`|
-|`DB_SUGGESTIONS2_PROFIL_TABLE`| Nom de la table contenant les données de référence | :white_check_mark: Oui, défault: `profil_reference`|
+|`DB_SUGGESTIONS2_REF_EXPERT`| Nom de la table contenant les données de référence experts | :white_check_mark: Oui, défault: `profil_reference`|
+|`DB_SUGGESTIONS2_REF_LYCEEN`| Nom de la table contenant les données de référence lycéens | :white_check_mark: Oui, défault: `profil_eleve`|
 
 
 ### Lancer l'application manuellement
@@ -61,7 +62,7 @@ pip install --upgrade -r ./requirements.txt
 
 En mode dev:
 ```bash
-fastapi dev app/main.py --port 5445
+fastapi dev app/setup_fastapi.py.py --port 5445
 ```
 
 L'application se recharge automatiquement après modification des fichiers
