@@ -415,7 +415,7 @@ public class AffinityEvaluator {
     private double getBonusDuree(String fl, Explanations expl) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
         boolean courte = algo.isEtudesCourtes(fl);
-        boolean longue = algo.isEtudesCourtes(fl);
+        boolean longue = algo.isEtudesLongues(fl);
 
         final double result;
         switch (pf.duree().toLowerCase()) {
