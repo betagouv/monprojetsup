@@ -11,7 +11,10 @@ class SuggestionsFormationsService(
     val suggestionHttpClient: SuggestionHttpClient,
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
-    fun recupererLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.AvecProfilExistant, idsFormations: List<String>): SuggestionsPourUnProfil {
+    fun recupererLesSuggestionsPourUnProfil(
+        profilEleve: ProfilEleve.AvecProfilExistant,
+        idsFormations: List<String>,
+    ): SuggestionsPourUnProfil {
         return suggestionHttpClient.recupererLesSuggestions(profilEleve, idsFormations)
     }
 }

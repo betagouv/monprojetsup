@@ -21,7 +21,6 @@ class FormationIdEntity {
 
     @Column(name = "obsolete", nullable = false)
     var obsolete: Boolean = false
-
 }
 
 @Entity

@@ -15,5 +15,4 @@ interface FormationJPARepository : JpaRepository<FormationCourteEntity, String> 
 
     @Query("SELECT formation.id FROM FormationIdEntity formation WHERE formation.obsolete = false")
     fun findNonObsoleteIds(): List<String>
-
 }
