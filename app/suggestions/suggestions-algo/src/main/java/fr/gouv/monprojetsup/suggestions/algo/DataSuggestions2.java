@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2SuggestionsDto;
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.NaiveBayesExplanations;
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2ExplanationsDto;
+import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesSuggestions;
+import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesExplanations;
+import fr.gouv.monprojetsup.suggestions.entities.Suggestions2ExplanationsDto;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +30,12 @@ public record DataSuggestions2(
                 Collectors.toMap(Suggestions2ExplanationsDto::getKey, e -> e)
         );
         val affinitiesMap = explanationsNaiveBayes.getAffinities().stream().collect(
-                Collectors.toMap(Suggestions2SuggestionsDto::getKey, e -> e)
+                Collectors.toMap(NaiveBayesSuggestions::getKey, e -> e)
         );
         return explanationsNaiveBayes.getAffinities().stream()
                 .filter(sugg -> keys.contains(sugg.getKey()))
                 .collect(Collectors.toMap(
-                Suggestions2SuggestionsDto::getKey,
+                NaiveBayesSuggestions::getKey,
                 sugg -> {
                     val key = sugg.getKey();
                     val affinity = affinitiesMap.get(key);

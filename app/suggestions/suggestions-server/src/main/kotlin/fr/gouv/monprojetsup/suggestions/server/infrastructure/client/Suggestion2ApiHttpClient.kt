@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2SuggestionsDto
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2Answer
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.NaiveBayesExplanations
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2ExplanationsDto
+import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesSuggestions
+import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesExplanations
+import fr.gouv.monprojetsup.suggestions.entities.Suggestions2ExplanationsDto
 import fr.gouv.monprojetsup.suggestions.server.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2Service
 import fr.gouv.monprojetsup.suggestions.server.logging.MpsLogger
@@ -27,7 +26,12 @@ class Suggestion2ApiHttpClient(
     override val logger: MpsLogger,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), Suggestions2Service {
 
-    override fun recupererLesSuggestions(request: GetAffinitiesServiceDTO.Request): List<Suggestions2SuggestionsDto> {
+    data class Suggestions2Answer(
+        val header: ResponseHeader = ResponseHeader(),
+        val scores: List<NaiveBayesSuggestions> = emptyList()
+    )
+
+    override fun recupererLesSuggestions(request: GetAffinitiesServiceDTO.Request): List<NaiveBayesSuggestions> {
         if(!enabled) {
             logger.info("SUGGESTIONS2", "recupererLesSuggestions: désactivé")
             return emptyList()
@@ -49,7 +53,7 @@ class Suggestion2ApiHttpClient(
     data class Explanations2Answer(
         val header : ResponseHeader =  ResponseHeader(),
         val explanations: List<Suggestions2ExplanationsDto> = emptyList(),
-        val scores: List<Suggestions2SuggestionsDto> = emptyList()
+        val scores: List<NaiveBayesSuggestions> = emptyList()
     )
 
     override fun recupererLesExplications(request: GetExplanationsAndExamplesServiceDTO): NaiveBayesExplanations {
@@ -65,7 +69,9 @@ class Suggestion2ApiHttpClient(
         val explanationDto =
             post<Explanations2Answer>(
                 url = "$baseUrl/explanations",
-                requeteDTO = GetExplanationsAndExamplesServiceDTO.Request(profil, keys),
+                requeteDTO = GetExplanationsAndExamplesServiceDTO.Request(
+                    request.profile,
+                    request.keys),
             )
         if(explanationDto.header.status == 0) {
             logger.info("SUGGESTIONS2", "recupererLesExplications: appel réussi à l'API Suggestions2")
