@@ -39,8 +39,7 @@ class RecupererFicheFormationService(
                 classe = profilEleve?.classe,
             )
         return if (profilEleve != null) {
-            val idsFormations = formationRepository.recupererIdsFormationsNonObsoletes()
-            val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve, idsFormations)
+            val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve)
             val (explications, exemplesDeMetiers) =
                 recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                     profilEleve,

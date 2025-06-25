@@ -13,9 +13,4 @@ class RecupererFormationsService(
     fun recupererFormations(idsFormations: List<String>): List<FormationCourte> {
         return formationRepository.recupererLesNomsDesFormations(idsFormations)
     }
-
-    @Transactional(readOnly = true)
-    fun recupererIdsFormationsNonObsoletes(): List<String> {
-        return formationRepository.recupererIdsFormationsNonObsoletes()
-    }
 }

@@ -67,8 +67,7 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
-        val idsFormations = recupererFormationsService.recupererIdsFormationsNonObsoletes()
-        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve, idsFormations)
+        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(
                 liste = suggestions.formations,
@@ -105,8 +104,7 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
-        val idsFormations = recupererFormationsService.recupererIdsFormationsNonObsoletes()
-        val suggestionsPourLeProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve, idsFormations)
+        val suggestionsPourLeProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
 
         val formationsCourtesTriees =
             getListeFormationsCourtesTriees(
@@ -133,8 +131,7 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
-        val idsFormations = recupererFormationsService.recupererIdsFormationsNonObsoletes()
-        val suggestionsPourLeProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve, idsFormations)
+        val suggestionsPourLeProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
 
         val formationsCourtesTriees =
             getListeFormationsCourtesTriees(
@@ -224,8 +221,7 @@ class FormationController(
                 else -> request.profil.toProfilExistant()
             }
 
-        val idsFormations = recupererFormationsService.recupererIdsFormationsNonObsoletes()
-        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve, idsFormations)
+        val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val formations =
             recupererFichesFormationsService.recupererFichesFormationPourProfil(
                 profilEleve = profilEleve,

@@ -13,6 +13,9 @@ interface SuggestionHttpClient {
         idsFormations: List<String>,
     ): SuggestionsPourUnProfil
 
+    @Throws(MonProjetSupInternalErrorException::class)
+    fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil
+
     @Throws(MonProjetSupInternalErrorException::class, MonProjetSupIllegalStateErrorException::class)
     fun recupererLesExplications(
         profilEleve: ProfilEleve.AvecProfilExistant,

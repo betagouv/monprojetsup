@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorEx
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDTO
@@ -25,6 +26,7 @@ class SuggestionApiHttpClient(
     override val objectMapper: ObjectMapper,
     override val httpClient: OkHttpClient,
     override val logger: MonProjetSupLogger,
+    val formationRepository: FormationRepository,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesSuggestions(
@@ -38,6 +40,10 @@ class SuggestionApiHttpClient(
             )
         return reponseDTO.toAffinitesPourProfil()
     }
+
+    @Throws(MonProjetSupInternalErrorException::class)
+    override fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant) =
+        recupererLesSuggestions((profilEleve), formationRepository.recupererIdsFormationsNonObsoletes())
 
     @Throws(MonProjetSupInternalErrorException::class, MonProjetSupIllegalStateErrorException::class)
     override fun recupererLesExplications(
