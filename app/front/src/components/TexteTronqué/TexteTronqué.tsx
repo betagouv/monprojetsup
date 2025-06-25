@@ -1,6 +1,12 @@
 import { type TexteTronquéProps } from "./TexteTronqué.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { useEffect, useRef, useState } from "react";
+import remarkHtml from 'remark-html'
+import remarkParse from 'remark-parse'
+import { text } from "stream/consumers";
+import {read} from 'to-vfile'
+import {unified} from 'unified'
+import parse from 'html-react-parser';
 
 const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   const [afficherEnEntier, setAfficherEnEntier] = useState(false);
@@ -28,14 +34,20 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
 
   if (!texte || texte === "") return null;
 
+  // Convertir le texte en HTML si nécessaire
+  
+  const texteHtml = unified()
+  .use(remarkParse)
+  .use(remarkHtml).processSync(texte).toString();
+  
   return (
     <div className="justify-start">
-      <p
+      <div
         className={`${classEnFonctionDeAfficherEnEntier()} mb-2 whitespace-pre-line`}
         ref={ref}
       >
-        {texte}
-      </p>
+        {parse(texteHtml)}
+      </div>
       {afficherBoutonLireLaSuite && (
         <button
           className="fr-link inline border-0 border-b border-solid border-[--underline-img] text-sm hover:border-b-[1.5px] hover:!bg-inherit"
