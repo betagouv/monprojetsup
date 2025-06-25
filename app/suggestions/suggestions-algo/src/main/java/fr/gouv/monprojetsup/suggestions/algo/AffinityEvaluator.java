@@ -325,7 +325,7 @@ public class AffinityEvaluator {
             SCORES_SUGGESTIONS2.forEach((source, bonus) -> {
                 Double score = dataFromSuggestion2.scores().get(source);
                 if (score != null) {
-                    scores.put(fl, score);
+                    scores.put(bonus, score);
                 }
             });
             if(expl != null && dataFromSuggestion2.explanations() != null) {

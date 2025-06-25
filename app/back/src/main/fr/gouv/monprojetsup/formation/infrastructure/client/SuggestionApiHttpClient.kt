@@ -27,11 +27,11 @@ class SuggestionApiHttpClient(
     override val logger: MonProjetSupLogger,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil {
+    override fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant, idsFormations: List<String>): SuggestionsPourUnProfil {
         val reponseDTO =
             post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve)),
+                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve), keys = idsFormations),
             )
         return reponseDTO.toAffinitesPourProfil()
     }

@@ -148,11 +148,9 @@ public record ReferenceCases(
         }
     }
 
-    public static String evaluate(ProfileDTO pf, String expectation, Map<String,String> labels)
+    public static String evaluate(ProfileDTO pf, String expectation, Map<String,String> labels, List<String> keys)
             throws IOException, InterruptedException {
-        val responseExpl =
-
-                getExplanationsAndExamples(pf, expectation);
+        val responseExpl = getExplanationsAndExamples(pf, expectation);
         if (responseExpl.liste().size() != 1)
             throw new RuntimeException("unexpected number of explanations");
 
@@ -252,10 +250,10 @@ public record ReferenceCases(
 
 
     public @Nullable ReferenceCase getSuggestionsAndExplanations(
-            ReferenceCase refCase, Map<String, String> labels
+            ReferenceCase refCase, Map<String, String> labels, List<String> keys
     ) throws IOException, InterruptedException {
         if (refCase.pf() == null) return null;
-        List<GetAffinitiesServiceDTO.Affinity> suggestions = callSuggestionsService(refCase.pf());
+        List<GetAffinitiesServiceDTO.Affinity> suggestions = callSuggestionsService(refCase.pf(), keys);
         suggestions.removeIf(s -> s.affinite() < 0.01);
         suggestions = suggestions.stream().limit(20).toList();
 
@@ -302,7 +300,7 @@ public record ReferenceCases(
     }
 
 
-    public ReferenceCases getSuggestionsAndExplanations(Integer restrictToIndex, Map<String, String> labels) {
+    public ReferenceCases getSuggestionsAndExplanations(Integer restrictToIndex, Map<String, String> labels, List<String> keys) {
         AtomicInteger i = new AtomicInteger(0);
 
         val results = new ReferenceCases();
@@ -320,7 +318,7 @@ public record ReferenceCases(
                         String nameCase = "case " + (i.incrementAndGet());
                         name = (name == null) ? nameCase : nameCase + name.substring(0, min(20, name.length()));
                         LOGGER.info("getting suggestion and explanations for " + name);
-                        return getSuggestionsAndExplanations(refCase, labels);
+                        return getSuggestionsAndExplanations(refCase, labels, keys);
                     } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -360,9 +358,11 @@ public record ReferenceCases(
         return new Gson().fromJson(response, GetExplanationsAndExamplesServiceDTO.Response.class);
     }
 
-    public static List<GetAffinitiesServiceDTO.Affinity> callSuggestionsService(ProfileDTO pf) throws IOException, InterruptedException {
+    public static List<GetAffinitiesServiceDTO.Affinity> callSuggestionsService(ProfileDTO pf, List<String> keys) throws IOException, InterruptedException {
         String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions";
-        String response = post(url, new GetAffinitiesServiceDTO.Request(pf, true));
+        String response = post(url, new GetAffinitiesServiceDTO.Request(
+                pf, keys, true)
+        );
         return new Gson().fromJson(response, GetAffinitiesServiceDTO.Response.class).affinites();
     }
 

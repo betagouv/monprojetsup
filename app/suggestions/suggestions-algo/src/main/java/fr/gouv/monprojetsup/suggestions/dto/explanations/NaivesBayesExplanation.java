@@ -36,7 +36,7 @@ public record NaivesBayesExplanation(
         sb.append(" : ");
         scores.forEach(d -> sb
                 .append(debugLabels.getOrDefault(d.key(),d.key())).append(" ")
-                .append("(li ")
+                .append("(influence ")
                 .append(d.logInfluence()).append(" cat ")
                 .append(d.categorie())
                 .append(") ")
