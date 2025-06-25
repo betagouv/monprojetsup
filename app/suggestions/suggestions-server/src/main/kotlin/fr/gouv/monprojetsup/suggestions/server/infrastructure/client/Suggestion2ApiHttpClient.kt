@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.server.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.monprojetsup.suggestions.algo.NaiveBayesExplanation
+import fr.gouv.monprojetsup.suggestions.algo.NaiveBayesExplanations
+import fr.gouv.monprojetsup.suggestions.algo.NaiveBayesScore
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader
-import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesExplanations
-import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesSuggestions
-import fr.gouv.monprojetsup.suggestions.entities.Suggestions2ExplanationsDto
 import fr.gouv.monprojetsup.suggestions.server.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2Service
 import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2ServiceRequest
@@ -28,10 +28,10 @@ class Suggestion2ApiHttpClient(
 
     data class Suggestions2Answer(
         val header: ResponseHeader = ResponseHeader(),
-        val scores: List<NaiveBayesSuggestions> = emptyList()
+        val scores: List<NaiveBayesScore> = emptyList()
     )
 
-    override fun recupererLesSuggestions(request: GetAffinitiesServiceDTO.Request): List<NaiveBayesSuggestions> {
+    override fun recupererLesSuggestions(request: GetAffinitiesServiceDTO.Request): List<NaiveBayesScore> {
         if(!enabled) {
             logger.info("SUGGESTIONS2", "recupererLesSuggestions: désactivé")
             return emptyList()
@@ -52,8 +52,8 @@ class Suggestion2ApiHttpClient(
 
     data class Explanations2Answer(
         val header : ResponseHeader =  ResponseHeader(),
-        val explanations: List<Suggestions2ExplanationsDto> = emptyList(),
-        val scores: List<NaiveBayesSuggestions> = emptyList()
+        val explanations: List<NaiveBayesExplanation> = emptyList(),
+        val scores: List<NaiveBayesScore> = emptyList()
     )
 
     override fun recupererLesExplications(request: Suggestions2ServiceRequest): NaiveBayesExplanations {

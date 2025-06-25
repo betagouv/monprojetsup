@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.entities.NaiveBayesExplanations;
 import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

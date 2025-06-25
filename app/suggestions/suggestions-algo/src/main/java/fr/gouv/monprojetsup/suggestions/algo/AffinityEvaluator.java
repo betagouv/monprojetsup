@@ -250,7 +250,7 @@ public class AffinityEvaluator {
         expl2.add(getDebugExplanation(calculScoreDetails.toString()));
 
         if(dataSuggestions2 != null && dataSuggestions2.explanations() != null) {
-            dataSuggestions2.explanations().getExplanations().forEach(
+            dataSuggestions2.explanations().explanations().forEach(
                     (source, explNaiveBayes) -> {
                         if(explNaiveBayes != null) {
                             expl2.add(
@@ -329,7 +329,7 @@ public class AffinityEvaluator {
                 }
             });
             if(expl != null && dataFromSuggestion2.explanations() != null) {
-                val naiveBayesExplanations = dataFromSuggestion2.explanations().getExplanations();
+                val naiveBayesExplanations = dataFromSuggestion2.explanations().explanations();
                 expl.explanations.addAll(
                         naiveBayesExplanations.values().stream()
                                 .map(Explanation::getNaiveBayesExplanation)
