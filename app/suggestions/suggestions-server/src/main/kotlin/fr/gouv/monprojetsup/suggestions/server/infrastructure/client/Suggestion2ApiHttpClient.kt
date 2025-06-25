@@ -61,11 +61,6 @@ class Suggestion2ApiHttpClient(
             logger.info("SUGGESTIONS2", "recupererLesExplications: désactivé")
             return NaiveBayesExplanations()
         }
-        val suggestionsDto =
-            post<Suggestions2Answer>(
-                url = "$baseUrl/suggestions",
-                requeteDTO = request,
-            )
         val explanationDto =
             post<Explanations2Answer>(
                 url = "$baseUrl/explanations",
@@ -74,7 +69,7 @@ class Suggestion2ApiHttpClient(
         if(explanationDto.header.status == 0) {
             logger.info("SUGGESTIONS2", "recupererLesExplications: appel réussi à l'API Suggestions2")
             return NaiveBayesExplanations(
-                suggestionsDto.scores,
+                explanationDto.scores,
                 explanationDto.explanations
             )
         } else {

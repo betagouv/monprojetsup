@@ -28,7 +28,8 @@ import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_I
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MOTS_CLES_MPS_PATH
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_EXCLUES_HEADER
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_EXCLUES_PATH
-import fr.gouv.monprojetsup.data.etl.loaders.DataSources.PROFILS_REFERENCE_MPS_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.PROFILS_REFERENCE_EXPERT_MPS_PATH
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.PROFILS_REFERENCE_LYCEEN_MPS_PATH
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_ATTENDUS
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_CONSEILS
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_DESCRIPTION
@@ -356,15 +357,23 @@ class MpsDataFromFiles(
     }
 
 
-    override fun getProfilsReference(): List<Map<String,String>> {
-        return CsvTools.readCSV(dataSources.getSourceDataFilePath(PROFILS_REFERENCE_MPS_PATH), ',')
+    override fun getProfilsReference(source: String): List<Map<String,String>> {
+        when(source) {
+            "expert" -> {
+                return CsvTools.readCSV(dataSources.getSourceDataFilePath(PROFILS_REFERENCE_EXPERT_MPS_PATH), ',')
+            }
+            "lyceen" -> {
+                return CsvTools.readCSV(dataSources.getSourceDataFilePath(PROFILS_REFERENCE_LYCEEN_MPS_PATH), ',')
+            }
+        }
+        throw IllegalArgumentException("Source de profils inconnue: $source")
     }
 
     override fun getCompatEtudesCourtes(): Set<String> {
         return if(useRemoteSheet) {
             formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ETUDES_COURTES).filter { it.value.isNotBlank() }.keys
         } else {
-            val durees = getDurees();
+            val durees = getDurees()
             durees.entries.filter { it.value != null && it.value!! <= 3 }.map { it.key }.toSet()
         }
     }
@@ -373,7 +382,7 @@ class MpsDataFromFiles(
         return if(useRemoteSheet) {
             formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_ETUDES_LONGUES).filter { it.value.isNotBlank() }.keys
         } else {
-            val durees = getDurees();
+            val durees = getDurees()
             durees.entries.filter { it.value != null && it.value!! >= 3 }.map { it.key }.toSet()
         }
     }
@@ -833,7 +842,7 @@ class MpsDataFromFiles(
     }
 
 
-     fun getDurees(): Map<String, Int?> {
+     private fun getDurees(): Map<String, Int?> {
         return if(useRemoteSheet) {
             val lines = formationsRemoteSheet.lines()
              lines.associate {

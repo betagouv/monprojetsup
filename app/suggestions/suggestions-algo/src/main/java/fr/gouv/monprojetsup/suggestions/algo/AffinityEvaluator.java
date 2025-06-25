@@ -227,10 +227,10 @@ public class AffinityEvaluator {
         StringBuilder calculScoreDetails = new StringBuilder();
         calculScoreDetails.append("Score Total pour ").append(fl).append(" :");
         calculScoreDetails.append(df2.format(affinite.affinite()));
-        calculScoreDetails.append(" obtenu comme le produit de [ ");
+        calculScoreDetails.append(" obtenu comme le produit des subscores [");
 
         List<Map.Entry<String, Double>> entries = new ArrayList<>(subScores.entrySet());
-        entries.sort(Comparator.comparing(e -> -e.getValue()));
+        entries.sort(Comparator.comparing(e -> cfg.getMinMultipliers().get(e.getKey())));
         entries.forEach(e -> {
             val key = e.getKey();
             double weight = cfg.getMinMultipliers().get(key);
@@ -240,7 +240,7 @@ public class AffinityEvaluator {
                             + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
             ));
             calculScoreDetails.append(" ");
-            calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+            calculScoreDetails.append(df2.format(getMultiplier(e.getKey(), e.getValue())));
             calculScoreDetails.append(" (");
             calculScoreDetails.append(label);
             calculScoreDetails.append(") , ");

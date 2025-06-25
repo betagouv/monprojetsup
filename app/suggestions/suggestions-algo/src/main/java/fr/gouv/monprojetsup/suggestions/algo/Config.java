@@ -65,12 +65,12 @@ public final class Config {
     public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
 
 
-    static final String NAIVE_BAYES_ELEVE = "eleve";
+    static final String NAIVE_BAYES_LYCEEN = "lyceen";
     static final String NAIVE_BAYES_EXPERT = "expert";
     public static final String BONUS_NAIVE_BAYES_EXPERT = "nbayes_" + NAIVE_BAYES_EXPERT;
-    public static final String BONUS_NAIVE_BAYES_ELEVE = "nbayes_" + NAIVE_BAYES_ELEVE;
+    public static final String BONUS_NAIVE_BAYES_LYCEEN = "nbayes_" + NAIVE_BAYES_LYCEEN;
     public static final Map<String, String> SCORES_SUGGESTIONS2 = Map.of(
-            NAIVE_BAYES_ELEVE, BONUS_NAIVE_BAYES_ELEVE,
+            NAIVE_BAYES_LYCEEN, BONUS_NAIVE_BAYES_LYCEEN,
             NAIVE_BAYES_EXPERT, BONUS_NAIVE_BAYES_EXPERT
     );
 
@@ -89,8 +89,8 @@ public final class Config {
                 new SimpleEntry<>(BONUS_TYPE_BAC, "type de bac"),
                 new SimpleEntry<>(BONUS_APPRENTISSAGE, "preférences apprentissage"),
                 new SimpleEntry<>(BONUS_GEO, "préférences géographiques"),
-                new SimpleEntry<>(BONUS_NAIVE_BAYES_EXPERT, "proximité profils de référence experts (NaiveBayes)"),
-                new SimpleEntry<>(BONUS_NAIVE_BAYES_ELEVE, "proximité profils de référence élèves (NaiveBayes)")
+                new SimpleEntry<>(BONUS_NAIVE_BAYES_EXPERT, "profils de référence experts (NaiveBayes)"),
+                new SimpleEntry<>(BONUS_NAIVE_BAYES_LYCEEN, "profils de référence lycéens (NaiveBayes)")
         ).collect(Collectors.toMap(
                 Map.Entry::getKey,
                 Map.Entry::getValue
@@ -120,7 +120,7 @@ public final class Config {
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
             entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI),
-            entry(BONUS_NAIVE_BAYES_ELEVE, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_ELEVE),
+            entry(BONUS_NAIVE_BAYES_LYCEEN, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_ELEVE),
             entry(BONUS_NAIVE_BAYES_EXPERT, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_EXPERT)
     );
 

@@ -92,28 +92,11 @@ def none_to_empty_list(val: List[Any] | None) -> List[Any]:
 
 class StudentDbRow(BaseModel):
     id: str
-    situation: Literal["AUCUNE_IDEE", "QUELQUES_PISTES", "PROJET_PRECIS"] | None
-    classe: Literal["SECONDE", "PREMIERE", "TERMINALE"] | None
-    id_baccalaureat: (
-        Literal[
-            "Générale",
-            "E",
-            "P",
-            "PA",
-            "S2TMD",
-            "ST2S",
-            "STAV",
-            "STD2A",
-            "STHR",
-            "STI2D",
-            "STL",
-            "STMG",
-            "NC",
-        ]
-        | None
-    )
-    duree_etudes_prevue: Literal["INDIFFERENT", "AUCUNE_IDEE", "COURTE", "LONGUE"] | None
-    alternance: Literal["PAS_INTERESSE", "INTERESSE", "INDIFFERENT", "TRES_INTERESSE"] | None
+    situation: str | None
+    classe: str | None
+    id_baccalaureat: str | None
+    duree_etudes_prevue: str | None
+    alternance: str | None
     specialites: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
     domaines: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
     centres_interets: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
@@ -132,9 +115,14 @@ class StudentDbRow(BaseModel):
 
         push_if_not_none(config.use_situation, items, self.situation, "situation")
         push_if_not_none(config.use_classe, items, self.classe, "classe")
-        push_if_not_none(config.use_id_baccalaureat, items, self.id_baccalaureat, "id_baccalaureat")
         push_if_not_none(
-            config.use_duree_etudes_prevue, items, self.duree_etudes_prevue, "duree_etudes_prevue"
+            config.use_id_baccalaureat, items, self.id_baccalaureat, "id_baccalaureat"
+        )
+        push_if_not_none(
+            config.use_duree_etudes_prevue,
+            items,
+            self.duree_etudes_prevue,
+            "duree_etudes_prevue",
         )
         push_if_not_none(config.use_alternance, items, self.alternance, "alternance")
 
@@ -145,7 +133,9 @@ class StudentDbRow(BaseModel):
         push_list(config.use_specialites, items, self.specialites, "specialites")
         push_list(config.use_interests, items, self.domaines, "interests")
         push_list(config.use_interests, items, self.centres_interets, "interests")
-        push_list(config.use_metiers_favoris, items, self.metiers_favoris, "metiers_favoris")
+        push_list(
+            config.use_metiers_favoris, items, self.metiers_favoris, "metiers_favoris"
+        )
         push_list(
             config.use_corbeille_formations,
             items,
@@ -153,7 +143,10 @@ class StudentDbRow(BaseModel):
             "corbeille_formations",
         )
         push_list(
-            config.use_communes_favorites, items, self.communes_favorites, "communes_favorites"
+            config.use_communes_favorites,
+            items,
+            self.communes_favorites,
+            "communes_favorites",
         )
         push_list(
             config.use_formations_favorites,
