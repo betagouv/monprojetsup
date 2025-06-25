@@ -177,12 +177,13 @@ class MpsDataFromFiles(
             val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_FICHES_ID))
             formationsRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
             check(formationsRemoteSheet.values.isNotEmpty() && formationsRemoteSheet.values[0].isNotEmpty()) { "No data found in the Sheet " }
-        }
-        if (useRemoteSheet) {
+
             logger.info("Chargement des formations génériques MPS depuis la feuille de calcul distante")
-            val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_GENERIQUES_ID))
-            formationsGeneriquesRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
+            val stream2 = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_GENERIQUES_ID))
+            formationsGeneriquesRemoteSheet = ObjectMapper().registerKotlinModule().readValue(stream2, RemoteSheet::class.java)
             check(formationsGeneriquesRemoteSheet.values.isNotEmpty() && formationsGeneriquesRemoteSheet.values[0].isNotEmpty() ) { "No data found in the Sheet " }
+        } else {
+            logger.info("L'utilisation de la feuille de calcul distante est désactivée.")
         }
 
         formationsMpsIds = loadMpsIds().sortedBy {  it.substring(2).toInt() }
