@@ -36,7 +36,7 @@ pip install --upgrade -r ./requirements.txt
 
 En mode production:
 ```bash
-fastapi run app/main.py --port 5445
+fastapi run app/setup_fastapi.py --port 5445
 ```
 
 #### Accéder au swagger
@@ -62,7 +62,7 @@ pip install --upgrade -r ./requirements.txt
 
 En mode dev:
 ```bash
-fastapi dev app/setup_fastapi.py.py --port 5445
+fastapi dev app/setup_fastapi.py --port 5445
 ```
 
 L'application se recharge automatiquement après modification des fichiers
