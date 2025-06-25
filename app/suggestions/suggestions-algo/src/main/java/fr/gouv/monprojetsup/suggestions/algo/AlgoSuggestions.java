@@ -7,10 +7,9 @@ import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.ChoiceDTO;
-import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2MultiExplanationsDto;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.NaiveBayesExplanations;
 import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -39,7 +38,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -213,15 +211,20 @@ public class AlgoSuggestions {
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
             boolean inclureScores,
-            @NotNull List<Affinity> affinitesNaiveBayes) {
+            @NotNull List<DataSuggestions2> affinitesNaiveBayes) {
         counter.getAndIncrement();
         if (containsNothingPersonal(pf)) {
             return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
         }
         //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true, generateDetailedExplanations);
+        AffinityEvaluator affinityEvaluator
+                = new AffinityEvaluator(pf, cfg, this, true, generateDetailedExplanations);
 
-        val affinitesNaiveBayesParCle = affinitesNaiveBayes.stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite));
+        val affinitesNaiveBayesByKey = affinitesNaiveBayes.stream()
+                .collect(Collectors.toMap(
+                        DataSuggestions2::key,
+                        d -> d
+                ));
 
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
@@ -230,10 +233,7 @@ public class AlgoSuggestions {
                                 fl -> affinityEvaluator.getAffinityEvaluation(
                                         fl,
                                         inclureScores,
-                                        Map.of(
-                                                BONUS_NAIVE_BAYES,
-                                                new DataSuggestions2(affinitesNaiveBayesParCle.getOrDefault(fl, NO_MATCH_SCORE), null)
-                                        )
+                                        affinitesNaiveBayesByKey.get(fl)
                                 )
                         ));
 
@@ -259,11 +259,11 @@ public class AlgoSuggestions {
     synchronized public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
             boolean inclureScores,
-            @NotNull List<Affinity> affinitesNaiveBayes) {
+            @NotNull  List<DataSuggestions2> dataSuggestions2) {
 
 
         List<Pair<String, Affinite> > affinities = new ArrayList<>(
-                getFormationsAffinities(pf, data.getConfig(), inclureScores, affinitesNaiveBayes)
+                getFormationsAffinities(pf, data.getConfig(), inclureScores, dataSuggestions2)
         );
         Collections.shuffle(affinities);
         affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));
@@ -379,31 +379,33 @@ public class AlgoSuggestions {
      * Get explanations and examples that explain why a list of formations is suited for a profile
      *
      * @param profile the profile
-     * @param keys     the keys of the formations
+     * @param keys the formations of interest and their affinities
      * @return the explanations and examples associated to the node
      */
     synchronized public List<ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
             @NotNull List<String> keys,
-            @NotNull  List<Suggestions2MultiExplanationsDto> explanationsNaiveBayes
+            @NotNull NaiveBayesExplanations explanationsNaiveBayes
     ) {
-        if(profile == null) {
-            return List.of();
-        }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this, false, generateDetailedExplanations);
-        val dataSuggestions2 = DataSuggestions2.build(keys, explanationsNaiveBayes);
+        if (profile == null) return List.of();
+        AffinityEvaluator affinityEvaluator
+                = new AffinityEvaluator(
+                profile,
+                data.getConfig(),
+                this,
+                false,
+                generateDetailedExplanations
+        );
+        val dataSuggestions2 = DataSuggestions2.build(
+                keys,
+                explanationsNaiveBayes
+        );
         return keys.stream().map(
                 fl -> affinityEvaluator.getExplanationsAndExamples(
                         fl,
                         dataSuggestions2.getOrDefault(
                                 fl,
-                                new DataSuggestions2(
-                                        NO_MATCH_SCORE,
-                                        new Suggestions2MultiExplanationsDto(
-                                                fl,
-                                                Map.of()
-                                        )
-                                )
+                                new DataSuggestions2(fl)
                         )
                 )
         ).toList();

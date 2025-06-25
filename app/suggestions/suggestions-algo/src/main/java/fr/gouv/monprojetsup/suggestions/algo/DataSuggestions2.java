@@ -1,42 +1,53 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples;
-import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2MultiExplanationsDto;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2SuggestionsDto;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.NaiveBayesExplanations;
+import fr.gouv.monprojetsup.suggestions.dto.suggestions2.Suggestions2ExplanationsDto;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public record DataSuggestions2(
-        double affinity,
+        @NotNull String key,//fl12
+        @NotNull Map<String,Double> scores,/// indexed e.g. by "expert" or "eleve"
         @Nullable
-        Suggestions2MultiExplanationsDto explanations
+        Suggestions2ExplanationsDto explanations
 ) {
+
+    public DataSuggestions2(String fl) {
+        this(fl, Map.of(), null);
+    }
+
     public static Map<String, DataSuggestions2> build(
             @NotNull List<String> keys,
-            @NotNull List<Suggestions2MultiExplanationsDto> explanationsNaiveBayes
+            @NotNull NaiveBayesExplanations explanationsNaiveBayes
     ) {
-        val explanationsNaiveBayesMap = explanationsNaiveBayes.stream().collect(
-                Collectors.toMap(Suggestions2MultiExplanationsDto::getKey, e -> e)
+        val explanationsNaiveBayesMap = explanationsNaiveBayes.getExplanations().stream().collect(
+                Collectors.toMap(Suggestions2ExplanationsDto::getKey, e -> e)
         );
-        val result = new HashMap<>(explanationsNaiveBayes.stream().collect(
-                Collectors.toMap(
-                        Suggestions2MultiExplanationsDto::getKey,
-                        a -> new DataSuggestions2(
-                                a.,
-                                explanationsNaiveBayesMap.get(a.key())
-                        )
-                )
-        ));
-        for (String key : keys) {
-            if (!result.containsKey(key)) {
-                result.put(key, new DataSuggestions2(-1, null));
-            }
-        }
-        return result;
+        val affinitiesMap = explanationsNaiveBayes.getAffinities().stream().collect(
+                Collectors.toMap(Suggestions2SuggestionsDto::getKey, e -> e)
+        );
+        return explanationsNaiveBayes.getAffinities().stream()
+                .filter(sugg -> keys.contains(sugg.getKey()))
+                .collect(Collectors.toMap(
+                Suggestions2SuggestionsDto::getKey,
+                sugg -> {
+                    val key = sugg.getKey();
+                    val affinity = affinitiesMap.get(key);
+                    val expl = explanationsNaiveBayesMap.get(key);
+                    if(affinity != null && expl != null) {
+                        return new DataSuggestions2(key, affinity.getScores(), expl);
+                    } else if(affinity != null) {
+                        return new DataSuggestions2(key, affinity.getScores(), new Suggestions2ExplanationsDto(key));
+                    } else {
+                        return new DataSuggestions2(key, Map.of(), new Suggestions2ExplanationsDto(key));
+                    }
+                })
+        );
     }
 }

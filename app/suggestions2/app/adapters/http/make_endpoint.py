@@ -20,7 +20,9 @@ from app.domain.models.suggestion import MultiSuggestions
 from app.domain.ports.service import SuggestionsService
 
 
-def make_endpoint(service: SuggestionsService, app: FastAPI, config: ProfileConfig) -> None:
+def make_endpoint(
+    service: SuggestionsService, app: FastAPI, config: ProfileConfig
+) -> None:
     SUGG_TIMER = Histogram(
         "http_suggestion_request_processing_seconds",
         "Time used to answer suggestion requests",
@@ -30,22 +32,13 @@ def make_endpoint(service: SuggestionsService, app: FastAPI, config: ProfileConf
 
     @app.post("/suggestions", response_model_exclude_none=True)
     async def get_suggestions(request: SuggestionRequest) -> SuggestionResponse:
+        print(f"request: {request}")
         with SUGG_TIMER.time():
-            suggestions: MultiSuggestions = service.suggest(request.profile.to_profile(config))
-
-            service_scores = suggestions.scores
-            scores = [
-                Score(
-                    key=item,
-                    scores={
-                        service: service_scores[service].scores[item]
-                        if item in service_scores[service].scores
-                        else 0.0
-                        for service in service_scores
-                    },
-                )
-                for item in request.keys
-            ]
+            suggestions: MultiSuggestions = service.suggest(
+                request.profile.to_profile(config)
+            )
+            scores = get_scores(suggestions, request)
+            print(f"Scores: {scores}")
             return SuggestionResponse(scores=scores)
 
     EXPL_TIMER = Histogram(
@@ -58,6 +51,12 @@ def make_endpoint(service: SuggestionsService, app: FastAPI, config: ProfileConf
     @app.post("/explanations", response_model_exclude_none=True)
     async def get_explanations(request: ExplanationRequest) -> ExplanationResponse:
         with EXPL_TIMER.time():
+
+            suggestions: MultiSuggestions = service.suggest(
+                request.profile.to_profile(config)
+            )
+            scores = get_scores(suggestions, request)
+
             explanations: MultiExplanations = service.explain(
                 request.profile.to_profile(config), request.keys
             )
@@ -84,8 +83,31 @@ def make_endpoint(service: SuggestionsService, app: FastAPI, config: ProfileConf
                 )
                 for item in request.keys
             ]
-            return ExplanationResponse(explanations=expl)
+            return ExplanationResponse(
+                explanations=expl,
+                scores=scores,
+            )
 
     @app.get("/health")
     def health_check() -> HealthCheck:
         return HealthCheck(status="OK")
+
+    def get_scores(
+        suggestions: MultiSuggestions, request: SuggestionRequest
+    ) -> list[Score]:
+        service_scores = suggestions.scores
+        scores = [
+            Score(
+                key=item,
+                scores={
+                    service: (
+                        service_scores[service].scores[item]
+                        if item in service_scores[service].scores
+                        else 0.0
+                    )
+                    for service in service_scores
+                },
+            )
+            for item in request.keys
+        ]
+        return scores

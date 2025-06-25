@@ -65,3 +65,4 @@ class ExplanationResponse(BaseModel):
     explanations: List[ExplanationResponseContent] = Field(
         description="Liste des explications générées pour ce profil."
     )
+    scores: List[Score] = Field(description="Liste des scores de chaque formation.")

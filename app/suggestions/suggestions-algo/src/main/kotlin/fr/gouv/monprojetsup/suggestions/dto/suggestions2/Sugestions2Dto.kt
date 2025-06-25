@@ -1,5 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.dto.suggestions2
 
+import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader
+import fr.gouv.monprojetsup.suggestions.dto.explanations.NaivesBayesExplanation
+
 /*
 output de /suggestions2
 {
@@ -15,13 +18,17 @@ output de /suggestions2
 }
 */
 data class Suggestions2Answer(
-    val scores: List<Suggestions2AffinityDto>
+    val header: ResponseHeader = ResponseHeader(),
+    val scores: List<Suggestions2SuggestionsDto> = emptyList()
 )
-data class Suggestions2AffinityDto(
-    val key: String,
+
+data class Suggestions2SuggestionsDto(
+    val key: String = "",
     //indexé par "eleve" ou "expert"
-    val scores: Map<String,Double>
-)
+    val scores: Map<String,Double> = emptyMap()
+) {
+}
+
 /*
 output de /explanations
 {
@@ -44,19 +51,18 @@ output de /explanations
             },
 
  */
-data class Explanations2Answer(
-    val explanations: List<Suggestions2MultiExplanationsDto>
-)
-data class Suggestions2MultiExplanationsDto(
-    val key: String,
-    val explanations: Map<String,SingleExplanation>
-)
-data class SingleExplanation(
-    val popularity: Double,
-    val scores: List<Score>
-)
-data class Score(
-    val key: String,
-    val log_influence: Double,
-    val categorie: String
-)
+data class Suggestions2ExplanationsDto(
+    //fl210
+    val key: String = "",
+    //key is 'expert' or 'eleve'
+    val explanations: Map<String, NaivesBayesExplanation> = emptyMap()
+) {
+    constructor(key: String) : this(key, emptyMap())
+}
+
+data class NaiveBayesExplanations(
+    val affinities : List<Suggestions2SuggestionsDto>,
+    val explanations: List<Suggestions2ExplanationsDto>
+) {
+    constructor() : this(emptyList(), emptyList())
+}

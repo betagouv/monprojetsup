@@ -6,40 +6,64 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-/*class NaivesBayesExplanationDetail(BaseModel):
-    item_key: str = Field(description="clé de l'item", examples=["mat5", "ci1"])
-    score: float = Field(
-        description="score mesurant l'impact de l'item la sélection de la formation",
-        examples=[-0.12345, 1.78253],
-    )
-    side: Literal["positive", "negative"] = Field(
-        description="si l'item était présent positivement ou négativement dans le profil."
-    )
+/*
+"popularity": 3.6699821356981728,
+          "scores": [
+            {
+              "key": "Générale",
+              "log_influence": 0.9176905251227548,
+              "categorie": "id_baccalaureat"
+            },
+            {
+              "key": "mat5",
+              "log_influence": -3.273289227406298,
+              "categorie": "specialites"
+            },
 */
 public record NaivesBayesExplanation(
-        @JsonProperty(value = "details")
-        @NotNull List<NaiveBayesExplanationDetail> details
+        @JsonProperty(value = "popularity")
+        double popularity,
+        @JsonProperty(value = "scores")
+        @NotNull List<NaiveBayesExplanationDetail> scores
 ) {
-    public String toDebugString(Map<String, @NotNull String> debugLabels) {
+    public String toDebugString(
+            String source,
+            Map<String, @NotNull String> debugLabels
+    ) {
         StringBuilder sb = new StringBuilder();
-        sb.append("naive-bayes: ");
-        details.forEach(d -> sb
-                .append(debugLabels.getOrDefault(d.itemKey(),d.itemKey())).append(" ")
-                .append("(")
-                .append(d.affinity()).append(" ")
-                .append(d.side(), 0, 3)
+        sb.append("naive-bayes ");
+        sb.append(source);
+        sb.append(" : ");
+        scores.forEach(d -> sb
+                .append(debugLabels.getOrDefault(d.key(),d.key())).append(" ")
+                .append("(li ")
+                .append(d.logInfluence()).append(" cat ")
+                .append(d.categorie())
                 .append(") ")
         );
         return sb.toString();
     }
 
+    /*class ExplanationResponseScore(BaseModel):
+    key: str = Field(
+        description="Identifiant de la feature responsable de la différence de score"
+    )
+    log_influence: float = Field(
+        description="Influence de cette feature sur le score, en échelle logarithmique"
+    )
+    categorie: str = Field(
+        description="Catégorie dans laquelle se trouvait la feature.",
+        examples=["corbeille_formation", "voeux_favoris"],
+    )
+*/
 
     record NaiveBayesExplanationDetail(
-            @JsonProperty(value = "item_key")
-            @NotNull String itemKey,
-            @JsonProperty(value = "score")
-            float affinity,
-            @JsonProperty(value = "side")
-            @NotNull String side
-    ) { }
+            @JsonProperty(value = "key")
+            @NotNull String key,//Identifiant de la feature responsable de la différence de score
+            @JsonProperty(value = "log_influence")
+            float logInfluence,//Influence de cette feature sur le score, en échelle logarithmique
+            @JsonProperty(value = "categorie")
+            @NotNull String categorie//Catégorie dans laquelle se trouvait la feature
+    ) {
+    }
 }
