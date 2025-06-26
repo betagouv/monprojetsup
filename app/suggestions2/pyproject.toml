@@ -12,3 +12,10 @@ dependencies = [
     "psycopg==3.2.4",
     "python-dotenv==1.0.1",
 ]
+
+[dependency-groups]
+dev = ["pytest>=8.4.1"]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
