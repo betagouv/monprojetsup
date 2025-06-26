@@ -25,18 +25,19 @@ Récapitulatif des variables d'environnement:
 
 ### Lancer l'application manuellement
 
+L'application utilise [`uv`](https://docs.astral.sh/uv/) pour la gestion du projet.
+
 #### Installer les dépendances 
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade -r ./requirements.txt
+uv sync
 ```
+
 #### Execution de l'application
 
 En mode production:
 ```bash
-fastapi run app/setup_fastapi.py --port 5445
+uv run fastapi run app/setup_fastapi.py --port 5445
 ```
 
 #### Accéder au swagger
@@ -54,23 +55,22 @@ L'endpoint exporte des métriques de performance compatibles avec Prometheus à 
 Voir ci-dessus pour créer le `.venv` et installer les dépendances.
 Ensuite, 
 ```bash
-source .venv/bin/activate
-pip install --upgrade -r ./requirements.txt
+uv sync --dev
 ```
 
 ### Lancer l'application en mode dev
 
 En mode dev:
 ```bash
-fastapi dev app/setup_fastapi.py --port 5445
+uv run fastapi dev app/setup_fastapi.py --port 5445
 ```
 
 L'application se recharge automatiquement après modification des fichiers
 
 ### Executer les tests
 ```bash
-source .venv/bin/activate
-pytest .
+uv sync --dev
+uv run pytest
 ```
 
 ## Lancer l'application en mode docker

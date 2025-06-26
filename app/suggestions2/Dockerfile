@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends libpq5
 # Install app and deps (using uv)
 WORKDIR /code
 COPY ./pyproject.toml /code/
-COPY ./app /code/app
 RUN uv sync --no-cache
+COPY ./app /code/app
 
 # Start app
 # "sh -c" is used to allow expansion of environment variable.
