@@ -39,7 +39,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   return (
     <div className="justify-start">
       <div
-        className={`${classEnFonctionDeAfficherEnEntier()} mb-2 whitespace-pre-line`}
+        className={`${classEnFonctionDeAfficherEnEntier()} custom-ul mb-2 `}
         ref={ref}
       >
         {parse(texteHtml)}
