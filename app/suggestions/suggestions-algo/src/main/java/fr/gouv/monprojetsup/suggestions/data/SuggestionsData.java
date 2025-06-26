@@ -130,11 +130,6 @@ public class SuggestionsData {
                 .orElse(null);
     }
 
-    public int getDuree(String formationId) {
-        val f = formationsPort.retrieveFormation(formationId);
-        return f.map(Formation::duree).orElse(DUREE_DEFAULT_VALUE);
-    }
-
     public @Nullable Double getStatsSpecialite(String formationId, String iMtCod) {
         return formationsPort.retrieveFormation(formationId)
                 .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, 0))
@@ -224,6 +219,18 @@ public class SuggestionsData {
 
     public void saveAlgoEdges(@NotNull Map<String, Set<String>> edges) {
         edgesPort.setAlgoEdges(edges.entrySet().stream().flatMap(e -> e.getValue().stream().map(dst -> new Edge(e.getKey(),dst))).toList());
+    }
+
+    public @NotNull Boolean getEtudeCourte(String formationId) {
+        return formationsPort.retrieveFormation(formationId)
+                .map(Formation::compatibleEtudesCourtes)
+                .orElse(false);
+    }
+
+    public @NotNull Boolean getEtudeLongue(String formationId) {
+        return formationsPort.retrieveFormation(formationId)
+                .map(Formation::compatibleEtudesLongues)
+                .orElse(false);
     }
 
 }

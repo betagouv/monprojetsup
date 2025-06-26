@@ -252,7 +252,7 @@ public class ConnecteurJsonCarteSQL {
                     int gFlCod = result.getInt(3);
                     int gFlCodFi = result.getInt(4);
                     boolean gFlFlgApp = result.getBoolean(5);
-                    Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp, false);
+                    Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp);
                     entree.filieres.put(gFlCod, filiere);
                 }
             }

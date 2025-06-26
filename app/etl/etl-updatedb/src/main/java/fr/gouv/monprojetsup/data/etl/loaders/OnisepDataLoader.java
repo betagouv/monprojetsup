@@ -7,7 +7,6 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.formations.FilierePsupVersIdeoData;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
-import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.model.onisep.SousDomaineWeb;
 import fr.gouv.monprojetsup.data.model.onisep.formations.FicheFormationIdeo;
@@ -51,20 +50,19 @@ import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_L
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_DOMAINES_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_FICHES_URL;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_FICHES_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_SIMPLE_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_FORMATIONS_SIMPLE_URL;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OD_METIERS_SIMPLE_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.IDEO_OLD_TO_NEW_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_TO_MPS_DOMAINE_DOMAINE_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.MPS_FORMATIONS_TO_MPS_DOMAINE_FORMATION_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.OLD_TO_NEW_IDEO_NEW_IDEO_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.OLD_TO_NEW_IDEO_OLD_IDEO_HEADER;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_FORMATIONS_TO_IDEO_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_HERITIER_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_LEGATAIRES_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_HERITAGES_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_INDEXATION_PATH;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_FORMATIONS_TO_IDEO_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER;
@@ -97,6 +95,8 @@ public class OnisepDataLoader {
         return new HashMap<>(logLiens);
 
     }
+
+
 
     private static void updateCreationLien(Map<String, FormationIdeoDuSup> formationsPerKey, String source) {
         int i = source.indexOf("/");
@@ -475,27 +475,16 @@ public class OnisepDataLoader {
             DataSources sources
     ) throws Exception {
         List<MetierIdeoSimple> metiersOnisep = loadMetiersSimplesIdeo(sources);
-        List<MetiersScrapped.MetierScrap> metiersScrapped = loadMetiersScrapped(sources);
         List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIdeo(sources);
 
         return  extractMetiersIdeo(
                 metiersOnisep,
-                metiersScrapped,
                 fichesMetiers,
                 formationsIdeoSuSup.stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()),
                 sousDomainesWeb
         );
 
 
-    }
-
-
-    private static List<MetiersScrapped.MetierScrap> loadMetiersScrapped(DataSources sources) throws IOException {
-        MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(
-                sources.getSourceDataFilePath(DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH),
-                MetiersScrapped.class
-        );
-        return metiersScrapped.metiers().values().stream().toList();
     }
 
 
@@ -631,7 +620,7 @@ public class OnisepDataLoader {
                         ))
         );
 
-        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_SIMPLE_URL);
+        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_SIMPLE_PATH);
 
         //in this order, so that richer information with fiche wins
         formationsPerKey.putAll(
@@ -644,7 +633,7 @@ public class OnisepDataLoader {
                         ))
         );
 
-        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_FICHES_URL);
+        updateCreationLien(formationsPerKey, IDEO_OD_FORMATIONS_FICHES_PATH);
 
         return formationsPerKey.values().stream()
                 .collect(Collectors.toMap(
@@ -656,20 +645,12 @@ public class OnisepDataLoader {
 
     private static Pair<Map<String, MetierIdeo>,Set<String>> extractMetiersIdeo(
             List<MetierIdeoSimple> metiersIdeoSimples,
-            List<MetiersScrapped.MetierScrap> metiersScrapped,
             List<FicheMetierIdeo> fichesMetiers,
             Set<String> formationsDuSup,
             List<SousDomaineWeb> sousDomainesWeb
     ) {
 
         Map<String, MetierIdeo> metiers = new HashMap<>();
-
-        metiersScrapped.forEach(m -> {
-            if(m.nom()!= null && !m.nom().isEmpty()) {
-                val met = new MetierIdeo(m);
-                metiers.put(met.ideo(), met);
-            }
-        });
 
         val sousDomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
         for (MetierIdeoSimple m : metiersIdeoSimples) {
@@ -780,7 +761,7 @@ public class OnisepDataLoader {
                 FicheFormationIdeo.class
         );
         List<FicheFormationIdeo> result = Serialisation.fromZippedXml(
-                sources.getSourceDataFilePath(DataSources.IDEO_OD_FORMATIONS_FICHES_PATH),
+                sources.getSourceDataFilePath(IDEO_OD_FORMATIONS_FICHES_PATH),
                 listType
         );
         return result.stream()

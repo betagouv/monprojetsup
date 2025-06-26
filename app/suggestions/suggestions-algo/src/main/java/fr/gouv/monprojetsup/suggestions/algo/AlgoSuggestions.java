@@ -39,9 +39,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.Constants.LAS_FL_COD;
-import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
@@ -88,9 +85,6 @@ public class AlgoSuggestions {
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
     public final int p75Capacity;
-    /* la liste des éléments (formations, métiers, ntérêts et secteursActivite) qui sont directement liés aux études de santé, i.e. à PASS */
-    @Getter
-    protected final Set<String> relatedToHealth = new HashSet<>();
     /**
      * end cache data
      */
@@ -112,11 +106,6 @@ public class AlgoSuggestions {
 
         apprentissage = data.getFormationIdsWithApprentissage();
 
-        relatedToHealth.addAll(edgesKeys
-                .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
-                .keySet());
-        relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.add(gFlCodToFrontId(LAS_FL_COD));
     }
 
     private void clearCaches() {
@@ -128,7 +117,8 @@ public class AlgoSuggestions {
         capacites.clear();
         nbAdmis.clear();
         voeuxCoords.clear();
-        durees.clear();
+        etudesCourtes.clear();
+        etudesLongues.clear();
         debugLabels.clear();
         statsSpecialites.clear();
         candidatsMetiers.clear();
@@ -480,9 +470,15 @@ public class AlgoSuggestions {
         return voeuxCoords.computeIfAbsent(fl, z -> data.getVoeuxCoords(fl));
     }
 
-    private final ConcurrentHashMap<String, @NotNull Integer> durees = new ConcurrentHashMap<>();
-    public int getDuree(String fl) {
-        return durees.computeIfAbsent(fl, z -> data.getDuree(fl));
+    private final ConcurrentHashMap<String, @NotNull Boolean> etudesCourtes = new ConcurrentHashMap<>();
+    public boolean isEtudesCourtes(String fl) {
+        return etudesCourtes.computeIfAbsent(fl, z -> data.getEtudeCourte(fl));
+    }
+
+    private final ConcurrentHashMap<String, @NotNull Boolean> etudesLongues = new ConcurrentHashMap<>();
+    public boolean isEtudesLongues(String fl) {
+        return etudesLongues.computeIfAbsent(fl, z -> data.getEtudeLongue(fl));
+
     }
 
     @Getter

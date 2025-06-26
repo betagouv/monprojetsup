@@ -20,9 +20,7 @@ public class DataSources {
     /* Ideo data */
 
     public static final String IDEO_OD_FORMATIONS_FICHES_PATH = "ideo/5fe07a9ecc960.zip";
-    public static final String IDEO_OD_FORMATIONS_FICHES_URL = "https://api.opendata.onisep.fr/downloads/5fe07a9ecc960/5fe07a9ecc960.zip";
     public static final String IDEO_OD_FORMATIONS_SIMPLE_PATH = "ideo/5fa591127f501.json";
-    public static final String IDEO_OD_FORMATIONS_SIMPLE_URL = "https://api.opendata.onisep.fr/downloads/5fa591127f501/5fa591127f501.json";
 
     public static final String IDEO_OD_METIERS_SIMPLE_PATH = "ideo/5fa5949243f97.json";
     public static final String IDEO_OD_METIERS_FICHES_PATH = "ideo/5fe0808a2da6f.zip";
@@ -43,18 +41,15 @@ public class DataSources {
     public static final String IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER = "ID_Licence_ONISEP";
     public static final String IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER = "ID_Master_ONISEP";
 
-    /* Onisep scrapping */
-    public static final String ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
-
     /* MPS data */
     public static final String PROFILS_REFERENCE_MPS_PATH = "ml/profils_experts.csv";
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
-    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION = "resume type formation";
-    public static final String RESUMES_MPS_RESUME_FORMATION = "resume filiere";
-    public static final String RESUMES_MPS_RESUME_KEY = "code filiere";
+    public static final String RESUMES_RESUME_GENERIQUE_HEADER = "resume type formation";
+    public static final String RESUMES_RESUME_PRINCIPAL_HEADER = "resume filiere";
+    public static final String RESUMES_MPS_ID_HEADER = "code filiere";
+    public static final String RESUMES_GENERIQUE_ID_HEADER = "code type formation";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
     public static final String LIENS_MPS_PATH_HEADER_ID = "id";
-    public static final String LIENS_MPS_PATH_HEADER_IGNORER = "probleme onisep data";
     public static final String LIENS_MPS_PATH_HEADER_EXTRAS = "ajouts";
     public static final String DOMAINES_MPS_PATH = "mps/Domaines MPS Onisep.csv";
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.csv";
@@ -80,6 +75,25 @@ public class DataSources {
     public static final String ROME_THEMES_PATH = "ROME/unix_arborescence_thematique_v451.json";//unused
     /* External data  */
     public static final String CITIES_FILE_PATH = "villes/villes_france.json";
+
+    public static final String REMOTE_SHEET_FEUILLE_FICHES_ID = "fiches";
+    public static final String REMOTE_SHEET_FEUILLE_GENERIQUES_ID = "formations_generiques";
+    public static final String REMOTE_SHEET_FEUILLE_EXCLUES_ID = "filieres_psup_exclues";
+
+    public static final String REMOTE_SHEET_COLUMNS_MPS_ID = "mps_id";
+    public static final String REMOTE_SHEET_COLUMNS_LABEL = "titre";
+    public static final String REMOTE_SHEET_COLUMNS_GENERIC_ID = "generic_id";
+    public static final String REMOTE_SHEET_COLUMNS_PSUP_IDS = "psup_ids";
+    public static final String REMOTE_SHEET_COLUMNS_DESCRIPTION = "description";
+    public static final String REMOTE_SHEET_COLUMNS_LIENS = "liens";
+    public static final String REMOTE_SHEET_COLUMNS_EXTRA_IDEO_IDS = "extra_formations_ideo_ids";
+    public static final String REMOTE_SHEET_COLUMNS_EXTRA_METIERS_IDEO_IDS = "extra_metiers_ideo_ids";
+    public static final String REMOTE_SHEET_COLUMNS_MOTS_CLES = "mots_cles";
+    public static final String REMOTE_SHEET_COLUMNS_ATTENDUS = "attendus";
+    public static final String REMOTE_SHEET_COLUMNS_CONSEILS = "conseils";
+    public static final String REMOTE_SHEET_COLUMNS_ETUDES_COURTES = "compatible_etudes_courtes";
+    public static final String REMOTE_SHEET_COLUMNS_ETUDES_LONGUES = "compatible_etudes_longues";
+    public static final String REMOTE_SHEET_COLUMNS_PSUP_ID = "psup_id";
 
     /***************************************************************************
      ******************* PATHES TO DATA FILES ***********************************

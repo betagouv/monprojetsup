@@ -35,7 +35,6 @@ import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_C
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_DISTANCE;
@@ -415,32 +414,25 @@ public class AffinityEvaluator {
 
     private double getBonusDuree(String fl, Explanations expl) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
-        int duree = algo.getDuree(fl);
-        duree = Math.min(Config.DUREE_MAX, duree);
-        duree = Math.max(DUREE_COURTE, duree);
+        boolean courte = algo.isEtudesCourtes(fl);
+        boolean longue = algo.isEtudesLongues(fl);
 
         final double result;
         switch (pf.duree().toLowerCase()) {
             case Config.DUREE_COURTE_PROFILE_VALUE -> {
-                if(duree >= Config.DUREE_LONGUE) {
+                if(!courte) {
                     result = NO_MATCH_SCORE;
                 } else {
-                    result =
-                            FULL_MATCH_SCORE
-                            * (Config.DUREE_LONGUE - duree)
-                            / (Config.DUREE_LONGUE - DUREE_COURTE);
+                    result = FULL_MATCH_SCORE;
                     if (expl != null)
                         expl.add(Explanation.getDurationExplanation(pf.duree()));
                 }
             }
             case DUREE_LONGUE_PROFILE_VALUE -> {
-                if(duree < Config.DUREE_LONGUE) {
+                if(!longue) {
                     result = Config.NO_MATCH_SCORE;
                 } else {
-                    result =
-                            FULL_MATCH_SCORE
-                            * (duree - (Config.DUREE_LONGUE - 1) )
-                            / (Config.DUREE_MAX - (Config.DUREE_LONGUE - 1) );
+                    result = FULL_MATCH_SCORE;
                     if (expl != null)
                         expl.add(Explanation.getDurationExplanation(pf.duree()));
                 }
