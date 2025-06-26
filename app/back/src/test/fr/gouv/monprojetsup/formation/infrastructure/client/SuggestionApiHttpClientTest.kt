@@ -13,6 +13,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
+import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -47,6 +48,9 @@ class SuggestionApiHttpClientTest {
 
     @Mock
     lateinit var logger: MonProjetSupLogger
+
+    @Mock
+    lateinit var formationRepository: FormationRepository
 
     @Captor
     lateinit var requeteCaptor: ArgumentCaptor<Request>
@@ -95,6 +99,7 @@ class SuggestionApiHttpClientTest {
                 objectMapper = objectMapper,
                 httpClient = httpClient,
                 logger = logger,
+                formationRepository = formationRepository,
             )
     }
 
@@ -319,6 +324,7 @@ class SuggestionApiHttpClientTest {
                   "situation":"projet_precis"
                 }
                 """.trimIndent().toResponseBody(mediaType)
+            given(formationRepository.recupererIdsFormationsNonObsoletes()).willReturn(listOf("fl5678"))
             val callMock = mock(Call::class.java)
             `when`(httpClient.newCall(MockitoHelper.capture(requeteCaptor))).thenReturn(callMock)
             val reponse =
@@ -340,6 +346,7 @@ class SuggestionApiHttpClientTest {
                 objectMapper.readValue(
                     """
                     {
+                      "keys":["fl5678"],
                       "profile": {
                         "niveau": "term",
                         "bac": "Générale",

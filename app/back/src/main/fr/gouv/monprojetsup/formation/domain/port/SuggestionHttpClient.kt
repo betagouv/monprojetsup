@@ -8,6 +8,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 
 interface SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
+    fun recupererLesSuggestions(
+        profilEleve: ProfilEleve.AvecProfilExistant,
+        idsFormations: List<String>,
+    ): SuggestionsPourUnProfil
+
+    @Throws(MonProjetSupInternalErrorException::class)
     fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil
 
     @Throws(MonProjetSupInternalErrorException::class, MonProjetSupIllegalStateErrorException::class)

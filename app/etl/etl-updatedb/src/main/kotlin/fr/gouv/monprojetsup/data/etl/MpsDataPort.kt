@@ -48,7 +48,7 @@ interface MpsDataPort {
 
     fun exportDiagnostics()
     fun getFormationToTypeformation(): Map<String,String>
-    fun getProfilsReference(): List<Map<String,String>>
+    fun getProfilsReference(source: String): List<Map<String,String>>
     fun getCompatEtudesCourtes(): Set<String>
     fun getCompatEtudesLongues(): Set<String>
 }

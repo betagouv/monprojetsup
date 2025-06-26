@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libpq5
 
 # Install app and deps (using uv)
 WORKDIR /code
-COPY ./requirements.txt /code/requirements.txt
-RUN uv pip install --no-cache-dir --upgrade --system -r /code/requirements.txt
+COPY ./pyproject.toml /code/
+RUN uv sync --no-cache
 COPY ./app /code/app
 
 # Start app
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${SUGGESTIONS2_ENDPOINT_PORT}"]
+# "sh -c" is used to allow expansion of environment variable.
+CMD ["sh", "-c", "uv run fastapi run app/setup_fastapi.py --host 0.0.0.0 --port ${SUGGESTIONS2_ENDPOINT_PORT}"]

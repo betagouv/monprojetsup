@@ -14,6 +14,17 @@ import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "ref_formation")
+class FormationIdEntity {
+    @Id
+    @Column(name = "id", nullable = false)
+    lateinit var id: String
+
+    @Column(name = "obsolete", nullable = false)
+    var obsolete: Boolean = false
+}
+
+@Entity
+@Table(name = "ref_formation")
 class FormationCourteEntity {
     @Id
     @Column(name = "id", nullable = false)
