@@ -22,8 +22,8 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
 
     def init_from_profiles(self, profiles: list[Profile]):
         self.matrix = compute_naive_bayes_matrix(profiles, self.regularization_laplace)
-        self.explanation_matrix, self.explanation_popularity = compute_explanation_matrix(
-            self.matrix
+        self.explanation_matrix, self.explanation_popularity = (
+            compute_explanation_matrix(self.matrix)
         )
 
     def suggest(self, profile: Profile) -> Suggestions:
@@ -79,7 +79,9 @@ def compute_naive_bayes_matrix(
     bayes_df = pd.DataFrame(dict_bayes)
 
     # Compute the frequency of each target value, and add it as a "bias" row
-    probabilites_items = {item: occurences_target[item] / n_profiles for item in occurences_target}
+    probabilites_items = {
+        item: occurences_target[item] / n_profiles for item in occurences_target
+    }
     bias_row = pd.Series(
         [probabilites_items[item] for item in bayes_df.columns],  # type: ignore
         index=bayes_df.columns,
@@ -108,7 +110,7 @@ def compute_explanation_matrix(matrix: pd.DataFrame) -> Tuple[pd.DataFrame, pd.S
     This matrix contains the log2 conditional probabilities of the naive bayes matrix,
     centered relative to the average, for each feature.
     Therefore, for a given target `t`, this number for feature `f` is larger than 0
-    when P(f|t) is greater than the geometric mean of the P(f|t') over all t,
+    when P(t|f) is greater than the geometric mean of the P(t'|f) over all t,
     and smaller otherwise.
     """
     bias_row: pd.Series[float] = np.log2(matrix.loc["bias"])  # type: ignore
@@ -121,7 +123,10 @@ def compute_explanation_matrix(matrix: pd.DataFrame) -> Tuple[pd.DataFrame, pd.S
 
 
 def explain_naive_bayes(
-    explain_matrix: pd.DataFrame, profile: Profile, keys: List[str], popularity_matrix: pd.Series
+    explain_matrix: pd.DataFrame,
+    profile: Profile,
+    keys: List[str],
+    popularity_matrix: pd.Series,
 ) -> Dict[str, Explanation]:
     # Ignore items/keys that are not in the matrix's index/columns
     items = [it for it in profile.features_str() if it in explain_matrix.index]
@@ -134,7 +139,9 @@ def explain_naive_bayes(
             key=k,
             popularity=popularity[k],
             relative_frequency={
-                it: scores[k][str(it)] for it in profile.features if str(it) in scores[k]
+                it: scores[k][str(it)]
+                for it in profile.features
+                if str(it) in scores[k]
             },
         )
         for k in scores

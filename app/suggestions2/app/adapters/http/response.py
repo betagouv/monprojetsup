@@ -38,7 +38,9 @@ class ExplanationResponseScore(BaseModel):
         description="Identifiant de la feature responsable de la différence de score"
     )
     log_influence: float = Field(
-        description="Influence de cette feature sur le score, en échelle logarithmique"
+        description="Influence de cette feature sur le score, en échelle logarithmique. "
+        "Une valeur de 'x' se traduit par "
+        "'Cette formation apparaît 2^x fois plus souvent que la moyenne chez les personnes qui ont cette feature'."
     )
     categorie: str = Field(
         description="Catégorie dans laquelle se trouvait la feature.",
@@ -47,7 +49,10 @@ class ExplanationResponseScore(BaseModel):
 
 
 class ExplanationResponseDetails(BaseModel):
-    popularity: float = Field(description="Log-popularité de l'item.")
+    popularity: float = Field(
+        description="Log-popularité de l'item. "
+        "Une valeur de 'x' se traduit par 'Cette formation apparaît 2^x fois plus souvent que les autres'."
+    )
     scores: List[ExplanationResponseScore] = Field(
         description="Influence de chaque feature du profile sur le score de l'item."
     )
