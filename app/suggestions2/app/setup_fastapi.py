@@ -15,7 +15,7 @@ DB_SUGGESTIONS2_REF_EXPERT: str = getenv(
     "DB_SUGGESTIONS2_REF_EXPERT", default="profil_reference_expert"
 )
 DB_SUGGESTIONS2_REF_LYCEEN: str = getenv(
-    "DB_SUGGESTIONS2_REF_LYCEEN", default="profil_reference_eleve"
+    "DB_SUGGESTIONS2_REF_LYCEEN", default="profil_reference_lyceen"
 )
 
 app = FastAPI(title="MonProjetSup Suggestions2 API", version=VERSION)
