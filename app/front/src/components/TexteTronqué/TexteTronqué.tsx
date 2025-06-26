@@ -39,7 +39,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   return (
     <div className="justify-start">
       <div
-        className={`${classEnFonctionDeAfficherEnEntier()} custom-ul mb-2 `}
+        className={`${classEnFonctionDeAfficherEnEntier()} custom-ul mb-2`}
         ref={ref}
       >
         {parse(texteHtml)}
