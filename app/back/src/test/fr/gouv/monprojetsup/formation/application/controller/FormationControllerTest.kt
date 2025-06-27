@@ -73,6 +73,7 @@ import java.net.ConnectException
 @WebMvcTest(
     controllers = [FormationController::class],
     includeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [HateoasBuilder::class])],
+    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
 )
 class FormationControllerTest(
     @Autowired val mvc: MockMvc,
