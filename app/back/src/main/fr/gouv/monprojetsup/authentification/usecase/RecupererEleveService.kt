@@ -35,8 +35,9 @@ class RecupererEleveService(
                 profilFiltre = filtrerMetiers(eleveBDD, profilFiltre)
                 profilFiltre
             }
-
-            else -> eleveBDD
+            else -> {
+                eleveBDD
+            }
         }
     }
 

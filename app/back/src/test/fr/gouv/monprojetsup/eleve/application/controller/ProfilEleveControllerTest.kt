@@ -34,7 +34,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [ProfilEleveController::class])
+@WebMvcTest(
+    controllers = [ProfilEleveController::class],
+    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
+)
 class ProfilEleveControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
@@ -269,6 +272,7 @@ class ProfilEleveControllerTest(
                             VoeuFavori("ta1", true),
                             VoeuFavori("ta77", false),
                         ),
+                    portfolioId = null,
                 )
             given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
             given(miseAJourEleveService.mettreAJourUnProfilEleve(modificationProfilEleve, unProfilEnseignant)).willReturn(nouveauProfil)
@@ -632,6 +636,7 @@ class ProfilEleveControllerTest(
                     corbeilleFormations = listOf("fl0012"),
                     compteParcoursupLie = true,
                     voeuxFavoris = voeuxFavoris,
+                    portfolioId = ID_ENSEIGNANT,
                 )
             given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
             given(
@@ -841,7 +846,7 @@ class ProfilEleveControllerTest(
         fun `si l'élève n'a pas encore crée de profil, doit retourner 404`() {
             // Given
             val id = "d26da5c2-c38d-4c07-9ef3-9da2443846df"
-            given(recupererEleveService.recupererEleve(id)).willReturn(ProfilEleve.SansCompte(id))
+            given(recupererEleveService.recupererEleve(id = id)).willReturn(ProfilEleve.SansCompte(id))
 
             // When & Then
             val bodyEntree =

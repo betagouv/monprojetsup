@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -59,6 +60,15 @@ class MiseAJourEleveServiceTest {
 
     @Mock
     private lateinit var eleveRepository: EleveRepository
+
+    @Mock
+    private lateinit var majIndicateurPortfolioService: MajIndicateurPortfolioService
+
+    @Mock
+    private lateinit var recupererProgressionService: RecupererProgressionService
+
+    @Mock
+    private lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     private lateinit var miseAJourEleveService: MiseAJourEleveService

@@ -66,11 +66,11 @@ export class HttpClient implements IHttpClient {
         if (erreur.code === "ECONNABORTED")
           return new RequêteAnnuléeErreurHttp({ ...options, erreur: JSON.stringify(error) });
 
-        if (erreur.code === "ERR_NETWORK" || erreur.cause?.message === "Network Error")
+        if (erreur.code === "ERR_NETWORK" || erreur.message === "Network Error")
           return new ErreurRéseauErreurHttp({ ...options, erreur: JSON.stringify(error) });
       }
 
-      return new ErreurInconnueErreurHttp({ ...options, erreur: JSON.stringify(error) });
+      return new ErreurInconnueErreurHttp({ ...options, erreur: JSON.stringify((error as AxiosError).code) });
     }
   };
 }

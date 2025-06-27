@@ -107,5 +107,6 @@ class ProfilEleveEntity() {
             corbeilleFormations = corbeilleFormations,
             compteParcoursupLie = compteParcoursupLie,
             voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
+            portfolioId = null,
         )
 }

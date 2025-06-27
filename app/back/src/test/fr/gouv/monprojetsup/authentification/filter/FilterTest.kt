@@ -48,7 +48,10 @@ data class IdentificationMockDTO(
     val isAuthenticated: Boolean,
 )
 
-@WebMvcTest(controllers = [IdentificationMockController::class])
+@WebMvcTest(
+    controllers = [IdentificationMockController::class],
+    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
+)
 class FilterTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
