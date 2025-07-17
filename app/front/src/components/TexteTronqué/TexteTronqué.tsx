@@ -34,7 +34,12 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
 
   // Convertir le texte en HTML si nécessaire
 
-  const texteHtml = unified().use(remarkParse).use(remarkHtml).processSync(texte).toString();
+  const texteHtml = unified()
+      .use(remarkParse)
+      .use(remarkHtml)
+      .processSync(texte)
+      .toString()
+      .replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
 
   return (
     <div className="justify-start">
