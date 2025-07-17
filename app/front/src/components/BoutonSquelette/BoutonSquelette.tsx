@@ -27,7 +27,7 @@ const BoutonSquelette = ({ children, taille, variante, icône }: BoutonSquelette
 
   return (
     <div
-      className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
+      className={`fr-btn ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
     >
       {children}
     </div>
