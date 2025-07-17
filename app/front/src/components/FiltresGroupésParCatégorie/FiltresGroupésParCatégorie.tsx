@@ -98,7 +98,7 @@ const FiltresGroupésParCatégorie = ({
               </Accordion.Trigger>
             </Accordion.Header>
             <Accordion.Content className="border border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
-              <div className="mb-4 grid grid-flow-row sm:grid-flow-col sm:items-center sm:justify-between gap-2">
+              <div className="mb-4 grid grid-flow-row gap-2 sm:grid-flow-col sm:items-center sm:justify-between">
                 <p className="fr-text--lg mb-0 text-[--text-label-grey]">{i18n.COMMUN.PRÉCISER_CATÉGORIES}</p>
                 {catégorie.afficherDétail && (
                   <div className="sm:text-right">
