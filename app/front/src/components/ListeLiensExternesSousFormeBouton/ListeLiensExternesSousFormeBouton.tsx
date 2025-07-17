@@ -9,25 +9,25 @@ const ListeLiensExternesSousFormeBouton = ({ id, liens }: ListeLiensExternesSous
   return (
     <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
       {liens
-          .filter((lien) => urlEstValide(lien.url))
-          .map((lien) => (
-        <li key={`${lien.url}${lien.intitulé}`}>
-          <LienExterne
-            ariaLabel={lien.intitulé}
-            href={lien.url}
-            id={id}
-            variante="neutre"
-          >
-            <BoutonSquelette
-              icône={{ position: "droite", classe: "fr-icon-external-link-line" }}
-              taille="petit"
-              variante="tertiaire"
+        .filter((lien) => urlEstValide(lien.url))
+        .map((lien) => (
+          <li key={`${lien.url}${lien.intitulé}`}>
+            <LienExterne
+              ariaLabel={lien.intitulé}
+              href={lien.url}
+              id={id}
+              variante="neutre"
             >
-              {lien.intitulé}
-            </BoutonSquelette>
-          </LienExterne>
-        </li>
-      ))}
+              <BoutonSquelette
+                icône={{ position: "droite", classe: "fr-icon-external-link-line" }}
+                taille="petit"
+                variante="tertiaire"
+              >
+                {lien.intitulé}
+              </BoutonSquelette>
+            </LienExterne>
+          </li>
+        ))}
     </ul>
   );
 };
