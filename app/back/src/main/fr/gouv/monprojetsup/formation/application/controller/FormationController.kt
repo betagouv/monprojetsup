@@ -67,7 +67,6 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
-
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(
@@ -221,6 +220,7 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
+
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val formations =
             recupererFichesFormationsService.recupererFichesFormationPourProfil(

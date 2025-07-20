@@ -17,4 +17,6 @@ interface FormationRepository {
     fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte>
 
     fun recupererIdsFormationsInexistantes(ids: List<String>): List<String>
+
+    fun recupererIdsFormationsNonObsoletes(): List<String>
 }

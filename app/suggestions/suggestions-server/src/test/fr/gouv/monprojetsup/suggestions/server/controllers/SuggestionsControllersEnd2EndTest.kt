@@ -105,7 +105,8 @@ class SuggestionsControllersTest(
         val deconseillees = profil.suggRejected().filter { isFiliere(it.id) }.map { s -> s.id }.toSet()
 
         profil.choix.removeIf { isFiliere(it.id) }
-        val resultat = getSuggestions(profil)
+        val allIDs = obligatoires + recommandees + deconseillees
+        val resultat = getSuggestions(profil, allIDs)
         val suggestions = resultat.affinites.filter { it.affinite > 0 }.map { it.key }.toSet()
         val premieresSuggestions =
             resultat.affinites.sortedBy { -it.affinite }.take(20).map { it.key }.toSet()
@@ -124,8 +125,8 @@ class SuggestionsControllersTest(
     }
 
 
-    private fun getSuggestions(profil: ProfileDTO): GetAffinitiesServiceDTO.Response {
-        val requete = Gson().toJson(mapOf("profile" to profil))
+    private fun getSuggestions(profil: ProfileDTO, keys: Collection<String>): GetAffinitiesServiceDTO.Response {
+        val requete = Gson().toJson(mapOf("profile" to profil, "keys" to keys))
         val resultat = mvc.perform(
             post(ENDPOINT_SUGGESTION).accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)

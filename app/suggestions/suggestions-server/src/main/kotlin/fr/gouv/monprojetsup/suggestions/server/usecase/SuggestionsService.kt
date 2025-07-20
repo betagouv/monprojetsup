@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.server.usecase
 
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions
+import fr.gouv.monprojetsup.suggestions.algo.DataSuggestions2
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO
 import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2Service
 import org.springframework.stereotype.Service
 
@@ -12,15 +12,15 @@ class SuggestionsService(
     private val algo: AlgoSuggestions,
     private val suggestions2Service: Suggestions2Service,
     ) {
-    fun getSuggestions(profil: ProfileDTO, inclureScores: Boolean?): GetAffinitiesServiceDTO.Response {
-        val naiveBayesAffinities = suggestions2Service.recupererLesSuggestions(profil)
+    fun getSuggestions(request: GetAffinitiesServiceDTO.Request): GetAffinitiesServiceDTO.Response {
+        val naiveBayesAffinities = suggestions2Service.recupererLesSuggestions(request)
         val suggestions = algo.getFormationsSuggestions(
-            profil,
-            inclureScores?: true,
-            naiveBayesAffinities
+            request.profile,
+            request.inclureScores?: true,
+            naiveBayesAffinities.stream().map { DataSuggestions2(it.key, it.scores, null) }.toList()
         )
         val metiers = algo.sortMetiersByAffinites(
-            profil,
+            request.profile,
             null
         )
         return GetAffinitiesServiceDTO.Response(

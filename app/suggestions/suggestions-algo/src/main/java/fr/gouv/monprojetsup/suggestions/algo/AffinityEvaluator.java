@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -33,7 +32,6 @@ import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.data.Constants.isMetier;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_NAIVE_BAYES;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
@@ -43,6 +41,7 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_SCORE_PATH_LENGTH
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MIN_SPEC_PCT_FOR_EXP;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NOSTATS_BAC_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.SCORES_SUGGESTIONS2;
 import static fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation.getDebugExplanation;
 import static java.util.Map.entry;
 
@@ -157,9 +156,15 @@ public class AffinityEvaluator {
     public Affinite getAffinityEvaluation(
             String fl,
             boolean inclureDetailsScores,
-            @NotNull Map<String,DataSuggestions2> subScores
+            @Nullable DataSuggestions2 subScores
     ) {
-        return getAffinityAndExplanations(fl, null, null, inclureDetailsScores, subScores);
+        return getAffinityAndExplanations(
+                fl,
+                null,
+                null,
+                inclureDetailsScores,
+                subScores
+        );
     }
 
 
@@ -174,10 +179,6 @@ public class AffinityEvaluator {
             explanations.add(expl);
         }
 
-        public void addAll(List<Explanation> expl) {
-            explanations.addAll(expl);
-        }
-
     }
 
 
@@ -188,11 +189,11 @@ public class AffinityEvaluator {
     /**
      * get explanations, including debug explanations if needed
      * @param fl key
-     * @param dataSuggestions2 used to get debug info about what matched and how
+     * @param datasSuggestions2 used to get debug info about what matched and how
      */
     public Pair<List<Explanation>, @NotNull Double> getExplanationsAndAffinity(
             String fl,
-            @Nullable DataSuggestions2 dataSuggestions2
+            @Nullable DataSuggestions2 datasSuggestions2
     ) {
 
         //en verbose mode, on récupère également les interests
@@ -206,13 +207,11 @@ public class AffinityEvaluator {
                 sortedExpl,
                 subScores,
                 includeDetailedExplanations,
-                dataSuggestions2 != null
-                        ? Map.of(BONUS_NAIVE_BAYES, dataSuggestions2)
-                        : Map.of()
+                datasSuggestions2
         );
 
         if (includeDetailedExplanations) {
-            sortedExpl = appendScoreDetails(fl, affinite, sortedExpl, subScores, dataSuggestions2);
+            sortedExpl = appendScoreDetails(fl, affinite, sortedExpl, subScores, datasSuggestions2);
         }
         return Pair.of(sortedExpl.explanations, affinite.affinite());
     }
@@ -228,10 +227,10 @@ public class AffinityEvaluator {
         StringBuilder calculScoreDetails = new StringBuilder();
         calculScoreDetails.append("Score Total pour ").append(fl).append(" :");
         calculScoreDetails.append(df2.format(affinite.affinite()));
-        calculScoreDetails.append(" obtenu comme le produit de [ ");
+        calculScoreDetails.append(" obtenu comme le produit des subscores [");
 
         List<Map.Entry<String, Double>> entries = new ArrayList<>(subScores.entrySet());
-        entries.sort(Comparator.comparing(e -> -e.getValue()));
+        entries.sort(Comparator.comparing(e -> cfg.getMinMultipliers().get(e.getKey())));
         entries.forEach(e -> {
             val key = e.getKey();
             double weight = cfg.getMinMultipliers().get(key);
@@ -241,7 +240,7 @@ public class AffinityEvaluator {
                             + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
             ));
             calculScoreDetails.append(" ");
-            calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+            calculScoreDetails.append(df2.format(getMultiplier(e.getKey(), e.getValue())));
             calculScoreDetails.append(" (");
             calculScoreDetails.append(label);
             calculScoreDetails.append(") , ");
@@ -251,11 +250,19 @@ public class AffinityEvaluator {
         expl2.add(getDebugExplanation(calculScoreDetails.toString()));
 
         if(dataSuggestions2 != null && dataSuggestions2.explanations() != null) {
-            expl2.addAll(
-                    dataSuggestions2.explanations().explanations().stream()
-                            .map(Explanation::getRef).filter(Objects::nonNull)
-                            .map(e -> getDebugExplanation(e.toDebugString(algo.getDebugLabels())))
-                            .toList()
+            dataSuggestions2.explanations().explanations().forEach(
+                    (source, explNaiveBayes) -> {
+                        if(explNaiveBayes != null) {
+                            expl2.add(
+                                    Explanation.getDebugExplanation(
+                                            explNaiveBayes.toDebugString(
+                                                    source,
+                                                    algo.getDebugLabels()
+                                            )
+                                    )
+                            );
+                        }
+                    }
             );
         }
         return new Explanations(expl2);
@@ -275,7 +282,7 @@ public class AffinityEvaluator {
             Explanations expl,
             @Nullable Map<String, Double> detailedSubScoresReceiver,
             boolean includeScores,
-            @NotNull Map<String, DataSuggestions2> subScoresFromSuggestion2
+            @Nullable DataSuggestions2 dataFromSuggestion2
             ) {
 
         if(rejected.contains(fl) && !includeScores) return Affinite.getNoMatch();
@@ -314,15 +321,24 @@ public class AffinityEvaluator {
         } else {
             scores.put(Config.BONUS_SPECIALITE, getBonusSpecialites(fl, expl));
         }
-        subScoresFromSuggestion2.forEach((id, data) -> {
-            scores.put(id, data.affinity());
-            if(expl != null && data.explanations() != null) {
-                expl.addAll(data.explanations().explanations());
+        if(dataFromSuggestion2 != null) {
+            SCORES_SUGGESTIONS2.forEach((source, bonus) -> {
+                Double score = dataFromSuggestion2.scores().get(source);
+                if (score != null) {
+                    scores.put(bonus, score);
+                }
+            });
+            if(expl != null && dataFromSuggestion2.explanations() != null) {
+                val naiveBayesExplanations = dataFromSuggestion2.explanations().explanations();
+                expl.explanations.addAll(
+                        naiveBayesExplanations.values().stream()
+                                .map(Explanation::getNaiveBayesExplanation)
+                                .toList()
+                );
             }
-        });
+        }
 
         double score = aggregateScores(scores);
-
         //put interests in expl, if required
         if (detailedSubScoresReceiver != null && includeDetailedExplanations) {
             detailedSubScoresReceiver.putAll(scores.entrySet().stream()

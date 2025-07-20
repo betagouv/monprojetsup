@@ -38,7 +38,7 @@ class SuggestionsControllers(
     fun getSuggestions(
         @RequestBody(required = true) request: GetAffinitiesServiceDTO.Request
     ): GetAffinitiesServiceDTO.Response {
-        return suggestionsService.getSuggestions(request.profile, request.inclureScores)
+        return suggestionsService.getSuggestions(request)
     }
 
     @Operation(
