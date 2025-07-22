@@ -15,8 +15,8 @@
     "test": "npx vitest run src --passWithNoTests",
     "test:watch": "npx vitest watch src --passWithNoTests",
     "lint": "npm run lint:eslint && npm run lint:tsc",
-    "lint:fix": "eslint --report-unused-disable-directives --max-warnings 0 './**/*.{ts,tsx}' --fix",
-    "lint:eslint": "eslint --report-unused-disable-directives --max-warnings 0 './**/*.{ts,tsx}'",
+    "lint:fix": "eslint --max-warnings 0 './**/*.{ts,tsx}' --fix",
+    "lint:eslint": "eslint --max-warnings 0 './**/*.{ts,tsx}'",
     "lint:tsc": "npx tsc",
     "openapi-types": "npx openapi-typescript http://localhost:5002/v3/api-docs -o ./src/types/api-mps.d.ts"
   },
