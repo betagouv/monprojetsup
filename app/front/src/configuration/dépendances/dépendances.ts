@@ -57,7 +57,6 @@ import { TraceHttpService } from "@/services/trace/traceHttpService/traceHttpSer
 import { TraceSessionStorageService } from "@/services/trace/traceSessionStorageService/traceSessionStorageService";
 
 export class Dépendances {
-  // eslint-disable-next-line no-use-before-define
   private static _instance: Dépendances;
 
   private readonly _httpClient: HttpClient;
