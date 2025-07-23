@@ -221,7 +221,7 @@ export const localeFR = {
         AUTO_CENSURE_FIN: "ou moins.",
       },
       SPÉCIALITÉS: {
-        LABEL: "Spécialité de bac ou enseignement(s) de spécialité(s) choisi(s) ou envisagé(s)",
+        LABEL: "Spécialité de bac ou enseignement(s) de spécialité choisi(s) ou envisagé(s)",
         DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
         SÉLECTIONNÉS: "Spécialité(s) sélectionnée(s)",
         MA_SÉLECTION: {
@@ -238,7 +238,7 @@ export const localeFR = {
     },
     INTÉRÊTS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Centres d’intérêts",
+        TITRE_ÉTAPE: "Centre d’intérêts",
         TITRE: "Plus tard, je voudrais ...",
       },
       SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste.",
