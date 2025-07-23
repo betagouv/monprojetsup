@@ -238,7 +238,7 @@ export const localeFR = {
     },
     INTÉRÊTS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Centre d’intérêts",
+        TITRE_ÉTAPE: "Centres d’intérêt",
         TITRE: "Plus tard, je voudrais ...",
       },
       SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste.",
