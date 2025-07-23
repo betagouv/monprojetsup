@@ -43,8 +43,6 @@ public record Filiere (
         /* deux versions pour certaines filières: avec ou sans apprentissage */
         boolean apprentissage,
 
-        boolean isLas,
-
         /* code identifiant la filière san,s apprentissage dans la base */
         int cleFiliere,
 
@@ -58,9 +56,8 @@ public record Filiere (
     public Filiere(String libelle,
                    String sigle,
                    int cle, int cleFiliere,
-                   boolean apprentissage,
-                   boolean isLas) {
-        this(libelle, sigle, cle, apprentissage, isLas, cleFiliere, new HashSet<>());
+                   boolean apprentissage) {
+        this(libelle, sigle, cle, apprentissage, cleFiliere, new HashSet<>());
         motsClesParcoursup.add(libelle);
         motsClesParcoursup.add(sigle);
         motsClesParcoursup.addAll(Arrays.asList(sigle.replace('/', ' ').replace('-', ' ').split(" ")));
@@ -68,7 +65,7 @@ public record Filiere (
 
     //used by Jackson
     private Filiere() {
-        this("", "", 0, false, false, 0, new HashSet<>());
+        this("", "", 0, false, 0, new HashSet<>());
     }
 
     @Override

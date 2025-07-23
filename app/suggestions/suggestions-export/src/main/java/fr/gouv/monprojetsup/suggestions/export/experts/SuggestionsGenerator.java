@@ -35,6 +35,7 @@ public class SuggestionsGenerator {
 
     private static final boolean ONLY_FORMATIONS = true;
 
+    @SuppressWarnings("FieldCanBeLocal")
     @Value("${profils.experts.mps.path}")
     private final String profilsExpertPath = "profilsExperts.json";
 
@@ -58,7 +59,7 @@ public class SuggestionsGenerator {
         ReferenceCases cases = from(profiles);
 
         LOGGER.info("Retrieving details and explanations...");
-        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getDebugLabels());
+        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getDebugLabels(), data.getFormationIds());
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(

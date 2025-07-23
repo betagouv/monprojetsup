@@ -14,10 +14,10 @@ public record Formation(
         @Nullable String labelDebug,
         int capacite,
         boolean apprentissage,
-        int duree,
         @NotNull StatsFormation stats,
-        @NotNull List<@NotNull String> filieresPsup
-
+        @NotNull List<@NotNull String> filieresPsup,
+        boolean compatibleEtudesCourtes,
+        boolean compatibleEtudesLongues
         ) {
 
 }
