@@ -55,6 +55,7 @@ public record TagsSources(
         return Normalizer.normalize(
                         tag
                                 .toLowerCase()
+                                .replaceAll("[.]", "")
                                 .replaceAll("[-/',;`]", " ")
                                 .trim(),
                         Normalizer.Form.NFD)

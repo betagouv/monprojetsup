@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO
 import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2Service
+import fr.gouv.monprojetsup.suggestions.server.domain.port.Suggestions2ServiceRequest
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -26,7 +27,11 @@ class ExplanationsService(
         profil: ProfileDTO,
         keys: List<String>
     ): List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples>? {
-        val explanationsNaiveBayes = suggestions2Service.recupererLesExplications(profil, keys)
+        val explanationsNaiveBayes = suggestions2Service.recupererLesExplications(
+            Suggestions2ServiceRequest(
+                profile = profil,
+                keys = keys)
+        )
         return algo.getExplanationsAndExamples(
             profil,
             keys,

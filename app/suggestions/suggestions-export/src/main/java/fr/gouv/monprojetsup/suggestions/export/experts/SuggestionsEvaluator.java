@@ -45,6 +45,8 @@ public class SuggestionsEvaluator {
 
         cases.toDetails("details", true, data.getDebugLabels());
 
+        val keys = data.getFormationIds();
+
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
@@ -55,7 +57,6 @@ public class SuggestionsEvaluator {
             fos.write(cases.resume(data.getDebugLabels()));
         }
 
-        boolean stopOnFirstKO = true;
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
                         Files.newOutputStream(Path.of("evaluation.txt")),
@@ -74,7 +75,6 @@ public class SuggestionsEvaluator {
                     continue;
                 }
 
-                boolean stoppedBecauseOfKo = false;
                 Map<String, Integer> suggestionsRanks = new HashMap<>();
                 int k = 1;
                 for (Suggestion sugg : refCase.suggestions()) {
@@ -122,7 +122,14 @@ public class SuggestionsEvaluator {
                                 if (cod == null) {
                                     fos2.write("could not find '" + expectation + "'");
                                 } else {
-                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod, labels));
+                                    fos2.write(
+                                            ReferenceCases.evaluate(
+                                                    refCase.pf(),
+                                                    cod,
+                                                    labels,
+                                                    keys
+                                            )
+                                    );
                                 }
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");
@@ -191,8 +198,7 @@ public class SuggestionsEvaluator {
     static String toApprentissageExplanationString(String apprentissage) {
         if (apprentissage == null) return "Non-renseigné";
         return switch (apprentissage) {
-            case "A" -> "Indifférent";
-            case "B" -> "Indifférent";
+            case "A", "B" -> "Indifférent";
             case "C" -> "Peu intéressé";
             default -> apprentissage;
         };

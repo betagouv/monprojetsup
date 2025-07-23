@@ -27,9 +27,7 @@ public record FormationIdeoDuSup(
         boolean estEcoleCommerce,
         boolean estEcoleArchitecture,
         boolean estEcoleArt,
-        boolean estConservationRestauration,
-        boolean estDMA
-
+        boolean estConservationRestauration
 ) {
 
     public void inheritFrom(FormationIdeoDuSup rich, boolean seulementMetiers) {
@@ -63,8 +61,7 @@ public record FormationIdeoDuSup(
                 f.estEcoleCommerce(),
                 f.estEcoleArchitecture(),
                 f.estEcoleArt(),
-                f.estDiplomeConservationRestauration(),
-                f.estDMA()
+                f.estDiplomeConservationRestauration()
         );
     }
 
@@ -87,8 +84,7 @@ public record FormationIdeoDuSup(
                 f.estEcoleCommerce(),
                 f.estEcoleArchitecture(),
                 f.estEcoleArt(),
-                f.estConservationRestauration(),
-                f.estDMA()
+                f.estConservationRestauration()
         );
     }
 

@@ -57,10 +57,10 @@ class FormationsIdeoDuSupTest {
     }
 
     @Test
-    fun `Les formations ideo du sup incluent L1 - histoire de l'art et archéologie et cette formation est connectée a commissaire priseur`() {
+    fun `Les formations ideo du sup incluent L1 - histoire de l'art et archéologie et cette formation est connectée a conservatrice du patrimoine`() {
         assertThat(formationsIdeoDuSup).containsKey(TestData.L1_HISTOIRE_ART_IDEO_CODE)
         val formation = formationsIdeoDuSup[TestData.L1_HISTOIRE_ART_IDEO_CODE]!!
-        assertThat(formation.metiers).contains(TestData.MET_COMMISSAIRE_PRISEUR_IDEO)
+        assertThat(formation.metiers).contains(TestData.MET_CONSERVATRICE_PATRIMOINE)
     }
 
 }

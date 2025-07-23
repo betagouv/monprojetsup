@@ -98,21 +98,23 @@ const FiltresGroupésParCatégorie = ({
               </Accordion.Trigger>
             </Accordion.Header>
             <Accordion.Content className="border border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
-              <div className="mb-4 grid grid-flow-col items-center justify-between">
+              <div className="mb-4 grid grid-flow-row gap-2 sm:grid-flow-col sm:items-center sm:justify-between">
                 <p className="fr-text--lg mb-0 text-[--text-label-grey]">{i18n.COMMUN.PRÉCISER_CATÉGORIES}</p>
                 {catégorie.afficherDétail && (
-                  <Bouton
-                    auClic={() => {
-                      setContenuModaleDétail(catégorie.filtres);
-                      modaleDomaineCatégorie.open();
-                    }}
-                    icône={{ position: "gauche", classe: "fr-icon-information-line" }}
-                    taille="petit"
-                    type="button"
-                    variante="secondaire"
-                  >
-                    {i18n.COMMUN.DÉTAILS}
-                  </Bouton>
+                  <div className="sm:text-right">
+                    <Bouton
+                      auClic={() => {
+                        setContenuModaleDétail(catégorie.filtres);
+                        modaleDomaineCatégorie.open();
+                      }}
+                      icône={{ position: "gauche", classe: "fr-icon-information-line" }}
+                      taille="petit"
+                      type="button"
+                      variante="secondaire"
+                    >
+                      {i18n.COMMUN.DÉTAILS}
+                    </Bouton>
+                  </div>
                 )}
               </div>
               <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">

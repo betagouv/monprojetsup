@@ -67,14 +67,8 @@ public class SuggestionsData {
         this.formationsVoeuxPort = formationsVoeuxPort;
         this.voeuxPort = voeuxPort;
         this.configPort = configPort;
-        val activeConfig = configPort.retrieveActiveConfig();
-        if(activeConfig == null) {
-            this.config = new Config();
-            configPort.setActiveConfig(this.config);
-        } else {
-            this.config = activeConfig;
+        refreshConfig();
         }
-    }
 
     @Getter
     private @NotNull Config config;
@@ -84,8 +78,10 @@ public class SuggestionsData {
         synchronized (this) {
             // Fetch the latest config from a database, external service, or file
             val activeConfig = configPort.retrieveActiveConfig();
-            if (activeConfig != null && activeConfig.isViable()) {
-                activeConfig.fix();
+            if(activeConfig == null || !activeConfig.isViable()) {
+                this.config = new Config();
+                configPort.setActiveConfig(this.config);
+            } else {
                 this.config = activeConfig;
             }
         }
@@ -94,7 +90,9 @@ public class SuggestionsData {
 
     public void setConfig(@NotNull Config config) {
         synchronized (this) {
-            config.fix();
+            if(!config.isViable()) {
+                throw new IllegalArgumentException("La nouvelle configuration n'est pas viable");
+            }
             this.config = config;
             configPort.setActiveConfig(config);
         }
@@ -130,11 +128,6 @@ public class SuggestionsData {
         return formationsPort.retrieveFormation(formationId)
                 .map(f -> f.stats().nbAdmisParBac().get(bac))
                 .orElse(null);
-    }
-
-    public int getDuree(String formationId) {
-        val f = formationsPort.retrieveFormation(formationId);
-        return f.map(Formation::duree).orElse(DUREE_DEFAULT_VALUE);
     }
 
     public @Nullable Double getStatsSpecialite(String formationId, String iMtCod) {
@@ -226,6 +219,18 @@ public class SuggestionsData {
 
     public void saveAlgoEdges(@NotNull Map<String, Set<String>> edges) {
         edgesPort.setAlgoEdges(edges.entrySet().stream().flatMap(e -> e.getValue().stream().map(dst -> new Edge(e.getKey(),dst))).toList());
+    }
+
+    public @NotNull Boolean getEtudeCourte(String formationId) {
+        return formationsPort.retrieveFormation(formationId)
+                .map(Formation::compatibleEtudesCourtes)
+                .orElse(false);
+    }
+
+    public @NotNull Boolean getEtudeLongue(String formationId) {
+        return formationsPort.retrieveFormation(formationId)
+                .map(Formation::compatibleEtudesLongues)
+                .orElse(false);
     }
 
 }

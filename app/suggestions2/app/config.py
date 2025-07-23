@@ -1,27 +1,22 @@
-from enum import Enum
+import logging
+from app.domain.models.config import ProfileConfig
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
+
+CONFIG = ProfileConfig(
+    use_id_baccalaureat=True,
+    use_duree_etudes_prevue=False,
+    use_specialites=True,
+    use_interests=True,
+    use_metiers_favoris=True,
+    use_corbeille_formations=True,
+    use_communes_favorites=False,
+    use_formations_favorites=True,
+    targets={
+        "formations_favorites",
+    },
+)
 
 
-class Variable(Enum):
-    FormationsFavorites = 0
-    CorbeilleFormations = 1
-    Specialites = 2
-    DomainesEtInterets = 3
-    VoeuxParcoursup = 4
-    Metiers = 5
-
-
-"""
-Defines which variables should be used for predicting the target (list for formations).
-"""
-BASKET_CONFIG = {
-    "features": [
-        Variable.FormationsFavorites,
-        Variable.CorbeilleFormations,
-        Variable.Specialites,
-        Variable.DomainesEtInterets,
-        # Variable.VoeuxParcoursup,
-        Variable.Metiers,
-    ],
-}
+LOGGER = logging.getLogger("uvicorn.error.app")
+LOGGER.setLevel("DEBUG")
