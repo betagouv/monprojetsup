@@ -53,7 +53,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@hookform/devtools": "^4.3.1",
-    "@playwright/test": "^1.50.1",
+    "@playwright/test": "^1.52.0",
     "@tanstack/react-query-devtools": "^5.62.3",
     "@tanstack/router-vite-plugin": "^1.87.4",
     "@testing-library/dom": "^10.4.0",
@@ -72,6 +72,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-sonarjs": "^3.0.1",
     "jsdom": "^25.0.1",
+    "playwright": "^1.52.0",
     "postcss": "^8.4.49",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "sass": "^1.82.0",

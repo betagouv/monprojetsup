@@ -26,6 +26,7 @@ const Bouton = ({
       type={type}
     >
       <BoutonSquelette
+        ariaHidden={false}
         icône={icône}
         taille={taille}
         variante={variante}

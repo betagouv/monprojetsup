@@ -8,6 +8,7 @@ const ListeDeFavoris = ({
   favoris,
   nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
   listeDeSuggestions,
+  boutonMPSVisible,
 }: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
@@ -37,12 +38,14 @@ const ListeDeFavoris = ({
           >
             <Favori
               ariaLabel={favori.ariaLabel}
+              boutonMPSVisible={boutonMPSVisible}
               callbackMettreÀJour={favori.callbackMettreÀJour}
               désactivé={favori.désactivé}
               estFavori={favori.estFavori}
               icôneEstFavori={favori.icôneEstFavori}
               icôneEstPasFavori={favori.icôneEstPasFavori}
               id={favori.id}
+              idDeLonglet={id}
               nom={favori.nom}
               title={favori.title}
               url={favori.url}
@@ -50,6 +53,7 @@ const ListeDeFavoris = ({
           </li>
         ))}
       </ul>
+
       {favoris.length > nombreFavorisAffichés && (
         <div className="mt-2 *:p-0">
           <Bouton

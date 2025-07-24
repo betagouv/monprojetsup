@@ -369,7 +369,7 @@ export const localeFR = {
       MODALE_PARCOURSUP: {
         TITRE: "Synchronisation avec Parcoursup",
         CONTENU:
-          "J’autorise MonProjetSup à accéder à mes favoris enregistrés depuis mon compte Parcoursup. A noter que MonProjetSup n’accède à aucun autre élément de ton dossier Parcoursup. Cette autorisation est valable toute la durée de l'année scolaire en cours, et révocable en écrivant à",
+          "J’autorise MonProjetSup à accéder à mes favoris enregistrés depuis mon compte Parcoursup. À noter que MonProjetSup n’accède à aucun autre élément de ton dossier Parcoursup. Cette autorisation est valable toute la durée de l'année scolaire en cours, et révocable en écrivant à",
         BOUTON_ACTION: "C'est parti",
       },
       CARTES: {

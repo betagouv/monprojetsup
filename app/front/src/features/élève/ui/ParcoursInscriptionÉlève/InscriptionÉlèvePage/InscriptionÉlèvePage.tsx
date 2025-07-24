@@ -127,6 +127,7 @@ const InscriptionÉlèvePage = () => {
                 variante="neutre"
               >
                 <BoutonSquelette
+                  ariaHidden={false}
                   icône={{ position: "gauche", classe: "fr-icon-arrow-left-line" }}
                   variante="secondaire"
                 >

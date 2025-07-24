@@ -8,4 +8,5 @@ export type BoutonSqueletteProps = {
     position?: "droite" | "gauche";
     classe: string;
   };
+  ariaHidden: boolean;
 };
