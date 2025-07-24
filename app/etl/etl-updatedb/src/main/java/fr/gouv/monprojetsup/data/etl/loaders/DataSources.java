@@ -42,12 +42,11 @@ public class DataSources {
     public static final String IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER = "ID_Master_ONISEP";
 
     /* MPS data */
+    public static final String PROFILS_REFERENCE_EXPERT_MPS_PATH = "ml/profils_experts.csv";
     public static final String PROFILS_REFERENCE_LYCEEN_MPS_PATH = "ml/profils_lyceens.csv";
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
     public static final String RESUMES_RESUME_GENERIQUE_HEADER = "resume type formation";
-    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION_MOS = "Retours MOSS type formation";
     public static final String RESUMES_RESUME_PRINCIPAL_HEADER = "resume filiere";
-     public static final String RESUMES_MPS_RESUME_FORMATION_MOS = "Retours MOSS filiere";
     public static final String RESUMES_MPS_ID_HEADER = "code filiere";
     public static final String RESUMES_GENERIQUE_ID_HEADER = "code type formation";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
