@@ -14,7 +14,7 @@ class FiltrerRechercheBuilderTest {
         val resultat = builder.filtrerMotsRecherches(recherche = rechercheLongue, tailleMinimumRecherche = 2)
 
         // Then
-        assertThat(resultat).isEqualTo(listOf("12", "réchèrche", "peu", "Toùt", "peTit", "lôngue"))
+        assertThat(resultat).isEqualTo(listOf("12", "ma", "réchèrche", "peu", "Toùt", "peTit", "lôngue"))
     }
 
     @Test
@@ -27,19 +27,6 @@ class FiltrerRechercheBuilderTest {
     }
 
     @Test
-    fun `doit filtrer les mots vides`() {
-        // Given
-        val rechercheAvecMotsVide =
-            "ma recherche avec ma liste de mots vides le la les aux un une des du des en sur sous dans chez par pour sans contre entre parmi vers derrière devant après avant autour et ou mais donc ni car que quand comme puisque quoique mon mes ton ta tes son sa ses notre nos votre vos leur leurs ce cet cette ces qui que quoi dont lequel laquelle lesquels lesquelles"
-
-        // When
-        val resultat = builder.filtrerMotsRecherches(recherche = rechercheAvecMotsVide, tailleMinimumRecherche = 2)
-
-        // Then
-        assertThat(resultat).isEqualTo(listOf("recherche", "liste", "mots", "vides"))
-    }
-
-    @Test
     fun `dois filtrer les mots doubles`() {
         // Given
         val rechercheMotsDoubles = "les chaussettes de l'archiduchesse sont-elles sèches archi-sèches"
@@ -48,6 +35,6 @@ class FiltrerRechercheBuilderTest {
         val resultat = builder.filtrerMotsRecherches(recherche = rechercheMotsDoubles, tailleMinimumRecherche = 2)
 
         // Then
-        assertThat(resultat).isEqualTo(listOf("chaussettes", "archiduchesse", "sont", "elles", "sèches", "archi"))
+        assertThat(resultat).isEqualTo(listOf("les", "chaussettes", "de", "archiduchesse", "sont", "elles", "sèches", "archi"))
     }
 }

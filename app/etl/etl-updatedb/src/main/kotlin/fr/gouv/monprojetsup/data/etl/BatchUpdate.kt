@@ -20,6 +20,18 @@ class BatchUpdate(
         }
     }
 
+    fun clearTable(tableName: String) {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
+
+            val sql = "DELETE FROM $tableName"
+            val query = statelessSession.createNativeMutationQuery(sql)
+            query.executeUpdate()
+
+            transaction.commit()
+        }
+    }
+
     fun <T> setEntities(entityName: String, entities: Collection<T>) {
         sessionFactory.openStatelessSession().use { statelessSession ->
             val transaction: Transaction = statelessSession.beginTransaction()
@@ -46,5 +58,23 @@ class BatchUpdate(
             return query.resultList
         }
     }
+
+    fun setTableContent(srcTableName: String, destTableName: String) {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
+
+            val sqlDelete = "DELETE FROM $destTableName"
+            val queryDelete = statelessSession.createNativeMutationQuery(sqlDelete)
+            queryDelete.executeUpdate()
+
+            val sqlInsert = "INSERT INTO $destTableName " +
+                    "SELECT * FROM $srcTableName"
+            val queryInsert = statelessSession.createNativeMutationQuery(sqlInsert)
+            queryInsert.executeUpdate()
+
+            transaction.commit()
+        }
+    }
+
 
 }

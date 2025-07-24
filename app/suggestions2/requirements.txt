@@ -1,5 +1,0 @@
-fastapi[standard]>=0.115.7,<0.116.0
-pandas>=2.2.3
-prometheus-client==0.21.1
-psycopg==3.2.4
-python-dotenv==1.0.1

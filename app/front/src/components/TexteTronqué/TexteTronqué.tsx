@@ -1,50 +1,30 @@
 import { type TexteTronquéProps } from "./TexteTronqué.interface";
-import { i18n } from "@/configuration/i18n/i18n";
-import { useEffect, useRef, useState } from "react";
+import parse from "html-react-parser";
+import { useRef } from "react";
+import remarkHtml from "remark-html";
+import remarkParse from "remark-parse";
+import { unified } from "unified";
 
 const TexteTronqué = ({ texte }: TexteTronquéProps) => {
-  const [afficherEnEntier, setAfficherEnEntier] = useState(false);
-  const [afficherBoutonLireLaSuite, setAfficherBoutonLireLaSuite] = useState(false);
-
-  const ref = useRef<HTMLParagraphElement | null>(null);
-
-  const classEnFonctionDeAfficherEnEntier = () => {
-    if (afficherEnEntier) return "";
-
-    return "line-clamp-4";
-  };
-
-  useEffect(() => {
-    const doitAfficherBoutonLireLaSuite =
-      ref?.current?.offsetHeight &&
-      ref?.current?.scrollHeight &&
-      ref?.current?.offsetWidth &&
-      ref?.current?.scrollWidth &&
-      (ref?.current?.offsetHeight < ref?.current?.scrollHeight ||
-        ref?.current?.offsetWidth < ref?.current?.scrollWidth);
-
-    setAfficherBoutonLireLaSuite(Boolean(doitAfficherBoutonLireLaSuite));
-  }, []);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   if (!texte || texte === "") return null;
 
+  const texteHtml = unified()
+    .use(remarkParse)
+    .use(remarkHtml)
+    .processSync(texte)
+    .toString()
+    .replaceAll("<a ", '<a target="_blank" rel="noopener noreferrer" ');
+
   return (
     <div className="justify-start">
-      <p
-        className={`${classEnFonctionDeAfficherEnEntier()} mb-2 whitespace-pre-line`}
+      <div
+        className="mb-2 whitespace-pre-line"
         ref={ref}
       >
-        {texte}
-      </p>
-      {afficherBoutonLireLaSuite && (
-        <button
-          className="fr-link inline border-0 border-b border-solid border-[--underline-img] text-sm hover:border-b-[1.5px] hover:!bg-inherit"
-          onClick={() => setAfficherEnEntier((valeurActuelle) => !valeurActuelle)}
-          type="button"
-        >
-          {afficherEnEntier ? i18n.COMMUN.MASQUER_SUITE : i18n.COMMUN.LIRE_SUITE}
-        </button>
-      )}
+        {parse(texteHtml)}
+      </div>
     </div>
   );
 };

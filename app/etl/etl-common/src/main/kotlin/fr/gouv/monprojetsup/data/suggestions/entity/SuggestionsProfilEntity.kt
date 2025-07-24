@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.eleve.entity.ChoixAlternance
 import fr.gouv.monprojetsup.data.eleve.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.data.eleve.entity.ChoixNiveau
 import fr.gouv.monprojetsup.data.eleve.entity.SituationAvanceeProjetSup
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsProfilEntity.Companion.TABLE_NAME
 import fr.gouv.monprojetsup.data.suggestions.entity.profil.CommuneEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.profil.FormationFavoriteEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.profil.VoeuFavoriEntity
@@ -19,7 +20,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "profil_reference")
+@Table(name = TABLE_NAME)
 class SuggestionsProfilEntity {
 
     @Id
@@ -104,6 +105,11 @@ class SuggestionsProfilEntity {
         ).toList()
         corbeilleFormations = toStringArray(m["corbeille_formations"])
     }
+
+    companion object {
+        const val TABLE_NAME = "profil_reference"
+    }
+
 }
 
 

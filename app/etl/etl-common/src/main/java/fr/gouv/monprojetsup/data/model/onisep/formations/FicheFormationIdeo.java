@@ -283,7 +283,7 @@ public record FicheFormationIdeo(
                 }
             }
         }
-        if (nature_certificat != null) result.addAll(nature_certificat);
+        //trop large if (nature_certificat != null) result.addAll(nature_certificat);
         if (element_enseignement != null) result.addAll(element_enseignement);
         if (sousDomainesWeb != null) {
             for (SousDomaineWeb sousDomaine : sousDomainesWeb) {
@@ -334,11 +334,6 @@ public record FicheFormationIdeo(
 
     public boolean estDiplomeConservationRestauration() {
         return Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_code, -1) == Constants.CODE_NSF_CONSERVATION_RESTAURATION;
-    }
-
-    public boolean estDMA() {
-        return type_Formation.type_formation_libelle_court.equals("DMA")
-                || type_Formation.type_formation_libelle.contains("DMA");
     }
 
     public Collection<Pair<String, String>> getSousdomainesWeb() {

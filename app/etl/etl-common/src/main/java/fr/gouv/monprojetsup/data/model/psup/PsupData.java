@@ -119,8 +119,6 @@ public record PsupData(
 
     public List<String> getFormationsMpsIds() {
         val resultInt = new HashSet<>(filActives);//environ 750 (incluant apprentissage)
-        resultInt.addAll(getLasFlCodes());
-
         val result = new HashSet<>(
                 resultInt.stream().map(Constants::gFlCodToMpsId).toList()
         );
@@ -141,13 +139,6 @@ public record PsupData(
 
     public @NotNull List<@NotNull Bac> getBacs() {
         return bacs;
-    }
-
-    public List<Filiere> getFilieres() {
-        return new ArrayList<>(filieres.values());
-    }
-    public Collection<Integer> getLasFlCodes() {
-        return filieres.values().stream().filter(Filiere::isLas).map(Filiere::cle).toList();
     }
 
     public AdmissionStats buildStats() {
@@ -267,7 +258,6 @@ public record PsupData(
 
     public void cleanupAfterUpdate() {
         filsim().normalize();
-        filActives.addAll(getLasFlCodes());
         filActives.retainAll(formations().filieres.keySet());
         //do not restrict to fil actives because we want to keep apprentissage
         formations().cleanup();
@@ -299,10 +289,9 @@ public record PsupData(
      * @return the correspondance
      */
     public Map<String, String> getPsupKeyToMpsKey() {
-        Map<Integer, Integer> flToFl = new HashMap<>();
 
         //si un libellé de flAAA est un préfixe strict du libellé de flBBB alors flBBB est dans le groupe de flAAA
-        addFormationsPrefixFomAnother(flToFl);
+        Map<Integer, Integer> flToFl = addFormationsPrefixFomAnother();
 
         /* regroupement explicite et systématique des filières en apprentissage */
         formations.filieres.values().stream()
@@ -411,7 +400,7 @@ public record PsupData(
         //"CPES - Cycle pluridisciplinaire d'Études Supérieures - Sciences (fl680002)"
         flToGrp.put("fl680015", "fl680002");
 
-        flToGrp.keySet().remove("fl250001");//on laisse louvre tel quel
+        flToGrp.remove("fl250001");//on laisse louvre tel quel
 
         //L1 droit bizarre
         String l1Droit = "fl2002";
@@ -449,7 +438,7 @@ public record PsupData(
         this.motsCles.set(motsCles);
     }
 
-    private void addFormationsPrefixFomAnother(Map<Integer, Integer> result) {
+    private Map<Integer, Integer> addFormationsPrefixFomAnother() {
         Map<String, Integer> inverse =
                 formations.filieres.values().stream()
                         .collect(
@@ -458,11 +447,12 @@ public record PsupData(
                                         fr.gouv.monprojetsup.data.model.formations.Filiere::gFlCod
                                 )
                         );
-        //on constitue l a liste des libellés qui ne sont pas encore en correespondance
+        //on constitue la liste des libellés
         LinkedList<String> names = new LinkedList<>(inverse.keySet().stream()
-                .filter(name -> !result.containsKey(inverse.get(name)))
                 .sorted().toList());
         //on considère les noms qui n'ont pas encore été matchés
+        Map<Integer, Integer> result = new HashMap<>();
+        //algo en temps linéaire, en commençant par trier les formations par libellé
         int i = 0;
         while (i < names.size() - 1) {
             String labeli = names.get(i);
@@ -476,6 +466,7 @@ public record PsupData(
                 i++;
             }
         }
+        return result;
     }
 
 

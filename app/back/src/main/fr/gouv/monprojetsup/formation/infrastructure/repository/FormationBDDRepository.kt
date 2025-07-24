@@ -57,6 +57,10 @@ class FormationBDDRepository(
         return ids.filterNot { existingIds.contains(it) }
     }
 
+    override fun recupererIdsFormationsNonObsoletes(): List<String> {
+        return formationJPARepository.findNonObsoleteIds()
+    }
+
     private fun logguerFormationInconnue(idFormation: String) {
         logger.error(
             type = "FORMATION_ABSENTE_BDD",

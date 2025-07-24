@@ -12,14 +12,18 @@ interface CandidatsJPARepository : JpaRepository<SuggestionsPaniersVoeuxEntity, 
 
 @Repository
 open class CandidatsRepository(
-            val repo : CandidatsJPARepository
+    private val repo : CandidatsJPARepository
 )
     : CandidatsPort
 {
 
     @Transactional(readOnly = true)
     override fun findAll(): List<PanierVoeux> {
-        return repo.findAll().map { it.toCandidat() }
+        return repo.findAll().map { PanierVoeux(
+            it.bac,
+            it.voeux.toList(),
+            it.lettres.toList()
+        ) }
     }
 
 }

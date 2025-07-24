@@ -236,10 +236,10 @@ public class ConnecteurJsonCarteSQL {
             stmt.setFetchSize(1_000_000);
             String sql = SELECT
                     //id du groupe de classement
-                    + "fil.gFlLib, "
+                    + "fil.g_fl_lib, "
                     + "fil.G_FL_SIG, "
-                    + "fil.gFlCod, "
-                    + "NVL(fil.G_FL_COD_FI,fil.gFlCod), "
+                    + "fil.g_fl_cod, "
+                    + "NVL(fil.G_FL_COD_FI,fil.g_fl_cod), "
                     + "fil.G_FL_FLG_APP "
                     + FROM + " mps_G_FIL fil";
 
@@ -252,7 +252,7 @@ public class ConnecteurJsonCarteSQL {
                     int gFlCod = result.getInt(3);
                     int gFlCodFi = result.getInt(4);
                     boolean gFlFlgApp = result.getBoolean(5);
-                    Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp, false);
+                    Filiere filiere = new Filiere(gFlLib, gFlSig, gFlCod, gFlCodFi, gFlFlgApp);
                     entree.filieres.put(gFlCod, filiere);
                 }
             }

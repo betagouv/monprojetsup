@@ -32,6 +32,7 @@ const FormationSansRecherchePage = () => {
       <ListeEtAperçuContenu>
         <FicheFormation
           afficherBoutonFavori
+          baseOuverte={false}
           id={hash}
         />
       </ListeEtAperçuContenu>

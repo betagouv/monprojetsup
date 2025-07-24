@@ -16,16 +16,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.AVENIRS_FORMATION_SLUG_PREFIX;
-import static fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS;
 
 public class UrlsUpdater {
 
 
     private static final String DESCRIPTIFS_FORMATIONS_METIERS = "DescriptifsFormationsMetiers";
     private static final String METIERS_IDEO_DU_SUP = "MetiersIdeoDuSup";
-    public static final String IDEO_HOTLINE = "IdeoHotline";
     private static final String AJOUTS_MPS = "AjoutsMps";
-    private static final String LAS_TO_GENERIC = " LasToGeneric" ;
     public static final String CARTE_PSUP = "CarteParcoursup";
     private static final String PREFIX_ONISEP = "Fiche détaillée Onisep - ";
     private static final String PREFIX_FT = "France Travail - ";
@@ -56,7 +53,6 @@ public class UrlsUpdater {
 
             label = capitalizeFirstLetter(label).replace(".", " ")
             .trim();
-            val labelSansApprentissage = label.replace(" - en apprentissage", "");
 
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label, source);
 
@@ -123,7 +119,7 @@ public class UrlsUpdater {
 
         mpsKeyToIdeo.forEach((mpsKey, ideos) -> {
                     if (ideos.size() < Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
-                        ideos.forEach(ideo -> {
+                        ideos.stream().distinct().forEach(ideo -> {
                             if (labels.containsKey(ideo)) {
                                 val label = labels.get(ideo);
                                 addUrl(mpsKey, AVENIRS_FORMATION_SLUG_PREFIX + ideo, label, "mpsKeyToIdeo", urls);
@@ -133,19 +129,29 @@ public class UrlsUpdater {
                 }
         );
 
-        extraUrls.forEach((key, extraLinks) -> {
-            val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
-            if(!cleanupExtraLinks.isEmpty()) {
-                val cleanedupKey = Constants.cleanup(key);
-                cleanupExtraLinks.forEach(e -> addUrl(cleanedupKey, e, getLabel(labels, cleanedupKey, e), AJOUTS_MPS, urls));
-            }
-        });
-
         val mpsIdToPsupIds = new HashMap<>(psupKeytoMpsKey.entrySet().stream().collect(
                 Collectors.groupingBy(Map.Entry::getValue,
                         Collectors.mapping(Map.Entry::getKey,
                                 Collectors.toList()))
         ));
+
+        mpsIdToPsupIds.forEach(
+                (mpsKey, listpsupKey) -> {
+                    val urlsCarte = listpsupKey.stream().map(liensCarte::get).filter(Objects::nonNull).distinct().sorted().toList();
+                    if (urlsCarte.size() <= Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
+                        urlsCarte.forEach(uri -> addUrl(mpsKey, uri, "Infos Onisep", "liensCarte", urls));
+                    }
+                }
+        );
+
+        extraUrls.forEach((key, extraLinks) -> {
+            val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
+            if (!cleanupExtraLinks.isEmpty()) {
+                val cleanedupKey = Constants.cleanup(key);
+                cleanupExtraLinks.forEach(e -> addUrl(cleanedupKey, e, getLabel(labels, cleanedupKey, e), AJOUTS_MPS, urls));
+            }
+        });
+
         mpsIds.forEach(mpsId -> {
             val l = new ArrayList<>(mpsIdToPsupIds.computeIfAbsent(mpsId, z -> new ArrayList<>()));
             l.add(mpsId);
@@ -184,22 +190,7 @@ public class UrlsUpdater {
                             );
                         });
                     }
-
-                    val urlsCarte = listpsupKey.stream().map(liensCarte::get).filter(Objects::nonNull).distinct().sorted().toList();
-                    if(urlsCarte.size() <= Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
-                        urlsCarte.forEach(uri -> addUrl(mpsKey, uri, "Infos Onisep", "liensCarte", urls));
-                    }
                 }
-                );
-
-
-        /* traitement spécifique études de santé */
-        addUrl(
-                Constants.gFlCodToMpsId(Constants.PASS_FL_COD),
-                Constants.URL_ARTICLE_PAS_LAS,
-                LABEL_ARTICLE_PAS_LAS,
-                LABEL_ARTICLE_PAS_LAS,
-                urls
         );
 
         return urls;

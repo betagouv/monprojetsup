@@ -3,44 +3,17 @@ package fr.gouv.monprojetsup.data.etl.loaders;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifFormation;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
-import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_FORMATION;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_KEY;
-import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_MPS_RESUME_TYPE_FORMATION;
-
 public class DescriptifsLoader {
-    public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
-            OnisepData onisepData,
-            DataSources sources
-    ) throws IOException {
 
-        DescriptifsFormationsMetiers descriptifs = new DescriptifsFormationsMetiers();
-
-        MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(
-                sources.getSourceDataFilePath(
-                        DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH
-                ),
-                MetiersScrapped.class);
-        descriptifs.inject(metiersScrapped);
-
-        injectFichesMetiers(onisepData.metiersIdeo(), descriptifs);
-
-        addMpsdescriptifs(descriptifs, sources);
-        return descriptifs;
-    }
-
-    private static void injectFichesMetiers(List<MetierIdeo> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
+     public static void injectFichesMetiers(List<MetierIdeo> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
         fichesMetiers.forEach(fiche -> {
             String key = fiche.ideo();
             String descriptif = fiche.descriptif();
@@ -54,20 +27,19 @@ public class DescriptifsLoader {
         });
     }
 
-    private static void addMpsdescriptifs(DescriptifsFormationsMetiers descriptifs, DataSources sources) {
-        val lines = CsvTools.readCSV(
-                sources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),
-                ',');
-        String keyTypeFor = "code type formation";
 
+    public static void addMpsdescriptifsFromFile(
+            DescriptifsFormationsMetiers descriptifs,
+            @NotNull List<Map<@NotNull String, @NotNull String>> lines,
+            String mpsIdKey,
+            String genericIdKey,
+            String resumeGeneralKey,
+            String resumePrincipalKey
+    ) {
         Map<String, String> resumesTypesformations = new HashMap<>();
-
-        if (lines.isEmpty()) {
-            throw new IllegalStateException("No data in " + DataSources.RESUMES_MPS_PATH);
-        }
         for (val line : lines) {
-            val frCod = line.get(keyTypeFor);
-            val descFormation = line.get(RESUMES_MPS_RESUME_TYPE_FORMATION);
+            val frCod = line.get(genericIdKey);
+            val descFormation = line.get(resumeGeneralKey);
             if(descFormation == null) {
                 throw new RuntimeException("No description for " + frCod);
             }
@@ -75,20 +47,31 @@ public class DescriptifsLoader {
                 resumesTypesformations.put(frCod, descFormation.trim());
             }
         }
+        addMpsdescriptifsFromRemoteSheet(descriptifs, lines, resumesTypesformations, mpsIdKey, genericIdKey, resumePrincipalKey);
+    }
+
+    public static void addMpsdescriptifsFromRemoteSheet(
+            DescriptifsFormationsMetiers descriptifs,
+            @NotNull List<Map<@NotNull String, @NotNull String>> lines,
+            Map<String,String> resumesTypesformations,
+            String mpsIdKey,
+            String genericIdKey,
+            String descriptionPrincipalKey
+    ) {
 
         for (val line : lines) {
             if(line.values().stream().allMatch(String::isBlank)) continue;
-            String flfrcod = line.getOrDefault(RESUMES_MPS_RESUME_KEY, "");
-            if (flfrcod.isBlank()) {
-                throw new RuntimeException("Empty key " + RESUMES_MPS_RESUME_KEY + " in " + line);
+            String mpsCod = line.getOrDefault(mpsIdKey, "");
+            if (mpsCod.isBlank()) {
+                throw new RuntimeException("Empty key " + mpsIdKey + " in " + line);
             }
 
-            String frcod = line.getOrDefault(keyTypeFor, "");
+            String frcod = line.getOrDefault(genericIdKey, "");
 
             String descForm = resumesTypesformations.getOrDefault(frcod, "");
-            String descFiliere = line.get(RESUMES_MPS_RESUME_FORMATION).trim();
+            String descFiliere = line.get(descriptionPrincipalKey).trim();
 
-            var descriptif = descriptifs.keyToDescriptifs().computeIfAbsent(flfrcod, z -> new DescriptifFormation(line));
+            var descriptif = descriptifs.keyToDescriptifs().computeIfAbsent(mpsCod, z -> new DescriptifFormation(line));
             if (descriptif.getMultiUrls() == null) descriptif.setMultiUrls(new HashSet<>());
 
             if (!descFiliere.isBlank()) {

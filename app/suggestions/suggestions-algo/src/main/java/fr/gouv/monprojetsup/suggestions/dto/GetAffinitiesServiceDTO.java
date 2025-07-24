@@ -15,6 +15,9 @@ public class GetAffinitiesServiceDTO {
             @Schema(name = "profile", description = "Profil utilisé pour évaluer l'affinité.")
             @NotNull ProfileDTO profile,
 
+            @Schema(name = "keys", description = "Liste des clés des formations considérées.")
+            @NotNull List<String> keys,
+
             @Schema(name = "inclureScores", description = "Inclure les scores aux différents critères dans la réponse.", example = "true")
             @Nullable Boolean inclureScores
 

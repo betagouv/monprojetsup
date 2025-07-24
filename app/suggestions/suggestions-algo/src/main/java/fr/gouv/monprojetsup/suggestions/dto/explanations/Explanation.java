@@ -64,6 +64,8 @@ record ExplanationSpecialite (String spe, int pct) {}
 
 record ExplanationSpecialites (List<ExplanationSpecialite> stats) {}
 
+record ExplanationNaivesBayes(NaivesBayesExplanation expl) {}
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -79,7 +81,7 @@ public class Explanation {
     @Nullable ExplanationTypeBac tbac;
     @Nullable ExplanationDebug debug;
     @Nullable ExplanationSpecialites spec;
-    @Nullable NaivesBayesExplanation ref;
+    @Nullable ExplanationNaivesBayes ref;
 
     public static @NotNull Explanation getGeoExplanation(@Nullable List<ExplanationGeo> result) {
         Explanation e = new Explanation();
@@ -128,6 +130,12 @@ public class Explanation {
     public static @NotNull Explanation getSpecialitesExplanation(Map<String, Double> stats) {
         Explanation e = new Explanation();
         e.spec = new ExplanationSpecialites(stats.entrySet().stream().map(ee -> new ExplanationSpecialite(ee.getKey(), (int) (ee.getValue() * 100))).toList());
+        return e;
+    }
+
+    public static Explanation getNaiveBayesExplanation(NaivesBayesExplanation expl) {
+        Explanation e = new Explanation();
+        e.ref = new ExplanationNaivesBayes(expl);
         return e;
     }
 

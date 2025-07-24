@@ -1,9 +1,11 @@
 
+
+
 define anneeSeconde = 2022;
 define MOYENNE_BAC_I_EB_COD = 20;
 
---il y a une bascule entre la version archivée de janvier à septembre 
---et la version courante de septembre à mi-décembre
+--il y a une bascule entre la version archivï¿½e de janvier ï¿½ septembre 
+--et la version courante de septembre ï¿½ mi-dï¿½cembre
 
 define a_adm_stats = a_adm_arch;
 define g_can_stats = g_can_arch;
@@ -13,6 +15,7 @@ define a_sit_voe_stats = a_sit_voe_arch;
 define a_voe_stats = a_voe_arch;
 define i_bul_sco_stats = i_bul_sco_arch;
 define a_rec_grp_stats = a_rec_grp_arch;
+define a_rec_stats = a_rec_arch;
 define i_ins_stats = i_ins_arch;
 define i_can_sco_stats = i_can_sco_arch;
 
@@ -147,21 +150,32 @@ from sp_g_tri_aff --
 ;
 ALTER TABLE mps_descriptions_formations ADD  CONSTRAINT constr_de_for PRIMARY KEY (g_ta_cod);
 
+DECLARE
+    v_nb_lignes NUMBER;
+    v_alias     VARCHAR2(20);
+BEGIN
+    -- Compter le nombre de lignes dans la table
+    SELECT COUNT(*) INTO v_nb_lignes FROM A_ADM_PROP;
+    -- Affecter la valeur Ã  l'alias en fonction du rÃ©sultat
+    IF v_nb_lignes = 0 THEN
+        EXECUTE IMMEDIATE 'DEFINE a_adm_fil_actives = A_ADM';
+        EXECUTE IMMEDIATE 'DEFINE sp_g_tri_aff_fil_actives = SP_G_TRI_AFF';
+    ELSE
+        EXECUTE IMMEDIATE 'DEFINE a_adm_fil_actives = A_ADM_ARCH';
+        EXECUTE IMMEDIATE 'DEFINE sp_g_tri_aff_fil_actives = SP_G_TRI_AFF_ARCH';
+    END IF;
+END;
+
 drop table mps_filieres_actives;
 create table mps_filieres_actives as
---les recrutements ï¿½ n-1
 (
-select distinct g_fl_cod_aff, g_ta_flg_for_las 
-from &sp_g_tri_aff_stats aff,&a_rec_grp_stats arg 
-where aff.g_ta_cod=arg.g_ta_cod and NVL(arg.a_rg_pla,0) > 0
-union 
---les admissions ï¿½ n
-select distinct g_fl_cod_aff, g_ta_flg_for_las 
-from sp_g_tri_aff aff,a_adm adm  
+--les admissions de la derniÃ¨re campagne en cours
+select distinct g_fl_cod_aff
+from &sp_g_tri_aff_fil_actives aff,&a_adm_fil_actives adm
 where aff.g_ta_cod=adm.g_ta_cod
-union 
---les admissions ï¿½ n
-select distinct g_fl_cod_aff, g_ta_flg_for_las 
+union
+--l'offre deformation actuelle
+select distinct g_fl_cod_aff
 from sp_g_tri_aff aff,a_rec_grp arg  
 where aff.g_ta_cod=arg.g_ta_cod
 and NVL(a_rg_pla,0) > 0
@@ -170,7 +184,7 @@ and NVL(a_rg_pla,0) > 0
 
 drop table mps_voeux;
 create table mps_voeux as 
-(SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod
+(SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod, arecgrp.g_ti_cod g_ti_cod
                     FROM &A_VOE_stats voeu,
                     &I_INS_stats ins,
                     &A_REC_GRP_stats  arecgrp,
@@ -183,6 +197,14 @@ create table mps_voeux as
                     AND voeu.a_sv_cod > -90
                     AND NVL(ins.i_is_val,0) = 1
                     );
+drop table mps_candidats;
+create table mps_candidats as (
+select distinct g_cn_cod from mps_candidats_filieres);
+
+drop table mps_let_mot;
+create table mps_let_mot as (
+select i_let_mot.g_cn_cod, g_ti_cod, i_lm_txt_let from i_let_mot, mps_candidats
+where i_let_mot.g_cn_cod=mps_candidats.g_cn_cod and 0=MOD(mps_candidats.g_cn_cod, 37));
 
 drop table mps_admis_bacs_spe;
 create table mps_admis_bacs_spe as

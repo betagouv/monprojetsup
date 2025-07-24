@@ -24,6 +24,7 @@ class MpsDataPortTest : DataPortTest(){
         mpsDataPort.getFormationsVersMetiersEtMetiersAssocies()
         mpsDataPort.getBacs()
         mpsDataPort.getSpecialites()
+        mpsDataPort.getPaniersVoeux()
     }
 
 
@@ -126,6 +127,12 @@ class MpsDataPortTest : DataPortTest(){
     fun `Les conseils ne sont pas trop longs`() {
         val conseils = mpsDataPort.getConseils()
         assertThat(conseils.entries).allSatisfy { e -> e.value.length < 200 }
+    }
+
+    @Test
+    fun `Les paniers de voeux sont non  vides`() {
+        val paniers = mpsDataPort.getPaniersVoeux()
+        assertThat(paniers).allSatisfy { e -> e.voeux.isNotEmpty() }
     }
 
 }

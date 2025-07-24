@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static java.util.Map.entry;
@@ -18,9 +21,6 @@ public final class Config {
     public static final double SEUIL_TYPE_BAC_NO_MATCH = 0.01;
     public static final double SEUIL_TYPE_BAC_FULL_MATCH = 0.2;
     public static final double SEUIL_TYPE_BAC_FITTED = 0.5;
-    public static final int DUREE_MAX = 5;
-    public static final int DUREE_LONGUE = 4;
-    public static final int DUREE_COURTE = 1;
     public static final String DUREE_COURTE_PROFILE_VALUE = "court";
     public static final String DUREE_LONGUE_PROFILE_VALUE = "long";
     public static final double MIN_SPEC_PCT_FOR_EXP = 0.1;
@@ -28,7 +28,6 @@ public final class Config {
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
     public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
     public static final double METIER_BONUS_TAG_MULTIPLIER = 2.0;
-    static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
     static final double EDGES_FORMATIONS_DOMAINES_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse un peu au domaine
     static final double EDGES_DOMAINES_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au domaine, je m'intéresse à la formation
     static final double EDGES_METIERS_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au métier, je m'intéresse à la formation
@@ -36,7 +35,6 @@ public final class Config {
     static final double EDGES_DOMAINES_METIERS_WEIGHT = 0.01;
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
-    static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
     static final double MAX_SCORE_PATH_LENGTH_3 = 0.25;
 
@@ -65,36 +63,52 @@ public final class Config {
     public static final String BONUS_TYPE_BAC = "typebac";
     public static final String BONUS_SPECIALITE = "spec";
     public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
-    public static final String BONUS_NAIVE_BAYES = "nbayes";
+
+
+    static final String NAIVE_BAYES_LYCEEN = "lyceen";
+    static final String NAIVE_BAYES_EXPERT = "expert";
+    public static final String BONUS_NAIVE_BAYES_EXPERT = "nbayes_" + NAIVE_BAYES_EXPERT;
+    public static final String BONUS_NAIVE_BAYES_LYCEEN = "nbayes_" + NAIVE_BAYES_LYCEEN;
+    public static final Map<String, String> SCORES_SUGGESTIONS2 = Map.of(
+            NAIVE_BAYES_LYCEEN, BONUS_NAIVE_BAYES_LYCEEN,
+            NAIVE_BAYES_EXPERT, BONUS_NAIVE_BAYES_EXPERT
+    );
+
 
     public static final double NO_MATCH_SCORE = 0.0;
 
-    public static final double FULL_MATCH_MULTIPLIER = 1.0;
+    public static final double FULL_MATCH_SCORE = 1.0;
 
-    public static final Map<String,String> BONUS_LABELS = Map.of(
-            BONUS_TAGS,"proximité intérêts et favoris (graphe)",
-            BONUS_SPECIALITE,"EDS",
-            BONUS_SPECIALITE_BAC_PRO, "spécialité",
-            BONUS_DURATION,"durée",
-            BONUS_SIM,"similarité avec autres favoris",
-            BONUS_VOEU_FAVORI,"voeu favori",
-            BONUS_TYPE_BAC,"type de bac",
-            BONUS_APPRENTISSAGE,"preférences apprentissage",
-            BONUS_GEO,"préférences géographiques",
-            BONUS_NAIVE_BAYES, "proximité profils de référence (NaiveBayes)"
-    );
+    public static final Map<String, String> BONUS_LABELS =  Stream.of(
+                new SimpleEntry<>(BONUS_TAGS, "proximité intérêts et favoris (graphe)"),
+                new SimpleEntry<>(BONUS_SPECIALITE, "EDS"),
+                new SimpleEntry<>(BONUS_SPECIALITE_BAC_PRO, "spécialité"),
+                new SimpleEntry<>(BONUS_DURATION, "durée"),
+                new SimpleEntry<>(BONUS_SIM, "similarité avec autres favoris"),
+                new SimpleEntry<>(BONUS_VOEU_FAVORI, "voeu favori"),
+                new SimpleEntry<>(BONUS_TYPE_BAC, "type de bac"),
+                new SimpleEntry<>(BONUS_APPRENTISSAGE, "preférences apprentissage"),
+                new SimpleEntry<>(BONUS_GEO, "préférences géographiques"),
+                new SimpleEntry<>(BONUS_NAIVE_BAYES_EXPERT, "profils de référence experts (NaiveBayes)"),
+                new SimpleEntry<>(BONUS_NAIVE_BAYES_LYCEEN, "profils de référence lycéens (NaiveBayes)")
+        ).collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue
+        ));
 
-    static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
+    static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_BAC = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_TAGS = 1.0E-08;
+    static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_EXPERT = 1.0E-08;
+    static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_ELEVE = 1.0E-07;
     static final double MULTIPLIER_FOR_UNFITTED_APP = 1.0E-05;
     static final double MULTIPLIER_FOR_UNFITTED_GEO = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_DURATION = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_SIM = 1.0E-03;
     static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
-    static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
-    static final double MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI = 1.0E-09;
-    public static final double MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES = 1.0E-03;
+
+    static final double NOSTATS_BAC_SCORE = 0.01;
 
     public static Map<String, Double> defaultMultipliers = Map.ofEntries(
             entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
@@ -106,7 +120,8 @@ public final class Config {
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
             entry(BONUS_VOEU_FAVORI, MULTIPLIER_FOR_UNFITTED_VOEU_FAVORI),
-            entry(BONUS_NAIVE_BAYES, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES)
+            entry(BONUS_NAIVE_BAYES_LYCEEN, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_ELEVE),
+            entry(BONUS_NAIVE_BAYES_EXPERT, MULTIPLIER_FOR_UNFITTED_NAIVE_BAYES_EXPERT)
     );
 
     @Getter
@@ -139,15 +154,9 @@ public final class Config {
 
     @JsonIgnore
     public boolean isViable() {
-        return minMultipliers != null && !minMultipliers.isEmpty();
+        return minMultipliers != null
+                && !minMultipliers.isEmpty()
+                && Config.defaultMultipliers.keySet().stream().allMatch(key -> minMultipliers.containsKey(key));
     }
 
-    public void fix() {
-        Config.defaultMultipliers.forEach((k, v) -> {
-            if(!getMinMultipliers().containsKey(k)) {
-                getMinMultipliers().put(k, v);
-            }
-        });
-
-    }
 }
