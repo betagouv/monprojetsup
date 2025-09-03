@@ -31,6 +31,7 @@ const AucunFavoris = ({ catégorie }: AucunFavorisProps) => {
           variante="neutre"
         >
           <BoutonSquelette
+            ariaHidden={false}
             icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
             taille="grand"
           >

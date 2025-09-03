@@ -32,11 +32,6 @@ export default function useModaleParcourSup() {
   const boutons = useMemo(
     (): ModalProps["buttons"] => [
       {
-        children: i18n.COMMUN.FERMER,
-        priority: "tertiary",
-        size: "large",
-      },
-      {
         children: i18n.ÉLÈVE.TABLEAU_DE_BORD.MODALE_PARCOURSUP.BOUTON_ACTION,
         iconId: "fr-icon-arrow-right-line",
         iconPosition: "right",
