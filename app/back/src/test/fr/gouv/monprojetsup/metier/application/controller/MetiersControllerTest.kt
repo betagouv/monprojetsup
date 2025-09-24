@@ -26,7 +26,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [MetierController::class])
+@WebMvcTest(
+    controllers = [MetierController::class],
+    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
+)
 class MetiersControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
