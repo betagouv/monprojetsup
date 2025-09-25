@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite.Companion.MAX_
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
-import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService.Companion.NIVEAU_PROGRESSION_MAX
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
@@ -89,16 +88,9 @@ class MiseAJourEleveService(
                 if (progression > 0) {
                     majIndicateurPortfolioService.ajouterPublication(
                         idElevePortfolio = portfolioId,
-                        libelle = "ton niveau MPS",
-                        valeur = "$progression / $NIVEAU_PROGRESSION_MAX",
-                        idIndicateur = "code",
-                        valeurNumerique = progression,
-                    )
-                    majIndicateurPortfolioService.ajouterPublication(
-                        idElevePortfolio = portfolioId,
-                        libelle = "voeux Parcoursup",
+                        libelle = "favoris Parcoursup",
                         valeur = nouveauxVoeux.size.toString(),
-                        idIndicateur = "voeux",
+                        idIndicateur = "favoris_psup",
                         valeurNumerique = nouveauxVoeux.size,
                     )
                     majIndicateurPortfolioService.ajouterPublication(
