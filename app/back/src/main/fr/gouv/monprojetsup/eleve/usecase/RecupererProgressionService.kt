@@ -25,7 +25,7 @@ class RecupererProgressionService(
                     it,
                 )
             }
-        if (!eleve.estProfilComplet(specialitesSelectionnablesParCandidat)) {
+        if (!eleve.estProfilComplete(specialitesSelectionnablesParCandidat)) {
             return 0
         }
         val nbFiches = traceRepository.getNbFichesLues(eleve.id)

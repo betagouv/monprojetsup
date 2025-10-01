@@ -46,8 +46,8 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             portfolioId = null,
         )
 
-        fun estProfilComplet(specialitesSelectionnablesParCandidat: List<String>?): Boolean {
-            return completionProfil(specialitesSelectionnablesParCandidat) >= 100
+        fun estProfilComplete(specialitesSelectionnablesParCandidat: List<String>?): Boolean {
+            return completionProfil(specialitesSelectionnablesParCandidat) >= 50
         }
 
         fun completionProfil(specialitesSelectionnablesParCandidat: List<String>?): Int {
