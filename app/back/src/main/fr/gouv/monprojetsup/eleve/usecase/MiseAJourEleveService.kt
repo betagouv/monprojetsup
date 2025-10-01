@@ -85,7 +85,12 @@ class MiseAJourEleveService(
                 profilEleveAMettreAJour.portfolioId = profilInitial.portfolioId
                 val progression = recupererProgressionService.recupererProgression(profilEleveAMettreAJour)
                 val nbFormationsAmbitieuses = nouvellesFormations?.filter { it.niveauAmbition == MAX_NIVEAU_AMBITION }.orEmpty().size
-                if (progression > 0) {
+                logger.info(
+                    "MAJ_PORTFOLIO",
+                    "portfolioId $portfolioId : progression=$progression, " +
+                        "nbFormationsAmbitieuses=$nbFormationsAmbitieuses, nbFavoris=${nouveauxVoeux.size}",
+                )
+                if (progression > 0 || nbFormationsAmbitieuses > 0 || nouveauxVoeux.isNotEmpty()) {
                     majIndicateurPortfolioService.ajouterPublication(
                         idElevePortfolio = portfolioId,
                         libelle = "favoris Parcoursup",
@@ -108,6 +113,8 @@ class MiseAJourEleveService(
                     message = "Echec de la mise à jour de l'indicateur du portfolio ${e.message}",
                 )
             }
+        } else {
+            logger.info("MAJ_PORTFOLIO", "pas d'id portfolio")
         }
         return if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
