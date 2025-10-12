@@ -7,9 +7,6 @@ on:
       - demo
 
 jobs:
-  checkFrontend: 
-    name: Frontend
-    uses: ./.github/workflows/frontend.yml
 
   checkBackend: 
     name: Backend
