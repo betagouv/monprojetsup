@@ -30,7 +30,7 @@ jobs:
       
   pushToOnisep: 
     name: ONISEP Repository
-    needs: [checkFrontend, checkBackend, checkEtl, checkSuggestions]
+    needs: [checkBackend, checkEtl, checkSuggestions]
     uses: ./.github/workflows/onisep.yml
     secrets:
       GITLAB_ONISEP_SSH_KEY: "${{ secrets.GITLAB_ONISEP_SSH_KEY }}"
