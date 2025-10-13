@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -34,6 +35,9 @@ class MiseAJourEleveService(
     private val recupererProgressionService: RecupererProgressionService,
     private val logger: MonProjetSupLogger,
 ) {
+    @Value("\${pfa.api.enabled}")
+    private var apiEnabled = true
+
     @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
     fun mettreAJourUnProfilEleve(
@@ -80,7 +84,7 @@ class MiseAJourEleveService(
                 portfolioId = profilInitial.portfolioId,
             )
         val portfolioId = profilInitial.portfolioId
-        if (portfolioId != null) {
+        if (portfolioId != null && apiEnabled) {
             try {
                 profilEleveAMettreAJour.portfolioId = profilInitial.portfolioId
                 val progression = recupererProgressionService.recupererProgression(profilEleveAMettreAJour)
@@ -113,8 +117,8 @@ class MiseAJourEleveService(
                     message = "Echec de la mise à jour de l'indicateur du portfolio ${e.message}",
                 )
             }
-        } else {
-            logger.info("MAJ_PORTFOLIO", "pas d'id portfolio")
+        } else if (portfolioId == null) {
+            logger.info("MAJ_PORTFOLIO", "pas d'id portfolio (m7_id) pour {}".format(profilEleveAMettreAJour.id))
         }
         return if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
