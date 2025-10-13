@@ -37,7 +37,6 @@ class MiseAJourEleveService(
     @Value("\${pfa.api.enabled}")
     private val apiEnabled: Boolean,
 ) {
-
     @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
     fun mettreAJourUnProfilEleve(
@@ -117,9 +116,9 @@ class MiseAJourEleveService(
                     message = "Echec de la mise à jour de l'indicateur du portfolio ${e.message}",
                 )
             }
-        } else if(!apiEnabled) {
+        } else if (!apiEnabled) {
             logger.info("MAJ_PORTFOLIO", "api désactivée")
-        }   else if(portfolioId == null) {
+        } else if (portfolioId == null) {
             logger.info("MAJ_PORTFOLIO", "pas d'id portfolio (m7_id)")
         }
         return if (profilEleveAMettreAJour != profilInitial) {

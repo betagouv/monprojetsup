@@ -21,7 +21,6 @@ class MajIndicateurPortfolioService(
     override val logger: MonProjetSupLogger,
     private val traceRepository: TraceRepository,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger) {
-
     @Value("\${pfa.api.auth.uri}")
     lateinit var authUri: String
 
