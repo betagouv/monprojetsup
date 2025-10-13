@@ -35,6 +35,8 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 
 class MiseAJourEleveServiceTest {
     @Mock
@@ -1007,6 +1009,12 @@ class MiseAJourEleveServiceTest {
     )
 
     companion object {
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("pfa.api.enabled") { true }
+        }
+
         private val scenariosNominauxModifsVoeux =
             listOf(
                 ScenarioCasNominalModifVoeux(
