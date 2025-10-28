@@ -23,6 +23,7 @@ variables:
 .rules:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 .push-to-onisep:
   stage: Push
@@ -79,8 +80,8 @@ Frontend:Security:
 
 Frontend:E2ETest:
   stage: PostTests
-  extends:
-    - .rules
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
   allow_failure: false
   script: 
     - npx npx playwright install --with-deps chromium
@@ -116,6 +117,7 @@ Push:Onisep:prod:
   allow_failure: false
   script:
     - echo "Push de la branch main vers Prod Onisep..."
+    - git pull onisep prod --no-rebase --no-edit
     - git push onisep HEAD:refs/heads/prod
   when: manual
   needs:
