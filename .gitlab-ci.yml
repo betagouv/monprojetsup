@@ -89,6 +89,7 @@ Frontend:E2ETest:
     - npx playwright test
   resource_group: E2ETest
   needs:
+    - Install
     - Frontend:Tests
     - Frontend:Linters
     - Frontend:Security
