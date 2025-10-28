@@ -37,7 +37,7 @@ const ListeDeFavoris = ({
           >
             <Favori
               ariaLabel={favori.ariaLabel}
-              boutonMPSVisible={true}
+              boutonMPSVisible
               callbackMettreÀJour={favori.callbackMettreÀJour}
               désactivé={favori.désactivé}
               estFavori={favori.estFavori}

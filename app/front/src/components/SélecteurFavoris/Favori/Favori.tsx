@@ -47,39 +47,43 @@ const Favori = ({
         )}
       </div>
 
-        <div>
-            {!boutonMPSVisible ? (<Toggle
-                aria-label={ariaLabel}
-                className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
-                disabled={désactivé}
-                onPressedChange={() => callbackMettreÀJour?.(id)}
-                pressed={estFavori}
-                title={title}
-            >
-                {icôneEstFavori === "fr-icon-heart-fill" ? (
-                    <BoutonSquelette
-                        ariaHidden
-                        icône={{
-                            classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
-                        }}
-                        taille="petit"
-                        variante="tertiaire"
-                    >
-                        {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
-                    </BoutonSquelette>
-                ) : (
-                    <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
-                        <img
-                            alt=""
-                            className="h-4 w-4"
-                            src={icôneEstFavori}
-                        />
-                    </div>
-                )}
-            </Toggle>) : (<></>)}
-        </div>
+      <div>
+        {!boutonMPSVisible ? (
+          <Toggle
+            aria-label={ariaLabel}
+            className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
+            disabled={désactivé}
+            onPressedChange={() => callbackMettreÀJour?.(id)}
+            pressed={estFavori}
+            title={title}
+          >
+            {icôneEstFavori === "fr-icon-heart-fill" ? (
+              <BoutonSquelette
+                ariaHidden
+                icône={{
+                  classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
+                }}
+                taille="petit"
+                variante="tertiaire"
+              >
+                {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
+              </BoutonSquelette>
+            ) : (
+              <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
+                <img
+                  alt=""
+                  className="h-4 w-4"
+                  src={icôneEstFavori}
+                />
+              </div>
+            )}
+          </Toggle>
+        ) : (
+          <></>
+        )}
+      </div>
 
-        <ModaleParcourSup modale={modaleParcourSup} />
+      <ModaleParcourSup modale={modaleParcourSup} />
     </>
   );
 };
