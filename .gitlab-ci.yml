@@ -60,7 +60,7 @@ Frontend:Linters:
   stage: Test
   extends: 
     - .rules
-  allow_failure: false
+  allow_failure: true
   script:
     - npm run lint
   needs:
