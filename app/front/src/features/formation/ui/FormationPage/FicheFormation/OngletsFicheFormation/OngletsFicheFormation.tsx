@@ -2,12 +2,11 @@ import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/Ongle
 import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
 import { type OngletsFicheFormationProps } from "./OngletsFicheFormation.interface";
 import useOngletsFicheFormation from "./useOngletsFicheFormation.tsx";
-import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
-  const ongletsIds = ["onglet_formation", "onglet_details", "onglet_criteres", "onglet_conseils"];
+  const ongletsIds = ["onglet_details", "onglet_criteres"];
 
   const { changementOngletFicheFormation } = useOngletsFicheFormation({
     formation,
@@ -30,13 +29,6 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
       });
     }
 
-    if (formation.descriptifs.détails && formation.descriptifs.détails !== "") {
-      onglets.push({
-        label: i18n.PAGE_FORMATION.ONGLET_DÉTAILS,
-        content: <TexteTronqué texte={formation.descriptifs.détails} />,
-      });
-    }
-
     if (
       (formation.descriptifs.attendus && formation.descriptifs.attendus !== "") ||
       formation.critèresAnalyse.length > 0 ||
@@ -53,13 +45,6 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
             répartitionParBac={formation.admis.répartition.parBac}
           />
         ),
-      });
-    }
-
-    if (formation.descriptifs.conseils && formation.descriptifs.conseils !== "") {
-      onglets.push({
-        label: i18n.PAGE_FORMATION.ONGLET_CONSEILS,
-        content: <TexteTronqué texte={formation.descriptifs.conseils} />,
       });
     }
 

@@ -32,10 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(
-    controllers = [ReferentielController::class],
-    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
-)
+@WebMvcTest(controllers = [ReferentielController::class])
 class ReferentielControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {

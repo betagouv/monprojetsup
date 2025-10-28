@@ -215,7 +215,6 @@ data class ProfilDTO(
             corbeilleFormations = corbeilleFormations.orEmpty(),
             compteParcoursupLie = compteParcoursupAssocie,
             voeuxFavoris = voeuxFavoris?.map { it.toVoeuFavori() }.orEmpty(),
-            portfolioId = null,
         )
     }
 }

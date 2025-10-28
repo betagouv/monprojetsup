@@ -1,6 +1,4 @@
 import { FavoriProps } from "./Favori.interface";
-import IconeMPS from "@/assets/icone-mps.svg";
-import Bouton from "@/components/Bouton/Bouton.tsx";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -49,55 +47,39 @@ const Favori = ({
         )}
       </div>
 
-      <Toggle
-        aria-label={ariaLabel}
-        className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
-        disabled={désactivé}
-        onPressedChange={() => callbackMettreÀJour?.(id)}
-        pressed={estFavori}
-        title={title}
-      >
-        {icôneEstFavori === "fr-icon-heart-fill" ? (
-          <BoutonSquelette
-            ariaHidden
-            icône={{
-              classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
-            }}
-            taille="petit"
-            variante="tertiaire"
-          >
-            {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
-          </BoutonSquelette>
-        ) : (
-          <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
-            <img
-              alt=""
-              className="h-4 w-4"
-              src={icôneEstFavori}
-            />
-          </div>
-        )}
-      </Toggle>
+        <div>
+            {!boutonMPSVisible ? (<Toggle
+                aria-label={ariaLabel}
+                className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
+                disabled={désactivé}
+                onPressedChange={() => callbackMettreÀJour?.(id)}
+                pressed={estFavori}
+                title={title}
+            >
+                {icôneEstFavori === "fr-icon-heart-fill" ? (
+                    <BoutonSquelette
+                        ariaHidden
+                        icône={{
+                            classe: estFavori ? icôneEstFavori : icôneEstPasFavori,
+                        }}
+                        taille="petit"
+                        variante="tertiaire"
+                    >
+                        {i18n.ACCESSIBILITÉ.METTRE_EN_FAVORI}
+                    </BoutonSquelette>
+                ) : (
+                    <div className="fr-btn fr-btn--sm fr-btn--tertiary px-2">
+                        <img
+                            alt=""
+                            className="h-4 w-4"
+                            src={icôneEstFavori}
+                        />
+                    </div>
+                )}
+            </Toggle>) : (<></>)}
+        </div>
 
-      {boutonMPSVisible ? (
-        <Bouton
-          auClic={modaleParcourSup.open}
-          taille="petit"
-          type="button"
-          variante="tertiaire"
-        >
-          <img
-            alt="Icon"
-            height={14}
-            src={IconeMPS}
-            width={14}
-          />
-        </Bouton>
-      ) : (
-        ""
-      )}
-
-      <ModaleParcourSup modale={modaleParcourSup} />
+        <ModaleParcourSup modale={modaleParcourSup} />
     </>
   );
 };

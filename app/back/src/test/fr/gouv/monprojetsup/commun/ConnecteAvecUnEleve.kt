@@ -33,7 +33,6 @@ internal class ConnecteAvecUnEleveSecurityContextFactory : WithSecurityContextFa
                 .claim("given_name", "Léo")
                 .claim("family_name", "Dupont")
                 .claim("email", "eleve@example.com")
-                .claim("m7_id", idEleve)
                 .build(),
         )
 }

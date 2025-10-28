@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package fr.gouv.monprojetsup.eleve.domain.entity
 
 import com.fasterxml.jackson.annotation.JsonValue
@@ -16,5 +14,4 @@ enum class ActionEleve(
     AJOUT_FAVORI_METIER(jsonValeur = "ajout_favori_metier"),
     FICHE_METIER(jsonValeur = "fiche_metier"),
     EDITION_PROFIL(jsonValeur = "edition_profil"),
-    PUBLICATION_ACTIVITE(jsonValeur = "publication_activite"),
 }

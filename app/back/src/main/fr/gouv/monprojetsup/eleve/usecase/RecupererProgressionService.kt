@@ -25,7 +25,7 @@ class RecupererProgressionService(
                     it,
                 )
             }
-        if (!eleve.estProfilComplete(specialitesSelectionnablesParCandidat)) {
+        if (!eleve.estProfilComplet(specialitesSelectionnablesParCandidat)) {
             return 0
         }
         val nbFiches = traceRepository.getNbFichesLues(eleve.id)
@@ -44,11 +44,6 @@ class RecupererProgressionService(
         if (!eleve.aDesFavorisParcoursup()) {
             return 5
         }
-        return NIVEAU_PROGRESSION_MAX
-    }
-
-    // define a contant int MAX_PROGRESS_STEP = 6
-    companion object {
-        const val NIVEAU_PROGRESSION_MAX = 6
+        return 6
     }
 }

@@ -19,10 +19,8 @@ class ParcoursupFavorisApiFavorisClient(
     @Value("\${parcoursup.api.favoris.client.password}")
     private val clientSecret: String,
     private val parcoursupAuthentClient: ParcoursupAuthentClient,
-    @Value("\${parcoursup.api.favoris.baseUrl}")
+    @Value("\${parcoursup.api.favoris.url}")
     override val baseUrl: String,
-    @Value("\${parcoursup.api.favoris.endpoint}")
-    private val endpoint: String,
     override val objectMapper: ObjectMapper,
     override val httpClient: OkHttpClient,
     override val logger: MonProjetSupLogger,
@@ -38,9 +36,13 @@ class ParcoursupFavorisApiFavorisClient(
         val accessToken = parcoursupAuthentClient.recupererClientAccessToken(clientId = clientId, clientSecret = clientSecret)
         val getFavoris =
             get<List<ParcoursupFavorisReponseDTO>>(
-                url = "$baseUrl/$endpoint/$idParcoursup",
+                url = baseUrl + URL_FAVORIS + idParcoursup,
                 token = accessToken,
             )
         return getFavoris.map { it.toFavorisParcoursup() }
+    }
+
+    companion object {
+        private const val URL_FAVORIS = "/ApiFavoris/favoris/"
     }
 }

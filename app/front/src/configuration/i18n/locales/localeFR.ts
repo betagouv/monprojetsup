@@ -477,7 +477,7 @@ export const localeFR = {
     AJOUTER_À_MA_SÉLECTION: "Ajouter à ma sélection",
     AJOUTÉ_À_MA_SÉLECTION: "Ajouté à ma sélection",
     SÉLECTIONNÉ: "Sélectionné",
-    SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
+    SUPPRIMER_DE_MA_SÉLECTION: "Supprimer de ma sélection",
     NE_PLUS_VOIR: "Ne plus voir",
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",

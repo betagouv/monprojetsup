@@ -8,7 +8,6 @@ import { i18n } from "@/configuration/i18n/i18n";
 import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteAvisÉlève/CarteAvisÉlève";
 import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/CarteParcourSupÉlève";
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
-import CarteTémoignageÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteTémoignageÉlève/CarteTémoignageÉlève";
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
@@ -51,27 +50,9 @@ const TableauDeBordÉlèvePage = () => {
                     titre={carte.titre}
                   />
                 </li>
-                {index === 1 && (
-                  <li>
-                    <CarteTémoignageÉlève
-                      auteur={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR}
-                      entête={messageProgression || null}
-                      rôle={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.RÔLE}
-                    >
-                      {i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE}{" "}
-                      <LienExterne
-                        ariaLabel={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_SUITE}
-                        href={constantes.LIENS.SIX_NIVEAUX_MPS}
-                      >
-                        {i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_SUITE}
-                      </LienExterne>
-                    </CarteTémoignageÉlève>
-                  </li>
-                )}
               </Fragment>
             ))}
           </ul>
-          <hr className="mb-4 mt-10" />
           <ul
             className={`grid list-none grid-cols-1 gap-6 p-0 ${associationParcoursupPossible ? "md:grid-cols-2" : ""} `}
           >

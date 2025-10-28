@@ -1,27 +1,32 @@
 import usePiedDePage from "./usePiedDePage";
 import useLayout from "@/components/_layout/useLayout";
 import { constantes } from "@/configuration/constantes.ts";
-import { i18n } from "@/configuration/i18n/i18n";
 import { Footer } from "@codegouvfr/react-dsfr/Footer";
 
 const PiedDePage = () => {
-  const { logoOpérateur, blocMarque, lienAccueil } = useLayout();
-  const { partenaires, liensSupplémentaires } = usePiedDePage();
+    const { logoFooter, blocMarque, lienAccueil } = useLayout();
+    const { liensSupplémentaires } = usePiedDePage();
 
-  return (
-    <Footer
-      accessibility="partially compliant"
-      accessibilityLinkProps={{ to: "/declaration-accessiblite" }}
-      bottomItems={liensSupplémentaires}
-      brandTop={blocMarque}
-      contentDescription={i18n.PIED_DE_PAGE.DESCRIPTION_SERVICE}
-      homeLinkProps={lienAccueil}
-      operatorLogo={logoOpérateur}
-      partnersLogos={partenaires}
-      termsLinkProps={{ href: constantes.LIENS.PAGE_MENTIONS_LÉGALES }}
-      websiteMapLinkProps={{ to: "/plan-du-site" }}
-    />
-  );
+
+
+    return (
+        <Footer
+            accessibility="partially compliant"
+            accessibilityLinkProps={{ to: "/declaration-accessiblite" }}
+            bottomItems={liensSupplémentaires}
+            brandTop={blocMarque}
+            homeLinkProps={lienAccueil}
+            operatorLogo={logoFooter}
+            termsLinkProps={{ href: constantes.LIENS.PAGE_MENTIONS_LÉGALES }}
+            websiteMapLinkProps={{ to: "/plan-du-site" }}
+            license={null}
+            domains={[
+                'education.gouv.fr',
+                'enseignementsup-recherche.gouv.fr',
+                'onisep.fr'
+            ]}
+        />
+    );
 };
 
 export default PiedDePage;

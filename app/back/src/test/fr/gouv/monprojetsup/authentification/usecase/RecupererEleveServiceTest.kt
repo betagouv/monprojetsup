@@ -109,10 +109,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu =
@@ -132,10 +129,7 @@ class RecupererEleveServiceTest {
             given(baccalaureatSpecialiteRepository.recupererUnBaccalaureatEtLesIdsDeSesSpecialites("baccalauréatInconnu")).willReturn(null)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu =
@@ -164,10 +158,7 @@ class RecupererEleveServiceTest {
             )
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu =
@@ -188,10 +179,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             assertThat(resultat).isEqualTo(profil)
@@ -222,10 +210,7 @@ class RecupererEleveServiceTest {
             )
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu =
@@ -288,10 +273,7 @@ class RecupererEleveServiceTest {
             )
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu =
@@ -332,10 +314,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             assertThat(resultat).isEqualTo(profil)
@@ -350,10 +329,7 @@ class RecupererEleveServiceTest {
             given(interetRepository.recupererIdsCentresInteretsInexistants(listOf("ci10", "ci13", "ci29"))).willReturn(listOf("ci13"))
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu = profilEleve.copy(centresInterets = listOf("ci10", "ci29"))
@@ -370,10 +346,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             assertThat(resultat).isEqualTo(profil)
@@ -388,10 +361,7 @@ class RecupererEleveServiceTest {
             given(domaineRepository.recupererIdsDomainesInexistants(listOf("dom12", "dom7", "dom25"))).willReturn(listOf("dom7"))
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu = profilEleve.copy(domainesInterets = listOf("dom12", "dom25"))
@@ -408,10 +378,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profil)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             assertThat(resultat).isEqualTo(profil)
@@ -428,10 +395,7 @@ class RecupererEleveServiceTest {
             ).willReturn(listOf("MET.14", "MET.168"))
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             val attendu = profilEleve.copy(metiersFavoris = listOf("MET.152"))
@@ -447,10 +411,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")).willReturn(profilEleve)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
 
             // Then
             assertThat(resultat).isEqualTo(profilEleve)
@@ -463,10 +424,7 @@ class RecupererEleveServiceTest {
             given(eleveRepository.recupererUnEleve(id = "3a24c5c6-7583-4c27-957c-feba8f4682df")).willReturn(profilSansCompte)
 
             // When
-            val resultat =
-                recupererEleveService.recupererEleve(
-                    id = "3a24c5c6-7583-4c27-957c-feba8f4682df",
-                )
+            val resultat = recupererEleveService.recupererEleve(id = "3a24c5c6-7583-4c27-957c-feba8f4682df")
 
             // Then
             assertThat(resultat).isEqualTo(profilSansCompte)
