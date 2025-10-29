@@ -9,6 +9,7 @@ const ListeDeCommunesSuggérées = ({ communes }: ListeDeCommunesSuggéréesProp
 
   return (
     <ListeDeFavoris
+      boutonMPSVisible={false}
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.COMMUNES.NB_PAR_PAGE}
