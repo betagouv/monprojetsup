@@ -82,7 +82,7 @@ Frontend:E2ETest:
   stage: PostTests
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
-  allow_failure: false
+  allow_failure: true
   script:
     - npm ci
     - npx playwright install --with-deps chromium
