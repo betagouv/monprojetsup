@@ -103,8 +103,8 @@ Push:Onisep:uat:
   allow_failure: false
   script:
     - echo "Push de la branch develop vers UAT Onisep..."
-    - git pull onisep uat --no-rebase --no-edit
-    - git push onisep HEAD:refs/heads/uat
+    #- git pull onisep uat --no-rebase --no-edit
+    - git push onisep HEAD:refs/heads/uat --force
   when: manual
   needs:
     - Frontend:E2ETest
