@@ -83,13 +83,13 @@ Frontend:E2ETest:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
   allow_failure: false
-  script: 
-    - npx npx playwright install --with-deps chromium
+  script:
+    - npm ci
+    - npx playwright install --with-deps chromium
     - cp .env.ci .env
     - npx playwright test
   resource_group: E2ETest
   needs:
-    - Install
     - Frontend:Tests
     - Frontend:Linters
     - Frontend:Security
