@@ -5,10 +5,10 @@ import Favori from "@/components/SélecteurFavoris/Favori/Favori";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ListeDeFavoris = ({
-                            favoris,
-                            nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
-                            listeDeSuggestions,
-                        }: ListeDeFavorisProps) => {
+  favoris,
+  nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
+  listeDeSuggestions,
+}: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
     nombreFavorisAffichésParDéfaut,
