@@ -1,6 +1,5 @@
 import logoOnisep from "@/assets/logo-onisep.svg";
 import logoMPS from "@/assets/logo/logo-mps.svg";
-import { i18n } from "@/configuration/i18n/i18n";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
 
 export default function useLayout() {

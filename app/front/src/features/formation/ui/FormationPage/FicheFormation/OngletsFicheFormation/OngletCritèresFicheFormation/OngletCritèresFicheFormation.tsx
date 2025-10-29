@@ -2,7 +2,6 @@ import { type OngletCritèresFicheFormationProps } from "./OngletCritèresFicheF
 import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoyenne/GraphiqueRépartitionMoyenne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
-import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";

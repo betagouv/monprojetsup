@@ -1,8 +1,6 @@
 import useTableauDeBordÉlèvePage from "./useTableauDeBordÉlèvePage";
 import Head from "@/components/_layout/Head/Head";
-import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import Titre from "@/components/Titre/Titre";
-import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteAvisÉlève/CarteAvisÉlève";
@@ -11,13 +9,7 @@ import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBo
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
-  const { cartes, associationParcoursupPossible, progression, estAuthentifié } = useTableauDeBordÉlèvePage();
-
-  const messageProgression = progression
-    ? i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_NIVEAU +
-      JSON.stringify(progression) +
-      i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_FELICITATIONS
-    : "";
+  const { cartes, associationParcoursupPossible, estAuthentifié } = useTableauDeBordÉlèvePage();
 
   const messageTitre = estAuthentifié
     ? i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_CONNECTE
@@ -40,7 +32,7 @@ const TableauDeBordÉlèvePage = () => {
           </div>
           <p className="fr-h1 mb-10">{messageBienvenue}</p>
           <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
-            {cartes.map((carte, index) => (
+            {cartes.map((carte) => (
               <Fragment key={carte.lien}>
                 <li>
                   <CartePrimaireTableauDeBordÉlève

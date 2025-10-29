@@ -48,7 +48,7 @@ const Favori = ({
       </div>
 
       <div>
-        {!boutonMPSVisible ? (
+        {!boutonMPSVisible && (
           <Toggle
             aria-label={ariaLabel}
             className={estFavori ? "*:text-[--artwork-minor-red-marianne]" : ""}
@@ -78,8 +78,6 @@ const Favori = ({
               </div>
             )}
           </Toggle>
-        ) : (
-          <></>
         )}
       </div>
 
