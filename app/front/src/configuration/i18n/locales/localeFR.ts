@@ -82,7 +82,7 @@ export const localeFR = {
     COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
-    RÉPARTITION_PAR_BAC: "Répartition par filières de bacs",
+    RÉPARTITION_PAR_BAC: "Profil des lycéens et lycéennes ayant intégré la formation",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
     MOYENNE_GÉNÉRALE: "Moyenne générale des lycéens admis à la formation",
     LES_ATTENDUS: "Les attendus de la formation",
