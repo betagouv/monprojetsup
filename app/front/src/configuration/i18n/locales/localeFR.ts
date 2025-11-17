@@ -34,7 +34,8 @@ export const localeFR = {
     PROFIL: "Enrichir mon profil",
   },
   CARTE_MÉTIER: {
-    FORMATIONS: "formation(s) pour apprendre le métier",
+    FORMATION: "formation pour apprendre le métier",
+    FORMATIONS: "formations pour apprendre le métier",
   },
   CARTE_FORMATION: {
     POINTS_AFFINITÉ_SINGULIER: "raison de t’intéresser à cette formation",
