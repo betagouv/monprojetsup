@@ -1,9 +1,9 @@
 import { FavoriProps } from "./Favori.interface";
+import ParcoursupFav from "@/assets/parcoursup-fav.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Toggle } from "@radix-ui/react-toggle";
-import ParcoursupFav from "@/assets/parcoursup-fav.svg";
 
 const Favori = ({
   id,
@@ -33,13 +33,18 @@ const Favori = ({
         ) : (
           <p className="fr-text--sm mb-0">{nom}</p>
         )}
-          <div className={'fr-grid-row fr-grid-row--middle'}>
-              <p className="fr-text--sm my-2">
-                  <span>{parcoursupSync ? "Synchronisée" : "Non synchronisée"}</span> avec <strong>Parcoursup</strong>
-              </p>
-              {parcoursupSync ? <img src={ParcoursupFav} alt={"Logo Parcoursup"} className="ml-4 h-5 w-5"/> : <></>}
-          </div>
-
+        <div className="fr-grid-row fr-grid-row--middle">
+          <p className="fr-text--sm my-2">
+            <span>{parcoursupSync ? "Synchronisée" : "Non synchronisée"}</span> avec <strong>Parcoursup</strong>
+          </p>
+          {parcoursupSync && (
+            <img
+              alt="Logo Parcoursup"
+              className="ml-4 h-5 w-5"
+              src={ParcoursupFav}
+            />
+          )}
+        </div>
       </div>
 
       <Toggle
