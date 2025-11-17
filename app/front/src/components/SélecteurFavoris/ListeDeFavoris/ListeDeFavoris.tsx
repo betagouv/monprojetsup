@@ -32,7 +32,7 @@ const ListeDeFavoris = ({
       >
         {favorisAffichés.map((favori) => (
           <li
-            className="grid grid-flow-col items-center justify-between gap-2 p-0"
+            className="grid grid-flow-col items-start justify-between gap-2 p-0"
             key={favori.id}
           >
             <Favori
