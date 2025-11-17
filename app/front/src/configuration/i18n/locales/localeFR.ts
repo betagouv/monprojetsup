@@ -37,7 +37,8 @@ export const localeFR = {
     FORMATIONS: "formation(s) pour apprendre le métier",
   },
   CARTE_FORMATION: {
-    POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_SINGULIER: "raison de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_PLURIEL: "raisons de t’intéresser à cette formation",
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
     COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
