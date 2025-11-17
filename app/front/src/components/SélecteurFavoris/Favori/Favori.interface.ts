@@ -11,7 +11,6 @@ export type Favori = {
   icôneEstPasFavori?: string;
   callbackMettreÀJour?: (idFavori: string) => Promise<unknown>;
   idDeLonglet?: string;
-  boutonMPSVisible?: boolean;
 };
 
 export type FavoriProps = Favori;
