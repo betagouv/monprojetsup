@@ -9,7 +9,6 @@ const ListeDeSpécialitésSuggérées = ({ spécialités }: ListeDeSpécialités
 
   return (
     <ListeDeFavoris
-      boutonMPSVisible={false}
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.SPÉCIALITÉS.NB_PAR_PAGE}
