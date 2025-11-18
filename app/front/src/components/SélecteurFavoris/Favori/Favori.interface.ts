@@ -12,7 +12,7 @@ export type Favori = {
   callbackMettreÀJour?: (idFavori: string) => Promise<unknown>;
   idDeLonglet?: string;
   parcoursupSynchronizable?: boolean;
-  isParcoursupSync?: boolean;
+  SyncAvecParcoursup?: boolean;
 };
 
 export type FavoriProps = Favori;
