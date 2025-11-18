@@ -6,12 +6,18 @@ import fr.gouv.monprojetsup.data.tools.CsvTools;
 import lombok.val;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.DIPLOME_ART_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.ECOLE_ARCHI_INGE_PSUP_FL_COD;
+import static fr.gouv.monprojetsup.data.Constants.ECOLE_ARCHI_PSUP_FL_COD;
+import static fr.gouv.monprojetsup.data.Constants.ECOLE_ART_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD;
+import static fr.gouv.monprojetsup.data.Constants.IEP_PSUP_FR_COD;
 
 
 public record PsupToIdeoCorrespondance(
@@ -19,8 +25,9 @@ public record PsupToIdeoCorrespondance(
 ) {
 
     public void generateDiagnostic(Set<String> formationsIdeo) throws IOException {
-        try(val csvTools = CsvTools.getWriter(
-                Constants.DIAGNOSTICS_OUTPUT_DIR + "psupToIdeoCorrespondanceIdeosInconnus.csv")) {
+        val outputPath = Path.of(Constants.DIAGNOSTICS_OUTPUT_DIR + "psupToIdeoCorrespondanceIdeosInconnus.csv");
+        boolean used = false;
+        try(val csvTools = CsvTools.getWriter(outputPath.toString())) {
             csvTools.appendHeaders(List.of(
                     "gFrCod type formation psup",
                     "gFrLib type formation psup",
@@ -36,6 +43,7 @@ public record PsupToIdeoCorrespondance(
                         .filter(ideo -> !formationsIdeo.contains(ideo))
                         .toList();
                 if (!ideosInconnus.isEmpty()) {
+                    used = true;
                     csvTools.append(List.of(
                             Integer.toString(line.gFrCod),
                             line.gFrLib,
@@ -46,6 +54,9 @@ public record PsupToIdeoCorrespondance(
                     ));
                 }
             }
+        }
+        if(!used) {
+            outputPath.toFile().delete();
         }
     }
 
