@@ -34,12 +34,15 @@ export const localeFR = {
     PROFIL: "Enrichir mon profil",
   },
   CARTE_MÉTIER: {
-    FORMATIONS: "formation(s) pour apprendre le métier",
+    FORMATION: "formation pour apprendre le métier",
+    FORMATIONS: "formations pour apprendre le métier",
   },
   CARTE_FORMATION: {
-    POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_SINGULIER: "raison de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_PLURIEL: "raisons de t’intéresser à cette formation",
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
-    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER: "ville",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL: "villes",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
   },
   PAGE_COOKIES: {
@@ -79,7 +82,8 @@ export const localeFR = {
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l’année dernière",
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
-    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER: "ville",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL: "villes",
     COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
     RÉPARTITION_PAR_BAC: "Répartition par filières de bacs",
