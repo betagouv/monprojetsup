@@ -8,6 +8,7 @@ const ListeDeFavoris = ({
   favoris,
   nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
   listeDeSuggestions,
+  parcoursupSynchronizable,
 }: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
@@ -45,6 +46,7 @@ const ListeDeFavoris = ({
               id={favori.id}
               idDeLonglet={id}
               nom={favori.nom}
+              parcoursupSynchronizable={parcoursupSynchronizable}
               title={favori.title}
               url={favori.url}
             />

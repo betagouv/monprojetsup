@@ -16,7 +16,8 @@ const Favori = ({
   icôneEstFavori = "fr-icon-heart-fill",
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
-  parcoursupSync,
+  parcoursupSynchronizable,
+  SyncAvecParcoursup,
 }: FavoriProps) => {
   return (
     <>
@@ -33,18 +34,21 @@ const Favori = ({
         ) : (
           <p className="fr-text--sm mb-0">{nom}</p>
         )}
-        <div className="fr-grid-row fr-grid-row--middle">
-          <p className="fr-text--sm my-2">
-            <span>{parcoursupSync ? "Synchronisée" : "Non synchronisée"}</span> avec <strong>Parcoursup</strong>
-          </p>
-          {parcoursupSync && (
-            <img
-              alt="Logo Parcoursup"
-              className="ml-4 h-5 w-5"
-              src={ParcoursupFav}
-            />
-          )}
-        </div>
+
+        {parcoursupSynchronizable && (
+          <div className="fr-grid-row fr-grid-row--middle">
+            <p className="fr-text--sm my-2">
+              <span>{SyncAvecParcoursup ? "Synchronisée" : "Non synchronisée"}</span> avec <strong>Parcoursup</strong>
+            </p>
+            {SyncAvecParcoursup && (
+              <img
+                alt="Logo Parcoursup"
+                className="ml-4 h-5 w-5"
+                src={ParcoursupFav}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       <Toggle
