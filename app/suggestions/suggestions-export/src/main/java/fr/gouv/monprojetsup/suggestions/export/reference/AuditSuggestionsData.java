@@ -169,8 +169,7 @@ public class AuditSuggestionsData {
             tools.append(List.of(
                     "critère qualité données de référence MPS",
                     "nb actuel de formations satisfaisant le critère",
-                    "% objectif atteint",
-                    "définition objectif"
+                    "nb total de formations"
             ));
             Map<String, Set<String>> domainesParFormations = formationsEdges.stream()
                     .collect(Collectors.toMap(
@@ -196,9 +195,7 @@ public class AuditSuggestionsData {
 
                 tools.append(List.of(
                         "formations avec >= " + i + " domaine(s) associé(s)",
-                        "" + nbFormationOk,
-                                pctObjectif + "%",
-                                objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                        "" + nbFormationOk,nbFormations + ""
                 )
                 );
             }
@@ -212,9 +209,7 @@ public class AuditSuggestionsData {
                 val pctObjectif = Math.min(100, (100 * nbFormationOk) / objectifNb);
                 tools.append(List.of(
                         "formations avec >= " + i + " métier(s) associé(s)",
-                        "" + nbFormationOk,
-                        pctObjectif + "%",
-                        objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                        "" + nbFormationOk,nbFormations + ""
                 ));
             }
         }
