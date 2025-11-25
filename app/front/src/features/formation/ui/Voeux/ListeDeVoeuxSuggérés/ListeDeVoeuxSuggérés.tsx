@@ -9,10 +9,10 @@ const ListeDeVoeuxSuggérés = ({ voeux }: ListeDeVoeuxSuggérésProps) => {
 
   return (
     <ListeDeFavoris
+      boutonMPSVisible={false}
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.VOEUX.NB_PAR_PAGE}
-      parcoursupSynchronizable
     />
   );
 };

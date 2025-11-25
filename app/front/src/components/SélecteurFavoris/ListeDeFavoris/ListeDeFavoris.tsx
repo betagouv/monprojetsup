@@ -8,7 +8,6 @@ const ListeDeFavoris = ({
   favoris,
   nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
   listeDeSuggestions,
-  parcoursupSynchronizable,
 }: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
@@ -33,11 +32,12 @@ const ListeDeFavoris = ({
       >
         {favorisAffichés.map((favori) => (
           <li
-            className="grid grid-flow-col items-start justify-between gap-2 p-0"
+            className="grid grid-flow-col items-center justify-between gap-2 p-0"
             key={favori.id}
           >
             <Favori
               ariaLabel={favori.ariaLabel}
+              boutonMPSVisible
               callbackMettreÀJour={favori.callbackMettreÀJour}
               désactivé={favori.désactivé}
               estFavori={favori.estFavori}
@@ -46,7 +46,6 @@ const ListeDeFavoris = ({
               id={favori.id}
               idDeLonglet={id}
               nom={favori.nom}
-              parcoursupSynchronizable={parcoursupSynchronizable}
               title={favori.title}
               url={favori.url}
             />

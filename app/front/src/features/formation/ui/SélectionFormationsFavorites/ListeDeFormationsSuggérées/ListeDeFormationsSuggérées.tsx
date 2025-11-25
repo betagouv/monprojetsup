@@ -9,6 +9,7 @@ const ListeDeFormationsSuggérées = ({ formations }: ListeDeFormationsSuggéré
 
   return (
     <ListeDeFavoris
+      boutonMPSVisible={false}
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.FORMATIONS.NB_PAR_PAGE}

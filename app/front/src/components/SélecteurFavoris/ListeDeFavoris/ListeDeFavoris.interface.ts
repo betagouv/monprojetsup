@@ -4,7 +4,7 @@ export type ListeDeFavorisProps = {
   favoris: Favori[];
   listeDeSuggestions?: boolean;
   nombreFavorisAffichésParDéfaut?: number;
-  parcoursupSynchronizable?: boolean;
+  boutonMPSVisible: boolean | undefined;
 };
 
 export type UseListeDeFavorisArgs = {
