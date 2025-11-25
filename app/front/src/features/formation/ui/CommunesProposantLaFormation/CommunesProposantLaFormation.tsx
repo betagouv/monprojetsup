@@ -21,20 +21,14 @@ const CommunesProposantLaFormation = ({ communes, lienParcoursSup }: CommunesPro
           {communes && communes.length > 0 ? (
             <>
               {" "}
-              {communes.length}{" "}
-              {communes.length > 1
-                ? i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL
-                : i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER}{" "}
+              {communes.length} {communes.length > 1 ? i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL : i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER}{" "}
               {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
               <strong>{communes.slice(0, 3).join(" • ")}</strong>
             </>
           ) : (
             <strong>
               {" "}
-              {communes.length}{" "}
-              {communes.length > 1
-                ? i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL
-                : i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER}
+              {communes.length} {communes.length > 1 ? i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL : i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER}
             </strong>
           )}
         </p>
