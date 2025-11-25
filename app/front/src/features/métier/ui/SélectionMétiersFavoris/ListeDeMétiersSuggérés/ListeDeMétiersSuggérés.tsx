@@ -9,6 +9,7 @@ const ListeDeMétiersSuggérés = ({ métiers }: ListeDeMétiersSuggérésProps)
 
   return (
     <ListeDeFavoris
+      boutonMPSVisible={false}
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.MÉTIERS.NB_PAR_PAGE}
