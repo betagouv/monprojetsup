@@ -38,7 +38,7 @@ const Favori = ({
         {parcoursupSynchronizable && (
           <div className="fr-grid-row fr-grid-row--middle">
             <p className="fr-text--sm my-2">
-              <span>{SyncAvecParcoursup ? "Synchronisée" : "Non synchronisée"}</span> avec <strong>Parcoursup</strong>
+              <span>{SyncAvecParcoursup ? "Synchronisé" : "Non synchronisé"}</span> avec <strong>Parcoursup</strong>
             </p>
             {SyncAvecParcoursup && (
               <img
