@@ -12,7 +12,6 @@ const ListeDeVoeuxSuggérés = ({ voeux }: ListeDeVoeuxSuggérésProps) => {
       favoris={favoris}
       listeDeSuggestions
       nombreFavorisAffichésParDéfaut={constantes.VOEUX.NB_PAR_PAGE}
-      parcoursupSynchronizable
     />
   );
 };
