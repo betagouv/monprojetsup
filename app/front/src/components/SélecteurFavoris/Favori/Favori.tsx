@@ -35,20 +35,20 @@ const Favori = ({
           <p className="fr-text--sm mb-0">{nom}</p>
         )}
 
-        {parcoursupSynchronizable && (
-          <div className="fr-grid-row fr-grid-row--middle">
-            <p className="fr-text--sm my-2">
-              <span>{SyncAvecParcoursup ? "Synchronisé" : "Non synchronisé"}</span> avec <strong>Parcoursup</strong>
-            </p>
-            {SyncAvecParcoursup && (
-              <img
-                alt="Logo Parcoursup"
-                className="ml-4 h-5 w-5"
-                src={ParcoursupFav}
-              />
-            )}
-          </div>
-        )}
+        {/*{parcoursupSynchronizable && (*/}
+        {/*  <div className="fr-grid-row fr-grid-row--middle">*/}
+        {/*    <p className="fr-text--sm my-2">*/}
+        {/*      <span>{SyncAvecParcoursup ? "Synchronisé" : "Non synchronisé"}</span> avec <strong>Parcoursup</strong>*/}
+        {/*    </p>*/}
+        {/*    {SyncAvecParcoursup && (*/}
+        {/*      <img*/}
+        {/*        alt="Logo Parcoursup"*/}
+        {/*        className="ml-4 h-5 w-5"*/}
+        {/*        src={ParcoursupFav}*/}
+        {/*      />*/}
+        {/*    )}*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </div>
 
       <Toggle
