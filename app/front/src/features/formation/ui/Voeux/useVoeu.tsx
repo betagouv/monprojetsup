@@ -39,8 +39,6 @@ export default function useVoeu() {
       title: estFavoriParcoursup ? i18n.ACCESSIBILITÉ.FAVORI_PARCOURSUP : undefined,
       url: générerUrlParcoursup(voeu.id, référentielDonnées?.bacs ?? []),
       désactivé: estFavoriParcoursup,
-      icôneEstFavori: estFavoriParcoursup ? parcoursupSVG : undefined,
-      icôneEstPasFavori: estFavoriParcoursup ? parcoursupSVG : undefined,
       callbackMettreÀJour: () => mettreÀJourVoeuxÉlève([voeu.id]),
     };
   };
