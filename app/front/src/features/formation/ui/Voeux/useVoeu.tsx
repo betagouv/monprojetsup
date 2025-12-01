@@ -1,4 +1,3 @@
-import parcoursupSVG from "@/assets/parcoursup-fav.svg";
 import { Favori } from "@/components/SélecteurFavoris/Favori/Favori.interface";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
