@@ -1,10 +1,12 @@
 import { MaSélectionFavorisProps } from "./MaSélectionFavoris.interface";
 import ListeDeFavoris from "@/components/SélecteurFavoris/ListeDeFavoris/ListeDeFavoris";
 import { i18n } from "@/configuration/i18n/i18n";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur.ts";
 import { useMemo } from "react";
 
 const MaSélectionFavoris = ({ favoris, messageAucun }: MaSélectionFavorisProps) => {
   const favorisSélectionnés = useMemo(() => favoris.filter((favori) => favori.estFavori), [favoris]);
+  const utilisateur = useUtilisateur();
 
   return (
     <div>
@@ -12,7 +14,7 @@ const MaSélectionFavoris = ({ favoris, messageAucun }: MaSélectionFavorisProps
       {favorisSélectionnés.length > 0 ? (
         <ListeDeFavoris
           favoris={favorisSélectionnés}
-          parcoursupSynchronizable
+          parcoursupSynchronizable={utilisateur.estAuthentifié}
         />
       ) : (
         <p className="fr-text--sm mb-0">{messageAucun}</p>
