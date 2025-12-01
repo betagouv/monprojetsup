@@ -71,14 +71,6 @@ export default function useEntête() {
     } else {
       return [
         {
-          iconId: "fr-icon-arrow-go-back-fill",
-          linkProps: {
-            href: environnement.VITE_AVENIRS_URL,
-            className: "after:!content-none",
-          },
-          text: i18n.ENTÊTE.PLATEFORME_AVENIRS,
-        },
-        {
           iconId: "fr-icon-user-fill",
           linkProps: {
             to: "/connexion",

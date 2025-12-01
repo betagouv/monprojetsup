@@ -1,13 +1,8 @@
 import { FavoriProps } from "./Favori.interface";
-import IconeMPS from "@/assets/icone-mps.svg";
-import Bouton from "@/components/Bouton/Bouton.tsx";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import ModaleParcourSup from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/ModaleParcourSup/ModaleParcourSup.tsx";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Toggle } from "@radix-ui/react-toggle";
-import { useMemo } from "react";
 
 const Favori = ({
   id,
@@ -20,18 +15,7 @@ const Favori = ({
   icôneEstFavori = "fr-icon-heart-fill",
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
-  idDeLonglet = "",
-  boutonMPSVisible = false,
 }: FavoriProps) => {
-  const modaleParcourSup = useMemo(
-    () =>
-      createModal({
-        id: `modale-parcoursup-${id}-${idDeLonglet}`,
-        isOpenedByDefault: false,
-      }),
-    [id, idDeLonglet],
-  );
-
   return (
     <>
       <div>
@@ -78,26 +62,6 @@ const Favori = ({
           </div>
         )}
       </Toggle>
-
-      {boutonMPSVisible ? (
-        <Bouton
-          auClic={modaleParcourSup.open}
-          taille="petit"
-          type="button"
-          variante="tertiaire"
-        >
-          <img
-            alt="Icon"
-            height={14}
-            src={IconeMPS}
-            width={14}
-          />
-        </Bouton>
-      ) : (
-        ""
-      )}
-
-      <ModaleParcourSup modale={modaleParcourSup} />
     </>
   );
 };

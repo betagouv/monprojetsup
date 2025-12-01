@@ -33,7 +33,6 @@ internal class ConnecteAvecUnEnseignantSecurityContextFactory : WithSecurityCont
                 .claim("given_name", "Léa")
                 .claim("family_name", "Dupond")
                 .claim("email", "enseignant@example.com")
-                .claim("m7_id", idEnseignant)
                 .build(),
         )
 }

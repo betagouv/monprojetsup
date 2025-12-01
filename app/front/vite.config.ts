@@ -16,7 +16,7 @@ export default ({ mode }: { mode: string }) => {
       host: "0.0.0.0",
       // Si changement, modifier le .env du repo pour faire correspondre le port
       port: 5_001,
-      allowedHosts: [".onisep.fr"],
+      allowedHosts: [process.env.VITE_ALLOWED_HOST],
     },
     plugins: [
       react(),

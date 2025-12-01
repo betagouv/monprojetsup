@@ -49,8 +49,6 @@ abstract class ApiHttpClient(
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val jsonRequete = objectMapper.writeValueAsString(requeteDTO).toRequestBody(mediaType)
         val requete = Request.Builder().post(jsonRequete).url(url)
-        requete.header("Accept", "application/json")
-        requete.header("Content-Type", "application/json")
         token?.let { requete.header("Authorization", "Bearer $token") }
         return requete
     }

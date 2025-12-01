@@ -26,7 +26,7 @@ const TagFiltreAvecEmoji = ({ children, emoji, auClic, appuyéParDéfaut = false
           </span>{" "}
         </>
       )}
-      <span className="capitalize">{children}</span>
+      <span>{children}</span>
     </Tag>
   );
 };

@@ -57,6 +57,8 @@ import { TraceHttpService } from "@/services/trace/traceHttpService/traceHttpSer
 import { TraceSessionStorageService } from "@/services/trace/traceSessionStorageService/traceSessionStorageService";
 
 export class Dépendances {
+  private static _instance: Dépendances;
+
   private readonly _httpClient: HttpClient;
 
   private readonly _mpsApiHttpClient: MpsApiHttpClient;
@@ -239,8 +241,6 @@ export class Dépendances {
     this.voirMétierUseCase = new VoirMétierUseCase(this._traceService);
     this.suivreLienExterne = new SuivreLienExterneUseCase(this._traceService);
   }
-
-  private static _instance: Dépendances;
 
   public static getInstance(): Dépendances {
     if (!Dépendances._instance) {

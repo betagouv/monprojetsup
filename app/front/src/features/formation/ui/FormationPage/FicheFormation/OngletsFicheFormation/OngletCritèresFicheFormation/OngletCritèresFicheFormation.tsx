@@ -2,7 +2,6 @@ import { type OngletCritèresFicheFormationProps } from "./OngletCritèresFicheF
 import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoyenne/GraphiqueRépartitionMoyenne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
-import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
@@ -14,7 +13,6 @@ const trierTableauParPourcentage = <T extends { pourcentage: number }>(tableau: 
 };
 
 const OngletCritèresFicheFormation = ({
-  critèresAnalyse,
   moyenneGénérale,
   répartitionParBac,
   descriptifAttendus,
@@ -48,34 +46,7 @@ const OngletCritèresFicheFormation = ({
           </ul>
         </div>
       )}
-      {critèresAnalyse.length > 0 && (
-        <>
-          <hr className="mb-2 mt-8 first:hidden" />
-          <div className="*:mb-4">
-            <Titre
-              niveauDeTitre="h2"
-              styleDeTitre="text--lg"
-            >
-              {i18n.PAGE_FORMATION.CRITÈRES_ANALYSE}
-            </Titre>
-          </div>
-          <ul className="m-0 grid list-none justify-start gap-4 p-0">
-            {trierTableauParPourcentage(critèresAnalyse).map((critère) => (
-              <Fragment key={critère.nom}>
-                {critère.pourcentage >= constantes.FORMATIONS.FICHES.POURCENTAGE_MIN_AFFICHAGE_CRITÈRES && (
-                  <li className="grid grid-flow-col justify-start gap-2 font-medium">
-                    <span
-                      aria-hidden="true"
-                      className="fr-icon-check-line fr-icon--sm text-[--artwork-minor-green-emeraude]"
-                    />
-                    {`${critère.nom} (${critère.pourcentage}%)`}
-                  </li>
-                )}
-              </Fragment>
-            ))}
-          </ul>
-        </>
-      )}
+
       {moyenneGénérale.centiles.length > 0 && (
         <>
           <hr className="mb-2 mt-8 first:hidden" />
@@ -90,6 +61,7 @@ const OngletCritèresFicheFormation = ({
           <GraphiqueRépartitionMoyenne notes={moyenneGénérale.centiles.map((centile) => centile.note)} />
         </>
       )}
+
       {descriptifAttendus && descriptifAttendus !== "" && (
         <>
           <hr className="mb-2 mt-8 first:hidden" />

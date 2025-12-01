@@ -48,7 +48,6 @@ class ParcoursupFavorisApiFavorisClientTest {
                 httpClient = httpClient,
                 logger = logger,
                 parcoursupAuthentClient = parcoursupAuthentClient,
-                endpoint = "ApiFavoris/favoris",
             )
     }
 
