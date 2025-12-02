@@ -395,7 +395,7 @@ export const localeFR = {
             "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
         },
         CONNECTE_TOI: {
-          TITRE: "MPS est un outil de la plateforme Avenirs(s).",
+          TITRE: "MPS est un outil de la plateforme Avenir(s).",
           SOUS_TITRE: "En te connectant, tu conserveras tes préférences et tes favoris.",
         },
         AVIS: {
