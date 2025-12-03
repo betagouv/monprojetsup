@@ -411,7 +411,7 @@ export const localeFR = {
           ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
           SI_SYNCHRO: {
             TITRE: "Tes comptes MPS et Parcoursup sont synchronisés",
-            SOUS_TITRE: "En désynchronisant tes comptes, tes favoris Parcoursup ne seront plus importés",
+            SOUS_TITRE: "En désynchronisant tes comptes, tes favoris Parcoursup ne seront plus importés.",
             BOUTON: "Désynchroniser",
           },
         },
