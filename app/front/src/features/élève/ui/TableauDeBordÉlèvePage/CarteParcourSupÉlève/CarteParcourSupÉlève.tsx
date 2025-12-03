@@ -45,6 +45,7 @@ const CarteParcourSupÉlève = () => {
             icône={{ position: "droite", classe: "fr-icon-refresh-line" }}
             taille="grand"
             type="button"
+            variante={"secondaire"}
           >
             {i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.PARCOURSUP.BOUTON}
           </Bouton>

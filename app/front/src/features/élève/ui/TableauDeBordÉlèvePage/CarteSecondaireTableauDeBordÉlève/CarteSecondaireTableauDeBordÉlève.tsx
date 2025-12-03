@@ -16,10 +16,10 @@ const CarteSecondaireTableauDeBordÉlève = ({
           src={illustration}
         />
         <div className="text-[--text-label-grey]">
-          <p className="fr-h3 mb-2">{titre}</p>
+          <p className="fr-h3 mb-2 text-[--text-active-blue-france]">{titre}</p>
           <p className="fr-text--lead mb-0">{sousTitre}</p>
         </div>
-        <div className="pt-2">{children}</div>
+        <div className="pt-2 ml-auto">{children}</div>
       </div>
     </div>
   );
