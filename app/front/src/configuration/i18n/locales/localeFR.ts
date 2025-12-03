@@ -405,11 +405,14 @@ export const localeFR = {
         },
         PARCOURSUP: {
           TITRE: "Tu as déjà un compte Parcoursup ?",
-          SOUS_TITRE: "En synchronisant MPS avec Parcoursup, tu retrouveras dans MPS les formations que tu as déjà mises en favori dans Parcoursup.",
+          SOUS_TITRE:
+            "En synchronisant MPS avec Parcoursup, tu retrouveras dans MPS les formations que tu as déjà mises en favori dans Parcoursup.",
           BOUTON: "Synchroniser",
           ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
           SI_SYNCHRO: {
-            SOUS_TITRE: "Tes comptes sont bien synchronisés. Cette autorisation est revocable en écrivant à",
+            TITRE: "Tes comptes MPS et Parcoursup sont synchronisés",
+            SOUS_TITRE: "En désynchronisant tes comptes, tes favoris Parcoursup ne seront plus importés",
+            BOUTON: "Désynchroniser",
           },
         },
       },
