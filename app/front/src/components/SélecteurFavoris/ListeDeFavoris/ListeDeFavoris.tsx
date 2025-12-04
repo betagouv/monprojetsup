@@ -3,6 +3,7 @@ import useListeDeFavoris from "./useListeDeFavoris";
 import Bouton from "@/components/Bouton/Bouton.tsx";
 import Favori from "@/components/SélecteurFavoris/Favori/Favori";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 
 const ListeDeFavoris = ({
   favoris,
@@ -16,6 +17,8 @@ const ListeDeFavoris = ({
   });
 
   if (favorisAffichés.length === 0) return null;
+
+  const eleve = useÉlève();
 
   return (
     <div
@@ -47,6 +50,7 @@ const ListeDeFavoris = ({
               idDeLonglet={id}
               nom={favori.nom}
               parcoursupSynchronizable={parcoursupSynchronizable}
+              SyncAvecParcoursup={eleve.estVoeuFavoriProvenantDeParcoursupPourÉlève(favori.id)}
               title={favori.title}
               url={favori.url}
             />
