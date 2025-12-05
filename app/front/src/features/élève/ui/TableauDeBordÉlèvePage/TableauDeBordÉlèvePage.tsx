@@ -44,10 +44,7 @@ const TableauDeBordÉlèvePage = () => {
                 </li>
               </Fragment>
             ))}
-          </ul>
-          <ul
-            className={`grid list-none grid-cols-1 gap-6 p-0 ${associationParcoursupPossible ? "md:grid-cols-2" : ""} `}
-          >
+
             {associationParcoursupPossible && (
               <li>
                 <CarteParcourSupÉlève />
