@@ -18,9 +18,9 @@ const MainLayout = () => {
     () =>
       createModal({
         id: "modale-parcoursup",
-        isOpenedByDefault: utilisateur.estAuthentifié && eleve.élève.classe === "terminale",
+        isOpenedByDefault: utilisateur.estAuthentifié && eleve.élève?.classe === "terminale",
       }),
-    [],
+    [utilisateur.estAuthentifié, eleve.élève?.classe],
   );
 
   return (

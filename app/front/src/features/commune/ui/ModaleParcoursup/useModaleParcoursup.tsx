@@ -7,7 +7,7 @@ export default function useModaleParcoursup() {
     const boutonDecouvrirLaCarte: ModalProps["buttons"] = {
       children: i18n.PARCOURSUP_MODALE.DECOUVRIR_LA_CARTE,
       size: "large",
-      linkProps: { to: "https://dossier.parcoursup.fr/Candidat/carte" },
+      linkProps: { href: "https://dossier.parcoursup.fr/Candidat/carte" },
     };
 
     return [boutonDecouvrirLaCarte];
