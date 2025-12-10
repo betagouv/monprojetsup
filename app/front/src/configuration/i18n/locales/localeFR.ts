@@ -453,6 +453,11 @@ export const localeFR = {
       TITRE_ONGLET: "Métiers",
     },
   },
+  PARCOURSUP_MODALE: {
+    TITRE: 'Carte des formations Parcoursup 2026',
+    CONTENU: 'La nouvelle carte des formations Parcoursup 2026 est disponible',
+    DECOUVRIR_LA_CARTE: "Découvrir la carte",
+  },
   COMMUN: {
     FERMER: "Fermer",
     CHAMPS_MARQUÉS_DU_SYMBOLE: "Les champs marqués du symbole",

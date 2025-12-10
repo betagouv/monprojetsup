@@ -4,8 +4,17 @@ import LienÉvitement from "@/components/LienÉvitement/LienÉvitement";
 import Toast from "@/components/Toast/Toast";
 import { constantes } from "@/configuration/constantes";
 import { Outlet } from "@tanstack/react-router";
+import ModaleParcoursup from "@/features/commune/ui/ModaleParcoursup/ModaleParcoursup.tsx";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useMemo } from "react";
 
 const MainLayout = () => {
+
+    const modaleParcoursup = useMemo(() => createModal({
+        id: "modale-parcoursup",
+        isOpenedByDefault: true,
+    }), [])
+
   return (
     <>
       <LienÉvitement />
@@ -22,6 +31,7 @@ const MainLayout = () => {
         tabIndex={-1}
       >
         <PiedDePage />
+        <ModaleParcoursup modale={modaleParcoursup}/>
       </section>
     </>
   );
