@@ -454,8 +454,8 @@ export const localeFR = {
     },
   },
   PARCOURSUP_MODALE: {
-    TITRE: 'Carte des formations Parcoursup 2026',
-    CONTENU: 'La nouvelle carte des formations Parcoursup 2026 est disponible',
+    TITRE: "Carte des formations Parcoursup 2026",
+    CONTENU: "La nouvelle carte des formations Parcoursup 2026 est disponible",
     DECOUVRIR_LA_CARTE: "Découvrir la carte",
   },
   COMMUN: {
