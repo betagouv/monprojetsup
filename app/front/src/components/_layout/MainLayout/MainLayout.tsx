@@ -7,12 +7,17 @@ import { Outlet } from "@tanstack/react-router";
 import ModaleParcoursup from "@/features/commune/ui/ModaleParcoursup/ModaleParcoursup.tsx";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMemo } from "react";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur.ts";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 
 const MainLayout = () => {
 
+    const utilisateur = useUtilisateur();
+    const eleve = useÉlève();
+
     const modaleParcoursup = useMemo(() => createModal({
         id: "modale-parcoursup",
-        isOpenedByDefault: true,
+        isOpenedByDefault: (utilisateur.estAuthentifié && eleve.élève.classe === "terminale"),
     }), [])
 
   return (
