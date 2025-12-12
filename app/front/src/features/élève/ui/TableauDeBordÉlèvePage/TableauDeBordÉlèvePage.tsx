@@ -7,6 +7,10 @@ import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/Car
 import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/CarteParcourSupÉlève";
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
 import { Fragment } from "react/jsx-runtime";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useMemo } from "react";
+import ModaleParcoursupEvent from "@/features/commune/ui/ModaleParcoursupEvent/ModaleParcoursupEvent.tsx";
 
 const TableauDeBordÉlèvePage = () => {
   const { cartes, associationParcoursupPossible, estAuthentifié } = useTableauDeBordÉlèvePage();
@@ -17,6 +21,18 @@ const TableauDeBordÉlèvePage = () => {
   const messageBienvenue = estAuthentifié
     ? i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_CONNECTE
     : i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_DECONNECTE;
+
+  const eleve = useÉlève();
+
+  const modaleParcoursup = useMemo(
+      () =>
+          createModal({
+            id: "modale-parcoursup",
+            isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
+          }),
+      [estAuthentifié, eleve.élève?.classe],
+  );
+
   return (
     <>
       <Head titre={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
@@ -58,6 +74,8 @@ const TableauDeBordÉlèvePage = () => {
           </ul>
         </div>
       </div>
+
+      <ModaleParcoursupEvent modale={modaleParcoursup} />
     </>
   );
 };

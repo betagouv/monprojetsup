@@ -1,5 +1,5 @@
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 
-export type ModaleParcoursupProps = {
+export type ModaleParcoursupEventProps = {
   modale: ReturnType<typeof createModal>;
 };
