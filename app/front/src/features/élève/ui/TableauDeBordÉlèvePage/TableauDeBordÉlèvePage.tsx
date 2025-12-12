@@ -3,14 +3,14 @@ import Head from "@/components/_layout/Head/Head";
 import Titre from "@/components/Titre/Titre";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
+import ModaleParcoursupEvent from "@/features/commune/ui/ModaleParcoursupEvent/ModaleParcoursupEvent.tsx";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteAvisÉlève/CarteAvisÉlève";
 import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/CarteParcourSupÉlève";
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
-import { Fragment } from "react/jsx-runtime";
-import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMemo } from "react";
-import ModaleParcoursupEvent from "@/features/commune/ui/ModaleParcoursupEvent/ModaleParcoursupEvent.tsx";
+import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
   const { cartes, associationParcoursupPossible, estAuthentifié } = useTableauDeBordÉlèvePage();
@@ -25,12 +25,12 @@ const TableauDeBordÉlèvePage = () => {
   const eleve = useÉlève();
 
   const modaleParcoursup = useMemo(
-      () =>
-          createModal({
-            id: "modale-parcoursup",
-            isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
-          }),
-      [estAuthentifié, eleve.élève?.classe],
+    () =>
+      createModal({
+        id: "modale-parcoursup",
+        isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
+      }),
+    [estAuthentifié, eleve.élève?.classe],
   );
 
   return (

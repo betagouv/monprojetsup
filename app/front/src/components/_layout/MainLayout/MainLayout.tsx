@@ -6,7 +6,6 @@ import { constantes } from "@/configuration/constantes";
 import { Outlet } from "@tanstack/react-router";
 
 const MainLayout = () => {
-
   return (
     <>
       <LienÉvitement />
