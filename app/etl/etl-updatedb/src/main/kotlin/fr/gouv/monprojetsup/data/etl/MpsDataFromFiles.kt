@@ -1021,6 +1021,49 @@ class MpsDataFromFiles(
         }
     }
 
+    private fun exportFilieresPsupAvecDescriptifVide() {
+        val descriptifs = getDescriptifs()
+        val descriptifsVide =
+            descriptifs.keyToDescriptifs().entries.filter { it.value.descriptifGeneralFront.isNullOrBlank() }
+                .map { it.key }.toSet()
+        if (descriptifsVide.isEmpty()) {
+            logger.info("Aucune filière PSUP avec descriptif vide")
+            return
+        } else {
+            val labels = getLabels()
+            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_descriptif_vide.csv").use { csv ->
+                csv.appendHeaders(
+                    listOf(
+                        "fl_cod",
+                        "code générique",
+                        "libellé",
+                    )
+                )
+                descriptifsVide.forEach { flCodStr: String ->
+                    try {
+                        val flCod = flCodStr.toInt()
+                        val filiere = psupData.formations.filieres[flCod]
+                        if (filiere != null) {
+                            val mpsId = gFlCodToMpsId(flCod)
+                            val label = labels.getOrDefault(mpsId, mpsId)
+                            csv.append(
+                                listOf(
+                                    flCod.toString(),
+                                    filiere.gFrCod.toString(),
+                                    label
+                                )
+                            )
+                        }
+                    } catch (e: NumberFormatException) {
+                        //ignore
+                    }
+                }
+
+            }
+        }
+    }
+
+
     private fun exportLiens() {
         val labels = getLabels()
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
@@ -1194,6 +1237,7 @@ class MpsDataFromFiles(
         val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
         exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
         exportFilieresPsupOrphelines()
+        exportFilieresPsupAvecDescriptifVide()
         exportRemoteSheets()
         exportLiens()
     }
