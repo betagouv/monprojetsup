@@ -1021,7 +1021,7 @@ class MpsDataFromFiles(
         }
     }
 
-    private fun exportFilieresPsupAvecDescriptifVide() {
+    private fun exportFormationsMpsAvecDescriptifVide() {
         val descriptifs = getDescriptifs()
         val descriptifsVide =
             descriptifs.keyToDescriptifs().entries.filter { it.value.descriptifGeneralFront.isNullOrBlank() }
@@ -1031,34 +1031,22 @@ class MpsDataFromFiles(
             return
         } else {
             val labels = getLabels()
-            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_descriptif_vide.csv").use { csv ->
+            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_mps_descriptif_vide.csv").use { csv ->
                 csv.appendHeaders(
                     listOf(
-                        "fl_cod",
-                        "code générique",
+                        "code",
                         "libellé",
                     )
                 )
                 descriptifsVide.forEach { flCodStr: String ->
-                    try {
-                        val flCod = flCodStr.toInt()
-                        val filiere = psupData.formations.filieres[flCod]
-                        if (filiere != null) {
-                            val mpsId = gFlCodToMpsId(flCod)
-                            val label = labels.getOrDefault(mpsId, mpsId)
-                            csv.append(
-                                listOf(
-                                    flCod.toString(),
-                                    filiere.gFrCod.toString(),
-                                    label
-                                )
-                            )
-                        }
-                    } catch (e: NumberFormatException) {
-                        //ignore
-                    }
+                    val label = labels.getOrDefault(flCodStr, flCodStr)
+                    csv.append(
+                        listOf(
+                            flCodStr,
+                            label
+                        )
+                    )
                 }
-
             }
         }
     }
@@ -1237,7 +1225,7 @@ class MpsDataFromFiles(
         val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
         exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
         exportFilieresPsupOrphelines()
-        exportFilieresPsupAvecDescriptifVide()
+        exportFormationsMpsAvecDescriptifVide()
         exportRemoteSheets()
         exportLiens()
     }
