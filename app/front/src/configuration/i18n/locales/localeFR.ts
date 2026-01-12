@@ -368,8 +368,12 @@ export const localeFR = {
     TABLEAU_DE_BORD: {
       TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
       TITRE_DECONNECTE: "C'est parti!",
-      MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
-      MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
+      MESSAGE_BIENVENUE: {
+        CONNECTE: "Bienvenue sur MPS 👋",
+        DECONNECTE: "Bienvenue sur MPS 👋",
+        SOUS_TITRE:
+          "Explore et sélectionne les formations correspondant à tes préférences afin de préparer sereinement Parcoursup. ",
+      },
       MODALE_PARCOURSUP: {
         TITRE: "Synchronisation avec Parcoursup",
         CONTENU:
