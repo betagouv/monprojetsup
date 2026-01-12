@@ -10,6 +10,7 @@ import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePa
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMemo } from "react";
+import { Table } from "@codegouvfr/react-dsfr/Table";
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
@@ -18,21 +19,23 @@ const TableauDeBordÉlèvePage = () => {
   const messageTitre = estAuthentifié
     ? i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_CONNECTE
     : i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_DECONNECTE;
+
   const messageBienvenue = estAuthentifié
-    ? i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_CONNECTE
-    : i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE_DECONNECTE;
+    ? i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE.CONNECTE
+    : i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE.DECONNECTE;
 
-  const eleve = useÉlève();
+  const afficherVideo = estAuthentifié ? "hidden" : "grid list-none grid-cols-3 gap-6 p-0 md:grid-cols-12";
 
-  const modaleParcoursup = useMemo(
-    () =>
-      createModal({
-        id: "modale-parcoursup",
-        isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
-      }),
-    [estAuthentifié, eleve.élève?.classe],
-  );
+    const eleve = useÉlève();
 
+    const modaleParcoursup = useMemo(
+        () =>
+            createModal({
+                id: "modale-parcoursup",
+                isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
+            }),
+        [estAuthentifié, eleve.élève?.classe],
+    );
   return (
     <>
       <Head titre={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
@@ -46,7 +49,84 @@ const TableauDeBordÉlèvePage = () => {
               {messageTitre}
             </Titre>
           </div>
-          <p className="fr-h1 mb-10">{messageBienvenue}</p>
+
+          <p className="fr-h1">{messageBienvenue}</p>
+
+          <p className="*:mb-2 *:font-normal *:text-[--text-mention-grey]">
+            {i18n.ÉLÈVE.TABLEAU_DE_BORD.MESSAGE_BIENVENUE.SOUS_TITRE}
+          </p>
+
+          <ul className={afficherVideo}>
+            <li className="col-span-3 md:col-span-7">
+              <div className="fr-responsive-vid">
+                <iframe
+                  className="fr-responsive-vid__player"
+                  sandbox="allow-scripts"
+                  src="https://videos.onisep.fr/embed/media/2e79baf6-1bf4-4ba8-8377-554dad1170f6/"
+                />
+              </div>
+            </li>
+
+            <li className="col-span-3 md:col-span-5">
+              <Carte
+                auClicHandler={async () => {}}
+                estFavori={false}
+                estMasqué={false}
+                id="monprojetsup"
+                sélectionnée={false}
+                titre=""
+              >
+                <h2 className="fr-h4 fr-mt-n2w">
+                  MonProjetSup,
+                  <br />
+                  comment ça marche ?
+                </h2>
+
+                <p className="fr-my-n4w">Les 3 étapes pour compléter Mon Projet Sup</p>
+
+                <div className="fr-my-n2w">
+                  <Table
+                    data={[
+                      [
+                        <span
+                          className="font-bold text-[--warning-425-625-hover]"
+                          key="step1"
+                        >
+                          01
+                        </span>,
+                        "Je complète mon profil 😎",
+                      ],
+                      [
+                        <span
+                          className="font-bold text-[--text-active-blue-france]"
+                          key="step2"
+                        >
+                          02
+                        </span>,
+                        <span key="step2_description">
+                          J’explore et <b>ajoute en favoris</b> des formations ❤️
+                        </span>,
+                      ],
+                      [
+                        <span
+                          className="font-bold text-[--green-emeraude-925-125-active]"
+                          key="step3"
+                        >
+                          03
+                        </span>,
+                        <span key="step3_description">
+                          j’indique mon <b>niveau d’ambition</b> pour chaque formation 🤔
+                        </span>,
+                      ],
+                    ]}
+                    id="etapes-monprojetsup"
+                    style={{ borderTop: "1.2px solid #929292" }}
+                  />
+                </div>
+              </Carte>
+            </li>
+          </ul>
+
           <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
             {cartes.map((carte) => (
               <Fragment key={carte.lien}>
@@ -60,12 +140,17 @@ const TableauDeBordÉlèvePage = () => {
                 </li>
               </Fragment>
             ))}
+          </ul>
 
+          <ul
+            className={`grid list-none grid-cols-1 gap-6 p-0 ${associationParcoursupPossible ? "md:grid-cols-2" : ""} `}
+          >
             {associationParcoursupPossible && (
               <li>
                 <CarteParcourSupÉlève />
               </li>
             )}
+
             {environnement.VITE_LAISSER_AVIS_URL && (
               <li>
                 <CarteAvisÉlève />

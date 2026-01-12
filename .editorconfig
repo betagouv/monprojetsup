@@ -1,0 +1,12 @@
+root = true
+
+[*]
+end_of_line = lf
+
+[app/front/**.{js,ts,tsx}]
+indent_style = space
+indent_size = 2
+
+[app/front/**.{css,scss}]
+indent_style = space
+indent_size = 2
