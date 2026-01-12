@@ -1,5 +1,6 @@
 import useTableauDeBordÉlèvePage from "./useTableauDeBordÉlèvePage";
 import Head from "@/components/_layout/Head/Head";
+import Carte from "@/components/Carte/Carte.tsx";
 import Titre from "@/components/Titre/Titre";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -9,8 +10,8 @@ import CarteAvisÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/Car
 import CarteParcourSupÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/CarteParcourSupÉlève";
 import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/TableauDeBordÉlèvePage/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useMemo } from "react";
 import { Table } from "@codegouvfr/react-dsfr/Table";
+import { useMemo } from "react";
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlèvePage = () => {
@@ -26,16 +27,16 @@ const TableauDeBordÉlèvePage = () => {
 
   const afficherVideo = estAuthentifié ? "hidden" : "grid list-none grid-cols-3 gap-6 p-0 md:grid-cols-12";
 
-    const eleve = useÉlève();
+  const eleve = useÉlève();
 
-    const modaleParcoursup = useMemo(
-        () =>
-            createModal({
-                id: "modale-parcoursup",
-                isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
-            }),
-        [estAuthentifié, eleve.élève?.classe],
-    );
+  const modaleParcoursup = useMemo(
+    () =>
+      createModal({
+        id: "modale-parcoursup",
+        isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
+      }),
+    [estAuthentifié, eleve.élève?.classe],
+  );
   return (
     <>
       <Head titre={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
