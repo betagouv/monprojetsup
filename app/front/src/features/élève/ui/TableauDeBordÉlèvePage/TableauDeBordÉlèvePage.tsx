@@ -32,7 +32,7 @@ const TableauDeBordÉlèvePage = () => {
   const modaleParcoursup = useMemo(
     () =>
       createModal({
-        id: "modale-parcoursup",
+        id: "modale-parcoursup-event",
         isOpenedByDefault: estAuthentifié && eleve.élève?.classe === "terminale",
       }),
     [estAuthentifié, eleve.élève?.classe],
