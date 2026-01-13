@@ -24,8 +24,8 @@ export default function useLayout() {
   );
 
   const lienAccueil: HeaderProps["homeLinkProps"] = {
-    href: "https://www.onisep.fr",
-    title: `ONISEP`,
+    to: "/",
+    title: `MonProjetSup`,
   };
 
   return {

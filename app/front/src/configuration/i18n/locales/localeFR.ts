@@ -368,8 +368,12 @@ export const localeFR = {
     TABLEAU_DE_BORD: {
       TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
       TITRE_DECONNECTE: "C'est parti!",
-      MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
-      MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
+      MESSAGE_BIENVENUE: {
+        CONNECTE: "Bienvenue sur MPS 👋",
+        DECONNECTE: "Bienvenue sur MPS 👋",
+        SOUS_TITRE:
+          "Explore et sélectionne les formations correspondant à tes préférences afin de préparer sereinement Parcoursup. ",
+      },
       MODALE_PARCOURSUP: {
         TITRE: "Synchronisation avec Parcoursup",
         CONTENU:
@@ -395,7 +399,7 @@ export const localeFR = {
             "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
         },
         CONNECTE_TOI: {
-          TITRE: "Connecte-toi à ton compte MPS-Avenir(s)",
+          TITRE: "MPS est un outil de la plateforme Avenir(s).",
           SOUS_TITRE: "En te connectant, tu conserveras tes préférences et tes favoris.",
         },
         AVIS: {
@@ -404,12 +408,15 @@ export const localeFR = {
           BOUTON: "Je donne mon avis",
         },
         PARCOURSUP: {
-          TITRE: "Synchronise MPS à ton compte Parcoursup",
-          SOUS_TITRE: "3 clics pour te faciliter la vie",
+          TITRE: "Tu as déjà un compte Parcoursup ?",
+          SOUS_TITRE:
+            "En synchronisant MPS avec Parcoursup, tu retrouveras dans MPS les formations que tu as déjà mises en favori dans Parcoursup.",
           BOUTON: "Synchroniser",
           ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
           SI_SYNCHRO: {
-            SOUS_TITRE: "Tes comptes sont bien synchronisés. Cette autorisation est revocable en écrivant à",
+            TITRE: "Tes comptes MPS et Parcoursup sont synchronisés",
+            SOUS_TITRE: "En désynchronisant tes comptes, tes favoris Parcoursup ne seront plus importés.",
+            BOUTON: "Désynchroniser",
           },
         },
       },
@@ -449,6 +456,11 @@ export const localeFR = {
     MÉTIERS: {
       TITRE_ONGLET: "Métiers",
     },
+  },
+  PARCOURSUP_MODALE: {
+    TITRE: "Carte des formations Parcoursup 2026",
+    CONTENU: "La nouvelle carte des formations Parcoursup 2026 est disponible.",
+    DECOUVRIR_LA_CARTE: "Découvrir la carte",
   },
   COMMUN: {
     FERMER: "Fermer",
