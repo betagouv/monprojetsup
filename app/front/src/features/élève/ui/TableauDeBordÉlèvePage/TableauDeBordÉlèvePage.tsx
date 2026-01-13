@@ -35,7 +35,6 @@ const TableauDeBordÉlèvePage = () => {
       <Head titre={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
       <div className="h-full bg-[--background-alt-beige-gris-galet] bg-right-top bg-no-repeat lg:bg-[url('/images-de-fond/tableau-de-bord.svg')]">
         <div className="fr-container pb-20 pt-12">
-
           <h1 className="fr-h1 mb-3">{messageBienvenue}</h1>
 
           <p className="*:mb-2 *:font-normal *:text-[--text-mention-grey]">
