@@ -53,7 +53,10 @@ const TableauDeBordÉlèvePage = () => {
             </li>
 
             <li className="col-span-3 md:col-span-5">
-              <div id="monprojetsup" className="bg-[--background-raised-grey] p-6 min-h-full">
+              <div
+                className="min-h-full bg-[--background-raised-grey] p-6"
+                id="monprojetsup"
+              >
                 <h2 className="fr-h4">
                   MonProjetSup,
                   <br />
