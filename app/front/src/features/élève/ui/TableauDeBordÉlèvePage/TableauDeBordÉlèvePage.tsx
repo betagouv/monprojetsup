@@ -1,6 +1,5 @@
 import useTableauDeBordÉlèvePage from "./useTableauDeBordÉlèvePage";
 import Head from "@/components/_layout/Head/Head";
-import Carte from "@/components/Carte/Carte.tsx";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import ModaleParcoursupEvent from "@/features/commune/ui/ModaleParcoursupEvent/ModaleParcoursupEvent.tsx";
