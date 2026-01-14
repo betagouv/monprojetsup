@@ -53,23 +53,16 @@ const TableauDeBordÉlèvePage = () => {
             </li>
 
             <li className="col-span-3 md:col-span-5">
-              <Carte
-                auClicHandler={async () => {}}
-                estFavori={false}
-                estMasqué={false}
-                id="monprojetsup"
-                sélectionnée={false}
-                titre=""
-              >
-                <h2 className="fr-h4 fr-mt-n2w">
+              <div id="monprojetsup" className="bg-[--background-raised-grey] p-6 min-h-full">
+                <h2 className="fr-h4">
                   MonProjetSup,
                   <br />
                   comment ça marche ?
                 </h2>
 
-                <p className="fr-my-n4w">Les 3 étapes pour compléter MonProjetSup</p>
+                <p>Les 3 étapes pour compléter MonProjetSup</p>
 
-                <div className="fr-my-n2w">
+                <div>
                   <Table
                     data={[
                       [
@@ -105,10 +98,10 @@ const TableauDeBordÉlèvePage = () => {
                       ],
                     ]}
                     id="etapes-monprojetsup"
-                    style={{ borderTop: "1.2px solid #929292" }}
+                    style={{ borderTop: "1.2px solid #929292", marginBottom: "0" }}
                   />
                 </div>
-              </Carte>
+              </div>
             </li>
           </ul>
 
