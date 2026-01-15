@@ -40,7 +40,7 @@ if [ $? -ne 0 ]; then \n\
   echo "keycloak service on port is not reachable, stopping container." \n\
   exit 1 \n\
 fi \n\
-java -jar mps-backend.jar' > /usr/local/bin/start.sh
+java -XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=25 -jar mps-backend.jar' > /usr/local/bin/start.sh
 
 # Make the startup script executable
 RUN chmod +x /usr/local/bin/start.sh
