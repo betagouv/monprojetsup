@@ -356,7 +356,7 @@ export const localeFR = {
       PARCOURSUP: {
         FAVORI: "Synchronisé avec Parcoursup",
         NON_FAVORI: "Non synchronisé avec Parcoursup",
-      }
+      },
     },
     CONFIRMATION_INSCRIPTION: {
       TITRE_PAGE: "Inscription terminée",

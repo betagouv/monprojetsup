@@ -1,9 +1,9 @@
 import { FavoriProps } from "./Favori.interface";
+import iconeMPS from "@/assets/parcoursup-fav.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Toggle } from "@radix-ui/react-toggle";
-import iconeMPS from '@/assets/parcoursup-fav.svg';
 
 const Favori = ({
   id,
@@ -17,7 +17,7 @@ const Favori = ({
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
   parcoursupSynchronizable,
-  SyncAvecParcoursup
+  SyncAvecParcoursup,
 }: FavoriProps) => {
   return (
     <>
@@ -34,12 +34,18 @@ const Favori = ({
         ) : (
           <p className="fr-text--sm mb-0">{nom}</p>
         )}
-        {parcoursupSynchronizable &&
-          <p className="mt-2 gap-3 flex flex-wrap">
-            {SyncAvecParcoursup ? i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.FAVORI: i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.NON_FAVORI}
-            {SyncAvecParcoursup ?? <img src={iconeMPS} alt={'Lien avec Parcoursup'} width={24} />}
+        {parcoursupSynchronizable && (
+          <p className="mt-2 flex flex-wrap gap-3">
+            {SyncAvecParcoursup ? i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.FAVORI : i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.NON_FAVORI}
+            {SyncAvecParcoursup ?? (
+              <img
+                alt="Lien avec Parcoursup"
+                src={iconeMPS}
+                width={24}
+              />
+            )}
           </p>
-        }
+        )}
       </div>
 
       <Toggle
@@ -71,7 +77,6 @@ const Favori = ({
           </div>
         )}
       </Toggle>
-
     </>
   );
 };
