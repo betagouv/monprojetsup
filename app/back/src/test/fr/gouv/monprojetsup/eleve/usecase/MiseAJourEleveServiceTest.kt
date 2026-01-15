@@ -312,20 +312,40 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurNonPresents {
         @Test
-        fun `si un des métiers favoris n'existe pas, doit throw BadRequestException`() {
+        fun `si un des métiers favoris n'existe pas, doit être filtré`() {
+            // Given
+            val metiersFavoris = listOf("MET_INCONNU", "MET001", "MET004")
+            val nouveauProfil = modificationProfilEleveVide.copy(metiersFavoris = metiersFavoris)
+            given(metierRepository.recupererIdsMetiersInexistants(metiersFavoris)).willReturn(listOf("MET_INCONNU"))
+
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+
+            val profilAMettreAJour =
+                profilEleve.copy(
+                    metiersFavoris = listOf("MET001", "MET004")
+                )
+
+            // When & Then
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
+        }
+
+        @Test
+        fun `si un des métiers favoris n'existe pas, doit être ignoré`() {
             // Given
             val metiersFavoris = listOf("MET_INCONNU", "MET001")
             val nouveauProfil = modificationProfilEleveVide.copy(metiersFavoris = metiersFavoris)
             given(metierRepository.recupererIdsMetiersInexistants(metiersFavoris)).willReturn(listOf("MET_INCONNU"))
 
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+
             // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Les métiers [MET_INCONNU] n'existent pas")
+            then(eleveRepository).shouldHaveNoInteractions()
         }
 
         @Test
@@ -383,7 +403,7 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurFormations {
         @Test
-        fun `si une des formations favorites ou de la corbeille n'existe pas, doit throw BadRequestException`() {
+        fun `si une des formations favorites ou de la corbeille n'existe pas, doit la filtrer`() {
             // Given
             val formationsFavorites =
                 listOf(
@@ -415,15 +435,28 @@ class MiseAJourEleveServiceTest {
                 ),
             ).willReturn(listOf("flInconnue"))
 
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilEleve,
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+
+            val profilAMettreAJour =
+                profilEleve.copy(
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl0001",
+                                niveauAmbition = 3,
+                                priseDeNote = "Ma formation préférée",
+                            ),
+                        ),
+                    corbeilleFormations = listOf("fl5678"),
+                    voeuxFavoris = emptyList(), // listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
                 )
-            }.isInstanceOf(
-                MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
+
+            // When & Then
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
+
         }
 
         @Test
@@ -459,21 +492,24 @@ class MiseAJourEleveServiceTest {
         }
 
         @Test
-        fun `si une des formations à la corbeille n'existe pas, doit throw BadRequestException`() {
+        fun `si une des formations à la corbeille n'existe pas, doit être filtrée`() {
             // Given
             val corbeilleFormations = listOf("flInconnue", "fl1234", "fl5678")
             val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
             given(formationRepository.recupererIdsFormationsInexistantes(corbeilleFormations)).willReturn(listOf("flInconnue"))
 
             // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilEleve,
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+            val profilAMettreAJour =
+                profilEleve.copy(
+                    corbeilleFormations = listOf("fl1234", "fl5678")
                 )
-            }.isInstanceOf(
-                MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
+
+            // When & Then
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
         }
 
         @Test
@@ -614,7 +650,7 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurVoeu {
         @Test
-        fun `si un des voeux n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
+        fun `si un des voeux n'est pas présent dans la liste des possibilités, doit être filtré`() {
             // Given
             given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(
                 emptyList(),
@@ -647,19 +683,36 @@ class MiseAJourEleveServiceTest {
                         listOf(
                             VoeuFavori("ta1", true),
                             VoeuFavori("tainconnu", false),
+                        )
+                )
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+
+            val profilAMettreAJour =
+                profilEleve.copy(
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl1",
+                                niveauAmbition = 3,
+                                priseDeNote = null,
+                            ),
+                            FormationFavorite(
+                                idFormation = "fl3",
+                                niveauAmbition = 1,
+                                priseDeNote = "Ma prise de note",
+                            ),
                         ),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                        )
                 )
 
             // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Le ou les voeux favoris suivants ne sont pas connus : [tainconnu]",
-                )
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
         }
     }
 

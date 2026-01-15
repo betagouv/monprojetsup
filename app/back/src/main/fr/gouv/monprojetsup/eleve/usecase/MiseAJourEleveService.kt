@@ -42,7 +42,7 @@ class MiseAJourEleveService(
         verifierBaccalaureatEtSesSpecialites(miseAJourDuProfil, profilInitial)
         verifierDomaines(miseAJourDuProfil.domainesInterets)
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
-        val metiersFavoris = verifierMetiers(miseAJourDuProfil.metiersFavoris)
+        val nouveauxMetiersFavoris = verifierMetiers(miseAJourDuProfil.metiersFavoris)
         val formationsFavoritesCorbeille = verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
         val voeuxFavoris = verifierVoeux(miseAJourDuProfil.voeuxFavoris)
 
@@ -63,7 +63,7 @@ class MiseAJourEleveService(
                 specialites = miseAJourDuProfil.specialites ?: profilInitial.specialites,
                 domainesInterets = miseAJourDuProfil.domainesInterets ?: profilInitial.domainesInterets,
                 centresInterets = miseAJourDuProfil.centresInterets ?: profilInitial.centresInterets,
-                metiersFavoris = miseAJourDuProfil.metiersFavoris ?: metiersFavoris,
+                metiersFavoris = nouveauxMetiersFavoris ?: profilInitial.metiersFavoris,
                 dureeEtudesPrevue = miseAJourDuProfil.dureeEtudesPrevue ?: profilInitial.dureeEtudesPrevue,
                 alternance = miseAJourDuProfil.alternance ?: profilInitial.alternance,
                 communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
@@ -152,6 +152,15 @@ class MiseAJourEleveService(
                     )
                 }
             }
+
+            !idFormations.isNullOrEmpty() && corbeilleFormations == null -> {
+                if (idFormations.aUneValeurCommune(profilInitial.corbeilleFormations)) {
+                    throw MonProjetSupBadRequestException(
+                        code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                        msg = "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
+                    )
+                }
+            }
         }
         if (!idFormations.isNullOrEmpty()) {
             val formationsInexistantes =
@@ -193,6 +202,9 @@ class MiseAJourEleveService(
         if (voeux == null) {
             return null
         }
+        if(voeux.isEmpty()) {
+            return emptyList()
+        }
         val voeuxInexistants = voeuRepository.recupererIdsVoeuxInexistants(voeux.map { itt -> itt.idVoeu })
         return if (voeuxInexistants.isNotEmpty()) {
             logger.warn(
@@ -209,6 +221,9 @@ class MiseAJourEleveService(
     private fun verifierMetiers(metiersFavoris: List<String>?) : List<String>? {
         if (metiersFavoris == null) {
             return null
+        }
+        if (metiersFavoris.isEmpty()) {
+            return emptyList()
         }
         if (metiersFavoris.distinct().size != metiersFavoris.size) {
             throw MonProjetSupBadRequestException(
