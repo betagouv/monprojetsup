@@ -43,7 +43,8 @@ class MiseAJourEleveService(
         verifierDomaines(miseAJourDuProfil.domainesInterets)
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         val nouveauxMetiersFavoris = verifierMetiers(miseAJourDuProfil.metiersFavoris)
-        val formationsFavoritesCorbeille = verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
+        val formationsFavoritesCorbeille =
+            verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
         val voeuxFavoris = verifierVoeux(miseAJourDuProfil.voeuxFavoris)
 
         val nouvellesFormations = formationsFavoritesCorbeille.first ?: profilInitial.formationsFavorites
@@ -124,7 +125,7 @@ class MiseAJourEleveService(
         formationsFavorites: List<FormationFavorite>?,
         corbeilleFormations: List<String>?,
         profilInitial: ProfilEleve.AvecProfilExistant,
-    ) : Pair<List<FormationFavorite>?, List<String>?> {
+    ): Pair<List<FormationFavorite>?, List<String>?> {
         val idFormations = formationsFavorites?.map { it.idFormation }
         var newFormationsFavorites = formationsFavorites
         var newCorbeilleFormations = corbeilleFormations
@@ -188,9 +189,10 @@ class MiseAJourEleveService(
                         "FORMATIONS_NON_RECONNUES",
                         "Les formations $formationsInexistantes envoyées n'existent pas",
                     )
-                    newCorbeilleFormations = corbeilleFormations.filterNot {
-                        formationsInexistantes.contains(it)
-                    }
+                    newCorbeilleFormations =
+                        corbeilleFormations.filterNot {
+                            formationsInexistantes.contains(it)
+                        }
                 }
             }
         }
@@ -198,18 +200,18 @@ class MiseAJourEleveService(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun verifierVoeux(voeux: List<VoeuFavori>?) : List<VoeuFavori>? {
+    private fun verifierVoeux(voeux: List<VoeuFavori>?): List<VoeuFavori>? {
         if (voeux == null) {
             return null
         }
-        if(voeux.isEmpty()) {
+        if (voeux.isEmpty()) {
             return emptyList()
         }
         val voeuxInexistants = voeuRepository.recupererIdsVoeuxInexistants(voeux.map { itt -> itt.idVoeu })
         return if (voeuxInexistants.isNotEmpty()) {
             logger.warn(
                 "VOEU_FAVORI_INEXISTANT",
-                "Le ou les voeux favoris suivants ne sont pas connus : $voeuxInexistants"
+                "Le ou les voeux favoris suivants ne sont pas connus : $voeuxInexistants",
             )
             voeux.filterNot { voeuxInexistants.contains(it.idVoeu) }
         } else {
@@ -218,7 +220,7 @@ class MiseAJourEleveService(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun verifierMetiers(metiersFavoris: List<String>?) : List<String>? {
+    private fun verifierMetiers(metiersFavoris: List<String>?): List<String>? {
         if (metiersFavoris == null) {
             return null
         }
@@ -228,14 +230,14 @@ class MiseAJourEleveService(
         if (metiersFavoris.distinct().size != metiersFavoris.size) {
             throw MonProjetSupBadRequestException(
                 "METIERS_FAVORIS_EN_DOUBLE",
-                "Un ou plusieurs des métiers est en double"
+                "Un ou plusieurs des métiers est en double",
             )
         } else {
             val metiersInexistants = metierRepository.recupererIdsMetiersInexistants(ids = metiersFavoris)
             return if (metiersInexistants.isNotEmpty()) {
                 logger.warn(
                     "METIER_FAVORI_INEXISTANT",
-                    "Le ou les métiers favoris suivants ne sont pas connus : $metiersInexistants"
+                    "Le ou les métiers favoris suivants ne sont pas connus : $metiersInexistants",
                 )
                 metiersFavoris.filterNot { itt -> metiersInexistants.contains(itt) }
             } else {

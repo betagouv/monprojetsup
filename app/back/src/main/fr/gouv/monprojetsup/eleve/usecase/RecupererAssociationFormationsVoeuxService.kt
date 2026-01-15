@@ -38,9 +38,9 @@ class RecupererAssociationFormationsVoeuxService(
             if (voeuxInconnus != null) {
                 logger.warn(
                     "VOEUX_FAVORIS_API_PSUP_INCONNUS",
-                    "Des voeux favoris inconnus ont été envoyés par l'API parcoursup pour le compte ${compteParcoursup} : ${
+                    "Des voeux favoris inconnus ont été envoyés par l'API parcoursup pour le compte $compteParcoursup : ${
                         voeuxInconnus.joinToString(
-                            ", "
+                            ", ",
                         )
                     }",
                 )

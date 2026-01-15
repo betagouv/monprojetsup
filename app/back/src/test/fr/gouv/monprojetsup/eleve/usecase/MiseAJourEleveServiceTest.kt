@@ -325,7 +325,7 @@ class MiseAJourEleveServiceTest {
 
             val profilAMettreAJour =
                 profilEleve.copy(
-                    metiersFavoris = listOf("MET001", "MET004")
+                    metiersFavoris = listOf("MET001", "MET004"),
                 )
 
             // When & Then
@@ -456,7 +456,6 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
-
         }
 
         @Test
@@ -505,7 +504,7 @@ class MiseAJourEleveServiceTest {
             )
             val profilAMettreAJour =
                 profilEleve.copy(
-                    corbeilleFormations = listOf("fl1234", "fl5678")
+                    corbeilleFormations = listOf("fl1234", "fl5678"),
                 )
 
             // When & Then
@@ -683,7 +682,7 @@ class MiseAJourEleveServiceTest {
                         listOf(
                             VoeuFavori("ta1", true),
                             VoeuFavori("tainconnu", false),
-                        )
+                        ),
                 )
             miseAJourEleveService.mettreAJourUnProfilEleve(
                 miseAJourDuProfil = nouveauProfil,
@@ -708,7 +707,7 @@ class MiseAJourEleveServiceTest {
                     voeuxFavoris =
                         listOf(
                             VoeuFavori("ta1", true),
-                        )
+                        ),
                 )
 
             // When & Then
