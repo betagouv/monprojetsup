@@ -353,6 +353,10 @@ export const localeFR = {
           AUCUNE: "Aucune formation sélectionnée",
         },
       },
+      PARCOURSUP: {
+        FAVORI: "Synchronisé avec Parcoursup",
+        NON_FAVORI: "Non synchronisé avec Parcoursup",
+      },
     },
     CONFIRMATION_INSCRIPTION: {
       TITRE_PAGE: "Inscription terminée",

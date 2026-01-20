@@ -1,4 +1,5 @@
 import { FavoriProps } from "./Favori.interface";
+import iconeMPS from "@/assets/parcoursup-fav.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -15,6 +16,8 @@ const Favori = ({
   icôneEstFavori = "fr-icon-heart-fill",
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
+  parcoursupSynchronizable,
+  SyncAvecParcoursup,
 }: FavoriProps) => {
   return (
     <>
@@ -30,6 +33,18 @@ const Favori = ({
           </LienExterne>
         ) : (
           <p className="fr-text--sm mb-0">{nom}</p>
+        )}
+        {parcoursupSynchronizable && (
+          <p className="mt-2 flex flex-wrap gap-3">
+            {SyncAvecParcoursup ? i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.FAVORI : i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.NON_FAVORI}
+            {SyncAvecParcoursup ?? (
+              <img
+                alt="Lien avec Parcoursup"
+                src={iconeMPS}
+                width={24}
+              />
+            )}
+          </p>
         )}
       </div>
 
