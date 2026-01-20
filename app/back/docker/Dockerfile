@@ -28,4 +28,4 @@ COPY --from=build /usr/src/mps-backend.jar .
 EXPOSE 3000
 
 # Set the command to run the application
-CMD ["java", "-jar", "mps-backend.jar"]
+CMD ["java", "-XX:MaxRAMPercentage=70", "-XX:InitialRAMPercentage=25", "-jar", "mps-backend.jar"]
