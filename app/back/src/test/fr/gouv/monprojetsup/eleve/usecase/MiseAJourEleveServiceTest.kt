@@ -444,7 +444,12 @@ class MiseAJourEleveServiceTest {
                         listOf(
                             "flInconnue",
                             "fl0001",
-                        ) + corbeilleFormations,
+                        )
+                ),
+            ).willReturn(listOf("flInconnue"))
+            given(
+                formationRepository.recupererIdsFormationsInexistantes(
+                    ids = corbeilleFormations,
                 ),
             ).willReturn(listOf("flInconnue"))
 
@@ -464,7 +469,9 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                     corbeilleFormations = listOf("fl5678"),
-                    voeuxFavoris = emptyList(), // listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
+                    voeuxFavoris = listOf(
+                        VoeuFavori("ta1", true)
+                    )// VoeuFavori("ta2", false)),
                 )
 
             // When & Then
@@ -472,7 +479,7 @@ class MiseAJourEleveServiceTest {
         }
 
         @Test
-        fun `si une des formations favorites n'existe pas, doit throw BadRequestException`() {
+        fun `si une des formations favorites n'existe pas, doit les ignorer`() {
             // Given
             val formationsFavorites =
                 listOf(
@@ -493,14 +500,26 @@ class MiseAJourEleveServiceTest {
             ).willReturn(listOf("flInconnue"))
 
             // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilEleve,
+            miseAJourEleveService.mettreAJourUnProfilEleve(
+                miseAJourDuProfil = nouveauProfil,
+                profilActuel = profilEleve,
+            )
+
+            val profilAMettreAJour =
+                profilEleve.copy(
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl0001",
+                                niveauAmbition = 3,
+                                priseDeNote = "Ma formation préférée",
+                            ),
+                        ),
                 )
-            }.isInstanceOf(
-                MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
+
+            // When & Then
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
+
         }
 
         @Test
@@ -521,7 +540,7 @@ class MiseAJourEleveServiceTest {
                 )
 
             // When & Then
-            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
+            then(eleveRepository).shouldHaveNoInteractions()
         }
 
         @Test
