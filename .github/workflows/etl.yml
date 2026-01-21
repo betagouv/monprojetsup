@@ -75,9 +75,9 @@ jobs:
           DB_USER: ${{ env.APP_DB_USERNAME }}
           DB_PASSWORD: ${{ env.APP_DB_PASSWORD }}
           MPS_DATA_DIR: ${{ runner.temp }}/mps_data/
-	  MPS_DATA_GOOGLE_API_KEY: ${{ secrets.MPS_DATA_GOOGLE_API_KEY }}
-	  MPS_DATA_GOOGLE_API_SPREADSHEET_ID: ${{ secrets.MPS_DATA_GOOGLE_API_SPREADSHEET_ID }}
-	  MPS_DATA_GOOGLE_USE_API: true
+          MPS_DATA_GOOGLE_API_KEY: ${{ secrets.MPS_DATA_GOOGLE_API_KEY }}
+          MPS_DATA_GOOGLE_API_SPREADSHEET_ID: ${{ secrets.MPS_DATA_GOOGLE_API_SPREADSHEET_ID }}
+          MPS_DATA_GOOGLE_USE_API: true
 
 
 
