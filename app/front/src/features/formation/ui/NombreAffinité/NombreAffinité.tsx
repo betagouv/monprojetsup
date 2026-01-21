@@ -11,7 +11,8 @@ const NombreAffinité = ({ affinité }: NombreAffinitéProps) => {
         className="fr-icon-checkbox-fill fr-icon--sm text-[--background-flat-success]"
       />
       <p className="fr-text--sm mb-0 text-[--text-label-green-emeraude]">
-        {affinité} {i18n.CARTE_FORMATION.POINTS_AFFINITÉ}
+        {affinité}{" "}
+        {affinité < 2 ? i18n.CARTE_FORMATION.POINTS_AFFINITÉ_SINGULIER : i18n.CARTE_FORMATION.POINTS_AFFINITÉ_PLURIEL}
       </p>
     </div>
   );

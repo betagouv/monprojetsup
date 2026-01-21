@@ -47,6 +47,7 @@ ENV NGINX_ROOT "/var/www/mps-front"
 
 # Copy nginx configuration
 COPY ./docker/nginx.conf.template /etc/nginx/templates/nginx.conf.template
+COPY ./docker/html/ /usr/share/nginx/html
 
 # Exposed port
 EXPOSE ${NGINX_PORT}

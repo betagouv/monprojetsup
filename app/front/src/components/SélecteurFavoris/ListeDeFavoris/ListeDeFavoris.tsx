@@ -3,12 +3,13 @@ import useListeDeFavoris from "./useListeDeFavoris";
 import Bouton from "@/components/Bouton/Bouton.tsx";
 import Favori from "@/components/SélecteurFavoris/Favori/Favori";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 
 const ListeDeFavoris = ({
   favoris,
   nombreFavorisAffichésParDéfaut = Number.POSITIVE_INFINITY,
   listeDeSuggestions,
-  boutonMPSVisible,
+  parcoursupSynchronizable,
 }: ListeDeFavorisProps) => {
   const { id, nombreFavorisAffichés, favorisAffichés, afficherPlusDeFavoris } = useListeDeFavoris({
     favoris,
@@ -16,6 +17,8 @@ const ListeDeFavoris = ({
   });
 
   if (favorisAffichés.length === 0) return null;
+
+  const eleve = useÉlève();
 
   return (
     <div
@@ -33,12 +36,11 @@ const ListeDeFavoris = ({
       >
         {favorisAffichés.map((favori) => (
           <li
-            className="grid grid-flow-col items-center justify-between gap-2 p-0"
+            className="grid grid-flow-col items-start justify-between gap-2 p-0"
             key={favori.id}
           >
             <Favori
               ariaLabel={favori.ariaLabel}
-              boutonMPSVisible={boutonMPSVisible}
               callbackMettreÀJour={favori.callbackMettreÀJour}
               désactivé={favori.désactivé}
               estFavori={favori.estFavori}
@@ -47,6 +49,8 @@ const ListeDeFavoris = ({
               id={favori.id}
               idDeLonglet={id}
               nom={favori.nom}
+              parcoursupSynchronizable={parcoursupSynchronizable}
+              SyncAvecParcoursup={eleve.estVoeuFavoriProvenantDeParcoursupPourÉlève(favori.id)}
               title={favori.title}
               url={favori.url}
             />

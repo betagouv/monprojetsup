@@ -34,12 +34,15 @@ export const localeFR = {
     PROFIL: "Enrichir mon profil",
   },
   CARTE_MÉTIER: {
-    FORMATIONS: "formation(s) pour apprendre le métier",
+    FORMATION: "formation pour apprendre le métier",
+    FORMATIONS: "formations pour apprendre le métier",
   },
   CARTE_FORMATION: {
-    POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_SINGULIER: "raison de t’intéresser à cette formation",
+    POINTS_AFFINITÉ_PLURIEL: "raisons de t’intéresser à cette formation",
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
-    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER: "ville",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL: "villes",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
   },
   PAGE_COOKIES: {
@@ -79,10 +82,11 @@ export const localeFR = {
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l’année dernière",
     COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
-    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SINGULIER: "ville",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_PLURIEL: "villes",
     COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
-    RÉPARTITION_PAR_BAC: "Répartition par filières de bacs",
+    RÉPARTITION_PAR_BAC: "Profil des lycéens et lycéennes ayant intégré la formation",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
     MOYENNE_GÉNÉRALE: "Moyenne générale des lycéens admis à la formation",
     LES_ATTENDUS: "Les attendus de la formation",
@@ -349,6 +353,10 @@ export const localeFR = {
           AUCUNE: "Aucune formation sélectionnée",
         },
       },
+      PARCOURSUP: {
+        FAVORI: "Synchronisé avec Parcoursup",
+        NON_FAVORI: "Non synchronisé avec Parcoursup",
+      },
     },
     CONFIRMATION_INSCRIPTION: {
       TITRE_PAGE: "Inscription terminée",
@@ -364,8 +372,12 @@ export const localeFR = {
     TABLEAU_DE_BORD: {
       TITRE_CONNECTE: "Bienvenue dans ton espace MPS",
       TITRE_DECONNECTE: "C'est parti!",
-      MESSAGE_BIENVENUE_CONNECTE: "Ravi de te voir connecté 👋",
-      MESSAGE_BIENVENUE_DECONNECTE: "Bienvenue sur MPS 👋",
+      MESSAGE_BIENVENUE: {
+        CONNECTE: "Bienvenue sur MPS 👋",
+        DECONNECTE: "Bienvenue sur MPS 👋",
+        SOUS_TITRE:
+          "Explore et sélectionne les formations correspondant à tes préférences afin de préparer sereinement Parcoursup. ",
+      },
       MODALE_PARCOURSUP: {
         TITRE: "Synchronisation avec Parcoursup",
         CONTENU:
@@ -391,7 +403,7 @@ export const localeFR = {
             "Une fois précisés ton profil et tes préférences, des suggestions personnalisées te seront proposées.",
         },
         CONNECTE_TOI: {
-          TITRE: "Connecte-toi à ton compte MPS-Avenir(s)",
+          TITRE: "MPS est un outil de la plateforme Avenir(s).",
           SOUS_TITRE: "En te connectant, tu conserveras tes préférences et tes favoris.",
         },
         AVIS: {
@@ -400,12 +412,15 @@ export const localeFR = {
           BOUTON: "Je donne mon avis",
         },
         PARCOURSUP: {
-          TITRE: "Synchronise MPS à ton compte Parcoursup",
-          SOUS_TITRE: "3 clics pour te faciliter la vie",
+          TITRE: "Tu as déjà un compte Parcoursup ?",
+          SOUS_TITRE:
+            "En synchronisant MPS avec Parcoursup, tu retrouveras dans MPS les formations que tu as déjà mises en favori dans Parcoursup.",
           BOUTON: "Synchroniser",
           ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
           SI_SYNCHRO: {
-            SOUS_TITRE: "Tes comptes sont bien synchronisés. Cette autorisation est revocable en écrivant à",
+            TITRE: "Tes comptes MPS et Parcoursup sont synchronisés",
+            SOUS_TITRE: "En désynchronisant tes comptes, tes favoris Parcoursup ne seront plus importés.",
+            BOUTON: "Désynchroniser",
           },
         },
       },
@@ -446,6 +461,11 @@ export const localeFR = {
       TITRE_ONGLET: "Métiers",
     },
   },
+  PARCOURSUP_MODALE: {
+    TITRE: "Carte des formations Parcoursup 2026",
+    CONTENU: "La nouvelle carte des formations Parcoursup 2026 est disponible.",
+    DECOUVRIR_LA_CARTE: "Découvrir la carte",
+  },
   COMMUN: {
     FERMER: "Fermer",
     CHAMPS_MARQUÉS_DU_SYMBOLE: "Les champs marqués du symbole",
@@ -477,7 +497,7 @@ export const localeFR = {
     AJOUTER_À_MA_SÉLECTION: "Ajouter à ma sélection",
     AJOUTÉ_À_MA_SÉLECTION: "Ajouté à ma sélection",
     SÉLECTIONNÉ: "Sélectionné",
-    SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
+    SUPPRIMER_DE_MA_SÉLECTION: "Supprimer de ma sélection",
     NE_PLUS_VOIR: "Ne plus voir",
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",

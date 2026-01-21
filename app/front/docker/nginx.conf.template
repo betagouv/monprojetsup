@@ -1,10 +1,19 @@
 server {
     listen ${NGINX_PORT};
     server_name ${NGINX_HOSTNAME};
+    server_tokens off;
 
     location / {
         root ${NGINX_ROOT};
         index index.html;
         try_files $uri $uri/ /index.html =404;
     }
+
+    error_page
+            301 302 303 304 307 308
+            400 401 402 403 405 406 408 409 410 411 412 413 414 415 416 421 429
+            500 501 502 503 504 505 507  /50x.html;
+            location = /50x.html {
+                root ${NGINX_ROOT};
+            }
 }

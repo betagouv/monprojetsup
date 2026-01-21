@@ -1,0 +1,124 @@
+image: node:22-bookworm-slim
+
+default:
+  before_script:
+    - cd ./app/front/
+  cache:
+    key:
+      files:
+        - ./app/front/package-lock.json
+    paths:
+      - ./app/front/node_modules/
+
+stages:
+  - Install
+  - Test
+  - PostTests
+  - Push
+
+variables:
+  DEFAULT_FOLDER: ./app/front/
+  CI_SERVER_HOST: gitlab.onisep.fr
+
+.rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+.push-to-onisep:
+  stage: Push
+  variables:
+    GIT_DEPTH: 0
+  needs:
+    - Frontend:E2ETest
+  before_script:
+    - apt-get update -y && apt-get install -y git
+    - echo "Configuration de git"
+    - git config --global user.email "ci-runner@$CI_SERVER_HOST"
+    - git config --global user.name "GitLab CI Runner"
+    - git remote add onisep "https://deploy_token:${DEPLOY_TOKEN}@gitlab.com/avenirs/monprojetsup/monprojetsup.git"
+
+Install:
+  stage: Install
+  extends:
+    - .rules
+  script: npm ci
+
+Frontend:Tests:
+  stage: Test
+  extends:
+    - .rules
+  allow_failure: false
+  script:
+    - cp .env.ci .env
+    - npm run test
+  needs:
+    - Install
+  resource_group: tests
+
+Frontend:Linters:
+  stage: Test
+  extends: 
+    - .rules
+  script:
+    - npm run lint
+  needs:
+    - Install
+  resource_group: tests
+
+Frontend:Security:
+  stage: Test
+  extends:
+    - .rules
+  allow_failure: true
+  script:
+    - npm audit --omit=dev
+  needs:
+    - Install
+  resource_group: tests
+
+Frontend:E2ETest:
+  stage: PostTests
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
+  allow_failure: true
+  script:
+    - npm ci
+    - npx playwright install --with-deps chromium
+    - cp .env.ci .env
+    - npx playwright test
+  resource_group: E2ETest
+  needs:
+    - Frontend:Tests
+    - Frontend:Linters
+    - Frontend:Security
+    
+Push:Onisep:uat:
+  stage: Push
+  extends:
+    - .push-to-onisep
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  allow_failure: false
+  script:
+    - echo "Push de la branch develop vers UAT Onisep..."
+    #- git pull onisep uat --no-rebase --no-edit
+    - git push onisep HEAD:refs/heads/uat --force
+  when: manual
+  needs:
+    - Frontend:E2ETest
+
+Push:Onisep:prod:
+  stage: Push
+  extends:
+    - .push-to-onisep
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  allow_failure: false
+  script:
+    - echo "Push de la branch main vers Prod Onisep..."
+    - git pull onisep prod --no-rebase --no-edit
+    - git push onisep HEAD:refs/heads/prod
+  when: manual
+  needs:
+    - Frontend:E2ETest

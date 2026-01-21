@@ -1,18 +1,20 @@
 import { MaSélectionFavorisProps } from "./MaSélectionFavoris.interface";
 import ListeDeFavoris from "@/components/SélecteurFavoris/ListeDeFavoris/ListeDeFavoris";
 import { i18n } from "@/configuration/i18n/i18n";
+import useUtilisateur from "@/features/utilisateur/ui/useUtilisateur.ts";
 import { useMemo } from "react";
 
-const MaSélectionFavoris = ({ favoris, messageAucun, boutonMPSVisible = true }: MaSélectionFavorisProps) => {
+const MaSélectionFavoris = ({ favoris, messageAucun }: MaSélectionFavorisProps) => {
   const favorisSélectionnés = useMemo(() => favoris.filter((favori) => favori.estFavori), [favoris]);
+  const utilisateur = useUtilisateur();
 
   return (
     <div>
       <p className="mb-0 font-bold text-[--text-label-grey]">{i18n.COMMUN.FAVORIS.MA_SÉLÉCTION}</p>
       {favorisSélectionnés.length > 0 ? (
         <ListeDeFavoris
-          boutonMPSVisible={boutonMPSVisible}
           favoris={favorisSélectionnés}
+          parcoursupSynchronizable={utilisateur.estAuthentifié}
         />
       ) : (
         <p className="fr-text--sm mb-0">{messageAucun}</p>

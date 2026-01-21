@@ -3,6 +3,7 @@ import useÉtudeForm from "./useÉtudeForm";
 import { i18n } from "@/configuration/i18n/i18n";
 import MaSélectionCommunes from "@/features/commune/ui/MaSélectionCommunes/MaSélectionCommunes";
 import RechercheCommunes from "@/features/commune/ui/RechercheCommunes/RechercheCommunes";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Select } from "@codegouvfr/react-dsfr/SelectNext";
 
 const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFormProps) => {
@@ -38,6 +39,20 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
         <RechercheCommunes />
         <MaSélectionCommunes />
       </fieldset>
+      <div className="fr-checkbox-group">
+        <Checkbox
+          options={[
+            {
+              label: "Je ne suis pas mobile à plus de 50km de ces villes",
+              nativeInputProps: {
+                name: "checkboxes-1",
+                value: "true",
+              },
+            },
+          ]}
+          small
+        />
+      </div>
     </form>
   );
 };

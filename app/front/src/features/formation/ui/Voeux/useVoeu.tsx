@@ -1,4 +1,3 @@
-import parcoursupSVG from "@/assets/parcoursup-fav.svg";
 import { Favori } from "@/components/SélecteurFavoris/Favori/Favori.interface";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -39,8 +38,6 @@ export default function useVoeu() {
       title: estFavoriParcoursup ? i18n.ACCESSIBILITÉ.FAVORI_PARCOURSUP : undefined,
       url: générerUrlParcoursup(voeu.id, référentielDonnées?.bacs ?? []),
       désactivé: estFavoriParcoursup,
-      icôneEstFavori: estFavoriParcoursup ? parcoursupSVG : undefined,
-      icôneEstPasFavori: estFavoriParcoursup ? parcoursupSVG : undefined,
       callbackMettreÀJour: () => mettreÀJourVoeuxÉlève([voeu.id]),
     };
   };
