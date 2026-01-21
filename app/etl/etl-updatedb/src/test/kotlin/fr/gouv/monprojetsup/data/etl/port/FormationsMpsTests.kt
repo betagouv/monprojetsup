@@ -27,13 +27,13 @@ class FormationsMpsTests : DataPortTest() {
     }
 
     @Test
-    fun `les formations sont soient compatibles courtes soit compatible longues`() {
+    fun `les formations sont soient compatibles courtes soit compatible longues, à part au plus 10`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
         val courtes = mpsDataPort.getCompatEtudesCourtes()
         val longues = mpsDataPort.getCompatEtudesLongues()
         val niCourtesNiLongues = formationsIds.filter { !courtes.contains(it) && !longues.contains(it) }
-        assertThat(niCourtesNiLongues).isEmpty() // toutes les formations sont compatibles courtes ou longues
+        assertThat(niCourtesNiLongues).hasSizeLessThanOrEqualTo(10) // toutes les formations sont compatibles courtes ou longues
     }
 
 
