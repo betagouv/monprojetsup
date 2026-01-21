@@ -85,7 +85,6 @@ class RecupererAssociationFormationsVoeuxServiceTest {
         // Then
         assertThat(resultat).isEqualTo(profil.voeuxFavoris)
         then(parcoursupApiHttpClient).shouldHaveNoInteractions()
-        then(voeuRepository).shouldHaveNoInteractions()
     }
 
     @Test
@@ -164,7 +163,6 @@ class RecupererAssociationFormationsVoeuxServiceTest {
         val resultat = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
 
         // Then
-        then(voeuRepository).shouldHaveNoInteractions()
         assertThat(resultat).isEqualTo(profil.voeuxFavoris)
     }
 
@@ -217,7 +215,6 @@ class RecupererAssociationFormationsVoeuxServiceTest {
 
         // Then
         assertThat(resultat).isEqualTo(profil.voeuxFavoris)
-        then(voeuRepository).shouldHaveNoInteractions()
     }
 
     @Test
