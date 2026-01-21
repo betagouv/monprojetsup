@@ -24,7 +24,7 @@ const CarteMétier = ({ id, titre, formations, sélectionnée = false }: CarteM�
     >
       {formations.length > 0 && (
         <p className="fr-text--sm mb-0">
-          {formations.length} {i18n.CARTE_MÉTIER.FORMATIONS}
+          {formations.length} {formations.length > 1 ? i18n.CARTE_MÉTIER.FORMATIONS : i18n.CARTE_MÉTIER.FORMATION}
         </p>
       )}
     </Carte>

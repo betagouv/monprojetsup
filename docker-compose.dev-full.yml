@@ -18,7 +18,7 @@ services:
     volumes:
       - ./test-db/db:/var/lib/postgresql/data
       - ./test-db/init-scripts:/docker-entrypoint-initdb.d
-            
+
   suggestions2:
     depends_on:
       appdb:
@@ -57,7 +57,7 @@ services:
       SUGGESTIONS_SERVER_PORT: ${SUGGESTIONS_PORT}
       DB_URL: jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
       DB_USER: ${APP_DB_USER}
-      DB_PASSWORD: ${APP_DB_PASSWORD}      
+      DB_PASSWORD: ${APP_DB_PASSWORD}
       FRONT_URI: http://localhost:${FRONT_PORT_EXPOSED}
       SUGGESTIONS_SWAGGER_URL: http://localhost:${SUGGESTIONS_PORT}
       SUGGESTIONS2_URL: http://suggestions2:${SUGGESTIONS2_PORT}
@@ -145,13 +145,6 @@ services:
       PARCOURSUP_AUTHENT_CLIENT_ID: client_id
       PARCOURSUP_AUTHENT_CLIENT_PASSWORD: client_password
       PARCOURSUP_API_URL: https://favoris.parcoursup.fr
-      MPS_DATA_AVENIRS_API_USE_API: false
-      MPS_DATA_AVENIRS_API_CLIENT_ID: 
-      MPS_DATA_AVENIRS_API_CLIENT_SECRET:
-      MPS_DATA_AVENIRS_API_BASEURL:
-      MPS_DATA_AVENIRS_API_INDICATEURS_ELEVES_ENDPOINT:
-      MPS_DATA_AVENIRS_API_INDICATEURS_ELEVES_OUTIL_ID:
-      MPS_DATA_AVENIRS_API_INDICATEURS_ELEVES_ACTIVITE_ID:
       LOG_LEVEL: DEBUG
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -169,10 +162,11 @@ services:
       VITE_ENV: local
       VITE_APP_URL: ${LOCALHOST_ACCESS}:${FRONT_PORT_EXPOSED}
       VITE_API_URL: ${LOCALHOST_ACCESS}:${BACK_PORT_EXPOSED}
+      VITE_ALLOWED_HOST: ${VITE_ALLOWED_HOST}
       VITE_PUBLIC_WEBSITE_URL: https://www.monprojetsup.fr
       VITE_AVENIRS_URL: https://avenirs.onisep.fr
       VITE_MATOMO_URL: http://urldetrackingmatomo.org
-      VITE_KEYCLOAK_URL: http://localhost:${KEYCLOAK_PORT_EXPOSED}
+      VITE_KEYCLOAK_URL: ${LOCALHOST_ACCESS}:${KEYCLOAK_PORT_EXPOSED}
       VITE_KEYCLOAK_ROYAUME: avenirs
       VITE_KEYCLOAK_CLIENT_ID: mps-cli
       VITE_KEYCLOAK_CLIENT_SECRET: anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
@@ -183,3 +177,15 @@ services:
     command: ["npm", "run", "dev"]
     stdin_open: true
     tty: true
+
+  flyway:
+    build:
+      context: ./app/back
+      dockerfile: Dockerfile.flyway
+    depends_on:
+      appdb:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
+      FLYWAY_USER: ${APP_DB_USER}
+      FLYWAY_PASSWORD: ${APP_DB_PASSWORD}

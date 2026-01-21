@@ -1,13 +1,9 @@
 import { FavoriProps } from "./Favori.interface";
-import IconeMPS from "@/assets/icone-mps.svg";
-import Bouton from "@/components/Bouton/Bouton.tsx";
+import iconeMPS from "@/assets/parcoursup-fav.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import ModaleParcourSup from "@/features/élève/ui/TableauDeBordÉlèvePage/CarteParcourSupÉlève/ModaleParcourSup/ModaleParcourSup.tsx";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Toggle } from "@radix-ui/react-toggle";
-import { useMemo } from "react";
 
 const Favori = ({
   id,
@@ -20,18 +16,9 @@ const Favori = ({
   icôneEstFavori = "fr-icon-heart-fill",
   icôneEstPasFavori = "fr-icon-heart-line",
   callbackMettreÀJour,
-  idDeLonglet = "",
-  boutonMPSVisible = false,
+  parcoursupSynchronizable,
+  SyncAvecParcoursup,
 }: FavoriProps) => {
-  const modaleParcourSup = useMemo(
-    () =>
-      createModal({
-        id: `modale-parcoursup-${id}-${idDeLonglet}`,
-        isOpenedByDefault: false,
-      }),
-    [id, idDeLonglet],
-  );
-
   return (
     <>
       <div>
@@ -46,6 +33,18 @@ const Favori = ({
           </LienExterne>
         ) : (
           <p className="fr-text--sm mb-0">{nom}</p>
+        )}
+        {parcoursupSynchronizable && (
+          <p className="mt-2 flex flex-wrap gap-3">
+            {SyncAvecParcoursup ? i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.FAVORI : i18n.ÉLÈVE.FORMATIONS.PARCOURSUP.NON_FAVORI}
+            {SyncAvecParcoursup ?? (
+              <img
+                alt="Lien avec Parcoursup"
+                src={iconeMPS}
+                width={24}
+              />
+            )}
+          </p>
         )}
       </div>
 
@@ -78,26 +77,6 @@ const Favori = ({
           </div>
         )}
       </Toggle>
-
-      {boutonMPSVisible ? (
-        <Bouton
-          auClic={modaleParcourSup.open}
-          taille="petit"
-          type="button"
-          variante="tertiaire"
-        >
-          <img
-            alt="Icon"
-            height={14}
-            src={IconeMPS}
-            width={14}
-          />
-        </Bouton>
-      ) : (
-        ""
-      )}
-
-      <ModaleParcourSup modale={modaleParcourSup} />
     </>
   );
 };
