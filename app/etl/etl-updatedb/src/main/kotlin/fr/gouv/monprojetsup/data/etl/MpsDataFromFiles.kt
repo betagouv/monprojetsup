@@ -187,7 +187,8 @@ class MpsDataFromFiles(
             logger.info("L'utilisation de la feuille de calcul distante est désactivée.")
         }
 
-        formationsMpsIds = loadMpsIds().sortedBy {  it.substring(2).toInt() }
+        val unsortedIds = loadMpsIds().filter { it.length >= 2 }. filter { it.substring(2).toIntOrNull() != null }
+        formationsMpsIds = unsortedIds.sortedBy {  it.substring(2).toInt() }
         descriptifs = loadDescriptifs()
         specialites = SpecialitesLoader.load(
             dataSources,
@@ -199,7 +200,7 @@ class MpsDataFromFiles(
     private fun loadMpsIds(): List<String> {
         //computeMpsIds
         return if (useRemoteSheet) {
-            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MPS_ID).values.toList()
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MPS_ID).values.filter { it.isNotEmpty() }.toList()
         } else {
             val result = HashSet(psupData.formationsMpsIds)
             val toRemove = readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
