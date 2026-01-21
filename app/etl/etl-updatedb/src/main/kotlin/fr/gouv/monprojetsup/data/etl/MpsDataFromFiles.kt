@@ -1022,6 +1022,37 @@ class MpsDataFromFiles(
         }
     }
 
+    private fun exportFormationsMpsAvecDescriptifVide() {
+        val descriptifs = getDescriptifs()
+        val descriptifsVide =
+            descriptifs.keyToDescriptifs().entries.filter { it.value.descriptifGeneralFront.isNullOrBlank() }
+                .map { it.key }.toSet()
+        if (descriptifsVide.isEmpty()) {
+            logger.info("Aucune filière PSUP avec descriptif vide")
+            return
+        } else {
+            val labels = getLabels()
+            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_mps_descriptif_vide.csv").use { csv ->
+                csv.appendHeaders(
+                    listOf(
+                        "code",
+                        "libellé",
+                    )
+                )
+                descriptifsVide.forEach { flCodStr: String ->
+                    val label = labels.getOrDefault(flCodStr, flCodStr)
+                    csv.append(
+                        listOf(
+                            flCodStr,
+                            label
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+
     private fun exportLiens() {
         val labels = getLabels()
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
@@ -1261,6 +1292,7 @@ class MpsDataFromFiles(
         exportFormationsSansVoeux()
         exportFormationsSansLiens()
         exportVoeuxSansFormation()
+        exportFormationsMpsAvecDescriptifVide()
         exportRemoteSheets()
         exportLiens()
     }

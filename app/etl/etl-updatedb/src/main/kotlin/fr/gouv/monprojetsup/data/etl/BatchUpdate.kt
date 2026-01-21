@@ -59,6 +59,13 @@ class BatchUpdate(
         }
     }
 
+    fun <T> getEntitiesHql(hql : String, classe: Class<T> ): Collection<T> {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val query = statelessSession.createSelectionQuery(hql, classe)
+            return query.resultList
+        }
+    }
+
     fun setTableContent(srcTableName: String, destTableName: String) {
         sessionFactory.openStatelessSession().use { statelessSession ->
             val transaction: Transaction = statelessSession.beginTransaction()
