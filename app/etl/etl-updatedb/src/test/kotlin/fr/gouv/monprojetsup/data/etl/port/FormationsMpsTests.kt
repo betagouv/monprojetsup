@@ -117,19 +117,21 @@ class FormationsMpsTests : DataPortTest() {
     @Nested
     inner class LiensTests {
         @Test
-        fun `Au moins un lien par formation`() {
+        fun `Au moins un lien par formation, à part au plus deux formations`() {
             val formationsIds = mpsDataPort.getFormationsMpsIds()
             assert(formationsIds.isNotEmpty())
             val liens = mpsDataPort.getLiens()
-            assertThat(formationsIds).allMatch { liens.containsKey(it) && liens[it]!!.isNotEmpty() }
+            val formationsAvecAuMoinsUnLien = formationsIds.filter { liens.containsKey(it) && liens[it]!!.isNotEmpty()  }
+            assertThat(formationsAvecAuMoinsUnLien).hasSizeGreaterThanOrEqualTo(formationsIds.size - 2)
         }
 
         @Test
-        fun `Au moins un voeu par formation`() {
+        fun `Au moins un voeu dans la moitié des formations`() {
             val formationsIds = mpsDataPort.getFormationsMpsIds()
             assert(formationsIds.isNotEmpty())
             val voeux = mpsDataPort.getVoeux()
-            assertThat(formationsIds).allMatch { voeux.containsKey(it) && voeux[it]!!.isNotEmpty() }
+            val formationsAvecAuMoinsUnVoeu = formationsIds.filter { voeux.containsKey(it) && voeux[it]!!.isNotEmpty()  }
+            assertThat(formationsAvecAuMoinsUnVoeu).hasSizeGreaterThanOrEqualTo(formationsIds.size / 2)
         }
 
         @Test

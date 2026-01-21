@@ -1,6 +1,5 @@
 import useTableauDeBordÉlèvePage from "./useTableauDeBordÉlèvePage";
 import Head from "@/components/_layout/Head/Head";
-import Carte from "@/components/Carte/Carte.tsx";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import ModaleParcoursupEvent from "@/features/commune/ui/ModaleParcoursupEvent/ModaleParcoursupEvent.tsx";
@@ -53,23 +52,19 @@ const TableauDeBordÉlèvePage = () => {
             </li>
 
             <li className="col-span-3 md:col-span-5">
-              <Carte
-                auClicHandler={async () => {}}
-                estFavori={false}
-                estMasqué={false}
+              <div
+                className="min-h-full bg-[--background-raised-grey] p-6"
                 id="monprojetsup"
-                sélectionnée={false}
-                titre=""
               >
-                <h2 className="fr-h4 fr-mt-n2w">
+                <h2 className="fr-h4">
                   MonProjetSup,
                   <br />
                   comment ça marche ?
                 </h2>
 
-                <p className="fr-my-n4w">Les 3 étapes pour compléter MonProjetSup</p>
+                <p>Les 3 étapes pour compléter MonProjetSup</p>
 
-                <div className="fr-my-n2w">
+                <div>
                   <Table
                     data={[
                       [
@@ -105,10 +100,10 @@ const TableauDeBordÉlèvePage = () => {
                       ],
                     ]}
                     id="etapes-monprojetsup"
-                    style={{ borderTop: "1.2px solid #929292" }}
+                    style={{ borderTop: "1.2px solid #929292", marginBottom: "0" }}
                   />
                 </div>
-              </Carte>
+              </div>
             </li>
           </ul>
 

@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.parcoursup.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.monprojetsup.commun.auth.infrastructure.TokenReponseDTO
 import fr.gouv.monprojetsup.commun.client.ApiHttpClient
-import fr.gouv.monprojetsup.commun.client.TokenReponseDTO
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken

@@ -17,6 +17,8 @@ jobs:
     uses: ./.github/workflows/etl.yml
     secrets:
       DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"
+      MPS_DATA_GOOGLE_API_KEY: "${{ secrets.MPS_DATA_GOOGLE_API_KEY }}"
+      MPS_DATA_GOOGLE_API_SPREADSHEET_ID: "${{ secrets.MPS_DATA_GOOGLE_API_SPREADSHEET_ID }}"
 
   checkSuggestions: 
     name: Suggestions

@@ -24,8 +24,8 @@ interface MpsDataPort {
     fun getGrilles(): Map<String, GrilleAnalyse>
     fun getMotsClesFormations(): Map<String, List<String>>
     fun getApprentissage(): Collection<String>
-    fun getApprentissagePct(): Map<String,Int>
-    fun getVoeux(): Map<String,Collection<Voeu>>
+    fun getApprentissagePct(): Map<String, Int>
+    fun getVoeux(): Map<String, Collection<Voeu>>
     fun getDebugLabels(): Map<String, String>
     fun getCapacitesAccueil(): Map<String, Int>
     fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>>
@@ -34,7 +34,7 @@ interface MpsDataPort {
     fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>>
     fun getPsupIdToMpsId(): Map<String, String>
     fun getPaniersVoeux(): List<PanierVoeux>
-    fun getEdges(): List<Triple<String,String,Int>>
+    fun getEdges(): List<Triple<String, String, Int>>
     fun getBacs(): List<Bac>
     fun getDomaines(): Taxonomie
     fun getInterets(): Taxonomie
@@ -47,8 +47,8 @@ interface MpsDataPort {
     fun getMpsIdToIdeoIds(): Map<String, List<String>>
 
     fun exportDiagnostics()
-    fun getFormationToTypeformation(): Map<String,String>
-    fun getProfilsReference(source: String): List<Map<String,String>>
+    fun getFormationToTypeformation(): Map<String, String>
+    fun getProfilsReference(source: String): List<Map<String, String>>
     fun getCompatEtudesCourtes(): Set<String>
     fun getCompatEtudesLongues(): Set<String>
 }

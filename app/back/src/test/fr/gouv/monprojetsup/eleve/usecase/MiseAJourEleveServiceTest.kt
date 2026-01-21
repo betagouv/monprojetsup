@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.CommunesCourtes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -34,6 +35,8 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 
 class MiseAJourEleveServiceTest {
     @Mock
@@ -59,6 +62,15 @@ class MiseAJourEleveServiceTest {
 
     @Mock
     private lateinit var eleveRepository: EleveRepository
+
+    @Mock
+    private lateinit var majIndicateurPortfolioService: MajIndicateurPortfolioService
+
+    @Mock
+    private lateinit var recupererProgressionService: RecupererProgressionService
+
+    @Mock
+    private lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     private lateinit var miseAJourEleveService: MiseAJourEleveService
@@ -97,6 +109,7 @@ class MiseAJourEleveServiceTest {
             corbeilleFormations = listOf("fl1234", "fl5678"),
             compteParcoursupLie = true,
             voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta2", false)),
+            portfolioId = "0f88ddd1",
         )
 
     private val profilVide = ProfilEleve.AvecProfilExistant(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
@@ -782,41 +795,7 @@ class MiseAJourEleveServiceTest {
             then(eleveRepository).should().mettreAJourUnProfilEleve(profilAMettreAJour)
         }
 
-        @Test
-        fun `quand toutes les valeurs sont okay, doit tout mettre à jour`() {
-            // Given
-            val modificationProfilEleve =
-                ModificationProfilEleve(
-                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-                    classe = ChoixNiveau.PREMIERE,
-                    baccalaureat = "Pro",
-                    specialites = listOf("5", "1008"),
-                    domainesInterets = listOf("agroequipement"),
-                    centresInterets = listOf("linguistique", "etude"),
-                    metiersFavoris = listOf("MET004"),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
-                    formationsFavorites =
-                        listOf(
-                            FormationFavorite(
-                                idFormation = "fl0011",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                            FormationFavorite(
-                                idFormation = "fl0015",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                        ),
-                    corbeilleFormations = listOf("fl0013"),
-                    voeuxFavoris =
-                        listOf(
-                            VoeuFavori("ta1", true),
-                            VoeuFavori("ta2", false),
-                        ),
-                )
+        fun preparerMajOK() {
             given(domaineRepository.recupererIdsDomainesInexistants(ids = listOf("agroequipement"))).willReturn(
                 emptyList(),
             )
@@ -863,6 +842,45 @@ class MiseAJourEleveServiceTest {
             )
             given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Pro"))
                 .willReturn(listOf("5", "7", "1008", "2003"))
+        }
+
+        @Test
+        fun `quand toutes les valeurs sont okay, doit tout mettre à jour`() {
+            // Given
+            val modificationProfilEleve =
+                ModificationProfilEleve(
+                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
+                    classe = ChoixNiveau.PREMIERE,
+                    baccalaureat = "Pro",
+                    specialites = listOf("5", "1008"),
+                    domainesInterets = listOf("agroequipement"),
+                    centresInterets = listOf("linguistique", "etude"),
+                    metiersFavoris = listOf("MET004"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl0011",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                            FormationFavorite(
+                                idFormation = "fl0015",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                        ),
+                    corbeilleFormations = listOf("fl0013"),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta2", false),
+                        ),
+                )
+
+            preparerMajOK()
 
             // When
             val resultat =
@@ -905,6 +923,7 @@ class MiseAJourEleveServiceTest {
                             VoeuFavori("ta1", true),
                             VoeuFavori("ta2", false),
                         ),
+                    portfolioId = "0f88ddd1",
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
@@ -931,6 +950,105 @@ class MiseAJourEleveServiceTest {
             val profilAMettreAJour = profilEleve.copy(baccalaureat = "Pro", specialites = emptyList())
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
         }
+
+        @Test
+        fun `quand toutes les valeurs sont okay, doit appeler le service majIndicateurPortfolioService et recupererProgressionService`() {
+            // Given
+            val modificationProfilEleve =
+                ModificationProfilEleve(
+                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
+                    classe = ChoixNiveau.PREMIERE,
+                    baccalaureat = "Pro",
+                    specialites = listOf("5", "1008"),
+                    domainesInterets = listOf("agroequipement"),
+                    centresInterets = listOf("linguistique", "etude"),
+                    metiersFavoris = listOf("MET004"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl0011",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                            FormationFavorite(
+                                idFormation = "fl0015",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                        ),
+                    corbeilleFormations = listOf("fl0013"),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta2", false),
+                        ),
+                )
+
+            preparerMajOK()
+
+            // When
+            val resultat =
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = modificationProfilEleve,
+                    profilActuel = profilEleve,
+                )
+
+            // Then
+            val nouveauProfil =
+                ProfilEleve.AvecProfilExistant(
+                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
+                    classe = ChoixNiveau.PREMIERE,
+                    baccalaureat = "Pro",
+                    specialites = listOf("5", "1008"),
+                    domainesInterets = listOf("agroequipement"),
+                    centresInterets = listOf("linguistique", "etude"),
+                    metiersFavoris = listOf("MET004"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
+                    formationsFavorites =
+                        listOf(
+                            FormationFavorite(
+                                idFormation = "fl0011",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                            FormationFavorite(
+                                idFormation = "fl0015",
+                                niveauAmbition = 2,
+                                priseDeNote = null,
+                            ),
+                        ),
+                    corbeilleFormations = listOf("fl0013"),
+                    compteParcoursupLie = true,
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                            VoeuFavori("ta2", false),
+                        ),
+                    portfolioId = "0f88ddd1",
+                )
+            then(recupererProgressionService).should(only()).recupererProgression(nouveauProfil)
+            then(majIndicateurPortfolioService).should().ajouterPublication(
+                "0f88ddd1",
+                "favoris Parcoursup",
+                "2",
+                "favoris_psup",
+                2,
+            )
+            then(majIndicateurPortfolioService).should().ajouterPublication(
+                "0f88ddd1",
+                "formations ambitieuses",
+                "0",
+                "formations_ambitieuses",
+                0,
+            )
+            then(majIndicateurPortfolioService).shouldHaveNoMoreInteractions()
+        }
     }
 
     data class ScenarioCasNominalModifVoeux(
@@ -943,6 +1061,12 @@ class MiseAJourEleveServiceTest {
     )
 
     companion object {
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("pfa.api.enabled") { true }
+        }
+
         private val scenariosNominauxModifsVoeux =
             listOf(
                 ScenarioCasNominalModifVoeux(
@@ -1102,7 +1226,7 @@ class MiseAJourEleveServiceTest {
 
     private val formationsIds = listOf("fl0010", "fl0012")
     private val voeuxMaps =
-        formationsIds.map {
+        formationsIds.associate {
             it to
                 listOf(
                     Voeu(
@@ -1120,7 +1244,7 @@ class MiseAJourEleveServiceTest {
                         longitude = 5.400000,
                     ),
                 )
-        }.toMap()
+        }
 
     @ParameterizedTest
     @MethodSource("provideArgumentsForScenariosModifVoeux")
