@@ -444,7 +444,7 @@ class MiseAJourEleveServiceTest {
                         listOf(
                             "flInconnue",
                             "fl0001",
-                        )
+                        ),
                 ),
             ).willReturn(listOf("flInconnue"))
             given(
@@ -469,9 +469,10 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                     corbeilleFormations = listOf("fl5678"),
-                    voeuxFavoris = listOf(
-                        VoeuFavori("ta1", true)
-                    )// VoeuFavori("ta2", false)),
+                    voeuxFavoris =
+                        listOf(
+                            VoeuFavori("ta1", true),
+                        ), // VoeuFavori("ta2", false)),
                 )
 
             // When & Then
@@ -519,7 +520,6 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
-
         }
 
         @Test
