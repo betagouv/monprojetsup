@@ -20,7 +20,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   return (
     <div className="justify-start">
       <div
-        className="mb-2 whitespace-pre-line"
+        className="mb-2"
         ref={ref}
       >
         {parse(texteHtml)}

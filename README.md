@@ -96,4 +96,3 @@ Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
 - `uat` utilisé pour des betas test (branch github `prod`)
 - `preprod` identique à integration mais avec un Cloudflare devant (branch github `demo`)
 - `prod` utilisé par les utilisateurs finaux (branch github `prod`)
-

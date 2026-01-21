@@ -37,6 +37,8 @@ public class Constants {
     public static final String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
 
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
+    public static final String DIAGNOSTICS_WARN_OUTPUT_DIR = DIAGNOSTICS_OUTPUT_DIR + "warn/";
+    public static final String DIAGNOSTICS_INFO_OUTPUT_DIR = DIAGNOSTICS_OUTPUT_DIR + "info/";
     public static final Integer PPPE_CONSTANT = 999999;
     public static final String CENTRE_INTERETS_ROME = "T-ROME.";
 

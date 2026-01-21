@@ -3,15 +3,17 @@ package fr.gouv.monprojetsup.data.etl
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import fr.gouv.monprojetsup.data.Constants
+import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_INFO_OUTPUT_DIR
 import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
+import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_WARN_OUTPUT_DIR
 import fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL
-import fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX
 import fr.gouv.monprojetsup.data.Constants.LAS_MPS_ID
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL1
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL2
 import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
+import fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.data.Constants.isMetier
 import fr.gouv.monprojetsup.data.Constants.isVoeu
@@ -42,9 +44,7 @@ import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LA
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_LIENS
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MOTS_CLES
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_MPS_ID
-import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_COLUMNS_PSUP_IDS
-import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_EXCLUES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_FICHES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.REMOTE_SHEET_FEUILLE_GENERIQUES_ID
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources.RESUMES_GENERIQUE_ID_HEADER
@@ -187,7 +187,8 @@ class MpsDataFromFiles(
             logger.info("L'utilisation de la feuille de calcul distante est désactivée.")
         }
 
-        formationsMpsIds = loadMpsIds().sortedBy {  it.substring(2).toInt() }
+        val unsortedIds = loadMpsIds().filter { it.length >= 2 }. filter { it.substring(2).toIntOrNull() != null }
+        formationsMpsIds = unsortedIds.sortedBy {  it.substring(2).toInt() }
         descriptifs = loadDescriptifs()
         specialites = SpecialitesLoader.load(
             dataSources,
@@ -199,7 +200,7 @@ class MpsDataFromFiles(
     private fun loadMpsIds(): List<String> {
         //computeMpsIds
         return if (useRemoteSheet) {
-            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MPS_ID).values.toList()
+            formationsRemoteSheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_MPS_ID).values.filter { it.isNotEmpty() }.toList()
         } else {
             val result = HashSet(psupData.formationsMpsIds)
             val toRemove = readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
@@ -1021,6 +1022,37 @@ class MpsDataFromFiles(
         }
     }
 
+    private fun exportFormationsMpsAvecDescriptifVide() {
+        val descriptifs = getDescriptifs()
+        val descriptifsVide =
+            descriptifs.keyToDescriptifs().entries.filter { it.value.descriptifGeneralFront.isNullOrBlank() }
+                .map { it.key }.toSet()
+        if (descriptifsVide.isEmpty()) {
+            logger.info("Aucune filière PSUP avec descriptif vide")
+            return
+        } else {
+            val labels = getLabels()
+            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_mps_descriptif_vide.csv").use { csv ->
+                csv.appendHeaders(
+                    listOf(
+                        "code",
+                        "libellé",
+                    )
+                )
+                descriptifsVide.forEach { flCodStr: String ->
+                    val label = labels.getOrDefault(flCodStr, flCodStr)
+                    csv.append(
+                        listOf(
+                            flCodStr,
+                            label
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+
     private fun exportLiens() {
         val labels = getLabels()
         CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens2.csv").use { csv ->
@@ -1048,50 +1080,114 @@ class MpsDataFromFiles(
 
     }
 
-    private fun exportFilieresPsupOrphelines() {
-        val usedflCods = getMpsIdToPsupFlIds().values.flatten().toHashSet()
-        if(useRemoteSheet) {
-            logger.info("Chargement des filières psup exclues depuis la feuille de calcul distante")
-            val stream = RemoteFileAccess.getRemoteStream(getRemoteSheetUri(REMOTE_SHEET_FEUILLE_EXCLUES_ID))
-            val sheet = ObjectMapper().registerKotlinModule().readValue(stream, RemoteSheet::class.java)
-            usedflCods.addAll(sheet.getValuesOfColumn(REMOTE_SHEET_COLUMNS_PSUP_ID).values)
-        } else {
-            usedflCods.addAll(
-                readCSV(dataSources.getSourceDataFilePath(MPS_FORMATIONS_EXCLUES_PATH), ',')
-                .filter { it.isNotEmpty() }
-                .map { it[MPS_FORMATIONS_EXCLUES_HEADER].toString() }
-                .toSet()
-            )
-        }
-        val usedFlIntCodes = usedflCods.filter { it.startsWith(FILIERE_PREFIX) }.map { it.substring(2).toInt() }.toSet()
-        val unusedFlCods = (psupData.filActives - usedFlIntCodes).toList()
-
-        if(unusedFlCods.isEmpty()) {
-            logger.info("Aucune filière PSUP orpheline")
+    private fun exportFormationsSansVoeux() {
+        val formationsIds = getFormationsMpsIds()
+        assert(formationsIds.isNotEmpty())
+        val formationsAvecVoeux = getVoeux().filter { it.value.isNotEmpty() }.map { it.key }.toSet()
+        val formationSansVoeux = formationsIds - formationsAvecVoeux
+        if(formationSansVoeux.isEmpty()) {
+            logger.info("Aucune fiche mps sans voeux")
             return
         } else {
-            CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "filieres_psup_hors_mps.csv").use { csv ->
+            createCsvListeOfMpsFormations(DIAGNOSTICS_WARN_OUTPUT_DIR + "fiches_mps_sans_voeux.csv", formationSansVoeux)
+        }
+    }
+
+    private fun exportVoeuxSansFormation() {
+        val mpsIds = getFormationsMpsIds()
+        val psupIndextoMpsIndex = psupData.getPsupKeyToMpsKey()
+
+        val voeuxOrphelins = psupData.formations.formations.values.filter {
+            val mpsids = ArrayList<String?>()
+            val candidateMpsKey = gFlCodToMpsId(it!!.gFlCod)
+            var mpsKey: String? = psupIndextoMpsIndex.get(candidateMpsKey)
+            if (mpsKey == null && mpsIds.contains(candidateMpsKey)) {
+                mpsKey = candidateMpsKey
+            }
+            if (mpsKey != null) {
+                mpsids.add(mpsKey)
+            }
+            if (it.isLAS()) {
+                mpsids.add(LAS_MPS_ID)
+            }
+            if (it.isPPPE()) {
+                mpsids.add(Constants.PPPE_MPS_ID)
+            }
+            mpsids.isEmpty()
+        }
+        if(voeuxOrphelins.isEmpty()) {
+            logger.info("Aucun voeu sans fiche mps")
+            return
+        } else {
+            CsvTools.getWriter(DIAGNOSTICS_WARN_OUTPUT_DIR + "voeux_psup_sans_fiche_mps.csv").use { csv ->
                 csv.appendHeaders(
                     listOf(
+                        "ta_cod",
                         "fl_cod",
-                        "code générique",
                         "libellé",
                     )
                 )
-                unusedFlCods.forEach { flCod: Int ->
-                    val filiere = psupData.formations.filieres[flCod]
-                    if (filiere != null) {
-                        csv.append(
-                            listOf(
-                                flCod.toString(),
-                                filiere.gFrCod.toString(),
-                                filiere.libelle
-                            )
+                voeuxOrphelins.sortedBy { it.gFlCod }.forEach {
+                    csv.append(
+                        listOf(
+                            gTaCodToMpsId(it.gTaCod),
+                            gFlCodToMpsId(it.gFlCod),
+                            it.libelle
                         )
-                    }
+                    )
                 }
-
             }
+            CsvTools.getWriter(DIAGNOSTICS_WARN_OUTPUT_DIR + "filieres_psup_sans_fiche_mps.csv").use { csv ->
+                csv.appendHeaders(
+                    listOf(
+                        "fl_cod",
+                        "libellé",
+                    )
+                )
+                val filieresPsupOrphelines = voeuxOrphelins.map { it.gFlCod }.distinct()
+                    .map { it to (psupData.formations.filieres[it]?.libelle ?: "Filière inconnue") }
+                    .sortedBy { it.second }
+                filieresPsupOrphelines.forEach {
+                    csv.append(
+                        listOf(
+                            gFlCodToMpsId(it.first),
+                            it.second
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun createCsvListeOfMpsFormations(filename : String, formationsIds: Collection<String>) {
+        val labels = getLabels()
+        CsvTools.getWriter(filename).use { csv ->
+            csv.appendHeaders(
+                listOf(
+                    "mps_id",
+                    "label"
+                )
+            )
+            formationsIds.forEach { mpsId ->
+                csv.append(
+                    listOf(
+                        mpsId,
+                        labels.getOrDefault(mpsId, "mpsId")
+                    )
+                )
+            }
+        }
+    }
+    private fun exportFormationsSansLiens() {
+        val formationsIds = getFormationsMpsIds()
+        val liens = getLiens()
+
+        val formationsSansLiens = formationsIds.filter { liens.getOrDefault(it, listOf()).isEmpty() }
+        if(formationsSansLiens.isEmpty()) {
+            logger.info("Aucune fiche mps sans lien")
+            return
+        } else {
+            createCsvListeOfMpsFormations(DIAGNOSTICS_WARN_OUTPUT_DIR + "fiche_mps_sans_liens.csv", formationsSansLiens)
         }
     }
 
@@ -1099,7 +1195,7 @@ class MpsDataFromFiles(
 
 
     private fun exportRemoteSheets() {
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "remote_sheet_fiches.csv").use { csv ->
+        CsvTools.getWriter(DIAGNOSTICS_INFO_OUTPUT_DIR + "remote_sheet_fiches.csv").use { csv ->
             csv.appendHeaders(
                 listOf(
                     REMOTE_SHEET_COLUMNS_MPS_ID,
@@ -1193,7 +1289,10 @@ class MpsDataFromFiles(
     override fun exportDiagnostics() {
         val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
         exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
-        exportFilieresPsupOrphelines()
+        exportFormationsSansVoeux()
+        exportFormationsSansLiens()
+        exportVoeuxSansFormation()
+        exportFormationsMpsAvecDescriptifVide()
         exportRemoteSheets()
         exportLiens()
     }

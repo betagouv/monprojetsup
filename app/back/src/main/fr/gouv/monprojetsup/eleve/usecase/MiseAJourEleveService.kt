@@ -2,18 +2,22 @@ package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
 import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
+import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite.Companion.MAX_NIVEAU_AMBITION
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,7 +31,13 @@ class MiseAJourEleveService(
     private val metierRepository: MetierRepository,
     private val formationRepository: FormationRepository,
     private val eleveRepository: EleveRepository,
+    private val majIndicateurPortfolioService: MajIndicateurPortfolioService,
+    private val recupererProgressionService: RecupererProgressionService,
+    private val logger: MonProjetSupLogger,
 ) {
+    @Value("\${pfa.api.enabled}")
+    private var apiEnabled = true
+
     @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
     fun mettreAJourUnProfilEleve(
@@ -71,7 +81,45 @@ class MiseAJourEleveService(
                 corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
                 compteParcoursupLie = profilInitial.compteParcoursupLie,
                 voeuxFavoris = nouveauxVoeux.sortedBy { it.idVoeu },
+                portfolioId = profilInitial.portfolioId,
             )
+        val portfolioId = profilInitial.portfolioId
+        if (portfolioId != null && apiEnabled) {
+            try {
+                profilEleveAMettreAJour.portfolioId = profilInitial.portfolioId
+                val progression = recupererProgressionService.recupererProgression(profilEleveAMettreAJour)
+                val nbFormationsAmbitieuses = nouvellesFormations?.filter { it.niveauAmbition == MAX_NIVEAU_AMBITION }.orEmpty().size
+                logger.info(
+                    "MAJ_PORTFOLIO",
+                    "portfolioId $portfolioId : progression=$progression, " +
+                        "nbFormationsAmbitieuses=$nbFormationsAmbitieuses, nbFavoris=${nouveauxVoeux.size}",
+                )
+                if (progression > 0 || nbFormationsAmbitieuses > 0 || nouveauxVoeux.isNotEmpty()) {
+                    majIndicateurPortfolioService.ajouterPublication(
+                        idElevePortfolio = portfolioId,
+                        libelle = "favoris Parcoursup",
+                        valeur = nouveauxVoeux.size.toString(),
+                        idIndicateur = "favoris_psup",
+                        valeurNumerique = nouveauxVoeux.size,
+                    )
+                    majIndicateurPortfolioService.ajouterPublication(
+                        idElevePortfolio = portfolioId,
+                        libelle = "formations ambitieuses",
+                        valeur = "$nbFormationsAmbitieuses",
+                        idIndicateur = "formations_ambitieuses",
+                        valeurNumerique = nbFormationsAmbitieuses,
+                    )
+                }
+            } catch (e: MonProjetSupInternalErrorException) {
+                // Si le service de portfolio ne répond pas, on ne bloque pas la mise à jour du profil élève
+                logger.warn(
+                    type = "ECHEC_MAJ_PORTFOLIO",
+                    message = "Echec de la mise à jour de l'indicateur du portfolio ${e.message}",
+                )
+            }
+        } else if (portfolioId == null) {
+            logger.info("MAJ_PORTFOLIO", "pas d'id portfolio (m7_id) pour {}".format(profilEleveAMettreAJour.id))
+        }
         return if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
             profilEleveAMettreAJour

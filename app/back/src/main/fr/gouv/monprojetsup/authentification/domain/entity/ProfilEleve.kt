@@ -25,6 +25,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         val corbeilleFormations: List<String>,
         val compteParcoursupLie: Boolean,
         val voeuxFavoris: List<VoeuFavori>,
+        var portfolioId: String? = null,
     ) : ProfilEleve(id) {
         constructor(id: String) : this(
             id = id,
@@ -42,13 +43,14 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             corbeilleFormations = emptyList(),
             compteParcoursupLie = false,
             voeuxFavoris = emptyList(),
+            portfolioId = null,
         )
 
-        fun estProfilComplet(specialitesSelectionnablesParCandidat: List<String>?): Boolean {
-            return completionProfil(specialitesSelectionnablesParCandidat) >= 100
+        fun estProfilComplete(specialitesSelectionnablesParCandidat: List<String>?): Boolean {
+            return completionProfil(specialitesSelectionnablesParCandidat) >= 50
         }
 
-        private fun completionProfil(specialitesSelectionnablesParCandidat: List<String>?): Int {
+        fun completionProfil(specialitesSelectionnablesParCandidat: List<String>?): Int {
             var result = 1
             if (classe != null) result = result.inc()
             if (situation != null) result = result.inc()
