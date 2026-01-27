@@ -74,7 +74,11 @@ class Suggestion2ApiHttpClient(
             )
         } else {
             logger.error("SUGGESTIONS2", "recupererLesExplications: erreur lors de l'appel à l'API Suggestions2, status: ${explanationDto.header.status}")
-            throw RuntimeException("Erreur lors de l'appel à l'API Suggestions2: error ${explanationDto.header.error} msg ${explanationDto.header.userMessage}")
+            return NaiveBayesExplanations(
+                emptyList(),
+                emptyList()
+            )
+            //throw RuntimeException("Erreur lors de l'appel à l'API Suggestions2: error ${explanationDto.header.error} msg ${explanationDto.header.userMessage}")
         }
 
     }
