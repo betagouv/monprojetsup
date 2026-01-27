@@ -101,3 +101,8 @@ Remplacez `.env` par le nom du fichier contenant les variables d'environnement.
 
 Il faut placer le conteneur de `suggestions2` et celui de la BDD dans un même réseau, et assigner à la variable `DB_SUGGESTIONS2_HOSTNAME` le nom d'hôte de la BDD sur ce réseau.
 Il faut aussi exposer le port 80 de `suggestions2` (potentiellement mappé à un autre port): l'API sera accessible via ce port.
+
+
+### Noms des champs de la base de données
+
+Pour voir ou modifier les noms des tables et champs utilisés dans la base de données, se référer au fichier `app/suggestions2/app/db_schema.py`.

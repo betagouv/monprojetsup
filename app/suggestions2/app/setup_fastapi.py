@@ -8,14 +8,15 @@ from app.adapters.naive_bayes import NaiveBayesMatrix
 from app.adapters.pg_database import PostgresDatabase
 from app.application.service import MultiSuggestionsService
 from app.config import CONFIG, VERSION, LOGGER
+from app.db_schema import DbTables
 
 
 load_dotenv()
 DB_SUGGESTIONS2_REF_EXPERT: str = getenv(
-    "DB_SUGGESTIONS2_REF_EXPERT", default="profil_reference_expert"
+    "DB_SUGGESTIONS2_REF_EXPERT", default=DbTables.REF_EXPERT
 )
 DB_SUGGESTIONS2_REF_LYCEEN: str = getenv(
-    "DB_SUGGESTIONS2_REF_LYCEEN", default="profil_reference_lyceen"
+    "DB_SUGGESTIONS2_REF_LYCEEN", default=DbTables.REF_LYCEEN
 )
 
 app = FastAPI(title="MonProjetSup Suggestions2 API", version=VERSION)
