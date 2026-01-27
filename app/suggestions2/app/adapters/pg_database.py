@@ -6,9 +6,10 @@ import psycopg as pg
 from dotenv import load_dotenv
 from psycopg.rows import DictRow, class_row, dict_row
 from psycopg.sql import SQL, Identifier
-from pydantic import BaseModel, BeforeValidator
+from pydantic import BaseModel, BeforeValidator, Field
 
 from app.config import LOGGER
+from app.db_schema import DbColumns, JsonNestedFields
 from app.domain.models.config import ProfileConfig
 from app.domain.models.profile import Item, Profile
 from app.domain.ports.data_repository import DataRepository
@@ -69,21 +70,21 @@ def parse_formations(val: List[Dict[str, Any]] | None) -> List[str]:
     """
     Extract the IDs of the formations
     """
-    return [f["idFormation"] for f in val or []]
+    return [f[JsonNestedFields.FORMATION_ID] for f in val or []]
 
 
 def parse_voeux(val: List[Dict[str, Any]] | None) -> List[str]:
     """
     Extract the IDs of the "parcoursup voeux"
     """
-    return [v["idVoeu"] for v in val or []]
+    return [v[JsonNestedFields.VOEU_ID] for v in val or []]
 
 
 def parse_communes(val: List[Dict[str, Any]] | None) -> List[str]:
     """
     Extract the INSEE Code of the cities
     """
-    return [c["codeInsee"] for c in val or []]
+    return [c[JsonNestedFields.COMMUNE_CODE_INSEE] for c in val or []]
 
 
 def none_to_empty_list(val: List[Any] | None) -> List[Any]:
@@ -91,20 +92,36 @@ def none_to_empty_list(val: List[Any] | None) -> List[Any]:
 
 
 class StudentDbRow(BaseModel):
-    id: str
-    situation: str | None
-    classe: str | None
-    id_baccalaureat: str | None
-    duree_etudes_prevue: str | None
-    alternance: str | None
-    specialites: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
-    domaines: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
-    centres_interets: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
-    metiers_favoris: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
-    corbeille_formations: Annotated[List[str], BeforeValidator(none_to_empty_list)] = []
-    communes_favorites: Annotated[List[str], BeforeValidator(parse_communes)] = []
-    formations_favorites: Annotated[List[str], BeforeValidator(parse_formations)] = []
-    voeux_favoris: Annotated[List[str], BeforeValidator(parse_voeux)] = []
+    id: str = Field(alias=DbColumns.ID)
+    situation: str | None = Field(alias=DbColumns.SITUATION)
+    classe: str | None = Field(alias=DbColumns.CLASSE)
+    id_baccalaureat: str | None = Field(alias=DbColumns.ID_BACCALAUREAT)
+    duree_etudes_prevue: str | None = Field(alias=DbColumns.DUREE_ETUDES_PREVUE)
+    alternance: str | None = Field(alias=DbColumns.ALTERNANCE)
+    specialites: Annotated[List[str], BeforeValidator(none_to_empty_list)] = Field(
+        default=[], alias=DbColumns.SPECIALITES
+    )
+    domaines: Annotated[List[str], BeforeValidator(none_to_empty_list)] = Field(
+        default=[], alias=DbColumns.DOMAINES
+    )
+    centres_interets: Annotated[List[str], BeforeValidator(none_to_empty_list)] = Field(
+        default=[], alias=DbColumns.CENTRES_INTERETS
+    )
+    metiers_favoris: Annotated[List[str], BeforeValidator(none_to_empty_list)] = Field(
+        default=[], alias=DbColumns.METIERS_FAVORIS
+    )
+    corbeille_formations: Annotated[List[str], BeforeValidator(none_to_empty_list)] = (
+        Field(default=[], alias=DbColumns.CORBEILLE_FORMATIONS)
+    )
+    communes_favorites: Annotated[List[str], BeforeValidator(parse_communes)] = Field(
+        default=[], alias=DbColumns.COMMUNES_FAVORITES
+    )
+    formations_favorites: Annotated[List[str], BeforeValidator(parse_formations)] = (
+        Field(default=[], alias=DbColumns.FORMATIONS_FAVORITES)
+    )
+    voeux_favoris: Annotated[List[str], BeforeValidator(parse_voeux)] = Field(
+        default=[], alias=DbColumns.VOEUX_FAVORIS
+    )
 
     def to_profile(self, config: ProfileConfig) -> Profile:
         items: list[Item] = []
