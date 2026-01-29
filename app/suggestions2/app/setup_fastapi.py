@@ -18,6 +18,12 @@ DB_SUGGESTIONS2_REF_EXPERT: str = getenv(
 DB_SUGGESTIONS2_REF_LYCEEN: str = getenv(
     "DB_SUGGESTIONS2_REF_LYCEEN", default=DbTables.REF_LYCEEN
 )
+DB_SUGGESTIONS2_PANIERS_VOEUX: str = getenv(
+    "DB_SUGGESTIONS2_PANIERS_VOEUX", default=DbTables.PANIERS_VOEUX
+)
+DB_SUGGESTIONS2_JOIN_FORMATION_VOEU: str = getenv(
+    "DB_SUGGESTIONS2_JOIN_FORMATION_VOEU", default=DbTables.JOIN_FORMATION_VOEU
+)
 
 app = FastAPI(title="MonProjetSup Suggestions2 API", version=VERSION)
 
@@ -46,12 +52,25 @@ data_profil_lyceen = data_repo.load_profiles(
 )
 profil_lyceen_service = NaiveBayesMatrix(regularization_laplace=1.0)
 profil_lyceen_service.init_from_profiles(data_profil_lyceen)
-# TODO: add other services here.
+
+LOGGER.info(
+    f"Creating 'voeux_parcoursup' service based on tables "
+    f"${DB_SUGGESTIONS2_PANIERS_VOEUX} and ${DB_SUGGESTIONS2_JOIN_FORMATION_VOEU}..."
+)
+data_voeux_parcoursup = data_repo.load_paniers_voeux_as_profiles(
+    paniers_table=DB_SUGGESTIONS2_PANIERS_VOEUX,
+    join_table=DB_SUGGESTIONS2_JOIN_FORMATION_VOEU,
+)
+voeux_parcoursup_service = NaiveBayesMatrix(regularization_laplace=1.0)
+voeux_parcoursup_service.init_from_profiles(data_voeux_parcoursup)
+
+# TODO: add more services here
 
 LOGGER.info("Creating aggregate service...")
 service = MultiSuggestionsService(
     expert=profil_expert_service,
     lyceen=profil_lyceen_service,
+    parcoursup=voeux_parcoursup_service,
 )
 
 LOGGER.info("Creating endpoint...")
