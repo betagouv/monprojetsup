@@ -1,5 +1,34 @@
 # ML Suggestions2 Endpoint
 
+## Fonctionnement
+
+### Scores de suggestions
+
+Suggestions2 calcule et renvoie trois scores pour chaque formation :
+
+| Score | Source de données par défaut dans la DB | Description |
+|:------|:------------------|:------------|
+| **expert** | `profil_reference_expert` | Basé sur les profils de référence créés par les experts métier |
+| **lyceen** | `profil_reference_lyceen` | Basé sur les profils des lycéens utilisant MonProjetSup |
+| **parcoursup** | `sugg_paniers_voeux` | Basé sur les paniers de vœux Parcoursup |
+
+#### Détails de fonctionnement du score Parcoursup
+
+Ce score exploite les paniers de vœux issus des données Parcoursup.
+
+Le principe est d'apprendre quelles formations sont fréquemment choisies ensemble par les candidats Parcoursup. Si un utilisateur s'intéresse à certaines formations, ce score suggère les formations qui étaient souvent présentes dans les mêmes paniers de vœux.
+
+Il fonctionne de la manière suivante :
+
+1. **Chargement des paniers de vœux** : La table `sugg_paniers_voeux` contient les vœux (du type `taXXX`) de candidats Parcoursup, regroupés par panier (un panier = les vœux d'un candidat).
+
+2. **Conversion vœux -> formations** : Les vœux Parcoursup (`taXXX`) correspondent à des formations spécifiques dans des établissements précis. La table de jointure `ref_join_formation_voeu` permet de convertir ces vœux en formations génériques (`flXXX`) utilisées par MonProjetSup.
+
+3. **Apprentissage des co-occurrences** : Chaque panier est ensuite traité comme un "profil" contenant un ensemble de formations favorites. A partir des ces profils, le modèle Naive Bayes (cf. la classe `NaiveBayesMatrix` du fichier `naive_bayes.py`) construit une matrice contenant les probabilités qu'une formation soit choisie sachant qu'une autre formation est présente dans le panier.
+
+4. **Calcul du score** : Pour un utilisateur donné, le score `parcoursup`d'une formation est alors calculé en fonction de toutes les formations qu'il a déjà marquées comme favorites, et de la matrice précédemment construite. Plus une formation apparaît fréquemment avec les formations favorites de l'utilisateur, plus son score sera élevé.
+
+
 ## Comment lancer le endpoint suggestions2
 
 ### Paramétrer l'accès à la base de données
