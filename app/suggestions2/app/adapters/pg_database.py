@@ -1,5 +1,4 @@
 import os
-from collections import defaultdict
 from typing import Annotated, Any, Dict, List, Literal
 from urllib.parse import quote_plus
 
@@ -10,7 +9,7 @@ from psycopg.sql import SQL, Identifier
 from pydantic import BaseModel, BeforeValidator, Field
 
 from app.config import LOGGER
-from app.db_schema import DbColumns, DbTables, JsonNestedFields
+from app.db_schema import DbColumns, JsonNestedFields
 from app.domain.models.config import ProfileConfig
 from app.domain.models.profile import Item, Profile
 from app.domain.ports.data_repository import DataRepository
@@ -57,71 +56,6 @@ class PostgresDatabase(DataRepository):
             cursor.execute(query)
             students_data = cursor.fetchall()
         return [s.to_profile(config) for s in students_data]
-
-    def load_paniers_voeux_as_profiles(
-        self,
-        paniers_table: str = DbTables.PANIERS_VOEUX,
-        join_table: str = DbTables.JOIN_FORMATION_VOEU,
-    ) -> list[Profile]:
-        """
-        Loads wish baskets "parcoursup" and converts them to Profiles for NaiveBayesMatrix.
-
-        paniers_table contains list of taXXX wishes that map to list of flXXX formations via join_table.
-
-        Each basket becomes a Profile where:
-        - features = the formations of the basket, category "formations_favorites"
-        - targets = the same formations
-
-        Returns:
-            List of Profiles representing formation co-occurrences
-        """
-        LOGGER.info(f"Loading voeu to formations mapping from '{join_table}'...")
-        query_mapping = SQL("SELECT id_formation, id_voeu FROM {}").format(
-            Identifier(join_table)
-        )
-        with self.connection.cursor() as cursor:
-            cursor.execute(query_mapping)
-            rows = cursor.fetchall()
-
-        # TODO: vérifier s'il est possible d'avoir plusieurs formations par voeu
-        # si ce n'est pas le cas on peut simplifier et utiliser Dict[str, str] au lieu de Dict[str, List[str]]
-        voeu_to_formations: Dict[str, List[str]] = defaultdict(list)
-        for row in rows:
-            voeu_to_formations[row["id_voeu"]].append(row["id_formation"])
-        LOGGER.info(f"Loaded mapping for {len(voeu_to_formations)} voeux.")
-
-        LOGGER.info(f"Loading paniers de voeux from '{paniers_table}'...")
-        query_paniers = SQL("SELECT id, bac, voeux FROM {}").format(
-            Identifier(paniers_table)
-        )
-        with self.connection.cursor() as cursor:
-            cursor.execute(query_paniers)
-            paniers_rows = cursor.fetchall()
-
-        profiles: list[Profile] = []
-        for row in paniers_rows:
-            voeux = row["voeux"] if row["voeux"] else []
-            formations_set: set[str] = set()
-            for voeu in voeux:
-                if voeu in voeu_to_formations:
-                    formations_set.update(voeu_to_formations[voeu])
-
-            if formations_set:
-                formations = list(formations_set)
-                profile = Profile(
-                    features=[
-                        Item(value=fl, category="formations_favorites")
-                        for fl in formations
-                    ],
-                    targets=formations,
-                )
-                profiles.append(profile)
-
-        LOGGER.info(
-            f"Converted {len(profiles)} paniers to profiles "
-            f"(from {len(paniers_rows)} total paniers)."
-        )
-        return profiles
 
 
 def get_env_or_raise(var_name: str) -> str:
