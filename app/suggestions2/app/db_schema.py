@@ -1,6 +1,5 @@
 """
-Configuration des noms par défaut de tables, colonnes, et champs JSON pour la base de données.
-REF_EXPERT, REF_LYCEEN, PANIERS_VOEUX, JOIN_FORMATION_VOEU peuvent être surchargés via des variables d'environnement (dans le .env).
+Configuration des noms de tables, colonnes, et champs JSON pour la base de données.
 """
 
 
@@ -9,8 +8,6 @@ class DbTables:
 
     REF_EXPERT = "profil_reference_expert"
     REF_LYCEEN = "profil_reference_lyceen"
-    PANIERS_VOEUX = "sugg_paniers_voeux"
-    JOIN_FORMATION_VOEU = "ref_join_formation_voeu"
 
 
 class DbColumns:
