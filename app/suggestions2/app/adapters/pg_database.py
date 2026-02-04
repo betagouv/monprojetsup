@@ -1,6 +1,6 @@
 import os
 from collections import defaultdict
-from typing import Annotated, Any, Dict, List, Literal
+from typing import Annotated, Any, Dict, Iterator, List, Literal
 from urllib.parse import quote_plus
 
 import psycopg as pg
@@ -51,20 +51,44 @@ class PostgresDatabase(DataRepository):
             password=DB_PASSWORD,
         )
 
-    def load_profiles(self, table_name: str, config: ProfileConfig) -> list[Profile]:
+    def iter_profiles_batched(
+        self,
+        table_name: str,
+        config: ProfileConfig,
+        batch_size: int = 10000,
+    ) -> Iterator[list[Profile]]:
+        """
+        Iterator that loads profiles from the given table in batches.
+        """
+        LOGGER.info(f"Loading profiles from '{table_name}' (batched)...")
         query = SQL("SELECT * FROM {}").format(Identifier(table_name))
-        with self.connection.cursor(row_factory=class_row(StudentDbRow)) as cursor:
-            cursor.execute(query)
-            students_data = cursor.fetchall()
-        return [s.to_profile(config) for s in students_data]
 
-    def load_paniers_voeux_as_profiles(
+        # NOTE: 'name=server_cursor_profiles' is needed to create a server-side cursor (by default it is client-side)
+        with self.connection.cursor(
+            name="server_cursor_profiles", row_factory=class_row(StudentDbRow)
+        ) as cursor:
+            cursor.execute(query)
+            total = 0
+
+            while True:
+                students_data = cursor.fetchmany(batch_size)
+                if not students_data:
+                    break
+
+                profiles = [s.to_profile(config) for s in students_data]
+                total += len(profiles)
+                yield profiles
+
+        LOGGER.info(f"Loaded {total} profiles from '{table_name}'.")
+
+    def iter_paniers_voeux_as_profiles_batched(
         self,
         paniers_table: str = DbTables.PANIERS_VOEUX,
         join_table: str = DbTables.JOIN_FORMATION_VOEU,
-    ) -> list[Profile]:
+        batch_size: int = 10000,
+    ) -> Iterator[list[Profile]]:
         """
-        Loads wish baskets "parcoursup" and converts them to Profiles for NaiveBayesMatrix.
+        Iterator that load, in batches, wish baskets "parcoursup" and converts them to Profiles for NaiveBayesMatrix.
 
         paniers_table contains list of taXXX wishes that map to list of flXXX formations via join_table.
 
@@ -75,33 +99,62 @@ class PostgresDatabase(DataRepository):
         Returns:
             List of Profiles representing formation co-occurrences
         """
+        voeu_to_formations = self._load_voeu_to_formations_mapping(join_table)
+
+        LOGGER.info(f"Loading paniers de voeux from '{paniers_table}' (batched)...")
+        query_paniers = SQL("SELECT id, bac, voeux FROM {}").format(
+            Identifier(paniers_table)
+        )
+
+        with self.connection.cursor(name="server_cursor_paniers") as cursor:
+            cursor.execute(query_paniers)
+            total = 0
+
+            while True:
+                paniers = cursor.fetchmany(batch_size)
+                if not paniers:
+                    break
+
+                profiles = self._convert_paniers_to_profiles(paniers, voeu_to_formations)
+                total += len(profiles)
+                if profiles:
+                    yield profiles
+
+        LOGGER.info(f"Loaded {total} profiles from paniers de voeux.")
+
+    def _load_voeu_to_formations_mapping(
+        self, join_table: str
+    ) -> Dict[str, List[str]]:
+        """Load the mapping voeu -> formations."""
         LOGGER.info(f"Loading voeu to formations mapping from '{join_table}'...")
         query_mapping = SQL("SELECT id_formation, id_voeu FROM {}").format(
             Identifier(join_table)
         )
-        with self.connection.cursor() as cursor:
-            cursor.execute(query_mapping)
-            rows = cursor.fetchall()
-
+        
         # TODO: vérifier s'il est possible d'avoir plusieurs formations par voeu
         # si ce n'est pas le cas on peut simplifier et utiliser Dict[str, str] au lieu de Dict[str, List[str]]
         voeu_to_formations: Dict[str, List[str]] = defaultdict(list)
-        for row in rows:
-            voeu_to_formations[row["id_voeu"]].append(row["id_formation"])
-        LOGGER.info(f"Loaded mapping for {len(voeu_to_formations)} voeux.")
-
-        LOGGER.info(f"Loading paniers de voeux from '{paniers_table}'...")
-        query_paniers = SQL("SELECT id, bac, voeux FROM {}").format(
-            Identifier(paniers_table)
-        )
         with self.connection.cursor() as cursor:
-            cursor.execute(query_paniers)
-            paniers_rows = cursor.fetchall()
+            cursor.execute(query_mapping)
+            rows = cursor.fetchall()
+            for row in rows:
+                voeu_to_formations[row["id_voeu"]].append(row["id_formation"])
+        
+        LOGGER.info(f"Loaded mapping for {len(voeu_to_formations)} voeux.")
+        return voeu_to_formations
 
+    def _convert_paniers_to_profiles(
+        self,
+        paniers_rows: list,
+        voeu_to_formations: Dict[str, List[str]],
+    ) -> list[Profile]:
+        """Converts wish baskets rows to Profiles."""
         profiles: list[Profile] = []
+        
         for row in paniers_rows:
             voeux = row["voeux"] if row["voeux"] else []
             formations_set: set[str] = set()
+            
             for voeu in voeux:
                 if voeu in voeu_to_formations:
                     formations_set.update(voeu_to_formations[voeu])
@@ -117,10 +170,6 @@ class PostgresDatabase(DataRepository):
                 )
                 profiles.append(profile)
 
-        LOGGER.info(
-            f"Converted {len(profiles)} paniers to profiles "
-            f"(from {len(paniers_rows)} total paniers)."
-        )
         return profiles
 
 
