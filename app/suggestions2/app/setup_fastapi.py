@@ -72,19 +72,19 @@ def create_services() -> MultiSuggestionsService:
         ),
     )
 
-    voeux_parcoursup_service = create_naive_bayes_service(
-        name="voeux_parcoursup",
-        profiles_iterator=data_repo.iter_paniers_voeux_as_profiles_batched(
-            paniers_table=DB_SUGGESTIONS2_PANIERS_VOEUX,
-            join_table=DB_SUGGESTIONS2_JOIN_FORMATION_VOEU,
-        ),
-    )
+    # voeux_parcoursup_service = create_naive_bayes_service(
+    #     name="voeux_parcoursup",
+    #     profiles_iterator=data_repo.iter_paniers_voeux_as_profiles_batched(
+    #         paniers_table=DB_SUGGESTIONS2_PANIERS_VOEUX,
+    #         join_table=DB_SUGGESTIONS2_JOIN_FORMATION_VOEU,
+    #     ),
+    # )
 # TODO: add more services here
     LOGGER.info("Creating aggregate service...")
     return MultiSuggestionsService(
         expert=profil_expert_service,
         lyceen=profil_lyceen_service,
-        parcoursup=voeux_parcoursup_service,
+        # parcoursup=voeux_parcoursup_service,
     )
 
 
