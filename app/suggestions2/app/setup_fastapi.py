@@ -42,10 +42,10 @@ def create_naive_bayes_service(
     """
     Create a NaiveBayes service from a batched profiles iterator.
     """
-    LOGGER.info(f"Creating '{name}' service...")
+    print(f"Creating '{name}' service...")
     service = NaiveBayesMatrix(regularization_laplace=regularization_laplace)
     service.init_from_profiles_batched(profiles_iterator)
-    LOGGER.info(f"Service '{name}' created with matrix shape {service.matrix.shape}")
+    print(f"Service '{name}' created with matrix shape {service.matrix.shape}")
     return service
 
 
@@ -53,7 +53,7 @@ def create_services() -> MultiSuggestionsService:
     """
     Create the different services for suggestions2.
     """
-    LOGGER.info("Creating DB connection...")
+    print("Creating DB connection...")
     data_repo = PostgresDatabase.from_env()
 
     profil_expert_service = create_naive_bayes_service(
@@ -72,19 +72,19 @@ def create_services() -> MultiSuggestionsService:
         ),
     )
 
-    # voeux_parcoursup_service = create_naive_bayes_service(
-    #     name="voeux_parcoursup",
-    #     profiles_iterator=data_repo.iter_paniers_voeux_as_profiles_batched(
-    #         paniers_table=DB_SUGGESTIONS2_PANIERS_VOEUX,
-    #         join_table=DB_SUGGESTIONS2_JOIN_FORMATION_VOEU,
-    #     ),
-    # )
+    voeux_parcoursup_service = create_naive_bayes_service(
+        name="voeux_parcoursup",
+        profiles_iterator=data_repo.iter_paniers_voeux_as_profiles_batched(
+            paniers_table=DB_SUGGESTIONS2_PANIERS_VOEUX,
+            join_table=DB_SUGGESTIONS2_JOIN_FORMATION_VOEU,
+        ),
+    )
 # TODO: add more services here
     LOGGER.info("Creating aggregate service...")
     return MultiSuggestionsService(
         expert=profil_expert_service,
         lyceen=profil_lyceen_service,
-        # parcoursup=voeux_parcoursup_service,
+        parcoursup=voeux_parcoursup_service,
     )
 
 
