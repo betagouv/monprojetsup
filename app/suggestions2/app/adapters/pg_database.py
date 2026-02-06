@@ -102,7 +102,8 @@ class PostgresDatabase(DataRepository):
         voeu_to_formations = self._load_voeu_to_formations_mapping(join_table)
 
         LOGGER.info(f"Loading paniers de voeux from '{paniers_table}' (batched)...")
-        query_paniers = SQL("SELECT id, bac, voeux FROM {}").format(
+        # TODO: remove this LIMIT after integration test.
+        query_paniers = SQL("SELECT id, bac, voeux FROM {} LIMIT 15000").format(
             Identifier(paniers_table)
         )
 
