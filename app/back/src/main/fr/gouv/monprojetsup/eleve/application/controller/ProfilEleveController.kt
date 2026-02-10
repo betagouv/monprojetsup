@@ -2,13 +2,13 @@ package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
 import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
+import fr.gouv.monprojetsup.eleve.application.dto.IndicateursDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
-import fr.gouv.monprojetsup.eleve.application.dto.ProgressionDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
-import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -26,7 +26,7 @@ class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
     private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
     private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
-    private val recupererProgressionService: RecupererProgressionService,
+    private val recupererIndicateursService: RecupererIndicateursService,
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -71,18 +71,21 @@ class ProfilEleveController(
         return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping("/progression")
+    @GetMapping("/indicateurs")
     @Operation(
-        summary = "Récupérer le niveau de progression pédagogique",
-        description = "Récupère le niveau de progression pédagogique, entre 0 et 6",
+        summary = "Récupérer les indicateurs MPS",
+        description = "Récupère les trois indicateurs MPS",
     )
-    fun getProgressionMPS(): ProgressionDTO {
+    fun getIndicateursMPS(): IndicateursDTO {
         val profil = recupererEleveAvecProfilExistant()
-        return ProgressionDTO(
-            progression =
-                recupererProgressionService.recupererProgression(
-                    profil,
-                ),
+        val indicateurs =
+            recupererIndicateursService.recupererIndicateurs(
+                profil,
+            )
+        return IndicateursDTO(
+            formationsRealistes = indicateurs.formationsRealistes,
+            formationsAmbitieuses = indicateurs.formationsAmbitieuses,
+            formationsPlanB = indicateurs.formationsPlanB,
         )
     }
 }

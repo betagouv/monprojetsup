@@ -67,7 +67,7 @@ class MiseAJourEleveServiceTest {
     private lateinit var majIndicateurPortfolioService: MajIndicateurPortfolioService
 
     @Mock
-    private lateinit var recupererProgressionService: RecupererProgressionService
+    private lateinit var recupererIndicateursService: RecupererIndicateursService
 
     @Mock
     private lateinit var logger: MonProjetSupLogger
@@ -1051,7 +1051,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     portfolioId = "0f88ddd1",
                 )
-            then(recupererProgressionService).should(only()).recupererProgression(nouveauProfil)
+            then(recupererIndicateursService).should(only()).recupererIndicateurs(nouveauProfil)
             then(majIndicateurPortfolioService).should().ajouterPublication(
                 "0f88ddd1",
                 "favoris Parcoursup",
