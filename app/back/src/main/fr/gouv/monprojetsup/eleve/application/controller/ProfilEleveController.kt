@@ -71,6 +71,14 @@ class ProfilEleveController(
         return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 
+    @GetMapping("/progression")
+    @Operation(
+        summary = "Déprécié",
+    )
+    fun getProgression(): Int {
+        return 6
+    }
+
     @GetMapping("/indicateurs")
     @Operation(
         summary = "Récupérer les indicateurs MPS",
