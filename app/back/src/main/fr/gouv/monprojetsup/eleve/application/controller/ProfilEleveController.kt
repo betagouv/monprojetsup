@@ -5,10 +5,12 @@ import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.IndicateursDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ProgressionDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -27,6 +29,7 @@ class ProfilEleveController(
     private val recupererAssociationFormationsVoeuxService: RecupererAssociationFormationsVoeuxService,
     private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
     private val recupererIndicateursService: RecupererIndicateursService,
+    private val recupererProgressionService: RecupererProgressionService,
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -73,10 +76,17 @@ class ProfilEleveController(
 
     @GetMapping("/progression")
     @Operation(
-        summary = "Déprécié",
+        summary = "Récupérer le niveau de progression pédagogique",
+        description = "Récupère le niveau de progression pédagogique, entre 0 et 6",
     )
-    fun getProgression(): Int {
-        return 6
+    fun getProgressionMPS(): ProgressionDTO {
+        val profil = recupererEleveAvecProfilExistant()
+        return ProgressionDTO(
+            progression =
+                recupererProgressionService.recupererProgression(
+                    profil,
+                ),
+        )
     }
 
     @GetMapping("/indicateurs")
