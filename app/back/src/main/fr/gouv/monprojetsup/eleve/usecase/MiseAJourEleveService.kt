@@ -35,7 +35,7 @@ class MiseAJourEleveService(
     private val logger: MonProjetSupLogger,
 ) {
     @Value("\${pfa.api.enabled}")
-    private var apiEnabled = true
+    private var apiEnabled = false
 
     @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
