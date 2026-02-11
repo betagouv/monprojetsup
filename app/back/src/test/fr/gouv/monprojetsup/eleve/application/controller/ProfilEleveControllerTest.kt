@@ -15,7 +15,7 @@ import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
-import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -52,7 +52,7 @@ class ProfilEleveControllerTest(
     lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 
     @MockBean
-    lateinit var recupererProgressionService: RecupererProgressionService
+    private lateinit var recupererIndicateursService: RecupererIndicateursService
 
     @Nested
     inner class `Quand on appelle la route POST profil` {
