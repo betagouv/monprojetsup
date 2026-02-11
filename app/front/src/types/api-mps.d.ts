@@ -229,7 +229,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/profil/progression": {
+    "/api/v1/auth/profil/indicateurs": {
         parameters: {
             query?: never;
             header?: never;
@@ -237,10 +237,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Récupérer le niveau de progression pédagogique
-         * @description Récupère le niveau de progression pédagogique, entre 0 et 6
+         * Récupérer les indicateurs MPS
+         * @description Récupère les trois indicateurs MPS
          */
-        get: operations["getProgressionMPS"];
+        get: operations["getIndicateursMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -772,14 +772,25 @@ export interface components {
             metiers: components["schemas"]["MetierCourtDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
-        ProgressionDTO: {
+        IndicateursDTO: {
             /**
              * Format: int32
-             * @description Progression dans les six niveaux MPS
-             * @example 6
-             * @enum {integer}
+             * @description Le nombre de formations estimées "réalistes" par le lycéen
+             * @example 1
              */
-            progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+            formationsRealistes: number;
+            /**
+             * Format: int32
+             * @description Le nombre de formations estimées "ambitieuses" par le lycéen
+             * @example 2
+             */
+            formationsAmbitieuses: number;
+            /**
+             * Format: int32
+             * @description Le nombre de formations estimées "plan B" par le lycéen
+             * @example 3
+             */
+            formationsPlanB: number;
         };
         IndicateursDTO: {
             /**
@@ -1114,7 +1125,7 @@ export interface operations {
             };
         };
     };
-    getProgressionMPS: {
+    getIndicateursMPS: {
         parameters: {
             query?: never;
             header?: never;
@@ -1129,7 +1140,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ProgressionDTO"];
+                    "*/*": components["schemas"]["IndicateursDTO"];
                 };
             };
         };
