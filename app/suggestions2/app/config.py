@@ -1,7 +1,12 @@
 import logging
+from pathlib import Path
+
 from app.domain.models.config import ProfileConfig
 
 VERSION = "0.3.0"
+
+# Default directory for storing precomputed models (models can be computed by app.tools.precompute_models)
+DEFAULT_MODELS_DIR = Path(__file__).parent.parent / "models"
 
 CONFIG = ProfileConfig(
     use_id_baccalaureat=True,
