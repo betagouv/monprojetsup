@@ -1,5 +1,7 @@
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, Iterator, List, Tuple
+import pickle
 
 import numpy as np
 import pandas as pd
@@ -27,6 +29,29 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
         self.explanation_matrix, self.explanation_popularity = (
             compute_explanation_matrix(self.matrix)
         )
+
+    def save_to_file(self, directory: Path | str, name: str) -> None:
+        """Save the entire NaiveBayesMatrix object to a single pickle file."""
+        directory = Path(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{name}.pkl"
+        
+        with open(path, "wb") as f:
+            pickle.dump(self, f)
+        
+        print(f"Model '{name}' saved to {path}")
+
+    @staticmethod
+    def load_from_file(directory: Path | str, name: str):
+        """Load a NaiveBayesMatrix object from a pickle file."""
+        directory = Path(directory)
+        path = directory / f"{name}.pkl"
+        
+        with open(path, "rb") as f:
+            instance = pickle.load(f)
+        
+        print(f"Model '{name}' loaded from {path} with matrix shape {instance.matrix.shape}")
+        return instance
 
     def suggest(self, profile: Profile) -> Suggestions:
         scores = predict_naive_bayes(self.matrix, profile.features_str())
