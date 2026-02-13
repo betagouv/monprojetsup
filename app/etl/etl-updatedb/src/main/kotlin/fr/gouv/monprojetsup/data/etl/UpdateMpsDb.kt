@@ -46,8 +46,18 @@ open class Runner(
 
 	override fun run(vararg args: String?) {
 
-		try {
-			logger.info("Début de la mise à jour")
+        logger.info("Début de la mise à jour sans arrêt du service")
+
+        logger.info("Mise à jour de la table de correspondance ville voeux")
+        updateFormationDbs.updateVillesVoeuxDb()
+
+        logger.info("Mise à jour des paniers de voeux")
+        updateSuggestionsDbs.updatePaniersVoeuxDb()
+
+        logger.info("Fin de la mise à jour sans arrêt du service")
+
+        try {
+			logger.info("Début de la mise à jour avec arrêt du service")
 			updateParametreDb.setEtlEnCours(true)
 
 			logger.info("Création des fichiers de diagnostic")
@@ -65,16 +75,15 @@ open class Runner(
 			logger.info("Mise à jour des liens formations metiers")
 			updateFormationsMetiersDbs.update()//after formations ert metiers
 
-			val voeuxOntChange = updateFormationDbs.checkForcedUpdate()
 			logger.info("Mise à jour des suggestions")
-			updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
+			updateSuggestionsDbs.updateSuggestionDbs()
 		} finally {
-			updateParametreDb.setFormationUpdateForcedFlag(false)
 			updateParametreDb.setEtlEnCours(false)
-			logger.info("Fin de la mise à jour")
+			logger.info("Fin de la mise à jour avec arrêt du service")
 		}
 
-	}
+
+    }
 
 }
 
