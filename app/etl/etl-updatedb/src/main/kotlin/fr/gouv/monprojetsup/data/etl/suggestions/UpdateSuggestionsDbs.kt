@@ -47,7 +47,7 @@ class UpdateSuggestionsDbs(
     @Value("\${mps.data.reference.table.lyceen}")
     var lyceenReferenceTable: String = ""
 
-    internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
+    internal fun updateSuggestionDbs() {
 
         logger.info("Copie des profils de référence experts")
         updateProfiles(expertReferenceTable, "expert")
@@ -60,11 +60,6 @@ class UpdateSuggestionsDbs(
             batchUpdate.clearEntities(SuggestionsPaniersVoeuxEntity::class.simpleName!!)
             batchUpdate.clearEntities(SuggestionsEdgeEntity::class.simpleName!!)
             batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
-        }
-
-        if (voeuxOntChange || minimalTestDataSet) {
-            logger.info("Mise à jour des paniers de voeux")
-            updatePaniersVoeuxDb()
         }
 
         logger.info("Mise à jour des edges")
@@ -114,7 +109,7 @@ class UpdateSuggestionsDbs(
         batchUpdate.upsertEntities(entities)
     }
 
-    internal fun updatePaniersVoeuxDb() {
+    fun updatePaniersVoeuxDb() {
         val entities = mpsDataPort.getPaniersVoeux()
             .map { SuggestionsPaniersVoeuxEntity(it) }
         batchUpdate.setEntities(
