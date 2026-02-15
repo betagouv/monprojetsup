@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsPaniersVoeuxEntit
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsProfilEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -33,8 +34,10 @@ interface SuggestionsEdgesDb :
 @Component
 class UpdateSuggestionsDbs(
     private val mpsDataPort: MpsDataPort,
-    private val batchUpdate: BatchUpdate
-) {
+    private val batchUpdate: BatchUpdate,
+    private val environment: Environment,
+
+    ) {
 
     private val logger: Logger = Logger.getLogger(UpdateSuggestionsDbs::class.java.simpleName)
 
@@ -47,7 +50,12 @@ class UpdateSuggestionsDbs(
     @Value("\${mps.data.reference.table.lyceen}")
     var lyceenReferenceTable: String = ""
 
-    internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
+    fun isTestSuggestionsProfileActive(): Boolean {
+        return environment.activeProfiles.contains("test")
+                || environment.activeProfiles.contains("test_suggestions")
+    }
+
+    internal fun updateSuggestionDbs() {
 
         logger.info("Copie des profils de référence experts")
         updateProfiles(expertReferenceTable, "expert")
@@ -60,11 +68,6 @@ class UpdateSuggestionsDbs(
             batchUpdate.clearEntities(SuggestionsPaniersVoeuxEntity::class.simpleName!!)
             batchUpdate.clearEntities(SuggestionsEdgeEntity::class.simpleName!!)
             batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
-        }
-
-        if (voeuxOntChange || minimalTestDataSet) {
-            logger.info("Mise à jour des paniers de voeux")
-            updatePaniersVoeuxDb()
         }
 
         logger.info("Mise à jour des edges")
@@ -114,13 +117,15 @@ class UpdateSuggestionsDbs(
         batchUpdate.upsertEntities(entities)
     }
 
-    internal fun updatePaniersVoeuxDb() {
-        val entities = mpsDataPort.getPaniersVoeux()
-            .map { SuggestionsPaniersVoeuxEntity(it) }
-        batchUpdate.setEntities(
-            SuggestionsPaniersVoeuxEntity::class.simpleName!!,
-            entities
-        )
+    fun updatePaniersVoeuxDb() {
+        if(!isTestSuggestionsProfileActive()) {
+            val entities = mpsDataPort.getPaniersVoeux()
+                .map { SuggestionsPaniersVoeuxEntity(it) }
+            batchUpdate.setEntities(
+                SuggestionsPaniersVoeuxEntity::class.simpleName!!,
+                entities
+            )
+        }
     }
 
 

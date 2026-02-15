@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.etl.parametre.UpdateParametreDb
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationVoeuEntity
@@ -15,6 +14,7 @@ import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.tools.GeodeticDistance
+import org.hibernate.Transaction
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.JpaRepository
@@ -57,9 +57,8 @@ class UpdateFormationDbs(
     private val voeuxDb: VoeuxDb,
     private val formationDb: FormationDb,
     private val formationVoeuxDb: FormationVoeuDb,
-    private val parametreDb: UpdateParametreDb,
-    private val environment: Environment
-
+    private val environment: Environment,
+    private val sessionFactory: org.hibernate.SessionFactory
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
@@ -81,27 +80,15 @@ class UpdateFormationDbs(
 
         logger.info("Mise à jour de la table des formations")
         updateFormationsDb()
-        logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
-        val isForcedUpdate = checkForcedUpdate()
-        val nbPairesVoeuxFormationsAChange = updateVoeuxDb() || isMinimalTestDatasetModeActive()
-        if(isForcedUpdate || nbPairesVoeuxFormationsAChange) {
-            logger.info("Mise à jour de la table de correspondance ville voeux")
-            if(isForcedUpdate) {
-                batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
-            }
-            updateVillesVoeuxDb()
-        }
+
+        logger.info("Mise à jour de la table des voeux")
+        updateVoeuxDb()
 
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
     }
-
-    fun checkForcedUpdate(): Boolean {
-        return  parametreDb.getFormationUpdateForcedFlag() || isMinimalTestDatasetModeActive()
-    }
-
 
     private fun updateMoyennesGeneralesAdmisDb() {
         val data = mpsDataPort.getMoyennesGeneralesAdmis()
@@ -127,7 +114,7 @@ class UpdateFormationDbs(
         val formationsVoeuxEntities = ArrayList<FormationVoeuEntity>()
         formationsMpsIds.forEach { id ->
             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
-            voeuxFormation.forEach { voeuxEntities.put(it.id, VoeuEntity(it)) }
+            voeuxFormation.forEach { voeuxEntities[it.id] = VoeuEntity(it) }
             formationsVoeuxEntities.addAll(
                 voeuxFormation.map {
                     FormationVoeuEntity(id, it.id)
@@ -263,47 +250,41 @@ class UpdateFormationDbs(
 
     fun updateVillesVoeuxDb() {
 
-        val onlyParis20 = isTestSuggestionsProfileActive()
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val transaction: Transaction = statelessSession.beginTransaction()
 
-        val cities = mpsDataPort.getCities()
-            .sortedBy { it.nom }
-            .filter { !onlyParis20 || it.codeInsee == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }
-            .associateBy { it.codeInsee }
-            .values
+            val onlyParis20 = isTestSuggestionsProfileActive()
 
-        val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
+            val cities = mpsDataPort.getCities()
+                .sortedBy { it.nom }
+                .filter { !onlyParis20 || it.codeInsee == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }
+                .associateBy { it.codeInsee }
+                .values
 
-        batchUpdate.clearEntities(VilleVoeuxEntity::class.simpleName!!)
+            val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
-        var letter = '_'
-
-        val entities = ArrayList<VilleVoeuxEntity>()
-        cities.forEach { city ->
-            val newLetter = city.nom.first()
-            if (newLetter != letter) {
-                if (entities.isNotEmpty()) {
-                    logger.info("Enregistrement des ${entities.count()} correspondances villes-voeux commençant par $letter")
-                    batchUpdate.upsertEntities(entities)
-                    entities.clear()
+            var letter = '_'
+            cities.forEach { city ->
+                val newLetter = city.nom.first()
+                if (newLetter != letter) {
+                    logger.info("Calcul des distances pour les villes commençant par $newLetter")
+                    letter = newLetter
                 }
-                logger.info("Calcul des distances pour les villes commençant par $newLetter")
-                letter = newLetter
+
+                val distances = voeux
+                    .associate { voeu ->
+                        voeu.id to geodeticDistance(voeu.coords(), city.coords)
+                    }
+                    .filter { it.value <= Constants.MAX_DISTANCE_VILLE_VOEU_KM}
+                val newEntity = VilleVoeuxEntity().apply {
+                    idVille = city.codeInsee
+                    distancesVoeuxKm = distances
+                }
+                statelessSession.upsert(newEntity)
             }
 
-            val distances = voeux
-                .map { voeu ->
-                    voeu.id to geodeticDistance(voeu.coords(), city.coords)
-                }
-                .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
-                .toMap()
-            val newEntity = VilleVoeuxEntity().apply {
-                idVille = city.codeInsee
-                distancesVoeuxKm = distances
-            }
-            entities.add(newEntity)
+            transaction.commit()
         }
-        logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
-        batchUpdate.upsertEntities(entities)
     }
 
     /**

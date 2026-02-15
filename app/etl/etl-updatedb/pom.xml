@@ -112,8 +112,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>src/main/kotlin</sourceDir>
                                 <sourceDir>src/main/java</sourceDir>
+                                <sourceDir>src/main/kotlin</sourceDir>
                                 <source>src/test/kotlin</source>
                             </sourceDirs>
                         </configuration>

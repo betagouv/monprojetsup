@@ -20,18 +20,6 @@ class BatchUpdate(
         }
     }
 
-    fun clearTable(tableName: String) {
-        sessionFactory.openStatelessSession().use { statelessSession ->
-            val transaction: Transaction = statelessSession.beginTransaction()
-
-            val sql = "DELETE FROM $tableName"
-            val query = statelessSession.createNativeMutationQuery(sql)
-            query.executeUpdate()
-
-            transaction.commit()
-        }
-    }
-
     fun <T> setEntities(entityName: String, entities: Collection<T>) {
         sessionFactory.openStatelessSession().use { statelessSession ->
             val transaction: Transaction = statelessSession.beginTransaction()
@@ -51,18 +39,20 @@ class BatchUpdate(
         }
     }
 
-    fun <T> getEntities(entityName: String, classe: Class<T> ): Collection<T> {
-        sessionFactory.openStatelessSession().use { statelessSession ->
-            val hql = "FROM $entityName"
-            val query = statelessSession.createSelectionQuery(hql, classe)
-            return query.resultList
-        }
-    }
+    fun <T> getEntities(entityName: String, classe: Class<T> ): Collection<T> =
+        getEntitiesHql("FROM $entityName", classe)
 
     fun <T> getEntitiesHql(hql : String, classe: Class<T> ): Collection<T> {
         sessionFactory.openStatelessSession().use { statelessSession ->
             val query = statelessSession.createSelectionQuery(hql, classe)
             return query.resultList
+        }
+    }
+
+    fun countEntities(entityName: String) : Long {
+        sessionFactory.openStatelessSession().use { statelessSession ->
+            val query = statelessSession.createSelectionQuery("SELECT COUNT(e) FROM $entityName e", Long::class.java)
+            return query.uniqueResult()
         }
     }
 

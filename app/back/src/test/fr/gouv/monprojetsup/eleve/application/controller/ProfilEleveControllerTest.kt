@@ -26,8 +26,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -37,25 +37,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(
     controllers = [ProfilEleveController::class],
-    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
 )
 class ProfilEleveControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
-    @MockBean
+    @MockitoBean
     lateinit var miseAJourEleveService: MiseAJourEleveService
 
-    @MockBean
+    @MockitoBean
     lateinit var recupererAssociationFormationsVoeuxService:
         RecupererAssociationFormationsVoeuxService
 
-    @MockBean
+    @MockitoBean
     lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 
-    @MockBean
+    @MockitoBean
     lateinit var recupererProgressionService: RecupererProgressionService
 
-    @MockBean
+    @MockitoBean
     lateinit var recupererIndicateursService: RecupererIndicateursService
 
     @Nested

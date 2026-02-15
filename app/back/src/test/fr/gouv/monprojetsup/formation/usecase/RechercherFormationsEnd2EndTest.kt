@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.formation.usecase
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.application.controller.FormationController.Companion.TAILLE_MINIMUM_RECHERCHE
 import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesDTO
@@ -23,14 +22,15 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.testcontainers.shaded.com.google.common.reflect.TypeToken
 
 data class RechercheScenario(
     val recherche: String,
@@ -47,7 +47,7 @@ class RechercherFormationsEnd2EndTest(
     @Autowired val objectMapper: ObjectMapper,
     @Autowired val environment: Environment,
 ) {
-    @MockBean
+    @MockitoBean
     lateinit var suggestionsFormationsService: SuggestionsFormationsService
 
     @Autowired
