@@ -4,8 +4,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingResponseWrapper
@@ -27,13 +25,6 @@ class LogguerReponsesFilter(
         filterChain.doFilter(requestToUse, responseWrapper)
         logReponse(requestToUse, responseWrapper)
         responseWrapper.copyBodyToResponse()
-    }
-
-    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return AntPathRequestMatcher("/v3/api-docs/**").matches(request) ||
-            NegatedRequestMatcher(AntPathRequestMatcher("/api/v1/**")).matches(
-                request,
-            )
     }
 
     @Throws(UnsupportedEncodingException::class)

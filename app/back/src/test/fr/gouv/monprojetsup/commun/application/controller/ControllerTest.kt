@@ -16,20 +16,20 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.BDDMockito.given
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 
 @ContextConfiguration(classes = [MonProjetSupTestConfiguration::class])
 @Import(value = [SecuriteConfiguration::class])
 abstract class ControllerTest {
-    @MockBean
+    @MockitoBean
     lateinit var recupererEleveService: RecupererEleveService
 
-    @MockBean
+    @MockitoBean
     lateinit var parametreRepository: ParametreRepository
 
-    @MockBean
+    @MockitoBean
     lateinit var logger: MonProjetSupLogger
 
     @BeforeEach
