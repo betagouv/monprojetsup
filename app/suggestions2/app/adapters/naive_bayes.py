@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, Iterator, List, Tuple
 
 import numpy as np
@@ -27,6 +28,35 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
         self.explanation_matrix, self.explanation_popularity = (
             compute_explanation_matrix(self.matrix)
         )
+
+    def save_to_file(self, directory: Path | str, name: str) -> None:
+        """Save the NaiveBayes matrix to a CSV file.
+        
+        Only the main matrix is saved. The explanation matrix and popularity
+        series are recomputed from it on load (they are derived data).
+        """
+        directory = Path(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{name}.csv"
+        self.matrix.to_csv(path)
+        print(f"Model '{name}' saved to {path} (shape: {self.matrix.shape})")
+
+    @classmethod
+    def load_from_file(cls, directory: Path | str, name: str) -> "NaiveBayesMatrix":
+        """Load a NaiveBayesMatrix from a CSV file and recompute derived data."""
+        directory = Path(directory)
+        path = directory / f"{name}.csv"
+        
+        if not path.exists():
+            raise FileNotFoundError(2, f"Model file not found: {path}", str(path))
+        
+        instance = cls()
+        instance.matrix = pd.read_csv(path, index_col=0)
+        instance.explanation_matrix, instance.explanation_popularity = (
+            compute_explanation_matrix(instance.matrix)
+        )
+        print(f"Model '{name}' loaded from {path} (shape: {instance.matrix.shape})")
+        return instance
 
     def suggest(self, profile: Profile) -> Suggestions:
         scores = predict_naive_bayes(self.matrix, profile.features_str())

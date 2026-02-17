@@ -138,17 +138,17 @@ class SuggestionRequestProfile(BaseModel):
         metiers_favoris = [
             f.id
             for f in self.choix
-            if f.id.startswith("met") and f.status == ChoixStatus.Favorite
+            if f.id.startswith("met") and f.status == ChoixStatus.Favorite.value
         ]
         corbeille_formations = [
             f.id
             for f in self.choix
-            if f.id.startswith("f") and f.status == ChoixStatus.Deleted
+            if f.id.startswith("f") and f.status == ChoixStatus.Deleted.value
         ]
         formations_favorites = [
             f.id
             for f in self.choix
-            if f.id.startswith("f") and f.status == ChoixStatus.Favorite
+            if f.id.startswith("f") and f.status == ChoixStatus.Favorite.value
         ]
         # voeux_favoris = [
         #     f.id for f in self.choix if f.id.startswith("f") and f.status == ChoixStatus.Favorite

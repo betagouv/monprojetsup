@@ -1,7 +1,17 @@
 import logging
+from os import getenv
+from pathlib import Path
+
+from dotenv import load_dotenv
+
 from app.domain.models.config import ProfileConfig
 
+load_dotenv()
+
 VERSION = "0.3.0"
+
+# Default directory for storing precomputed models (models can be computed by app.tools.precompute_models)
+DEFAULT_MODELS_DIR = Path(getenv("MODELS_DIR", Path(__file__).parent.parent / "models"))
 
 CONFIG = ProfileConfig(
     use_id_baccalaureat=True,
