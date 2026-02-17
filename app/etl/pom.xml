@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.5.10</version>
 	</parent>
 	<groupId>fr.gouv.monprojetsup</groupId>
 	<artifactId>etl</artifactId>
@@ -53,6 +53,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+            <version>2.13.2</version>
 		</dependency>
 
 		<dependency>
@@ -123,7 +124,7 @@
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>5.9</version>
+			<version>5.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -185,16 +186,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludedGroups>${test.excluded.groups}</excludedGroups>
-				</configuration>
-			</plugin>
+                <configuration>
+                   <excludedGroups>${test.excluded.groups}</excludedGroups>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<excludedGroups>${test.excluded.groups}</excludedGroups>
-				</configuration>
+                <configuration>
+                    <excludedGroups>${test.excluded.groups}</excludedGroups>
+                </configuration>
 			</plugin>
 		</plugins>
     </build>

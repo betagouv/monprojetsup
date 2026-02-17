@@ -1,6 +1,5 @@
 """
-Configuration des noms par défaut de tables, colonnes, et champs JSON pour la base de données.
-REF_EXPERT, REF_LYCEEN, PANIERS_VOEUX, JOIN_FORMATION_VOEU peuvent être surchargés via des variables d'environnement (dans le .env).
+Configuration des noms de tables, colonnes, et champs JSON pour la base de données.
 """
 
 from os import getenv

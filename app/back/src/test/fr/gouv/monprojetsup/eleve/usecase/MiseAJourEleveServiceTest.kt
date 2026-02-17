@@ -534,10 +534,6 @@ class MiseAJourEleveServiceTest {
                 miseAJourDuProfil = nouveauProfil,
                 profilActuel = profilEleve,
             )
-            val profilAMettreAJour =
-                profilEleve.copy(
-                    corbeilleFormations = listOf("fl1234", "fl5678"),
-                )
 
             // When & Then
             then(eleveRepository).shouldHaveNoInteractions()

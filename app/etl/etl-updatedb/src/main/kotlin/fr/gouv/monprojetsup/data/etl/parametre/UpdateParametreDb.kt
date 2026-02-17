@@ -32,18 +32,4 @@ class UpdateParametreDb(
         parametreDb.save(majSuggestionsParam)
     }
 
-    fun getFormationUpdateForcedFlag() : Boolean {
-        return parametreDb
-            .findById(FORCE_FORMATIONS_UPDATE)
-            .orElse(ParametreEntity().apply { statut = false })
-            .statut
-    }
-
-    fun setFormationUpdateForcedFlag(b: Boolean) {
-        val newParam = ParametreEntity()
-        newParam.id = FORCE_FORMATIONS_UPDATE
-        newParam.statut = b
-        parametreDb.save(newParam)
-    }
-
 }

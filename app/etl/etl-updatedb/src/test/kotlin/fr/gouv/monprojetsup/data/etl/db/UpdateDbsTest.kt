@@ -218,7 +218,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Test
         @Tag("resource-intensive-test")
         fun `Doit réussir à mettre à jour les tables sugg_`() {
-            assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs(false) }
+            assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
         }
 
         @Test

@@ -28,7 +28,6 @@ Il fonctionne de la manière suivante :
 
 4. **Calcul du score** : Pour un utilisateur donné, le score `parcoursup`d'une formation est alors calculé en fonction de toutes les formations qu'il a déjà marquées comme favorites, et de la matrice précédemment construite. Plus une formation apparaît fréquemment avec les formations favorites de l'utilisateur, plus son score sera élevé.
 
-
 ## Comment lancer le endpoint suggestions2
 
 ### Paramétrer l'accès à la base de données
@@ -137,3 +136,4 @@ Il faut aussi exposer le port 80 de `suggestions2` (potentiellement mappé à un
 ### Noms des champs de la base de données
 
 Pour voir ou modifier les noms des tables et champs utilisés dans la base de données par défaut, se référer au fichier `app/suggestions2/app/db_schema.py`.
+`.
