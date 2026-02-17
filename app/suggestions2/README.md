@@ -47,6 +47,7 @@ Récapitulatif des variables d'environnement:
 |`DB_SUGGESTIONS2_USERNAME`| Nom d'utilisateur pour accéder à la BDD | :x: Non |
 |`DB_SUGGESTIONS2_PASSWORD`| Mot de passe pour accéder à la BDD | :x: Non |
 |`DB_SUGGESTIONS2_HOSTNAME`| Nom de l'hôte de la base de données | :white_check_mark: Oui, défault: `localhost`|
+|`MODELS_DIR`| Répertoire contenant les modèles pré-calculés | :white_check_mark: Oui, défault: `models/` (relatif au dossier suggestions2)|
 |`DB_SUGGESTIONS2_REF_EXPERT`| Nom de la table contenant les données de référence experts | :white_check_mark: Oui, défault: `profil_reference_expert`|
 |`DB_SUGGESTIONS2_REF_LYCEEN`| Nom de la table contenant les données de référence lycéens | :white_check_mark: Oui, défault: `profil_reference_lyceen`|
 |`DB_SUGGESTIONS2_PANIERS_VOEUX`| Nom de la table contenant les paniers de vœux | :white_check_mark: Oui, défault: `sugg_paniers_voeux`|

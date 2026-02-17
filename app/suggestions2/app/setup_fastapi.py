@@ -90,6 +90,8 @@ def create_services() -> MultiSuggestionsService:
             f"Precomputed model not found: {e.filename}. "
             "Run 'python -m app.tools.precompute_models' to generate them."
         )
+    except Exception as e:
+        LOGGER.error(f"Could not load precomputed model 'voeux_parcoursup': {e}")
 
 # TODO: add more services here
     LOGGER.info("Creating aggregate service...")
