@@ -15,6 +15,7 @@ import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
+import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -25,8 +26,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -36,23 +37,25 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(
     controllers = [ProfilEleveController::class],
-    excludeAutoConfiguration = [org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration::class],
 )
 class ProfilEleveControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
-    @MockBean
+    @MockitoBean
     lateinit var miseAJourEleveService: MiseAJourEleveService
 
-    @MockBean
+    @MockitoBean
     lateinit var recupererAssociationFormationsVoeuxService:
         RecupererAssociationFormationsVoeuxService
 
-    @MockBean
+    @MockitoBean
     lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 
-    @MockBean
+    @MockitoBean
     lateinit var recupererProgressionService: RecupererProgressionService
+
+    @MockitoBean
+    lateinit var recupererIndicateursService: RecupererIndicateursService
 
     @Nested
     inner class `Quand on appelle la route POST profil` {

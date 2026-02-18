@@ -140,7 +140,7 @@ export interface paths {
         put?: never;
         /**
          * Modifier le profil de l'utilisateur connecté
-         * @description  Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)
+         * @description Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)
          */
         post: operations["postProfilEleve"];
         delete?: never;
@@ -241,6 +241,26 @@ export interface paths {
          * @description Récupère le niveau de progression pédagogique, entre 0 et 6
          */
         get: operations["getProgressionMPS"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/profil/indicateurs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Récupérer les indicateurs MPS
+         * @description Récupère les trois indicateurs MPS
+         */
+        get: operations["getIndicateursMPS"];
         put?: never;
         post?: never;
         delete?: never;
@@ -571,7 +591,7 @@ export interface components {
         };
         TraceDTO: {
             /** @enum {string} */
-            action: "fiche_formation" | "recherche_formation" | "suggestions" | "onglet_fiche_formation" | "lien_externe" | "ajout_favori_formation" | "ajout_favori_metier" | "fiche_metier" | "edition_profil";
+            action: "fiche_formation" | "recherche_formation" | "suggestions" | "onglet_fiche_formation" | "lien_externe" | "ajout_favori_formation" | "ajout_favori_metier" | "fiche_metier" | "edition_profil" | "publication_activite";
             param1?: string;
             param2?: string;
         };
@@ -760,6 +780,26 @@ export interface components {
              * @enum {integer}
              */
             progression: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        };
+        IndicateursDTO: {
+            /**
+             * Format: int32
+             * @description Le nombre de formations estimées "réalistes" par le lycéen
+             * @example 1
+             */
+            formationsRealistes: number;
+            /**
+             * Format: int32
+             * @description Le nombre de formations estimées "ambitieuses" par le lycéen
+             * @example 2
+             */
+            formationsAmbitieuses: number;
+            /**
+             * Format: int32
+             * @description Le nombre de formations estimées "plan B" par le lycéen
+             * @example 3
+             */
+            formationsPlanB: number;
         };
     };
     responses: never;
@@ -1090,6 +1130,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ProgressionDTO"];
+                };
+            };
+        };
+    };
+    getIndicateursMPS: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IndicateursDTO"];
                 };
             };
         };

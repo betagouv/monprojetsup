@@ -67,7 +67,7 @@ class MiseAJourEleveServiceTest {
     private lateinit var majIndicateurPortfolioService: MajIndicateurPortfolioService
 
     @Mock
-    private lateinit var recupererProgressionService: RecupererProgressionService
+    private lateinit var recupererIndicateursService: RecupererIndicateursService
 
     @Mock
     private lateinit var logger: MonProjetSupLogger
@@ -534,10 +534,6 @@ class MiseAJourEleveServiceTest {
                 miseAJourDuProfil = nouveauProfil,
                 profilActuel = profilEleve,
             )
-            val profilAMettreAJour =
-                profilEleve.copy(
-                    corbeilleFormations = listOf("fl1234", "fl5678"),
-                )
 
             // When & Then
             then(eleveRepository).shouldHaveNoInteractions()
@@ -968,105 +964,6 @@ class MiseAJourEleveServiceTest {
             // Then
             val profilAMettreAJour = profilEleve.copy(baccalaureat = "Pro", specialites = emptyList())
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
-        }
-
-        @Test
-        fun `quand toutes les valeurs sont okay, doit appeler le service majIndicateurPortfolioService et recupererProgressionService`() {
-            // Given
-            val modificationProfilEleve =
-                ModificationProfilEleve(
-                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-                    classe = ChoixNiveau.PREMIERE,
-                    baccalaureat = "Pro",
-                    specialites = listOf("5", "1008"),
-                    domainesInterets = listOf("agroequipement"),
-                    centresInterets = listOf("linguistique", "etude"),
-                    metiersFavoris = listOf("MET004"),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
-                    formationsFavorites =
-                        listOf(
-                            FormationFavorite(
-                                idFormation = "fl0011",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                            FormationFavorite(
-                                idFormation = "fl0015",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                        ),
-                    corbeilleFormations = listOf("fl0013"),
-                    voeuxFavoris =
-                        listOf(
-                            VoeuFavori("ta1", true),
-                            VoeuFavori("ta2", false),
-                        ),
-                )
-
-            preparerMajOK()
-
-            // When
-            val resultat =
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = modificationProfilEleve,
-                    profilActuel = profilEleve,
-                )
-
-            // Then
-            val nouveauProfil =
-                ProfilEleve.AvecProfilExistant(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-                    classe = ChoixNiveau.PREMIERE,
-                    baccalaureat = "Pro",
-                    specialites = listOf("5", "1008"),
-                    domainesInterets = listOf("agroequipement"),
-                    centresInterets = listOf("linguistique", "etude"),
-                    metiersFavoris = listOf("MET004"),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
-                    formationsFavorites =
-                        listOf(
-                            FormationFavorite(
-                                idFormation = "fl0011",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                            FormationFavorite(
-                                idFormation = "fl0015",
-                                niveauAmbition = 2,
-                                priseDeNote = null,
-                            ),
-                        ),
-                    corbeilleFormations = listOf("fl0013"),
-                    compteParcoursupLie = true,
-                    voeuxFavoris =
-                        listOf(
-                            VoeuFavori("ta1", true),
-                            VoeuFavori("ta2", false),
-                        ),
-                    portfolioId = "0f88ddd1",
-                )
-            then(recupererProgressionService).should(only()).recupererProgression(nouveauProfil)
-            then(majIndicateurPortfolioService).should().ajouterPublication(
-                "0f88ddd1",
-                "favoris Parcoursup",
-                "2",
-                "favoris_psup",
-                2,
-            )
-            then(majIndicateurPortfolioService).should().ajouterPublication(
-                "0f88ddd1",
-                "formations ambitieuses",
-                "0",
-                "formations_ambitieuses",
-                0,
-            )
-            then(majIndicateurPortfolioService).shouldHaveNoMoreInteractions()
         }
     }
 

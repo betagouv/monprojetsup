@@ -1,5 +1,6 @@
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from pathlib import Path
+from typing import Dict, Iterator, List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -20,11 +21,42 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
         self.explanation_popularity: pd.Series = pd.Series()
         self.regularization_laplace = regularization_laplace
 
-    def init_from_profiles(self, profiles: list[Profile]):
-        self.matrix = compute_naive_bayes_matrix(profiles, self.regularization_laplace)
+    def init_from_profiles_batched(self, profiles_iterator: Iterator[list[Profile]]):
+        self.matrix = compute_naive_bayes_matrix_batched(
+            profiles_iterator, self.regularization_laplace
+        )
         self.explanation_matrix, self.explanation_popularity = (
             compute_explanation_matrix(self.matrix)
         )
+
+    def save_to_file(self, directory: Path | str, name: str) -> None:
+        """Save the NaiveBayes matrix to a CSV file.
+        
+        Only the main matrix is saved. The explanation matrix and popularity
+        series are recomputed from it on load (they are derived data).
+        """
+        directory = Path(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{name}.csv"
+        self.matrix.to_csv(path)
+        print(f"Model '{name}' saved to {path} (shape: {self.matrix.shape})")
+
+    @classmethod
+    def load_from_file(cls, directory: Path | str, name: str) -> "NaiveBayesMatrix":
+        """Load a NaiveBayesMatrix from a CSV file and recompute derived data."""
+        directory = Path(directory)
+        path = directory / f"{name}.csv"
+        
+        if not path.exists():
+            raise FileNotFoundError(2, f"Model file not found: {path}", str(path))
+        
+        instance = cls()
+        instance.matrix = pd.read_csv(path, index_col=0)
+        instance.explanation_matrix, instance.explanation_popularity = (
+            compute_explanation_matrix(instance.matrix)
+        )
+        print(f"Model '{name}' loaded from {path} (shape: {instance.matrix.shape})")
+        return instance
 
     def suggest(self, profile: Profile) -> Suggestions:
         scores = predict_naive_bayes(self.matrix, profile.features_str())
@@ -41,8 +73,8 @@ class NaiveBayesMatrix(ExplainableSuggestionsEngine):
         return str(self.matrix)
 
 
-def compute_naive_bayes_matrix(
-    profiles: list[Profile],
+def compute_naive_bayes_matrix_batched(
+    profiles_iterator: Iterator[list[Profile]],
     regularization_laplace: float,
 ) -> pd.DataFrame:
     """
@@ -52,21 +84,44 @@ def compute_naive_bayes_matrix(
 
     `regularization_laplace`: Parameter alpha for regularization,
     see [https://scikit-learn.org/stable/modules/naive_bayes.html#categorical-naive-bayes](here).
+
+    This function processes the profiles in batches to reduce memory usage (needed).
     """
     co_occurences_target_key: Dict[Tuple[str, str], int] = defaultdict(int)
     occurences_target: Dict[str, int] = defaultdict(int)
-    n_profiles: int = len(profiles)
+    n_profiles: int = 0
     all_key_values: set[str] = set()
 
-    # Count occurrences and co-occurrences
-    for profile in profiles:
-        for t in profile.targets:
-            occurences_target[t] += 1
+    # Count occurrences and co-occurrences incrementally
+    for batch in profiles_iterator:
+        for profile in batch:
+            n_profiles += 1
+            for t in profile.targets:
+                occurences_target[t] += 1
 
-            for v in profile.features_str():
-                all_key_values.add(v)
-                co_occurences_target_key[(t, v)] += 1
+                for v in profile.features_str():
+                    all_key_values.add(v)
+                    co_occurences_target_key[(t, v)] += 1
 
+    return _build_bayes_dataframe(
+        co_occurences_target_key,
+        occurences_target,
+        all_key_values,
+        n_profiles,
+        regularization_laplace,
+    )
+
+
+def _build_bayes_dataframe(
+    co_occurences_target_key: Dict[Tuple[str, str], int],
+    occurences_target: Dict[str, int],
+    all_key_values: set[str],
+    n_profiles: int,
+    regularization_laplace: float,
+) -> pd.DataFrame:
+    """
+    Builds the Naive Bayes DataFrame from the counters.
+    """
     # Compute the conditional probabilities P(t | v)
     dict_bayes: Dict[str, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
     for t, count_t in occurences_target.items():

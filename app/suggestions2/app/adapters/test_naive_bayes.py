@@ -22,7 +22,7 @@ def test_naive_bayes():
         regularization_laplace=1.0,
     )
 
-    matrix.init_from_profiles(profiles)
+    matrix.init_from_profiles_batched(iter([profiles]))
 
     res = matrix.suggest(
         Profile(
@@ -62,7 +62,7 @@ def test_explanation():
         regularization_laplace=1.0,
     )
 
-    matrix.init_from_profiles(profiles)
+    matrix.init_from_profiles_batched(iter([profiles]))
 
     res = matrix.explain(
         Profile(

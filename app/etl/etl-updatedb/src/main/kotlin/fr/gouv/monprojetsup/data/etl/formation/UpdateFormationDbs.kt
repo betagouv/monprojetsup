@@ -81,6 +81,9 @@ class UpdateFormationDbs(
         logger.info("Mise à jour de la table des formations")
         updateFormationsDb()
 
+        logger.info("Mise à jour de la table des voeux")
+        updateVoeuxDb()
+
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")

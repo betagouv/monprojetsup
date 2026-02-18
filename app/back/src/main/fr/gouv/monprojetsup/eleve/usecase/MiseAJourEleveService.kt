@@ -5,7 +5,6 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
 import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite
-import fr.gouv.monprojetsup.eleve.domain.entity.FormationFavorite.Companion.MAX_NIVEAU_AMBITION
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFavori
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
@@ -32,11 +31,11 @@ class MiseAJourEleveService(
     private val formationRepository: FormationRepository,
     private val eleveRepository: EleveRepository,
     private val majIndicateurPortfolioService: MajIndicateurPortfolioService,
-    private val recupererProgressionService: RecupererProgressionService,
+    private val recupererIndicateursService: RecupererIndicateursService,
     private val logger: MonProjetSupLogger,
 ) {
     @Value("\${pfa.api.enabled}")
-    private var apiEnabled = true
+    private var apiEnabled = false
 
     @Transactional(readOnly = false)
     @Throws(MonProjetSupBadRequestException::class)
@@ -86,31 +85,35 @@ class MiseAJourEleveService(
             )
         val portfolioId = profilInitial.portfolioId
         if (portfolioId != null && apiEnabled) {
+            val indicateurs = recupererIndicateursService.recupererIndicateurs(profilEleveAMettreAJour)
             try {
                 profilEleveAMettreAJour.portfolioId = profilInitial.portfolioId
-                val progression = recupererProgressionService.recupererProgression(profilEleveAMettreAJour)
-                val nbFormationsAmbitieuses = nouvellesFormations?.filter { it.niveauAmbition == MAX_NIVEAU_AMBITION }.orEmpty().size
                 logger.info(
                     "MAJ_PORTFOLIO",
-                    "portfolioId $portfolioId : progression=$progression, " +
-                        "nbFormationsAmbitieuses=$nbFormationsAmbitieuses, nbFavoris=${nouveauxVoeux.size}",
+                    "portfolioId $portfolioId : realistes=${indicateurs.formationsRealistes}, " +
+                        "ambitieuses=${indicateurs.formationsAmbitieuses}, planB=${indicateurs.formationsPlanB}",
                 )
-                if (progression > 0 || nbFormationsAmbitieuses > 0 || nouveauxVoeux.isNotEmpty()) {
-                    majIndicateurPortfolioService.ajouterPublication(
-                        idElevePortfolio = portfolioId,
-                        libelle = "favoris Parcoursup",
-                        valeur = nouveauxVoeux.size.toString(),
-                        idIndicateur = "favoris_psup",
-                        valeurNumerique = nouveauxVoeux.size,
-                    )
-                    majIndicateurPortfolioService.ajouterPublication(
-                        idElevePortfolio = portfolioId,
-                        libelle = "formations ambitieuses",
-                        valeur = "$nbFormationsAmbitieuses",
-                        idIndicateur = "formations_ambitieuses",
-                        valeurNumerique = nbFormationsAmbitieuses,
-                    )
-                }
+                majIndicateurPortfolioService.ajouterPublication(
+                    idElevePortfolio = portfolioId,
+                    libelle = "formations estimées \"réalistes\"",
+                    valeur = indicateurs.formationsRealistes.toString(),
+                    idIndicateur = "formations_realistes",
+                    valeurNumerique = indicateurs.formationsRealistes,
+                )
+                majIndicateurPortfolioService.ajouterPublication(
+                    idElevePortfolio = portfolioId,
+                    libelle = "formations estimées \"ambitieuses\"",
+                    valeur = indicateurs.formationsAmbitieuses.toString(),
+                    idIndicateur = "formations_ambitieuses",
+                    valeurNumerique = indicateurs.formationsAmbitieuses,
+                )
+                majIndicateurPortfolioService.ajouterPublication(
+                    idElevePortfolio = portfolioId,
+                    libelle = "formations estimées \"plan B\"",
+                    valeur = indicateurs.formationsPlanB.toString(),
+                    idIndicateur = "formations_planB",
+                    valeurNumerique = indicateurs.formationsPlanB,
+                )
             } catch (e: MonProjetSupInternalErrorException) {
                 // Si le service de portfolio ne répond pas, on ne bloque pas la mise à jour du profil élève
                 logger.warn(

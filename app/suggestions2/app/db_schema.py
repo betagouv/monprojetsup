@@ -2,12 +2,27 @@
 Configuration des noms de tables, colonnes, et champs JSON pour la base de données.
 """
 
+from os import getenv
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class DbTables:
-    """Noms par défaut des tables de profils de référence."""
+    """Noms des tables de profils de référence."""
 
-    REF_EXPERT = "profil_reference_expert"
-    REF_LYCEEN = "profil_reference_lyceen"
+    # Valeurs par défaut
+    _REF_EXPERT = "profil_reference_expert"
+    _REF_LYCEEN = "profil_reference_lyceen"
+    _PANIERS_VOEUX = "sugg_paniers_voeux"
+    _JOIN_FORMATION_VOEU = "ref_join_formation_voeu"
+
+    # Valeurs effectives (peuvent être surchargées par variables d'environnement)
+    REF_EXPERT: str = getenv("DB_SUGGESTIONS2_REF_EXPERT", default=_REF_EXPERT)
+    REF_LYCEEN: str = getenv("DB_SUGGESTIONS2_REF_LYCEEN", default=_REF_LYCEEN)
+    PANIERS_VOEUX: str = getenv("DB_SUGGESTIONS2_PANIERS_VOEUX", default=_PANIERS_VOEUX)
+    JOIN_FORMATION_VOEU: str = getenv("DB_SUGGESTIONS2_JOIN_FORMATION_VOEU", default=_JOIN_FORMATION_VOEU)
 
 
 class DbColumns:
