@@ -72,6 +72,7 @@ abstract class ControllerTest {
                 corbeilleFormations = listOf("fl0010", "fl0012"),
                 compteParcoursupLie = true,
                 voeuxFavoris = listOf(VoeuFavori("ta1", true), VoeuFavori("ta77", false)),
+                estExpert = false,
             )
 
         private val unProfilEnseignant = ProfilEleve.SansCompte(id = ID_ENSEIGNANT)
