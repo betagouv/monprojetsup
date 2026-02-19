@@ -36,7 +36,12 @@ class SuggestionApiHttpClient(
         val reponseDTO =
             post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve), keys = idsFormations),
+                requeteDTO =
+                    AffiniteProfilRequeteDTO(
+                        profil = APISuggestionProfilDTO(profilEleve = profilEleve),
+                        keys = idsFormations,
+                        inclureExplicationsDetaillees = profilEleve.estExpert ?: false,
+                    ),
             )
         return reponseDTO.toAffinitesPourProfil()
     }
@@ -57,6 +62,7 @@ class SuggestionApiHttpClient(
                     ExplicationFormationPourUnProfilRequeteDTO(
                         profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         formations = idsFormations,
+                        inclureExplicationsDetaillees = profilEleve.estExpert ?: false,
                     ),
             ).resultats
         val explications =

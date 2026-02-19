@@ -26,7 +26,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         profilEleve: ProfilEleve.AvecProfilExistant,
         idsFormations: List<String>,
     ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
-        val explicationsParFormation = suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
+        val explicationsParFormation =
+            suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
         val baccalaureats = recupererBaccalaureats(explicationsParFormation)
         val metiers = recupererMetiers(explicationsParFormation)
         val specialites =
@@ -53,7 +54,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                             )
                         }
                     }?.distinct() ?: emptyList(),
-                choixEleve = choixEleve[idFormation]!!,
+                choixEleve =
+                    choixEleve[idFormation]
+                        ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation"),
                 explicationTypeBaccalaureat =
                     explications?.typeBaccalaureat?.let { typeBaccalaureat ->
                         explicationTypeBaccalaureat(
@@ -77,7 +80,10 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         profilEleve: ProfilEleve.AvecProfilExistant,
         idFormation: String,
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
-        val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
+        val explicationsListe = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))
+        val explications =
+            explicationsListe[idFormation]
+                ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation")
         val specialites =
             explications.specialitesChoisies.takeUnless { it.isEmpty() }
                 ?.map { it.idSpecialite }?.let { idsSpecialites ->

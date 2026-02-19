@@ -19,7 +19,10 @@ public class GetAffinitiesServiceDTO {
             @NotNull List<String> keys,
 
             @Schema(name = "inclureScores", description = "Inclure les scores aux différents critères dans la réponse.", example = "true")
-            @Nullable Boolean inclureScores
+            @Nullable Boolean inclureScores,
+
+            @Schema(name = "inclureExplicationsDetaillees", description = "Inclure les explications detaillées des calculs des scores.", example = "false")
+            @Nullable Boolean inclureExplicationsDetaillees
 
     ) {
 
