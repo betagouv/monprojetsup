@@ -49,7 +49,8 @@ class SuggestionsControllers(
     )
     @PostMapping("/explanations")
     fun getExplanationsAndExamples(@RequestBody request: GetExplanationsAndExamplesServiceDTO.Request): GetExplanationsAndExamplesServiceDTO.Response {
-        val liste = explanationsService.getExplanations(request.profile, request.keys)
+        val withDetails = request.inclureExplicationsDetaillees ?: false
+        val liste = explanationsService.getExplanations(request.profile, request.keys, withDetails)
         return GetExplanationsAndExamplesServiceDTO.Response(liste)
     }
 
