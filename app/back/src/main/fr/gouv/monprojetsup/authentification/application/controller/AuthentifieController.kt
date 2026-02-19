@@ -6,8 +6,6 @@ import fr.gouv.monprojetsup.commun.erreur.domain.eleveSansCompteException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
-
-
 abstract class AuthentifieController {
     @Throws(MonProjetSupForbiddenException::class)
     protected fun recupererEleve(): ProfilEleve {
@@ -39,5 +37,4 @@ abstract class AuthentifieController {
         }
         return false
     }
-
 }

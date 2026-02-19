@@ -11,4 +11,4 @@ data class AffiniteProfilRequeteDTO(
     val profil: APISuggestionProfilDTO,
     @field:JsonProperty(value = "inclureExplicationsDetaillees")
     val inclureExplicationsDetaillees: Boolean,
-    ) : APISuggestionRequeteDTO()
+) : APISuggestionRequeteDTO()

@@ -54,8 +54,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                             )
                         }
                     }?.distinct() ?: emptyList(),
-                choixEleve = choixEleve[idFormation]
-                    ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation"),
+                choixEleve =
+                    choixEleve[idFormation]
+                        ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation"),
                 explicationTypeBaccalaureat =
                     explications?.typeBaccalaureat?.let { typeBaccalaureat ->
                         explicationTypeBaccalaureat(
@@ -66,12 +67,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                 detailsCalculScore =
                     explications?.detailsCalculScore.takeUnless { it.isNullOrEmpty() } ?: emptyList(),
             ) to (
-                    explications?.exemplesDeMetiers?.let { idsMetiers ->
-                        idsMetiers.mapNotNull { idMetier ->
-                            metiers.firstOrNull { it.id == idMetier }
-                        }
-                    }?.distinct() ?: emptyList()
-                    )
+                explications?.exemplesDeMetiers?.let { idsMetiers ->
+                    idsMetiers.mapNotNull { idMetier ->
+                        metiers.firstOrNull { it.id == idMetier }
+                    }
+                }?.distinct() ?: emptyList()
+            )
         }
     }
 
@@ -80,8 +81,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         idFormation: String,
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
         val explicationsListe = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))
-        val explications = explicationsListe[idFormation]
-            ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation")
+        val explications =
+            explicationsListe[idFormation]
+                ?: throw IllegalArgumentException("Aucune explication trouvée pour la formation avec l'id $idFormation")
         val specialites =
             explications.specialitesChoisies.takeUnless { it.isEmpty() }
                 ?.map { it.idSpecialite }?.let { idsSpecialites ->
