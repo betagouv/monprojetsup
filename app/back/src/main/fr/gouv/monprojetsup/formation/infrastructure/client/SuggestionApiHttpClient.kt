@@ -31,12 +31,12 @@ class SuggestionApiHttpClient(
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesSuggestions(
         profilEleve: ProfilEleve.AvecProfilExistant,
-        idsFormations: List<String>,
+        idsFormations: List<String>
     ): SuggestionsPourUnProfil {
         val reponseDTO =
             post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve), keys = idsFormations),
+                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve), keys = idsFormations, inclureExplicationsDetaillees = profilEleve.estExpert?: false),
             )
         return reponseDTO.toAffinitesPourProfil()
     }
@@ -48,7 +48,7 @@ class SuggestionApiHttpClient(
     @Throws(MonProjetSupInternalErrorException::class, MonProjetSupIllegalStateErrorException::class)
     override fun recupererLesExplications(
         profilEleve: ProfilEleve.AvecProfilExistant,
-        idsFormations: List<String>,
+        idsFormations: List<String>
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
         val reponseDTO =
             post<ExplicationFormationPourUnProfilReponseDTO>(
@@ -57,6 +57,7 @@ class SuggestionApiHttpClient(
                     ExplicationFormationPourUnProfilRequeteDTO(
                         profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         formations = idsFormations,
+                        inclureExplicationsDetaillees = profilEleve.estExpert?: false
                     ),
             ).resultats
         val explications =
