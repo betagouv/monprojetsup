@@ -88,6 +88,7 @@ class SuggestionApiHttpClientTest {
             corbeilleFormations = listOf("fl0001"),
             compteParcoursupLie = true,
             voeuxFavoris = emptyList(),
+            estExpert = false,
         )
 
     @BeforeEach
@@ -395,7 +396,7 @@ class SuggestionApiHttpClientTest {
                           }
                         ],
                         "situation":"projet_precis"
-                      }
+                      },"inclureExplicationsDetaillees":false
                     }
                     """.trimIndent(),
                     JsonNode::class.java,
@@ -1056,7 +1057,7 @@ class SuggestionApiHttpClientTest {
                         ],
                         "situation":"projet_precis"
                       },
-                      "keys":["fl2014"]
+                      "keys":["fl2014"],"inclureExplicationsDetaillees":false
                     }
                     """.trimIndent(),
                     JsonNode::class.java,
