@@ -162,7 +162,8 @@ public record ReferenceCases(
         return callExplanationsService(
                 new GetExplanationsAndExamplesServiceDTO.Request(
                         pf,
-                        List.of(fl)
+                        List.of(fl),
+                        true
                 )
         );
 
@@ -280,7 +281,8 @@ public record ReferenceCases(
                 responseExpl = callExplanationsService(
                         new GetExplanationsAndExamplesServiceDTO.Request(
                                 refCase.pf(),
-                                List.of(suggestion1.key())
+                                List.of(suggestion1.key()),
+                                true
                         )
                 );
                 if (responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
@@ -361,7 +363,7 @@ public record ReferenceCases(
     public static List<GetAffinitiesServiceDTO.Affinity> callSuggestionsService(ProfileDTO pf, List<String> keys) throws IOException, InterruptedException {
         String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions";
         String response = post(url, new GetAffinitiesServiceDTO.Request(
-                pf, keys, true)
+                pf, keys, true, true)
         );
         return new Gson().fromJson(response, GetAffinitiesServiceDTO.Response.class).affinites();
     }

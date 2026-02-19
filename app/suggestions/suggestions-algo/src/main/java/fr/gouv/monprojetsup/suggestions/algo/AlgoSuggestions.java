@@ -12,7 +12,6 @@ import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.port.ParametresPort;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -70,9 +69,6 @@ public class AlgoSuggestions {
     /* le graphe des relations entre les différentes clés dans les nomenclatures */
     @Getter
     private final Edges edgesKeys = new Edges();
-
-    @Setter
-    private boolean generateDetailedExplanations;
 
     /* map les flcod vers les frcod */
     private @NotNull Map<String, @NotNull String> typesFormations = new HashMap<>();
@@ -210,14 +206,15 @@ public class AlgoSuggestions {
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
             boolean inclureScores,
-            @NotNull List<DataSuggestions2> affinitesNaiveBayes) {
+            @NotNull List<DataSuggestions2> affinitesNaiveBayes,
+            boolean withDetails) {
         counter.getAndIncrement();
         if (containsNothingPersonal(pf)) {
             return getFormationIds().stream().map(fl -> Pair.of(fl, Affinite.getNoMatch())).toList();
         }
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator
-                = new AffinityEvaluator(pf, cfg, this, true, generateDetailedExplanations);
+                = new AffinityEvaluator(pf, cfg, this, true, withDetails);
 
         val affinitesNaiveBayesByKey = affinitesNaiveBayes.stream()
                 .collect(Collectors.toMap(
@@ -258,11 +255,12 @@ public class AlgoSuggestions {
     synchronized public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
             boolean inclureScores,
-            @NotNull  List<DataSuggestions2> dataSuggestions2) {
+            @NotNull  List<DataSuggestions2> dataSuggestions2,
+            boolean withDetails) {
 
 
         List<Pair<String, Affinite> > affinities = new ArrayList<>(
-                getFormationsAffinities(pf, data.getConfig(), inclureScores, dataSuggestions2)
+                getFormationsAffinities(pf, data.getConfig(), inclureScores, dataSuggestions2,withDetails)
         );
         Collections.shuffle(affinities);
         affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));
@@ -351,7 +349,7 @@ public class AlgoSuggestions {
      * @param cles the keys
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    synchronized public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles) {
+    synchronized public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles, boolean withDetails) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -367,7 +365,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(ChoiceDTO::id).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, data.getConfig(), this, false, generateDetailedExplanations).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, data.getConfig(), this, false, withDetails).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -384,7 +382,8 @@ public class AlgoSuggestions {
     synchronized public List<ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
             @NotNull List<String> keys,
-            @NotNull NaiveBayesExplanations explanationsNaiveBayes
+            @NotNull NaiveBayesExplanations explanationsNaiveBayes,
+            Boolean withDetails
     ) {
         if (profile == null) return List.of();
         AffinityEvaluator affinityEvaluator
@@ -393,7 +392,7 @@ public class AlgoSuggestions {
                 data.getConfig(),
                 this,
                 false,
-                generateDetailedExplanations
+                withDetails
         );
         val dataSuggestions2 = DataSuggestions2.build(
                 keys,
