@@ -23,6 +23,7 @@ import fr.gouv.monprojetsup.formation.usecase.RecupererFicheFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFichesFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -44,6 +45,7 @@ class FormationController(
     val rechercherFormation: RechercherFormationsService,
     val ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder,
     val hateoasBuilder: HateoasBuilder,
+    val logger: MonProjetSupLogger,
 ) : AuthentifieOuPasController() {
     @PostMapping("/suggestions")
     @Operation(
@@ -194,6 +196,9 @@ class FormationController(
                 request.profil == null -> recupererEleveAvecProfilExistant() ?: AvecProfilExistant("")
                 else -> request.profil.toProfilExistant()
             }
+        if (profilEleve.estExpert == true) {
+            logger.info("LOG_EXPERT", "Récupération d'une fiche formation pour un profil expert")
+        }
         val ficheFormation = recupererFicheFormationService.recupererFormation(profilEleve = profilEleve, idFormation = request.id)
         return FormationAvecExplicationsDTO(ficheFormation)
     }
