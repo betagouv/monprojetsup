@@ -40,7 +40,7 @@ class SuggestionApiHttpClient(
                     AffiniteProfilRequeteDTO(
                         profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         keys = idsFormations,
-                        inclureExplicationsDetaillees = profilEleve.estExpert ?: false,
+                        inclureExplicationsDetaillees = false,
                     ),
             )
         return reponseDTO.toAffinitesPourProfil()
@@ -55,6 +55,12 @@ class SuggestionApiHttpClient(
         profilEleve: ProfilEleve.AvecProfilExistant,
         idsFormations: List<String>,
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
+        if (profilEleve.estExpert == true) {
+            logger.info(
+                type = "RECUPERATION_EXPLICATIONS_SUGGESTION_PROFIL_EXPERT",
+                message = "explications pour expert id ${profilEleve.id} formations $idsFormations",
+            )
+        }
         val reponseDTO =
             post<ExplicationFormationPourUnProfilReponseDTO>(
                 url = "$baseUrl/explanations",
@@ -69,6 +75,13 @@ class SuggestionApiHttpClient(
             idsFormations.associateWith { idFormation ->
                 reponseDTO.firstOrNull { it.cle == idFormation }?.toExplicationsSuggestion()
             }
+        if (profilEleve.estExpert == true) {
+            val nbExplicationsDetaillees = explications.map { it.value?.detailsCalculScore?.size }.filterNotNull().sum()
+            logger.info(
+                type = "NB_EXPLICATIONS_DETAILLEES_SUGGESTION_PROFIL_EXPERT",
+                message = "$nbExplicationsDetaillees explications pour expert id ${profilEleve.id} formations $idsFormations",
+            )
+        }
         val formationsSansExplications = explications.filter { it.value == null }
         if (formationsSansExplications.isNotEmpty()) {
             val idsFormationsSansExplications = formationsSansExplications.map { it.key }
