@@ -89,6 +89,7 @@ class MajIndicateurPortfolioService(
                     "valeur" to valeur,
                     "cle" to libelle,
                     "code" to idIndicateur,
+                    "desactive" to (valeurNumerique == 0),
                 ),
             token = bearerTokenProviderService.getToken(),
         )

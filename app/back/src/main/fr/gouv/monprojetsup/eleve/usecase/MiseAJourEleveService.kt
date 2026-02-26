@@ -93,23 +93,29 @@ class MiseAJourEleveService(
                     "portfolioId $portfolioId : realistes=${indicateurs.formationsRealistes}, " +
                         "ambitieuses=${indicateurs.formationsAmbitieuses}, planB=${indicateurs.formationsPlanB}",
                 )
+                val libelleRealistes =
+                    if (indicateurs.formationsRealistes > 1) "formations estimées \"réalistes\"" else "formation estimée \"réaliste\""
                 majIndicateurPortfolioService.ajouterPublication(
                     idElevePortfolio = portfolioId,
-                    libelle = "formations estimées \"réalistes\"",
+                    libelle = libelleRealistes,
                     valeur = indicateurs.formationsRealistes.toString(),
                     idIndicateur = "formations_realistes",
                     valeurNumerique = indicateurs.formationsRealistes,
                 )
+                val libelleAmbitieuses =
+                    if (indicateurs.formationsAmbitieuses > 1) "formations estimées \"ambitieuses\"" else "formation estimée \"ambitieuse\""
                 majIndicateurPortfolioService.ajouterPublication(
                     idElevePortfolio = portfolioId,
-                    libelle = "formations estimées \"ambitieuses\"",
+                    libelle = libelleAmbitieuses,
                     valeur = indicateurs.formationsAmbitieuses.toString(),
                     idIndicateur = "formations_ambitieuses",
                     valeurNumerique = indicateurs.formationsAmbitieuses,
                 )
+                val libellePlanB =
+                    if (indicateurs.formationsPlanB > 1) "formations estimées \"plan B\"" else "formation estimée \"plan B\""
                 majIndicateurPortfolioService.ajouterPublication(
                     idElevePortfolio = portfolioId,
-                    libelle = "formations estimées \"plan B\"",
+                    libelle = libellePlanB,
                     valeur = indicateurs.formationsPlanB.toString(),
                     idIndicateur = "formations_planB",
                     valeurNumerique = indicateurs.formationsPlanB,
