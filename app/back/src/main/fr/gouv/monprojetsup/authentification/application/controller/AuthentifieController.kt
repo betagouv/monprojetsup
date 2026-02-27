@@ -32,9 +32,19 @@ abstract class AuthentifieController {
 
         if (authentification is JwtAuthenticationToken) {
             val jwt = authentification.getToken()
-
             return jwt.hasClaim("EXPERT")
         }
         return false
+    }
+
+    @Throws(MonProjetSupForbiddenException::class)
+    protected fun getAllClaims(): String {
+        val authentification = SecurityContextHolder.getContext().authentication
+
+        if (authentification is JwtAuthenticationToken) {
+            val jwt = authentification.getToken()
+            return jwt.claims.map { it.toString() }.joinToString(" | ")
+        }
+        return ""
     }
 }
