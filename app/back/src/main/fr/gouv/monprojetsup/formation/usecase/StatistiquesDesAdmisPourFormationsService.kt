@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
@@ -22,7 +21,6 @@ class StatistiquesDesAdmisPourFormationsService(
         val frequencesCumulees =
             frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
                 idsFormations,
-                ANNEE_DONNEES_PARCOURSUP,
             )
         val statistiques =
             idsFormations.associateWith {
@@ -42,7 +40,6 @@ class StatistiquesDesAdmisPourFormationsService(
         val frequencesCumulees: Map<Baccalaureat, List<Int>> =
             frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
                 idFormation = idFormation,
-                annee = ANNEE_DONNEES_PARCOURSUP,
             )
         return statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(frequencesCumulees, idBaccalaureat, classe)
     }

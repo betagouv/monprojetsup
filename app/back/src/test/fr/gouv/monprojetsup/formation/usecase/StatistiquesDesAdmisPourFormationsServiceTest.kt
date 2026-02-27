@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
@@ -175,7 +174,6 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
             given(
                 frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
                     idFormation = "fl0001",
-                    annee = ANNEE_DONNEES_PARCOURSUP,
                 ),
             ).willReturn(
                 frequencesCumulees,
@@ -217,7 +215,6 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
             given(
                 frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
                     idsFormations = idsFormations,
-                    ANNEE_DONNEES_PARCOURSUP,
                 ),
             ).willReturn(
                 mapOf(
