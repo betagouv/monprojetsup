@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class IdentificationFilter(
     val recupererEleveService: RecupererEleveService,
-    val mpsLogger: MonProjetSupLogger
+    val mpsLogger: MonProjetSupLogger,
 ) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
@@ -69,12 +69,11 @@ class IdentificationFilter(
     private fun getM7Id(token: Jwt): String? = token.getClaim<String?>("m7_id")
 
     protected fun estExpert(token: Jwt): Boolean {
-            return token.hasClaim("profile") && token.getClaim<String>("profile") == "expert"
+        return token.hasClaim("profile") && token.getClaim<String>("profile") == "expert"
     }
 
     @Throws(MonProjetSupForbiddenException::class)
     protected fun getAllClaims(token: Jwt): String {
         return token.claims.map { it.toString() }.joinToString(" | ")
     }
-
 }
