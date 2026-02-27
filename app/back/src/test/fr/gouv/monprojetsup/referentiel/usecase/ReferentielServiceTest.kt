@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.referentiel.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat
@@ -134,7 +133,7 @@ class ReferentielServiceTest {
                 baccalaureatPro to pro,
                 baccalaureatSTL to stl,
             )
-        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesParBacs(ANNEE_DONNEES_PARCOURSUP)).willReturn(
+        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesParBacs()).willReturn(
             frequencesCumuleesParBacs,
         )
 
@@ -175,7 +174,6 @@ class ReferentielServiceTest {
                 categoriesDomaineAvecLeursDomaines = categorieDomaineAvecLeursDomaines,
                 admissionsParcoursup =
                     AdmissionsParcoursup(
-                        annee = ANNEE_DONNEES_PARCOURSUP,
                         parBaccalaureat =
                             listOf(
                                 PourcentagesPourChaqueMoyenneParBaccalaureat(

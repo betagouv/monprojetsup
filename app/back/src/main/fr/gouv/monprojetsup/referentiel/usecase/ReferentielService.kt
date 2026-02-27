@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.referentiel.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
@@ -42,11 +41,8 @@ class ReferentielService(
 
     private fun creerAdmissionsParcoursup(): AdmissionsParcoursup {
         val frequencesCumuleesParBaccalaureat =
-            frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesParBacs(
-                ANNEE_DONNEES_PARCOURSUP,
-            )
+            frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesParBacs()
         return AdmissionsParcoursup(
-            annee = ANNEE_DONNEES_PARCOURSUP,
             parBaccalaureat =
                 frequencesCumuleesParBaccalaureat.map { entry ->
                     AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat(

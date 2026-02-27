@@ -28,7 +28,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
         @Sql("classpath:moyenne_generale_admis.sql")
         fun `Doit retourner les fréquences cumulées pour tous les baccalaureats sauf NC`() {
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs("2024")
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs()
 
             // Then
             val attendu =
@@ -251,17 +251,9 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
                             9,
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
-        }
-
-        @Test
-        @Sql("classpath:moyenne_generale_admis.sql")
-        fun `si aucune donnée n'est trouvée pour l'année donnée, doit retourner map vide`() {
-            // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs("2022")
-
-            // Then
-            assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
+            attendu.entries.forEach {
+                assertThat(result[it.key]).isEqualTo(it.value)
+            }
         }
     }
 
@@ -274,7 +266,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val idFormation = "fl0001"
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2024")
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
 
             // Then
             val attendu =
@@ -296,20 +288,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val idFormation = "fl0004"
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2023")
-
-            // Then
-            assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
-        }
-
-        @Test
-        @Sql("classpath:moyenne_generale_admis.sql")
-        fun `si aucune donnée n'est trouvée pour l'année donnée, doit retourner map vide`() {
-            // Given
-            val idFormation = "fl0002"
-
-            // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2024")
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
 
             // Then
             assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
@@ -328,22 +307,26 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val result =
                 moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(
                     idsFormations = idFormation,
-                    annee = "2023",
                 )
 
             // Then
             val attendu =
                 mapOf(
-                    "fl0001" to emptyMap(),
-                    "fl0003" to emptyMap(),
                     "fl0002" to
+                        mapOf(),
+                    "fl0001" to
                         mapOf(
-                            baccalaureatGeneral to fl0002General2023,
-                            baccalaureatSTMG to fl0002STMG2023,
-                            baccalaureatPro to fl0002P2023,
+                            baccalaureatST2S to fl0001ST2S2024,
+                            baccalaureatSTAV to fl0001STAV2024,
+                            baccalaureatSTMG to fl0001STMG2024,
+                            baccalaureatPro to fl0001P2024,
+                            baccalaureatGeneral to fl0001Generale2024,
+                            baccalaureatSTL to fl0001STL2024,
                         ),
                 )
-            assertThat(result).isEqualTo(attendu)
+            attendu.entries.forEach {
+                assertThat(result[it.key]).isEqualTo(it.value)
+            }
         }
     }
 

@@ -81,7 +81,7 @@ data class ReferentielDTO(
         val parBaccalaureat: List<PourcentagesPourChaqueMoyenneParBaccalaureatDTO>,
     ) {
         constructor(admissionsParcoursup: AdmissionsParcoursup) : this(
-            annee = admissionsParcoursup.annee,
+            annee = "",
             parBaccalaureat = admissionsParcoursup.parBaccalaureat.map { PourcentagesPourChaqueMoyenneParBaccalaureatDTO(it) },
         )
 

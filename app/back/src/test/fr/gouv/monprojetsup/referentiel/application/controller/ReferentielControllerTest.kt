@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.referentiel.application.controller
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
-import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat
@@ -165,7 +164,7 @@ class ReferentielControllerTest(
             }
           ],
           "admissionsParcoursup": {
-            "annee": "2024",
+            "annee": "",
             "parBaccalaureat": [
               {
                 "baccalaureat": {
@@ -919,7 +918,6 @@ class ReferentielControllerTest(
             )
         val admissionsParcoursup =
             AdmissionsParcoursup(
-                annee = ANNEE_DONNEES_PARCOURSUP,
                 parBaccalaureat =
                     listOf(
                         PourcentagesPourChaqueMoyenneParBaccalaureat(
