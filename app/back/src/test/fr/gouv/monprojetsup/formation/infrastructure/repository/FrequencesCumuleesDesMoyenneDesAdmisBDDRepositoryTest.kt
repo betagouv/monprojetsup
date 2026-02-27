@@ -323,6 +323,15 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
                             baccalaureatGeneral to fl0001Generale2024,
                             baccalaureatSTL to fl0001STL2024,
                         ),
+                    "fl0001" to
+                        mapOf(
+                            baccalaureatST2S to fl0001ST2S2024,
+                            baccalaureatSTAV to fl0001STAV2024,
+                            baccalaureatSTMG to fl0001STMG2024,
+                            baccalaureatPro to fl0001P2024,
+                            baccalaureatGeneral to fl0001Generale2024,
+                            baccalaureatSTL to fl0001STL2024,
+                        ),
                 )
             attendu.entries.forEach {
                 assertThat(result[it.key]).isEqualTo(it.value)
