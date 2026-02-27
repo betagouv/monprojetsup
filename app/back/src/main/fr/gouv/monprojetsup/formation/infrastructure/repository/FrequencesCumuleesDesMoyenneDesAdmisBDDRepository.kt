@@ -12,9 +12,8 @@ import org.springframework.stereotype.Repository
 class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
     private val entityManager: EntityManager,
 ) : FrequencesCumuleesDesMoyenneDesAdmisRepository {
-    override fun recupererFrequencesCumuleesParBacs(annee: String): Map<Baccalaureat, List<Int>> {
-        return findAllByAnneeAndBaccalaureatIdNotIn(
-            annee = annee,
+    override fun recupererFrequencesCumuleesParBacs(): Map<Baccalaureat, List<Int>> {
+        return findAllBaccalaureatIdNotIn(
             idsBaccalaureatsExclus = idsBaccalaureatsExclus,
         ).map { entry ->
             val listeDesFrequencesCumulesPourUnBac = entry.value.map { it.frequencesCumulees }
@@ -26,24 +25,16 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         }.toMap()
     }
 
-    override fun recupererFrequencesCumuleesDeTousLesBacs(
-        idFormation: String,
-        annee: String,
-    ): Map<Baccalaureat, List<Int>> {
+    override fun recupererFrequencesCumuleesDeTousLesBacs(idFormation: String): Map<Baccalaureat, List<Int>> {
         return findAllByAnneeAndIdFormationAndBaccalaureatIdNotIn(
-            annee = annee,
             idFormation = idFormation,
             idsBaccalaureatsExclus = idsBaccalaureatsExclus,
         )
     }
 
-    override fun recupererFrequencesCumuleesDeTousLesBacs(
-        idsFormations: List<String>,
-        annee: String,
-    ): Map<String, Map<Baccalaureat, List<Int>>> {
+    override fun recupererFrequencesCumuleesDeTousLesBacs(idsFormations: List<String>): Map<String, Map<Baccalaureat, List<Int>>> {
         val groupementParIdFormation =
             findAllByAnneeAndIdFormationInAndBaccalaureatIdNotIn(
-                annee = annee,
                 idsFormations = idsFormations,
                 idsBaccalaureatsExclus = idsBaccalaureatsExclus,
             ).groupBy { it.moyenneGeneraleAdmisEntity.id.idFormation }
@@ -54,8 +45,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         }
     }
 
-    private fun findAllByAnneeAndBaccalaureatIdNotIn(
-        annee: String,
+    private fun findAllBaccalaureatIdNotIn(
         idsBaccalaureatsExclus: List<String>,
     ): Map<BaccalaureatEntity, List<MoyenneGeneraleAdmisEntity>> {
         return entityManager.createQuery(
@@ -63,12 +53,10 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
             SELECT new fr.gouv.monprojetsup.formation.infrastructure.entity.MoyenneGeneraleAdmisQuery(b, m)
             FROM MoyenneGeneraleAdmisEntity m
             JOIN BaccalaureatEntity b ON m.id.idBaccalaureat = b.id
-            WHERE m.id.annee = :annee
-            AND m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
+            WHERE m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
             """,
             MoyenneGeneraleAdmisQuery::class.java,
-        ).setParameter("annee", annee)
-            .setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
+        ).setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
             .resultList
             .groupBy { it.baccalaureatEntity }
             .map { entry -> entry.key to entry.value.map { it.moyenneGeneraleAdmisEntity } }
@@ -76,7 +64,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
     }
 
     private fun findAllByAnneeAndIdFormationAndBaccalaureatIdNotIn(
-        annee: String,
         idFormation: String,
         idsBaccalaureatsExclus: List<String>,
     ): Map<Baccalaureat, List<Int>> {
@@ -85,20 +72,17 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
             SELECT new fr.gouv.monprojetsup.formation.infrastructure.entity.MoyenneGeneraleAdmisQuery(b, m)
             FROM MoyenneGeneraleAdmisEntity m
             JOIN BaccalaureatEntity b ON m.id.idBaccalaureat = b.id
-            WHERE m.id.annee = :annee
-            AND m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
+            WHERE m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
             AND m.id.idFormation = :idFormation
             """,
             MoyenneGeneraleAdmisQuery::class.java,
-        ).setParameter("annee", annee)
-            .setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
+        ).setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
             .setParameter("idFormation", idFormation)
             .resultList
             .associate { entry -> entry.baccalaureatEntity.toBaccalaureat() to entry.moyenneGeneraleAdmisEntity.frequencesCumulees }
     }
 
     fun findAllByAnneeAndIdFormationInAndBaccalaureatIdNotIn(
-        annee: String,
         idsFormations: List<String>,
         idsBaccalaureatsExclus: List<String>,
     ): List<MoyenneGeneraleAdmisQuery> {
@@ -107,13 +91,11 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
             SELECT new fr.gouv.monprojetsup.formation.infrastructure.entity.MoyenneGeneraleAdmisQuery(b, m)
             FROM MoyenneGeneraleAdmisEntity m
             JOIN BaccalaureatEntity b ON m.id.idBaccalaureat = b.id
-            WHERE m.id.annee = :annee
-            AND m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
+            WHERE m.id.idBaccalaureat NOT IN :idsBaccalaureatsExclus
             AND m.id.idFormation IN :idsFormation
             """,
             MoyenneGeneraleAdmisQuery::class.java,
-        ).setParameter("annee", annee)
-            .setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
+        ).setParameter("idsBaccalaureatsExclus", idsBaccalaureatsExclus)
             .setParameter("idsFormation", idsFormations)
             .resultList
     }
