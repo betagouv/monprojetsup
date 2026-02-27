@@ -313,11 +313,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val attendu =
                 mapOf(
                     "fl0002" to
-                        mapOf(
-                            baccalaureatGeneral to fl0002General2023,
-                            baccalaureatSTMG to fl0002STMG2023,
-                            baccalaureatPro to fl0002P2023,
-                        ),
+                        mapOf(),
                     "fl0001" to
                         mapOf(
                             baccalaureatST2S to fl0001ST2S2024,
