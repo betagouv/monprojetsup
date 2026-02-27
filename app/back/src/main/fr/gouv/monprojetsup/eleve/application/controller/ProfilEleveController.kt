@@ -54,7 +54,7 @@ class ProfilEleveController(
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
     fun getProfilEleve(): ProfilDTO {
-        val profil = recupererEleveAvecProfilExistant().copy(estExpert = estExpert())
+        val profil = recupererEleveAvecProfilExistant()
         val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
         return ProfilDTO(profil, voeuxFavoris)
     }
