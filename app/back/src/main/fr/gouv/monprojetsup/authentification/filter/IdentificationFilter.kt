@@ -33,12 +33,10 @@ class IdentificationFilter(
     ) {
         val jwtToken = getToken()
         jwtToken?.let {
-            mpsLogger.info("JWT_CLAIMS", getAllClaims(jwtToken))
             val idIndividu = getIdIndividu(jwtToken)
             if (idIndividu != null) {
                 val portfolioId = getM7Id(jwtToken)
                 val estExpert = estExpert(jwtToken)
-                mpsLogger.info("IS_EXPERT", if (estExpert) "expert" else "non expert")
                 val eleve = recupererEleveService.recupererEleve(idIndividu)
                 if (eleve is ProfilEleve.AvecProfilExistant) {
                     eleve.portfolioId = portfolioId
