@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -30,6 +31,7 @@ class ProfilEleveController(
     private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
     private val recupererIndicateursService: RecupererIndicateursService,
     private val recupererProgressionService: RecupererProgressionService,
+    private val logger: MonProjetSupLogger
 ) : AuthentifieController() {
     @PostMapping
     @Operation(
@@ -54,6 +56,7 @@ class ProfilEleveController(
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
     fun getProfilEleve(): ProfilDTO {
+        logger.info("CLAIMS", getAllClaims())
         val profil = recupererEleveAvecProfilExistant().copy(estExpert = estExpert())
         val voeuxFavoris = recupererAssociationFormationsVoeuxService.recupererVoeuxFavoris(profil)
         return ProfilDTO(profil, voeuxFavoris)
