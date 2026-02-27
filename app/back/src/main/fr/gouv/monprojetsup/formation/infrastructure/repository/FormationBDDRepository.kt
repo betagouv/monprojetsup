@@ -62,10 +62,9 @@ class FormationBDDRepository(
     }
 
     private fun logguerFormationInconnue(idFormation: String) {
-        logger.error(
+        logger.info(
             type = "FORMATION_ABSENTE_BDD",
             message = "La formation $idFormation n'est pas présente en base",
-            parametres = mapOf("idFormationAbsente" to idFormation),
         )
     }
 }
