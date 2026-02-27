@@ -11,7 +11,6 @@ import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererAssociationFormationsVoeuxService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererIndicateursService
 import fr.gouv.monprojetsup.eleve.usecase.RecupererProgressionService
-import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
