@@ -12,7 +12,6 @@ data class Referentiel(
 )
 
 data class AdmissionsParcoursup(
-    val annee: String,
     val parBaccalaureat: List<PourcentagesPourChaqueMoyenneParBaccalaureat>,
 ) {
     data class PourcentagesPourChaqueMoyenneParBaccalaureat(
