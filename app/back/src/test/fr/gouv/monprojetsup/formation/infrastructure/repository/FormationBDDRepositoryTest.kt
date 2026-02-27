@@ -196,24 +196,21 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             assertThat(result).isEqualTo(emptyList<Formation>())
             then(
                 logger,
-            ).should().error(
+            ).should().info(
                 type = "FORMATION_ABSENTE_BDD",
                 message = "La formation fl0007 n'est pas présente en base",
-                parametres = mapOf("idFormationAbsente" to "fl0007"),
             )
             then(
                 logger,
-            ).should().error(
+            ).should().info(
                 type = "FORMATION_ABSENTE_BDD",
                 message = "La formation fl0008 n'est pas présente en base",
-                parametres = mapOf("idFormationAbsente" to "fl0008"),
             )
             then(
                 logger,
-            ).should().error(
+            ).should().info(
                 type = "FORMATION_ABSENTE_BDD",
                 message = "La formation fl0009 n'est pas présente en base",
-                parametres = mapOf("idFormationAbsente" to "fl0009"),
             )
             then(logger).shouldHaveNoMoreInteractions()
         }
