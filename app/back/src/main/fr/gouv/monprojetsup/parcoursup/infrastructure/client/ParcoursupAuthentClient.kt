@@ -62,6 +62,7 @@ class ParcoursupAuthentClient(
 
     @Throws(MonProjetSupBadRequestException::class)
     override fun recupererIdParcoursupEleve(parametresPourRecupererToken: ParametresPourRecupererToken): Int {
+        logger.info("RECUP_ID_PSUP_ELEVE", "params $parametresPourRecupererToken")
         val url =
             (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
                 .addQueryParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
@@ -69,6 +70,7 @@ class ParcoursupAuthentClient(
                 .addQueryParameter(CODE, parametresPourRecupererToken.code)
                 .addQueryParameter(CODE_VERIFIER, parametresPourRecupererToken.codeVerifier)
                 .build()
+        logger.info("RECUP_ID_PSUP_ELEVE", "clientId:$clientId url:$url")
 
         val formBody = FormBody.Builder().build()
         val request =
@@ -78,6 +80,8 @@ class ParcoursupAuthentClient(
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_URL_ENCODED)
                 .post(formBody)
                 .build()
+
+        logger.info("RECUP_ID_PSUP_ELEVE", "request:${request.toString().replace(clientSecret,"XXXXX")}")
 
         httpClient.newCall(request).execute().use { response ->
             verifierCodeErreur(response, url.toString())
