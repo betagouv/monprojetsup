@@ -640,6 +640,7 @@ class ProfilEleveControllerTest(
                     compteParcoursupLie = true,
                     voeuxFavoris = voeuxFavoris,
                     portfolioId = ID_ENSEIGNANT,
+                    estExpert = false,
                 )
             given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
             given(

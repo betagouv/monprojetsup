@@ -36,7 +36,12 @@ class SuggestionApiHttpClient(
         val reponseDTO =
             post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve), keys = idsFormations),
+                requeteDTO =
+                    AffiniteProfilRequeteDTO(
+                        profil = APISuggestionProfilDTO(profilEleve = profilEleve),
+                        keys = idsFormations,
+                        inclureExplicationsDetaillees = false,
+                    ),
             )
         return reponseDTO.toAffinitesPourProfil()
     }
@@ -50,6 +55,12 @@ class SuggestionApiHttpClient(
         profilEleve: ProfilEleve.AvecProfilExistant,
         idsFormations: List<String>,
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
+        if (profilEleve.estExpert == true) {
+            logger.info(
+                type = "RECUPERATION_EXPLICATIONS_SUGGESTION_PROFIL_EXPERT",
+                message = "explications pour expert id ${profilEleve.id} formations $idsFormations",
+            )
+        }
         val reponseDTO =
             post<ExplicationFormationPourUnProfilReponseDTO>(
                 url = "$baseUrl/explanations",
@@ -57,12 +68,20 @@ class SuggestionApiHttpClient(
                     ExplicationFormationPourUnProfilRequeteDTO(
                         profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         formations = idsFormations,
+                        inclureExplicationsDetaillees = profilEleve.estExpert ?: false,
                     ),
             ).resultats
         val explications =
             idsFormations.associateWith { idFormation ->
                 reponseDTO.firstOrNull { it.cle == idFormation }?.toExplicationsSuggestion()
             }
+        if (profilEleve.estExpert == true) {
+            val nbExplicationsDetaillees = explications.map { it.value?.detailsCalculScore?.size }.filterNotNull().sum()
+            logger.info(
+                type = "NB_EXPLICATIONS_DETAILLEES_SUGGESTION_PROFIL_EXPERT",
+                message = "$nbExplicationsDetaillees explications pour expert id ${profilEleve.id} formations $idsFormations",
+            )
+        }
         val formationsSansExplications = explications.filter { it.value == null }
         if (formationsSansExplications.isNotEmpty()) {
             val idsFormationsSansExplications = formationsSansExplications.map { it.key }

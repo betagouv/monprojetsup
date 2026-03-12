@@ -26,6 +26,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         val compteParcoursupLie: Boolean,
         val voeuxFavoris: List<VoeuFavori>,
         var portfolioId: String? = null,
+        var estExpert: Boolean? = null,
     ) : ProfilEleve(id) {
         constructor(id: String) : this(
             id = id,

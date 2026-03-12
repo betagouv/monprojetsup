@@ -3,6 +3,8 @@ package fr.gouv.monprojetsup.authentification.filter
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -17,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class IdentificationFilter(
     val recupererEleveService: RecupererEleveService,
+    val mpsLogger: MonProjetSupLogger,
 ) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
@@ -33,9 +36,11 @@ class IdentificationFilter(
             val idIndividu = getIdIndividu(jwtToken)
             if (idIndividu != null) {
                 val portfolioId = getM7Id(jwtToken)
+                val estExpert = estExpert(jwtToken)
                 val eleve = recupererEleveService.recupererEleve(idIndividu)
                 if (eleve is ProfilEleve.AvecProfilExistant) {
                     eleve.portfolioId = portfolioId
+                    eleve.estExpert = estExpert
                 }
                 val authenticationEleve =
                     UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
@@ -60,4 +65,13 @@ class IdentificationFilter(
     private fun getIdIndividu(token: Jwt): String? = token.getClaim<String>("sub")
 
     private fun getM7Id(token: Jwt): String? = token.getClaim<String?>("m7_id")
+
+    protected fun estExpert(token: Jwt): Boolean {
+        return token.hasClaim("profile") && token.getClaim<String>("profile") == "expert"
+    }
+
+    @Throws(MonProjetSupForbiddenException::class)
+    protected fun getAllClaims(token: Jwt): String {
+        return token.claims.map { it.toString() }.joinToString(" | ")
+    }
 }

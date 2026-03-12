@@ -9,4 +9,6 @@ data class ExplicationFormationPourUnProfilRequeteDTO(
     val profil: APISuggestionProfilDTO,
     @field:JsonProperty(value = "keys")
     val formations: List<String>,
+    @field:JsonProperty(value = "inclureExplicationsDetaillees")
+    val inclureExplicationsDetaillees: Boolean,
 ) : APISuggestionRequeteDTO()
