@@ -122,14 +122,15 @@ def _build_bayes_dataframe(
     """
     Builds the Naive Bayes DataFrame from the counters.
     """
-    # Compute the conditional probabilities P(t | v)
+    # Compute the conditional probabilities P(v | t) with standard Laplace smoothing
+    n_categories = len(all_key_values)
     dict_bayes: Dict[str, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
     for t, count_t in occurences_target.items():
         for v in all_key_values:
             count_v_and_t = co_occurences_target_key[(t, v)]
-            # Apply Laplace regularization
+            # Apply Laplace regularization: P(v|t) = (count(v,t) + α) / (count(t) + α·|V|)
             dict_bayes[t][v] = (count_v_and_t + regularization_laplace) / (
-                count_t + regularization_laplace
+                count_t + regularization_laplace * n_categories
             )
     bayes_df = pd.DataFrame(dict_bayes)
 
