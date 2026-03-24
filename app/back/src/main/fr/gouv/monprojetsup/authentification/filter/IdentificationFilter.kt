@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
-import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -19,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class IdentificationFilter(
     val recupererEleveService: RecupererEleveService,
-    val mpsLogger: MonProjetSupLogger,
 ) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
