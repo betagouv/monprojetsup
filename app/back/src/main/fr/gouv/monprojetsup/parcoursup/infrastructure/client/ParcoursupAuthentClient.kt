@@ -65,14 +65,17 @@ class ParcoursupAuthentClient(
         logger.info("RECUP_ID_PSUP_ELEVE", "params $parametresPourRecupererToken")
         val url =
             (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
-                .addQueryParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
-                .addQueryParameter(REDIRECT_URI, parametresPourRecupererToken.redirectUri)
-                .addQueryParameter(CODE, parametresPourRecupererToken.code)
-                .addQueryParameter(CODE_VERIFIER, parametresPourRecupererToken.codeVerifier)
                 .build()
         logger.info("RECUP_ID_PSUP_ELEVE", "clientId:$clientId url:$url")
 
-        val formBody = FormBody.Builder().build()
+        val formBody =
+            FormBody.Builder()
+                .add(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
+                .add(REDIRECT_URI, parametresPourRecupererToken.redirectUri)
+                .add(CODE, parametresPourRecupererToken.code)
+                .add(CODE_VERIFIER, parametresPourRecupererToken.codeVerifier)
+                .build()
+
         val request =
             Request.Builder()
                 .url(url)
