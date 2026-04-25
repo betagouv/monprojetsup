@@ -158,8 +158,7 @@ class ParcoursupAuthentClientTest {
         fun `quand la récupération de l'access token échoue, alors doit throw MonProjetSupInternalErrorException`() {
             // Given
             val url =
-                "https://monauthentification.fr/Authentification/oauth2/token?grant_type=authorization_code" +
-                    "&redirect_uri=redirectUri&code=code&code_verifier=codeVerifier"
+                "https://monauthentification.fr/Authentification/oauth2/token"
             val callAuthentMock =
                 mockCall(
                     url = url,
@@ -181,8 +180,7 @@ class ParcoursupAuthentClientTest {
         fun `quand la récupération du token ne contient pas access_token, alors doit throw MonProjetSupInternalErrorException`() {
             // Given
             val url =
-                "https://monauthentification.fr/Authentification/oauth2/token?grant_type=authorization_code" +
-                    "&redirect_uri=redirectUri&code=code&code_verifier=codeVerifier"
+                "https://monauthentification.fr/Authentification/oauth2/token"
             val stringBody =
                 """
                 {
